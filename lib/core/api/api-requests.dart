@@ -28,7 +28,7 @@ class ApiRequest {
 
           return handler.next(options);
         },
-        onResponse: (response, handler) {
+        onResponse: (Response<dynamic> response, handler) {
           return handler.next(response);
         },
         onError: (error, handler) {
