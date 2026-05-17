@@ -1,58 +1,33 @@
-import 'package:dartz/dartz.dart';
-import 'package:http/http.dart' as http;
-import 'package:kitch_plus/core/api/api_keys.dart';
-import 'package:kitch_plus/core/constants/user-parameters.dart';
-
 import '../../../../../core/api/api-requests.dart';
-import '../../../../../core/errors/exceptions.dart';
+import '../../../../../core/api/errors/exceptions.dart';
+import '../../../../../core/constants/user-parameters.dart';
 
 abstract class ResetPasswordRemoteDataSource{
-  Future<Unit> checkEmail(String email);
-  Future<Unit> verifyCode(VerifyCodeParams params);
-  Future<Unit> updatePassword(UpdatePasswordParams params);
+  Future<void> checkEmail(String email);
+  Future<void> verifyCode(VerifyCodeParams params);
 }
 
 class ResetPasswordRemoteDataSourceImpl implements ResetPasswordRemoteDataSource {
-  final http.Client client;
-  ApiRequest api = ApiRequest(client: http.Client());
-  ResetPasswordRemoteDataSourceImpl({required this.client});
+  final ApiRequest apiRequest;
 
-
-  @override
-  Future<Unit> checkEmail(String email) async {
-    final response = await api.post(EndPoint.checkEmail, {"email": email});
-    return handleResponse(response);
-  }
+  ResetPasswordRemoteDataSourceImpl(this.apiRequest);
 
   @override
-  Future<Unit> verifyCode(VerifyCodeParams params) async {
-    final body = {
-      "email": params.email,
-      "code": params.code
-    };
-    final response = await api.post(EndPoint.verifyCode, body);
-    return handleResponse(response);
-  }
-
-
-  @override
-  Future<Unit> updatePassword(UpdatePasswordParams params) async {
-    final body = {
-      "email": params.email,
-      "password": params.password
-    };
-    final response = await api.post(EndPoint.updatePassword, body);
-    print("Error ${response.statusCode}: ${response.body}");
-    return handleResponse(response);
-  }
-
-
-
-    handleResponse(http.Response response){
-    if(response.statusCode == 200 || response.statusCode== 201){
-      return Future.value(unit);
+  Future<void> checkEmail(String email) async {
+    final response = await apiRequest.post(
+        "/auth/check-email", body: {"email": email});
+    if (response.statusCode != 200) {
+      throw ServerException(message: response.data["message"]);
     }
-    throw ServerException(message: getErrorMessage(response.statusCode));
+  }
 
-}
+  @override
+  Future<void> verifyCode(VerifyCodeParams params) async {
+    final response = await apiRequest.post(
+        "/auth/verify-code", body: params.toJson());
+
+    if (response.statusCode != 200) {
+      throw ServerException(message: response.data["message"]);
+    }
+  }
 }

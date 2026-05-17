@@ -8,7 +8,3 @@ const String LOGIN_SUCCESS_MESSAGE = 'Login Successfully';
 const String LOGOUT_SUCCESS_MESSAGE = 'Logout Successfully';
 
 const String CHECK_EMAIL_MESSAGE = 'OTP sent successfully, check your email';
-const String VERIFY_CODE_MESSAGE = 'verification successfully';
-const String UPDATE_PASSWORD_MESSAGE = 'Password updated successfully';
-const String DELETE_RESERVATION_SUCCESS = 'Reservation deleted successfully';
-const String WAITER_REQUEST_SUCCESS = 'The waiter is coming to your table';

@@ -1,4 +1,4 @@
-import '../constants/failure_success_message.dart';
+import '../../constants/failure_success_message.dart';
 import 'failures.dart';
 
 class ServerException implements Exception{

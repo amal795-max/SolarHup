@@ -13,8 +13,8 @@ class AppStyle {
     double ?height,
     Color? color,
   }) {
-    final isArabic = Get.locale?.languageCode == 'ar';
-    final selectedColor = color ?? (DataHelper.isDarkTheme(Get.context!) ? AppColors.white : AppColors.black);
+    final isArabic = true;
+    final selectedColor = color ?? ( AppColors.black);
 
     return isArabic
         ? GoogleFonts.cairo(
@@ -149,7 +149,7 @@ class AppStyle {
   static TextStyle get inputError =>  getFontStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w400,
-    color: AppColors.errorRed,
+    color: AppColors.red,
     height: 1.4,
   );
 
@@ -185,7 +185,7 @@ class AppStyle {
   static TextStyle get labelMoreStyle => getFontStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w500,
-    color: AppColors.mainAppColor,
+    color: AppColors.primaryColor,
   );
   static TextStyle get normalStyle => getFontStyle(
     fontSize: 16.sp,
@@ -195,7 +195,7 @@ class AppStyle {
   static TextStyle get navTitle => getFontStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w600,
-    color: AppColors.mainAppColor,
+    color: AppColors.primaryColor,
   );
 
 

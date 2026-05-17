@@ -1,5 +1,4 @@
-import 'package:kitch_plus/features/authentication/data/model/login_model/sub-data-model.dart';
-
+import 'package:untitled1/features/authentication/data/model/login_model/sub-data-model.dart' ;
 
 class LoginModel {
   final DataLoginModel dataLoginModel;

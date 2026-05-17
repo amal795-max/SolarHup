@@ -1,7 +1,7 @@
 class EnvironmentConfig {
   static const String apiEndpoint = String.fromEnvironment(
     "API_ENDPOINT",
-    defaultValue: "https://api",
+    defaultValue: "https://",
   );
 
   static const String androidAppSecret = String.fromEnvironment(
@@ -9,15 +9,6 @@ class EnvironmentConfig {
     defaultValue: "ramez",
   );
 
-  static const String iosAppSecret = String.fromEnvironment(
-    "APP_SECRET",
-    defaultValue: "ramez",
-  );
-
-  static const String appEnv = String.fromEnvironment(
-    "APP_ENV",
-    defaultValue: "development",
-  );
 
 
 }

@@ -1,17 +1,19 @@
-import "dart:io";
+import 'dart:io';
 
-class CheckInternet {
-  static Future<bool> checkConnect() async {
+abstract class NetworkInfo{
+  Future<bool> get isConnected;
+}
+
+class NetworkInfoImpl implements NetworkInfo{
+  NetworkInfoImpl();
+  @override
+  Future<bool> get isConnected async {
     try {
-      final List<InternetAddress> result = await InternetAddress.lookup(
-        "google.com",
-      );
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (_) {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (e){
       return false;
     }
-    return false;
   }
 }
+
