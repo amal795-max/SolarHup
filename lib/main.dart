@@ -1,13 +1,21 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
-import 'package:untitled1/core/translation/app_localization.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_themes.dart';
 import 'core/routing/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterLocalization.instance.ensureInitialized();
-  runApp(const MyApp());
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: const <Locale>[Locale('en'), Locale('ar')],
+        path: 'assets/language',
+        fallbackLocale: const Locale('en'),
+        child: const MyApp()
+    ),
+  );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -15,66 +23,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-
-      title: 'Flutter Demo',
-      supportedLocales: const <Locale>[
-       Locale('en'),
-        Locale('ar')],
-      localizationsDelegates: const [AppLocalizations.delegate],
-      localeResolutionCallback: (deviceLocal, supportedLocales) {
-        for (var local in supportedLocales) {
-          if (deviceLocal != null &&
-              deviceLocal.languageCode == local.languageCode) {
-            return deviceLocal;
-          }
-        }
-        return supportedLocales.first;
+    return ScreenUtilInit(
+      designSize: const Size(393, 852),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',darkTheme: AppThemes.darkTheme,
+          theme: AppThemes.lightTheme,
+          // themeMode: ThemeMode.light,
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          localeResolutionCallback: (deviceLocal, supportedLocales) {
+            for (var local in supportedLocales) {
+              if (deviceLocal != null && deviceLocal.languageCode == local.languageCode) {
+                return deviceLocal;
+              }
+            }
+            return supportedLocales.first;
+          },
+          routerConfig: router,
+        );
       },
-      routerConfig: router,    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            Text(AppLocalizations.of(context)!.translate('hello')),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
+
 }
