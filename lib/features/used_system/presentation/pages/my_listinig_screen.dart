@@ -146,7 +146,6 @@ class _ListingCard extends StatelessWidget {
                   child: Icon(Icons.inventory_2_outlined, size: 40.sp),
                 ),
                 SizedBox(width: 12.w),
-                // Details
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
