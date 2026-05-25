@@ -4,13 +4,13 @@ class AppColors {
   // Brand Colors
   static const Color primaryColor = Color(0xFF0A2A43);
   static const Color deepPrimaryColor = Color(0xFF001527);
-  static const Color secondaryColor = Color(0xFFF9C80E);
+  static const Color secondaryColor = Color(0xFFFDCC16);
   static const Color tertiaryColor = Color(0xFF3E2102);
   static const Color brown = Color(0xFF745B00);
-  static const Color lightYellow = Color(0xFFFDCC16);
+  static const Color lightYellow = Color(0xFFDCC16);
   // Neutral Colors
   static const Color black = Color(0xFF000000);
-  static const Color white = Color(0xFFFFFFFF);
+  static const Color white = Colors.white;
   static const Color grey = Color(0xFF73777E);
   static const Color deepGrey = Color(0xFF43474D);
   static const Color lightGrey = Color(0xFFEEEDF0);

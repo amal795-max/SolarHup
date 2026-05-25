@@ -5,7 +5,6 @@ import 'package:untitled1/core/theme/app_style.dart';
 
 class CustomTextField extends StatefulWidget {
   final double? width;
-  final double height;
   final TextEditingController? controller;
   final String? initialValue;
   final String title;
@@ -27,7 +26,6 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     this.width,
-    this.height = 45,
     this.controller,
     this.initialValue,
     required this.title,
@@ -98,15 +96,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              
-              
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: Colors.grey.shade400),
+                borderSide: const BorderSide(color: AppColors.borderColor),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.grey),
+                borderSide: const BorderSide(color: AppColors.lightGray),
               ),
               prefixIcon: widget.prefixIcon,
               prefixIconColor: AppColors.grey,

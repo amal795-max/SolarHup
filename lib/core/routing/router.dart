@@ -6,8 +6,12 @@ import 'package:untitled1/features/authentication/presentation/pages/login_scree
 import 'package:untitled1/features/authentication/presentation/pages/register_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
+import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
+import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 
 import '../../features/authentication/presentation/pages/check_email.dart';
+import '../../features/used_system/presentation/pages/filters_screen.dart';
+import '../../features/used_system/presentation/pages/used_products_screen.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -40,6 +44,26 @@ final GoRouter router = GoRouter(
       path: AppRoutes.resetPasswordScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ResetPasswordScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.addProductScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const AddUsedProductScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.usedProductScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const UsedProductsScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.filterProductScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FiltersScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.myListeningScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyListingScreen();
       },),
 
   ],

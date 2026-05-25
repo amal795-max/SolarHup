@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/header.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -52,7 +53,9 @@ class VerificationScreen extends StatelessWidget {
                     SizedBox(height: 32.h),
                     CustomButton(
                       text: 'verify_identity'.tr(),
-                      onPressed: () {},
+                      onPressed: () {
+                        context.push(AppRoutes.myListeningScreen);
+                      },
                     ),
                     SizedBox(height: 24.h),
                     Text(
@@ -61,12 +64,11 @@ class VerificationScreen extends StatelessWidget {
                     ),
                     TextButton.icon(
                       onPressed: () {},
-                      icon: const Icon(Icons.refresh, size: 18),
+                      icon: const Icon(Icons.refresh, size: 18,color: AppColors.tertiaryColor,),
                       label: Text(
                         'resend_code'.tr(),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(color: AppColors.tertiaryColor)
                       ),
                     ),
                   ],

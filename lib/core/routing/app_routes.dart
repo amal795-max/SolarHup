@@ -4,4 +4,8 @@ abstract class AppRoutes {
   static const splashScreen = '/splashScreen';
   static const verificationScreen = '/verificationScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
+  static const addProductScreen = '/addProductScreen';
+  static const usedProductScreen = '/usedProductScreen';
+  static const filterProductScreen = '/filterProductScreen';
+  static const myListeningScreen = '/myListeningScreen';
 }

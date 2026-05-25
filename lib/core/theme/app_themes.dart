@@ -26,9 +26,12 @@ class AppThemes {
     textTheme: TextTheme(
       headlineSmall: AppStyle.h4.copyWith(color: AppColors.white),
       titleMedium: AppStyle.h6.copyWith(color: AppColors.white),
-      bodyLarge: AppStyle.bodyMedium.copyWith(color: AppColors.white),
+      bodyLarge: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+      bodyMedium: AppStyle.bodyMedium.copyWith(color: AppColors.white),
       bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.lightGray),
-      labelLarge: AppStyle.buttonLarge.copyWith(color: AppColors.white),
+      labelLarge: AppStyle.labelLarge.copyWith(color: AppColors.white),
+      labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.lightGray),
+      displaySmall:  AppStyle.bodyXSmall,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
@@ -75,11 +78,15 @@ class AppThemes {
       centerTitle: true,
     ),
     textTheme: TextTheme(
+
       headlineSmall: AppStyle.h4.copyWith(color: AppColors.primaryColor),
       titleMedium: AppStyle.h6.copyWith(color: AppColors.black),
-      bodyLarge: AppStyle.bodyMedium.copyWith(color: AppColors.black),
+      bodyLarge: AppStyle.bodyLarge.copyWith(color: AppColors.black),
+      bodyMedium: AppStyle.bodyMedium.copyWith(color: AppColors.black),
       bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.grey),
-      labelLarge: AppStyle.buttonLarge.copyWith(color: AppColors.white),
+      labelLarge: AppStyle.labelLarge.copyWith(color: AppColors.white),
+      labelSmall: AppStyle.labelSmall,
+      displaySmall:  AppStyle.bodyXSmall,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
