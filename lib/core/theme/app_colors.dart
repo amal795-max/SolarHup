@@ -1,4 +1,4 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 class AppColors {
   // Brand Colors
@@ -7,7 +7,7 @@ class AppColors {
   static const Color secondaryColor = Color(0xFFFDCC16);
   static const Color tertiaryColor = Color(0xFF3E2102);
   static const Color brown = Color(0xFF745B00);
-  static const Color lightYellow = Color(0xFFDCC16);
+  static const Color lightYellow = Color(0x0ffdcc16);
   // Neutral Colors
   static const Color black = Color(0xFF000000);
   static const Color white = Colors.white;

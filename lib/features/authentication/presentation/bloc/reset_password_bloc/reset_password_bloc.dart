@@ -18,7 +18,7 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
 
       result.fold(
             (failure) => emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
-            (_) => emit(ResetPasswordSuccess(message: '')),
+            (_) => emit(const ResetPasswordSuccess(message: '')),
       );
     });
     //
@@ -46,11 +46,11 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
   String mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case OfflineFailure:
-        return "No internet connection";
+        return 'No internet connection';
       case ServerFailure:
         return (failure as ServerFailure).message;
       default:
-        return "Unexpected error occurred";
+        return 'Unexpected error occurred';
     }
   }
 }

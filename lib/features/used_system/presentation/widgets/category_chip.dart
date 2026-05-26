@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class CategoryFilterSection extends StatelessWidget {
-  const CategoryFilterSection();
+  const CategoryFilterSection({super.key});
 
   @override
   Widget build(BuildContext context) {

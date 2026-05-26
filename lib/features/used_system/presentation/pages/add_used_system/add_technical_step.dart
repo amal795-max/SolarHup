@@ -10,7 +10,7 @@ import '../../widgets/section_header.dart';
 
 class TechnicalStep extends StatelessWidget {
   final VoidCallback onNext;
-  const TechnicalStep({required this.onNext});
+  const TechnicalStep({super.key, required this.onNext});
 
   @override
   Widget build(BuildContext context) {

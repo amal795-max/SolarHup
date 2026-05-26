@@ -15,19 +15,19 @@ class ResetPasswordRemoteDataSourceImpl implements ResetPasswordRemoteDataSource
   @override
   Future<void> checkEmail(String email) async {
     final response = await apiRequest.post(
-        "/auth/check-email", body: {"email": email});
+        '/auth/check-email', body: {'email': email});
     if (response.statusCode != 200) {
-      throw ServerException(message: response.data["message"]);
+      throw ServerException(message: response.data['message']);
     }
   }
 
   @override
   Future<void> verifyCode(VerifyCodeParams params) async {
     final response = await apiRequest.post(
-        "/auth/verify-code", body: params.toJson());
+        '/auth/verify-code', body: params.toJson());
 
     if (response.statusCode != 200) {
-      throw ServerException(message: response.data["message"]);
+      throw ServerException(message: response.data['message']);
     }
   }
 }

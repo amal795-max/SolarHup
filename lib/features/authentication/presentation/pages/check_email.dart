@@ -21,21 +21,21 @@ class CheckEmailPage extends StatelessWidget {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     backgroundColor: Colors.white70,
-                    title: Text(
+                    title: const Text(
                       textAlign: TextAlign.center,
-                      "How to change your password",
+                      'How to change your password',
                     ),
-                    content: Text(
-                      "1.Enter your registered email.\n"
-                      "2.You will receive an OTP code in your email\n3. Enter the OTP code.\n4.Set new password and login with it",
+                    content: const Text(
+                      '1.Enter your registered email.\n'
+                      '2.You will receive an OTP code in your email\n3. Enter the OTP code.\n4.Set new password and login with it',
                     ),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text(
-                          "Close",
+                        child: const Text(
+                          'Close',
                           style: TextStyle(color: AppColors.primaryColor),
                         ),
                       ),
@@ -44,7 +44,7 @@ class CheckEmailPage extends StatelessWidget {
                 },
               );
             },
-            icon: Icon(Icons.help_outline, color: AppColors.deepGrey),
+            icon: const Icon(Icons.help_outline, color: AppColors.deepGrey),
           ),
           SizedBox(width: 12.w),
         ],
@@ -88,8 +88,8 @@ class CheckEmailPage extends StatelessWidget {
 
 
     return ListView(
-      padding: EdgeInsets.all(20),
-      children: [
+      padding: const EdgeInsets.all(20),
+      children: const [
 
       ],
     );

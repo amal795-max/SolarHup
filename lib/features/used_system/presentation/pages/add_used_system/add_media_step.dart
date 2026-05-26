@@ -7,7 +7,7 @@ import '../../../../../widgets/primary_button.dart';
 import '../../widgets/section_header.dart';
 
 class MediaStep extends StatelessWidget {
-  const MediaStep();
+  const MediaStep({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class _ProTip extends StatelessWidget {
       decoration: BoxDecoration(
           color:AppColors.lightYellow,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: Color(0xF745B00))
+          border: Border.all(color: const Color(0x0f745b00))
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

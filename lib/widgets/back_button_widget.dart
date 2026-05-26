@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "../core/theme/app_colors.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../core/theme/app_colors.dart';
 
 class BackButtonWidget extends StatelessWidget {
   const BackButtonWidget({super.key});
@@ -15,7 +15,7 @@ class BackButtonWidget extends StatelessWidget {
         shape: WidgetStatePropertyAll(
         RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.r),
-         side: BorderSide(color: AppColors.primaryColor))))),
+         side: const BorderSide(color: AppColors.primaryColor))))),
       );
 
 
