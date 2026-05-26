@@ -13,7 +13,7 @@ class CheckEmailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.white,
-        actions: <Widget>[
+        actions: [
           IconButton(
             onPressed: () {
               showDialog(
@@ -27,9 +27,9 @@ class CheckEmailPage extends StatelessWidget {
                     ),
                     content: const Text(
                       '1.Enter your registered email.\n'
-                      '2.You will receive an OTP code in your email\n3. Enter the OTP code.\n4.Set new password and login with it',
+                          '2.You will receive an OTP code in your email\n3. Enter the OTP code.\n4.Set new password and login with it',
                     ),
-                    actions: <Widget>[
+                    actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -63,7 +63,7 @@ class CheckEmailPage extends StatelessWidget {
   }
 
   void _listener(BuildContext context, ResetPasswordState state) {
-   context.read<ResetPasswordBloc>();
+    context.read<ResetPasswordBloc>();
     if (state is ResetPasswordSuccess) {
       DataHelper.showSnackBar(
         message: state.message,
@@ -84,12 +84,12 @@ class CheckEmailPage extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, ResetPasswordState state) {
-   context.read<ResetPasswordBloc>();
+    context.read<ResetPasswordBloc>();
 
 
     return ListView(
       padding: const EdgeInsets.all(20),
-      children: <Widget>const <dynamic>[
+      children: const [
 
       ],
     );
