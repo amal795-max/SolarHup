@@ -24,7 +24,7 @@ class ResetPasswordRepositoriesImpl implements ResetPasswordRepositories {
       print('');
       try {
         await fn();
-        return Right(unit);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }

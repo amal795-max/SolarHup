@@ -17,7 +17,7 @@ class VerifyCodeParams {
   VerifyCodeParams(this.email, this.code,);
 
   Map<String,dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       email:email,
       code:code
     };

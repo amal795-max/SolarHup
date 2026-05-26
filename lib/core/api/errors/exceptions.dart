@@ -45,6 +45,6 @@ String mapFailureToMessage(Failure failure) {
     case EmptyCacheFailure:
       return EMPTY_CACHE_FAILURE_MESSAGE;
     default:
-      return "Unexpected errors. Please try again later.";
+      return 'Unexpected errors. Please try again later.';
   }
 }

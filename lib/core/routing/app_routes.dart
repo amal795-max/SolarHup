@@ -1,6 +1,6 @@
 
 abstract class AppRoutes {
-  static const loginScreen = '/loginScreen';
-  static const splashScreen = '/splashScreen';
+  static const String loginScreen = '/loginScreen';
+  static const String splashScreen = '/splashScreen';
 
 }

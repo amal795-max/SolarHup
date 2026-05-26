@@ -1,5 +1,5 @@
-import "dart:io";
-import "package:flutter/material.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
 
 class DataHelper {
   static bool get isIos => Platform.isIOS;

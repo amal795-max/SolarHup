@@ -4,7 +4,7 @@ part of 'reset_password_bloc.dart';
 sealed class ResetPasswordState extends Equatable {
   const ResetPasswordState();
   @override
-  List<Object> get props => [];
+  List<Object> get props => <Object>[];
 }
 
 final class ResetPasswordInitial extends ResetPasswordState {}

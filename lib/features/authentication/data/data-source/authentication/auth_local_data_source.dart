@@ -21,7 +21,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource{
   }
   @override
   Future<LoginModel> getCachedUser() {
-    final jsonString = LocalStorage().getData(key: "CacheUser");
+    final jsonString = LocalStorage().getData(key: 'CacheUser');
     if (jsonString != null) {
       final jsonMap = json.decode(jsonString);
       return Future.value(LoginModel.fromJson(jsonMap));

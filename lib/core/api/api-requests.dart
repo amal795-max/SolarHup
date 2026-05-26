@@ -19,7 +19,7 @@ class ApiRequest {
 
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
           final token = LocalStorage().getData(key: ApiKeys.token);
 
           if (token != null && token.isNotEmpty) {
@@ -28,10 +28,10 @@ class ApiRequest {
 
           return handler.next(options);
         },
-        onResponse: (Response<dynamic> response, handler) {
+        onResponse: (Response<dynamic> response, ResponseInterceptorHandler handler) {
           return handler.next(response);
         },
-        onError: (error, handler) {
+        onError: (DioException error, ErrorInterceptorHandler handler) {
           return handler.next(error);
         },
       ),

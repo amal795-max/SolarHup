@@ -16,10 +16,10 @@ class AppLocalizations {
 
   Future loadJsonLanguage() async {
     String code = _localization.currentLocale?.languageCode ?? 'en';
-    String jsonString = await rootBundle.loadString("assets/language/$code.json");
+    String jsonString = await rootBundle.loadString('assets/language/$code.json');
 
     Map<String, dynamic> jsonMap = json.decode(jsonString);
-    _localizedStrings = jsonMap.map((key, value) {
+    _localizedStrings = jsonMap.map((String key, value) {
       return MapEntry(key, value.toString());
     });
   }
@@ -32,7 +32,7 @@ class _AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'ar'].contains(locale.languageCode);
+    return <String>['en', 'ar'].contains(locale.languageCode);
   }
 
   @override

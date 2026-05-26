@@ -20,7 +20,7 @@ class DataLoginModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'data': clientModel.toJson(),
       'token': token,
       'refresh_token': refreshToken,

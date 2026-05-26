@@ -1,9 +1,8 @@
 
-import "package:flutter/material.dart";
-import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:google_fonts/google_fonts.dart";
-import "../helper/data_helper.dart";
-import "app_colors.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'app_colors.dart';
 
 class AppStyle {
 
@@ -13,8 +12,8 @@ class AppStyle {
     double ?height,
     Color? color,
   }) {
-    final isArabic = true;
-    final selectedColor = color ?? ( AppColors.black);
+    final bool isArabic = true;
+    final Color selectedColor = color ?? ( AppColors.black);
 
     return isArabic
         ? GoogleFonts.cairo(

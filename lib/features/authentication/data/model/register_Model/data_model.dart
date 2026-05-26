@@ -15,6 +15,6 @@ class DataModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'email': email,};
+    return <String, dynamic>{'id': id, 'name': name, 'email': email,};
   }
 }

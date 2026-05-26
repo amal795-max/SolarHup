@@ -10,7 +10,7 @@ class RegisterModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'data': dataModel.toJson(),
     };
   }

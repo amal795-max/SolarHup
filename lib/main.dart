@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
       supportedLocales: const <Locale>[
        Locale('en'),
         Locale('ar')],
-      localizationsDelegates: const [AppLocalizations.delegate],
-      localeResolutionCallback: (deviceLocal, supportedLocales) {
-        for (var local in supportedLocales) {
+      localizationsDelegates: const <LocalizationsDelegate<dynamic>>[AppLocalizations.delegate],
+      localeResolutionCallback: (Locale? deviceLocal, Iterable<Locale> supportedLocales) {
+        for (Locale local in supportedLocales) {
           if (deviceLocal != null &&
               deviceLocal.languageCode == local.languageCode) {
             return deviceLocal;
@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
-          children: [
+          children: <Widget>[
             Text(AppLocalizations.of(context)!.translate('hello')),
             Text(
               '$_counter',

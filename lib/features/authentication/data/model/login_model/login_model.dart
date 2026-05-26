@@ -10,7 +10,7 @@ class LoginModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
+    return <String, dynamic>{
       'data': dataLoginModel.toJson(),
     };
   }
