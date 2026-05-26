@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/api/errors/failures.dart';
@@ -13,12 +12,12 @@ class ResetPasswordBloc extends Bloc<ResetPasswordEvent, ResetPasswordState> {
 
   ResetPasswordBloc(this.repository) : super(ResetPasswordInitial()) {
 
-    on<CheckEmailEvent>((CheckEmailEvent event, Emitter<ResetPasswordState> emit) async {
+    on<CheckEmailEvent>((event, emit) async {
       emit(ResetPasswordLoading());
-      final Either<Failure, Unit> result = await repository.checkEmail(event.email);
+      final result = await repository.checkEmail(event.email);
 
       result.fold(
-            (Failure failure) => emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
+            (failure) => emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
             (_) => emit(const ResetPasswordSuccess(message: '')),
       );
     });
