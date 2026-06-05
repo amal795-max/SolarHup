@@ -6,6 +6,7 @@ import 'package:untitled1/features/authentication/presentation/pages/login_scree
 import 'package:untitled1/features/authentication/presentation/pages/register_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
+import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 
@@ -20,6 +21,12 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const AuthenticationScreen();
       },),
+    GoRoute(
+      path: AppRoutes.homeScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const HomeScreen();
+      },),
+    
     GoRoute(
       path: AppRoutes.splashScreen,
       builder: (BuildContext context, GoRouterState state) {

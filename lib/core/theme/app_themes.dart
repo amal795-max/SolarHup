@@ -25,17 +25,19 @@ class AppThemes {
     ),
     textTheme: TextTheme(
       headlineSmall: AppStyle.h4.copyWith(color: AppColors.white),
+      titleLarge: AppStyle.h5.copyWith(color: AppColors.white),
       titleMedium: AppStyle.h6.copyWith(color: AppColors.white),
       bodyLarge: AppStyle.bodyLarge.copyWith(color: AppColors.white),
       bodyMedium: AppStyle.bodyMedium.copyWith(color: AppColors.white),
       bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.lightGray),
       labelLarge: AppStyle.labelLarge.copyWith(color: AppColors.white),
+      labelMedium: AppStyle.labelMedium.copyWith(color: AppColors.lightGray),
       labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.lightGray),
       displaySmall:  AppStyle.bodyXSmall,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.darkGray.withOpacity(0.3),
+      fillColor: AppColors.darkGray.withValues(alpha: 0.3),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
         borderSide: const BorderSide(color: AppColors.darkGray),
@@ -78,13 +80,14 @@ class AppThemes {
       centerTitle: true,
     ),
     textTheme: TextTheme(
-
       headlineSmall: AppStyle.h4.copyWith(color: AppColors.primaryColor),
+      titleLarge: AppStyle.h5.copyWith(color: AppColors.black),
       titleMedium: AppStyle.h6.copyWith(color: AppColors.black),
       bodyLarge: AppStyle.bodyLarge.copyWith(color: AppColors.black),
       bodyMedium: AppStyle.bodyMedium.copyWith(color: AppColors.black),
       bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.grey),
       labelLarge: AppStyle.labelLarge.copyWith(color: AppColors.white),
+      labelMedium: AppStyle.labelMedium.copyWith(color: AppColors.grey),
       labelSmall: AppStyle.labelSmall,
       displaySmall:  AppStyle.bodyXSmall,
     ),

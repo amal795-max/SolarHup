@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_themes.dart';
+
 import 'core/routing/router.dart';
 
 void main() async {
@@ -9,13 +10,12 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
-        supportedLocales: const <Locale>[Locale('en'), Locale('ar')],
-        path: 'assets/language',
-        fallbackLocale: const Locale('en'),
-        child: const MyApp()
+      supportedLocales: const <Locale>[Locale('en'), Locale('ar')],
+      path: 'assets/language',
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
     ),
   );
-
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',darkTheme: AppThemes.darkTheme,
+          title: 'Flutter Demo',
+          darkTheme: AppThemes.darkTheme,
           theme: AppThemes.lightTheme,
           // themeMode: ThemeMode.light,
           localizationsDelegates: context.localizationDelegates,
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
           locale: context.locale,
           localeResolutionCallback: (deviceLocal, supportedLocales) {
             for (var local in supportedLocales) {
-              if (deviceLocal != null && deviceLocal.languageCode == local.languageCode) {
+              if (deviceLocal != null &&
+                  deviceLocal.languageCode == local.languageCode) {
                 return deviceLocal;
               }
             }
@@ -49,5 +51,4 @@ class MyApp extends StatelessWidget {
       },
     );
   }
-
 }
