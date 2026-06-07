@@ -77,7 +77,7 @@ class StoreCard extends StatelessWidget {
             ),
             // Stacked logo badge (overlaps image + white info section)
             Positioned(
-              left: 14.w,
+              left: 20.w,
               top: 100.h,
               child: _StoreIconBadge(
                 iconData: data.iconData,
