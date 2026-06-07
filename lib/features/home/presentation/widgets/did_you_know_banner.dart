@@ -19,17 +19,24 @@ class DidYouKnowBanner extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'home_did_you_know'.tr(),
-              style: AppStyle.h6.copyWith(color: AppColors.white),
+            Center(
+              child: Text(
+                'home_did_you_know'.tr(),
+                style: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 8.h),
-            Text(
-              'home_did_you_know_body'.tr(),
-              style: AppStyle.bodyXSmall.copyWith(
-                color: AppColors.white.withValues(alpha: 0.85),
+            Center(
+              child: Text(
+                'home_did_you_know_body'.tr(),
+                style: AppStyle.bodyXSmall.copyWith(
+                  color: AppColors.white.withValues(alpha: 0.5),
+                  fontSize: AppStyle.bodyMedium.fontSize,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],

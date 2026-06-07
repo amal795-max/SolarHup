@@ -86,7 +86,7 @@
   "details": "Details",
   "technical": "Technical",
   "media": "Media",
-  "system_info":"System Information",
+  "system_info": "System Information",
   "system_info_subtitle": "Tell us what you're listing in the marketplace.",
   "title": "Title",
   "title_hint": "e.g. 5kW Residential Hybrid System",
@@ -182,5 +182,16 @@
   "stores_tag_battery_backup": "Battery Backup",
   "stores_tag_free_audit": "Free Audit",
   "stores_tag_financing": "Financing",
-  "stores_tag_residential": "Residential"
+  "stores_tag_residential": "Residential",
+
+  "store_info_follow_store": "Follow Store",
+  "store_info_following": "Following",
+  "store_info_certified_vendor": "Certified Vendor",
+  "store_info_featured_products": "Featured Products",
+  "store_info_new_badge": "New",
+  "store_info_configure_kit": "Configure Kit",
+  "store_info_expert_title": "Need expert advice?",
+  "store_info_expert_subtitle": "Our solar consultants are available for a free system sizing and ROI analysis.",
+  "store_info_schedule_call": "Schedule Call",
+  "store_info_live_chat": "Live Chat"
 }

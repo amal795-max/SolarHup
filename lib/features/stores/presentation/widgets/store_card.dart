@@ -49,7 +49,7 @@ class StoreCard extends StatelessWidget {
     final cardColor = isDark ? AppColors.darkContainer : AppColors.white;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(16.r),
@@ -65,11 +65,25 @@ class StoreCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16.r),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          clipBehavior: Clip.none,
           children: [
-            _StoreImageSection(data: data),
-            _StoreInfoSection(data: data, onTap: onTap, isDark: isDark),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _StoreImageSection(data: data),
+                _StoreInfoSection(data: data, onTap: onTap, isDark: isDark),
+              ],
+            ),
+            // Stacked logo badge (overlaps image + white info section)
+            Positioned(
+              left: 14.w,
+              top: 100.h,
+              child: _StoreIconBadge(
+                iconData: data.iconData,
+                colorValue: data.iconColorValue,
+              ),
+            ),
           ],
         ),
       ),
@@ -97,7 +111,7 @@ class _StoreImageSection extends StatelessWidget {
     );
 
     return SizedBox(
-      height: 175.h,
+      height: 140.h,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
@@ -130,15 +144,6 @@ class _StoreImageSection extends StatelessWidget {
             top: 10.h,
             right: 10.w,
             child: _RatingBadge(rating: data.rating),
-          ),
-          // Store icon badge — bottom-left
-          Positioned(
-            bottom: 12.h,
-            left: 12.w,
-            child: _StoreIconBadge(
-              iconData: data.iconData,
-              colorValue: data.iconColorValue,
-            ),
           ),
         ],
       ),
@@ -200,25 +205,29 @@ class _StoreIconBadge extends StatelessWidget {
   final IconData iconData;
   final int colorValue;
 
-  const _StoreIconBadge({
-    required this.iconData,
-    required this.colorValue,
-  });
+  const _StoreIconBadge({required this.iconData, required this.colorValue});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 44.w,
-      height: 44.w,
+      width: 60.w,
+      height: 60.w,
       decoration: BoxDecoration(
         color: Color(colorValue),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.2),
-          width: 1.5,
+          color: Colors.white.withValues(alpha: 0.85),
+          width: 4,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.20),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Icon(iconData, color: AppColors.secondaryColor, size: 22.sp),
+      child: Icon(iconData, color: AppColors.secondaryColor, size: 24.sp),
     );
   }
 }
@@ -242,8 +251,9 @@ class _StoreInfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(14.w, 12.h, 14.w, 14.h),
+    return Container(
+      constraints: BoxConstraints(minHeight: 220.h),
+      padding: EdgeInsets.fromLTRB(14.w, 30.h, 14.w, 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -274,10 +284,10 @@ class _StoreInfoSection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 14.h),
           // Tag chips
           _TagsRow(tags: data.tags, isDark: isDark),
-          SizedBox(height: 12.h),
+          SizedBox(height: 18.h),
           // CTA button — tap navigates to the store detail
           CustomButton(
             text: 'stores_view_store'.tr(),
@@ -306,7 +316,9 @@ class _TagsRow extends StatelessWidget {
     return Wrap(
       spacing: 8.w,
       runSpacing: 6.h,
-      children: tags.map((tag) => _TagChip(label: tag, isDark: isDark)).toList(),
+      children: tags
+          .map((tag) => _TagChip(label: tag, isDark: isDark))
+          .toList(),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
@@ -133,7 +135,22 @@ class _StoresViewState extends State<_StoresView> {
   }
 
   void _onStoreTap(StoreCardData store) {
-    // TODO: Navigate to store detail screen
+    context.push(
+      AppRoutes.storeInfoScreen,
+      extra: StoreInfoData(
+        id: store.id,
+        name: store.name,
+        description: store.location,
+        rating: store.rating,
+        location: store.location,
+        isVerified: true,
+        imagePlaceholderColorValue: store.imagePlaceholderColorValue,
+        iconData: store.iconData,
+        iconColorValue: store.iconColorValue,
+        categories: sampleStoreInfo.categories,
+        featuredProducts: sampleStoreInfo.featuredProducts,
+      ),
+    );
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────

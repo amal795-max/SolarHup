@@ -182,5 +182,16 @@
   "stores_tag_battery_backup": "احتياطي البطارية",
   "stores_tag_free_audit": "تدقيق مجاني",
   "stores_tag_financing": "تمويل",
-  "stores_tag_residential": "سكني"
+  "stores_tag_residential": "سكني",
+
+  "store_info_follow_store": "متابعة المتجر",
+  "store_info_following": "متابَع",
+  "store_info_certified_vendor": "بائع معتمد",
+  "store_info_featured_products": "المنتجات المميزة",
+  "store_info_new_badge": "جديد",
+  "store_info_configure_kit": "تخصيص الحزمة",
+  "store_info_expert_title": "هل تحتاج إلى مشورة خبير؟",
+  "store_info_expert_subtitle": "مستشارونا الشمسيون متاحون لتحديد حجم النظام المجاني وتحليل العائد على الاستثمار.",
+  "store_info_schedule_call": "جدولة مكالمة",
+  "store_info_live_chat": "الدردشة المباشرة"
 }

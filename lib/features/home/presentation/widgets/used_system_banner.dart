@@ -21,26 +21,24 @@ class UsedSystemBanner extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Text(
-                'home_used_system_label'.tr(),
-                style: AppStyle.labelXSmall.copyWith(
-                  color: AppColors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+            Text(
+              'home_used_system_label'.tr(),
+              style: AppStyle.labelXSmall.copyWith(
+                color: AppColors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: AppStyle.bodyLarge.fontSize,
               ),
             ),
             SizedBox(height: 8.h),
-            Text(
-              'home_used_system_desc'.tr(),
-              style: AppStyle.bodySmall.copyWith(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.w600,
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: Text(
+                'home_used_system_desc'.tr(),
+                style: AppStyle.bodySmall.copyWith(
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppStyle.bodyLarge.fontSize,
+                ),
               ),
             ),
           ],
