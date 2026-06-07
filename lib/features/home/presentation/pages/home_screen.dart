@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +54,6 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-  int _currentNavIndex = 0;
 
   // ── Search ────────────────────────────────────────────────────────────────
 
@@ -160,41 +158,28 @@ class _HomeViewState extends State<_HomeView> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {}),
-          body: _buildBody(context, state),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            backgroundColor: AppColors.secondaryColor,
-            elevation: 4,
-            shape: const CircleBorder(),
-            child: Icon(Icons.chat, color: AppColors.primaryColor, size: 22.sp),
-          ),
-          bottomNavigationBar: _HomeBottomNav(
-            currentIndex: _currentNavIndex,
-            onTap: _onNavTap,
+        return SafeArea(
+          top: false,
+          child: Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {
+              context.push(AppRoutes.cartScreen);
+            }),
+            body: _buildBody(context, state),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: AppColors.secondaryColor,
+              elevation: 4,
+              shape: const CircleBorder(),
+              child: Icon(Icons.chat, color: AppColors.primaryColor, size: 22.sp),
+            ),
+
           ),
         );
       },
     );
   }
 
-  void _onNavTap(int index) {
-    // Only update the home nav index for in-page destinations.
-    // When pushing a new full-screen route, keep index at 0 so that
-    // Home stays highlighted if the user pops back to this screen.
-    switch (index) {
-      case 1:
-        context.push(AppRoutes.storesScreen);
-      case 2:
-        break; // TODO: Services screen
-      case 3:
-        break; // TODO: Orders screen
-      default:
-        setState(() => _currentNavIndex = index);
-    }
-  }
 
   Widget _buildBody(BuildContext context, HomeState state) {
     if (state is HomeLoading || state is HomeInitial) {
@@ -370,88 +355,3 @@ class _HomeViewState extends State<_HomeView> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Bottom Navigation Bar
-// ---------------------------------------------------------------------------
-
-class _HomeBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-
-  const _HomeBottomNav({required this.currentIndex, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = DataHelper.isDarkTheme(context);
-
-    final items = <_NavItem>[
-      _NavItem('nav_home'.tr(), Icons.home_outlined, Icons.home),
-      _NavItem('nav_store'.tr(), Icons.storefront_outlined, Icons.storefront),
-      _NavItem('nav_services'.tr(), Icons.build_outlined, Icons.build),
-      _NavItem(
-        'nav_orders'.tr(),
-        Icons.receipt_long_outlined,
-        Icons.receipt_long,
-      ),
-    ];
-
-    return Container(
-      height: 70.h,
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBottomNav : AppColors.white,
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.darkGray : AppColors.borderColor,
-          ),
-        ),
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -3),
-                ),
-              ],
-      ),
-      child: Row(
-        children: items.asMap().entries.map((entry) {
-          final idx = entry.key;
-          final item = entry.value;
-          final isActive = currentIndex == idx;
-          return Expanded(
-            child: InkWell(
-              onTap: () => onTap(idx),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    isActive ? item.activeIcon : item.icon,
-                    color: isActive ? AppColors.primaryColor : AppColors.grey,
-                    size: 22.sp,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(
-                    item.label,
-                    style: AppStyle.labelXSmall.copyWith(
-                      color: isActive ? AppColors.primaryColor : AppColors.grey,
-                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _NavItem {
-  final String label;
-  final IconData icon;
-  final IconData activeIcon;
-
-  const _NavItem(this.label, this.icon, this.activeIcon);
-}

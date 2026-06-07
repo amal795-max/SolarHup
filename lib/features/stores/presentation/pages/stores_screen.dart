@@ -52,7 +52,6 @@ class _StoresView extends StatefulWidget {
 class _StoresViewState extends State<_StoresView> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  int _currentNavIndex = 1; // "Store" tab is active
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -120,19 +119,7 @@ class _StoresViewState extends State<_StoresView> {
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
-  void _onNavTap(int index) {
-    if (index == _currentNavIndex) return;
-    switch (index) {
-      case 0:
-        // StoresScreen was pushed on top of HomeScreen — pop back to it
-        // so HomeScreen is reused with its nav correctly at index 0.
-        context.pop();
-      case 2:
-        break; // TODO: Services screen
-      case 3:
-        break; // TODO: Orders screen
-    }
-  }
+
 
   void _onStoreTap(StoreCardData store) {
     context.push(
@@ -172,10 +159,7 @@ class _StoresViewState extends State<_StoresView> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {}),
         body: _buildBody(context, state),
-        bottomNavigationBar: _StoresBottomNav(
-          currentIndex: _currentNavIndex,
-          onTap: _onNavTap,
-        ),
+
       ),
     );
   }
@@ -338,95 +322,4 @@ class _StoresViewState extends State<_StoresView> {
       ),
     );
   }
-}
-
-// ---------------------------------------------------------------------------
-// Bottom navigation bar (Store tab is active at index 1)
-// ---------------------------------------------------------------------------
-
-class _StoresBottomNav extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-
-  const _StoresBottomNav({
-    required this.currentIndex,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = DataHelper.isDarkTheme(context);
-
-    final items = <_NavItem>[
-      _NavItem('nav_home'.tr(), Icons.home_outlined, Icons.home),
-      _NavItem('nav_store'.tr(), Icons.storefront_outlined, Icons.storefront),
-      _NavItem('nav_services'.tr(), Icons.build_outlined, Icons.build),
-      _NavItem(
-          'nav_orders'.tr(), Icons.receipt_long_outlined, Icons.receipt_long),
-    ];
-
-    return Container(
-      height: 70.h,
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBottomNav : AppColors.white,
-        border: Border(
-          top: BorderSide(
-            color: isDark ? AppColors.darkGray : AppColors.borderColor,
-          ),
-        ),
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -3),
-                ),
-              ],
-      ),
-      // InkWell is used for each nav item since tapping triggers navigation.
-      child: Row(
-        children: items.asMap().entries.map((entry) {
-          final idx = entry.key;
-          final item = entry.value;
-          final isActive = currentIndex == idx;
-
-          return Expanded(
-            child: InkWell(
-              onTap: () => onTap(idx),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    isActive ? item.activeIcon : item.icon,
-                    color:
-                        isActive ? AppColors.primaryColor : AppColors.grey,
-                    size: 22.sp,
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(
-                    item.label,
-                    style: AppStyle.labelXSmall.copyWith(
-                      color:
-                          isActive ? AppColors.primaryColor : AppColors.grey,
-                      fontWeight:
-                          isActive ? FontWeight.w700 : FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
-class _NavItem {
-  final String label;
-  final IconData icon;
-  final IconData activeIcon;
-
-  const _NavItem(this.label, this.icon, this.activeIcon);
 }

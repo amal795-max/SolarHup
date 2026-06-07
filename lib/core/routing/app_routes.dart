@@ -1,4 +1,5 @@
 abstract class AppRoutes {
+  static const bottomNavBar = '/bottomNavBar';
   static const homeScreen = '/homeScreen';
   static const loginScreen = '/loginScreen';
   static const registerScreen = '/registerScreen';
@@ -11,4 +12,9 @@ abstract class AppRoutes {
   static const myListeningScreen = '/myListeningScreen';
   static const storesScreen = '/storesScreen';
   static const storeInfoScreen = '/storeInfoScreen';
+  static const cartScreen = '/cartScreen';
+  static const shippingInformationScreen = '/shippingInformationScreen';
+  static const orderTrackingScreen = '/orderTrackingScreen';
+  static const rateOrderScreen = '/rateOrderScreen';
+  static const activityScreen = '/activityScreen';
 }

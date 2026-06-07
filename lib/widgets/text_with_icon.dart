@@ -45,7 +45,7 @@ class TextWithIcon extends StatelessWidget {
                     AppColors.primaryColor,
                   BlendMode.srcIn,
                 ),
-              ):Icon(icon,size: 20.r,color: AppColors.primaryColor,),
+              ):Icon(icon,size: 16.r,color: AppColors.primaryColor,),
             Text(
               title,
               maxLines: 1,

@@ -8,7 +8,7 @@ class AppColors {
   static const Color tertiaryColor = Color(0xFF3E2102);
   static const Color brown = Color(0xFF745B00);
   static const Color lightYellow = Color(0x0ffdcc16);
-  // Neutral Colors
+
   static const Color black = Color(0xFF000000);
   static const Color white = Colors.white;
   static const Color grey = Color(0xFF73777E);
@@ -16,16 +16,16 @@ class AppColors {
   static const Color lightGrey = Color(0xFFEEEDF0);
   static const Color backGroundGrey = Color(0xFFFAF9FB);
   static const Color borderColor = Color(0xFFC3C7CE);
+  static final Color shadowColor = Colors.black.withOpacity(0.03);
 
-  // Semantic/Theme Mapping
   static const Color darkContainer = Color(0xFF1E293B);
   static const Color darkMode = Color(0xFF0F172A);
   static const Color lightGray = Color(0xFF94A3B8);
   static const Color textField = borderColor;
   static const Color darkBottomNav = Color(0xFF1E293B);
   static const Color darkGray = Color(0xFF334155);
-  static const Color lightMain = Color(0xFF38BDFC);
   static const Color greyTitle = grey;
+  static const Color blue = Color(0xFF7592B0);
 
   static const Color red = Color(0xFFBA1A1A);
 }

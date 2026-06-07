@@ -7,8 +7,14 @@ import 'package:untitled1/features/authentication/presentation/pages/register_sc
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
+import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
+import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
+import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
+import 'package:untitled1/features/orders/presentation/pages/order_tracking_screen.dart';
+import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.dart';
+import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 
@@ -28,12 +34,18 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const HomeScreen();
       },),
-    
+    GoRoute(
+      path: AppRoutes.bottomNavBar,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CustomBottomNavBar();
+      },),
+
     GoRoute(
       path: AppRoutes.splashScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const CheckEmailPage();
-      },) ,
+      },
+    ),
     GoRoute(
       path: AppRoutes.loginScreen,
       builder: (BuildContext context, GoRouterState state) {
@@ -84,8 +96,38 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final data = state.extra as StoreInfoData? ?? sampleStoreInfo;
         return StoreInfoScreen(data: data);
-      },),
 
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.cartScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CartScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.shippingInformationScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ShippingInformationScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.orderTrackingScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OrderTrackingScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.rateOrderScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const RateOrderScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.activityScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ActivityScreen();
+      },
+    ),
   ],
-
 );

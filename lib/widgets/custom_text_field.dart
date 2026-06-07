@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 class CustomTextField extends StatefulWidget {
   final double? width;
+  final bool  hasTitle;
   final TextEditingController? controller;
   final String? initialValue;
   final String title;
@@ -26,6 +28,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     this.width,
+    this.hasTitle=true,
     this.controller,
     this.initialValue,
     required this.title,
@@ -66,7 +69,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(widget.title, style:AppStyle.labelSmall),
+         widget.hasTitle?  Text(widget.title, style:context.textTheme.bodySmall):const SizedBox.shrink(),
           SizedBox(height: 5.h),
           TextFormField(
             controller: widget.controller,
@@ -90,7 +93,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
               hintText: widget.hint,
               filled: true,
-              fillColor: AppColors.backGroundGrey,
+              fillColor: context.colorScheme.tertiaryContainer,
               labelText: widget.label,
               hintStyle:  AppStyle.bodyXSmall.copyWith(color: Colors.grey),
               border: OutlineInputBorder(

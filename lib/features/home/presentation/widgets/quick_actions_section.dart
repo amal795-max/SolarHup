@@ -33,8 +33,8 @@ class QuickActionsSection extends StatelessWidget {
           SizedBox(width: 12.w),
           Expanded(
             child: _QuickActionCard(
-              iconBgColor: AppColors.lightMain.withValues(alpha: 0.15),
-              iconColor: AppColors.lightMain,
+              iconBgColor: AppColors.lightGray.withValues(alpha: 0.15),
+              iconColor: AppColors.lightGray,
               icon: Icons.compare_arrows_rounded,
               title: 'home_compare'.tr(),
               subtitle: 'home_compare_desc'.tr(),
