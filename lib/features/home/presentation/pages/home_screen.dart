@@ -181,16 +181,18 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _onNavTap(int index) {
-    setState(() => _currentNavIndex = index);
+    // Only update the home nav index for in-page destinations.
+    // When pushing a new full-screen route, keep index at 0 so that
+    // Home stays highlighted if the user pops back to this screen.
     switch (index) {
       case 1:
-        context.push(AppRoutes.usedProductScreen);
+        context.push(AppRoutes.storesScreen);
       case 2:
-        break;
+        break; // TODO: Services screen
       case 3:
-        break;
+        break; // TODO: Orders screen
       default:
-        break;
+        setState(() => _currentNavIndex = index);
     }
   }
 

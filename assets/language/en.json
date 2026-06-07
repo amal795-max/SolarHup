@@ -160,5 +160,27 @@
   "ecogen_name": "EcoGen 300W Panel",
   "sunpeak_name": "SunPeak Ultra 450W Monocrystalline",
   "hybrid_inv_name": "Hybrid Inv...",
-  "app_display_name": "SolarHub"
+  "app_display_name": "SolarHub",
+
+  "stores_title": "Certified Solar Stores",
+  "stores_subtitle": "Find premium equipment and installation experts near you.",
+  "stores_search_hint": "Search solar stores by name or city...",
+  "stores_view_store": "View Store",
+  "stores_no_results": "No stores found",
+  "stores_no_results_hint": "Try different keywords or adjust your search.",
+  "stores_error_title": "Something went wrong",
+  "stores_error_subtitle": "Please check your connection and try again.",
+  "stores_retry": "Retry",
+  "stores_volt_masters": "Volt Masters",
+  "stores_sun_power_pros": "Sun Power Pros",
+  "stores_ecoenergy_hub": "EcoEnergy Hub",
+  "stores_silicon_valley_location": "Silicon Valley Tech Center, CA",
+  "stores_austin_location": "Downtown Austin Hub, TX",
+  "stores_denver_location": "Denver Green District, CO",
+  "stores_tag_tier1_panels": "Tier 1 Panels",
+  "stores_tag_next_day_install": "Next-Day Install",
+  "stores_tag_battery_backup": "Battery Backup",
+  "stores_tag_free_audit": "Free Audit",
+  "stores_tag_financing": "Financing",
+  "stores_tag_residential": "Residential"
 }

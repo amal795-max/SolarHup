@@ -160,5 +160,27 @@
   "ecogen_name": "لوح EcoGen بقدرة 300 واط",
   "sunpeak_name": "SunPeak Ultra 450W أحادي الكريستال",
   "hybrid_inv_name": "عاكس هجين...",
-  "app_display_name": "SolarHub"
+  "app_display_name": "SolarHub",
+
+  "stores_title": "متاجر الطاقة الشمسية المعتمدة",
+  "stores_subtitle": "اعثر على أفضل المعدات وخبراء التركيب بالقرب منك.",
+  "stores_search_hint": "ابحث عن المتاجر بالاسم أو المدينة...",
+  "stores_view_store": "عرض المتجر",
+  "stores_no_results": "لم يتم العثور على متاجر",
+  "stores_no_results_hint": "جرّب كلمات مختلفة أو عدّل بحثك.",
+  "stores_error_title": "حدث خطأ ما",
+  "stores_error_subtitle": "يرجى التحقق من اتصالك والمحاولة مجدداً.",
+  "stores_retry": "إعادة المحاولة",
+  "stores_volt_masters": "فولت ماسترز",
+  "stores_sun_power_pros": "صن باور بروز",
+  "stores_ecoenergy_hub": "إيكو إينرجي هاب",
+  "stores_silicon_valley_location": "مركز سيليكون فالي التقني، كاليفورنيا",
+  "stores_austin_location": "وسط مدينة أوستن، تكساس",
+  "stores_denver_location": "حي دنفر الأخضر، كولورادو",
+  "stores_tag_tier1_panels": "ألواح الفئة الأولى",
+  "stores_tag_next_day_install": "تركيب في اليوم التالي",
+  "stores_tag_battery_backup": "احتياطي البطارية",
+  "stores_tag_free_audit": "تدقيق مجاني",
+  "stores_tag_financing": "تمويل",
+  "stores_tag_residential": "سكني"
 }

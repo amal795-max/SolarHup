@@ -7,6 +7,7 @@ import 'package:untitled1/features/authentication/presentation/pages/register_sc
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 
@@ -71,6 +72,11 @@ final GoRouter router = GoRouter(
       path: AppRoutes.myListeningScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const MyListingScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.storesScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const StoresScreen();
       },),
 
   ],

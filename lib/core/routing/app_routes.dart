@@ -9,4 +9,5 @@ abstract class AppRoutes {
   static const usedProductScreen = '/usedProductScreen';
   static const filterProductScreen = '/filterProductScreen';
   static const myListeningScreen = '/myListeningScreen';
+  static const storesScreen = '/storesScreen';
 }
