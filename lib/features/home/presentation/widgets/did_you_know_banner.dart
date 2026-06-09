@@ -24,7 +24,7 @@ class DidYouKnowBanner extends StatelessWidget {
             Center(
               child: Text(
                 'home_did_you_know'.tr(),
-                style: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+                style: AppStyle.bodyMedium.copyWith(color: AppColors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -32,9 +32,8 @@ class DidYouKnowBanner extends StatelessWidget {
             Center(
               child: Text(
                 'home_did_you_know_body'.tr(),
-                style: AppStyle.bodyXSmall.copyWith(
+                style: AppStyle.bodySmall.copyWith(
                   color: AppColors.white.withValues(alpha: 0.5),
-                  fontSize: AppStyle.bodyMedium.fontSize,
                 ),
                 textAlign: TextAlign.center,
               ),

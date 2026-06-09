@@ -72,7 +72,7 @@ class RegisterScreen extends StatelessWidget {
                     CustomButton(
                       text: 'create_account'.tr(),
                       onPressed: () {
-                        context.pushReplacement(AppRoutes.bottomNavBar);
+                        context.pushReplacement(AppRoutes.verificationScreen);
                       },
                       textColor: AppColors.white,
                       icon: Icons.arrow_forward_rounded,

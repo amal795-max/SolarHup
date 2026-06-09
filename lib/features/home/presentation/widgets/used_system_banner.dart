@@ -23,22 +23,18 @@ class UsedSystemBanner extends StatelessWidget {
           children: [
             Text(
               'home_used_system_label'.tr(),
-              style: AppStyle.labelXSmall.copyWith(
+              style: AppStyle.bodyMedium.copyWith(
                 color: AppColors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: AppStyle.bodyLarge.fontSize,
               ),
             ),
             SizedBox(height: 8.h),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Text(
+            Text(
                 'home_used_system_desc'.tr(),
                 style: AppStyle.bodySmall.copyWith(
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: AppStyle.bodyLarge.fontSize,
-                ),
+
               ),
             ),
           ],

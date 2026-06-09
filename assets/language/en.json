@@ -267,5 +267,18 @@
   "download_report_btn": "Download Report",
   "status_processing": "PROCESSING",
   "status_shipped": "SHIPPED",
-  "status_past": "PAST"
+  "status_past": "PAST",
+  "my_favorite": "My Favorite",
+  "my_discounts": "My Discounts",
+  "blog": "Blog",
+  "language": "Language",
+  "complaints": "Complaints",
+  "dark_mode": "Dark Mode",
+  "terms_conditions": "Terms & Conditions",
+  "logout": "Logout",
+  "help_title": "We're here to help.",
+  "help_subtitle": "Please provide details about your issue below.",
+  "discount_active": "Active",
+  "discount_expired": "Expired"
+
 }

@@ -17,4 +17,5 @@ abstract class AppRoutes {
   static const orderTrackingScreen = '/orderTrackingScreen';
   static const rateOrderScreen = '/rateOrderScreen';
   static const activityScreen = '/activityScreen';
+  static const discountsScreen = '/discountsScreen';
 }

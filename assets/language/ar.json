@@ -267,5 +267,20 @@
   "download_report_btn": "تحميل التقرير",
   "status_processing": "قيد المعالجة",
   "status_shipped": "تم الشحن",
-  "status_past": "سابق"
+  "status_past": "سابق",
+  "my_favorite": "المفضلة",
+  "my_discounts": "خصوماتي",
+  "blog": "المدونة",
+  "language": "اللغة",
+  "complaints": "الشكاوى",
+  "dark_mode": "الوضع الداكن",
+  "terms_conditions": "الشروط والأحكام",
+  "logout": "تسجيل الخروج",
+  "my_discounts_title": "خصوماتي",
+  "help_title": "نحن هنا لمساعدتك",
+  "help_subtitle": "يرجى تزويدنا بتفاصيل مشكلتك أدناه",
+  "discount_active": "فعّال",
+  "discount_expired": "منتهي"
+
+
 }

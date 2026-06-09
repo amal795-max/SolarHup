@@ -21,7 +21,6 @@ class AppColors {
   static const Color darkContainer = Color(0xFF1E293B);
   static const Color darkMode = Color(0xFF0F172A);
   static const Color lightGray = Color(0xFF94A3B8);
-  static const Color textField = borderColor;
   static const Color darkBottomNav = Color(0xFF1E293B);
   static const Color darkGray = Color(0xFF334155);
   static const Color greyTitle = grey;
