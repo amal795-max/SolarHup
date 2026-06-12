@@ -50,6 +50,7 @@ class StoreCategoryItem {
 }
 
 class StoreProductItem {
+  final String id;
   final String name;
   final String categoryLabel;
   final double price;
@@ -62,6 +63,7 @@ class StoreProductItem {
   final bool isKitProduct;
 
   const StoreProductItem({
+    this.id = 'helios-450w',
     required this.name,
     required this.categoryLabel,
     required this.price,

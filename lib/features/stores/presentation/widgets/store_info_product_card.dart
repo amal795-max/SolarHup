@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
@@ -335,7 +337,7 @@ class _CartIconButton extends StatelessWidget {
         color: isDark ? AppColors.darkGray : AppColors.lightGrey,
         child: InkWell(
           onTap: () {
-            // TODO: dispatch AddToCartEvent when a cart BLoC is wired up
+            context.push(AppRoutes.cartScreen);
           },
           splashColor: AppColors.primaryColor.withValues(alpha: 0.18),
           highlightColor: AppColors.primaryColor.withValues(alpha: 0.08),
@@ -364,7 +366,7 @@ class _ConfigureKitButton extends StatelessWidget {
     return CustomButton(
       text: 'store_info_configure_kit'.tr(),
       onPressed: () {
-        // TODO: navigate to kit configuration screen
+        context.push(AppRoutes.storeKitScreen);
       },
       backgroundColor: AppColors.secondaryColor,
       textColor: AppColors.tertiaryColor,

@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/core/theme/app_style.dart';
 
 class UsedSystemBanner extends StatelessWidget {
   const UsedSystemBanner({super.key});
@@ -23,10 +22,9 @@ class UsedSystemBanner extends StatelessWidget {
           children: [
             Text(
               'home_used_system_label'.tr(),
-              style: AppStyle.labelXSmall.copyWith(
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
                 color: AppColors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: AppStyle.bodyLarge.fontSize,
               ),
             ),
             SizedBox(height: 8.h),
@@ -34,10 +32,9 @@ class UsedSystemBanner extends StatelessWidget {
               padding: const EdgeInsets.only(right: 20),
               child: Text(
                 'home_used_system_desc'.tr(),
-                style: AppStyle.bodySmall.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.w600,
-                  fontSize: AppStyle.bodyLarge.fontSize,
                 ),
               ),
             ),

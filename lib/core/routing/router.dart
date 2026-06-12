@@ -9,6 +9,9 @@ import 'package:untitled1/features/authentication/presentation/pages/verificatio
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
@@ -97,6 +100,25 @@ final GoRouter router = GoRouter(
         final data = state.extra as StoreInfoData? ?? sampleStoreInfo;
         return StoreInfoScreen(data: data);
 
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.storeKitScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const StoreKitScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.productDetailScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final productId = state.extra as String? ?? 'helios-450w';
+        return ProductDetailScreen(productId: productId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.bookConsultationScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const BookConsultationScreen();
       },
     ),
     GoRoute(

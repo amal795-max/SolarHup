@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -51,9 +53,8 @@ class StoreInfoExpertSection extends StatelessWidget {
                   borderColor: AppColors.white.withValues(alpha: 0.6),
                   textColor: AppColors.white,
                   height: 44.h,
-                  onPressed: () {
-                    // TODO: open call scheduling flow
-                  },
+                  onPressed: () =>
+                      context.push(AppRoutes.bookConsultationScreen),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -65,7 +66,12 @@ class StoreInfoExpertSection extends StatelessWidget {
                   textColor: AppColors.secondaryColor,
                   height: 44.h,
                   onPressed: () {
-                    // TODO: open live chat
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('store_info_live_chat'.tr()),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
                   },
                 ),
               ),

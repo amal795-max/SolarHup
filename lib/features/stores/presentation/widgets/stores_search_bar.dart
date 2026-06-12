@@ -14,6 +14,7 @@ class StoresSearchBar extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onClear;
   final VoidCallback? onFilterTap;
+  final String? hintText;
 
   const StoresSearchBar({
     super.key,
@@ -22,6 +23,7 @@ class StoresSearchBar extends StatelessWidget {
     this.onChanged,
     this.onClear,
     this.onFilterTap,
+    this.hintText,
   });
 
   @override
@@ -50,7 +52,7 @@ class StoresSearchBar extends StatelessWidget {
                 onChanged: onChanged,
                 style: theme.textTheme.bodyMedium,
                 decoration: InputDecoration(
-                  hintText: 'stores_search_hint'.tr(),
+                  hintText: hintText ?? 'stores_search_hint'.tr(),
                   hintStyle:
                       AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
                   prefixIcon: Icon(

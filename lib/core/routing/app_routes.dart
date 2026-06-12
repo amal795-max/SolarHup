@@ -12,9 +12,12 @@ abstract class AppRoutes {
   static const myListeningScreen = '/myListeningScreen';
   static const storesScreen = '/storesScreen';
   static const storeInfoScreen = '/storeInfoScreen';
+  static const storeKitScreen = '/storeKitScreen';
+  static const productDetailScreen = '/productDetailScreen';
   static const cartScreen = '/cartScreen';
   static const shippingInformationScreen = '/shippingInformationScreen';
   static const orderTrackingScreen = '/orderTrackingScreen';
   static const rateOrderScreen = '/rateOrderScreen';
   static const activityScreen = '/activityScreen';
+  static const bookConsultationScreen = '/bookConsultationScreen';
 }

@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/theme/app_themes.dart';
+import 'package:untitled1/core/theme/theme.dart';
 
 import 'core/routing/router.dart';
 
@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
-          darkTheme: AppThemes.darkTheme,
-          theme: AppThemes.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          theme: AppTheme.lightTheme,
           // themeMode: ThemeMode.light,
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,

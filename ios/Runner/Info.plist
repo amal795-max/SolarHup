@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>SolarHub needs access to your photo library to attach images to your consultation booking.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>SolarHub needs access to your camera to take photos for your consultation booking.</string>
 </dict>
 </plist>

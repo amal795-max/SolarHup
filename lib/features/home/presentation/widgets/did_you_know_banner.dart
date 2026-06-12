@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/core/theme/app_style.dart';
 
 class DidYouKnowBanner extends StatelessWidget {
   const DidYouKnowBanner({super.key});
@@ -24,7 +23,9 @@ class DidYouKnowBanner extends StatelessWidget {
             Center(
               child: Text(
                 'home_did_you_know'.tr(),
-                style: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: AppColors.white,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -32,9 +33,8 @@ class DidYouKnowBanner extends StatelessWidget {
             Center(
               child: Text(
                 'home_did_you_know_body'.tr(),
-                style: AppStyle.bodyXSmall.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.white.withValues(alpha: 0.5),
-                  fontSize: AppStyle.bodyMedium.fontSize,
                 ),
                 textAlign: TextAlign.center,
               ),

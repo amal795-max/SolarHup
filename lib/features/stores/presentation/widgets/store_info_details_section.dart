@@ -1,8 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 
 /// Store details card — sits inside the white sheet that slides over the hero.
@@ -106,33 +108,46 @@ class _FollowStoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 9.h),
-      decoration: BoxDecoration(
-        color: AppColors.primaryColor,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryColor.withValues(alpha: 0.28),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.add_rounded, color: AppColors.white, size: 15.sp),
-          SizedBox(width: 5.w),
-          Text(
-            'store_info_follow_store'.tr(),
-            style: AppStyle.labelSmall.copyWith(
-              color: AppColors.white,
-              fontWeight: FontWeight.w600,
+    return BlocBuilder<StoreInfoBloc, StoreInfoState>(
+      builder: (context, state) {
+        final isFollowing = state.isFollowing;
+
+        return Material(
+          color: isFollowing ? AppColors.lightGrey : AppColors.primaryColor,
+          borderRadius: BorderRadius.circular(20.r),
+          elevation: isFollowing ? 0 : 2,
+          shadowColor: AppColors.primaryColor.withValues(alpha: 0.28),
+          child: InkWell(
+            onTap: () => context
+                .read<StoreInfoBloc>()
+                .add(const ToggleFollowStoreEvent()),
+            borderRadius: BorderRadius.circular(20.r),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 9.h),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    isFollowing ? Icons.check_rounded : Icons.add_rounded,
+                    color: isFollowing ? AppColors.deepGrey : AppColors.white,
+                    size: 15.sp,
+                  ),
+                  SizedBox(width: 5.w),
+                  Text(
+                    isFollowing
+                        ? 'store_info_following'.tr()
+                        : 'store_info_follow_store'.tr(),
+                    style: AppStyle.labelSmall.copyWith(
+                      color: isFollowing ? AppColors.deepGrey : AppColors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
