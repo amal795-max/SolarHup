@@ -315,4 +315,19 @@
   "consultation_pick_gallery": "اختر من المعرض",
   "consultation_pick_camera": "التقط صورة",
   "consultation_attachment_too_large": "حجم الملف يتجاوز الحد الأقصى 10 م.ب"
+  "my_favorite": "المفضلة",
+  "my_discounts": "خصوماتي",
+  "blog": "المدونة",
+  "language": "اللغة",
+  "complaints": "الشكاوى",
+  "dark_mode": "الوضع الداكن",
+  "terms_conditions": "الشروط والأحكام",
+  "logout": "تسجيل الخروج",
+  "my_discounts_title": "خصوماتي",
+  "help_title": "نحن هنا لمساعدتك",
+  "help_subtitle": "يرجى تزويدنا بتفاصيل مشكلتك أدناه",
+  "discount_active": "فعّال",
+  "discount_expired": "منتهي"
+
+
 }

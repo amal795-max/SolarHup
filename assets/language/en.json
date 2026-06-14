@@ -315,4 +315,17 @@
   "consultation_pick_gallery": "Choose from Gallery",
   "consultation_pick_camera": "Take a Photo",
   "consultation_attachment_too_large": "File exceeds the 10MB limit"
+  "my_favorite": "My Favorite",
+  "my_discounts": "My Discounts",
+  "blog": "Blog",
+  "language": "Language",
+  "complaints": "Complaints",
+  "dark_mode": "Dark Mode",
+  "terms_conditions": "Terms & Conditions",
+  "logout": "Logout",
+  "help_title": "We're here to help.",
+  "help_subtitle": "Please provide details about your issue below.",
+  "discount_active": "Active",
+  "discount_expired": "Expired"
+
 }

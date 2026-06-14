@@ -28,16 +28,15 @@ class UsedSystemBanner extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Text(
+            Text(
                 'home_used_system_desc'.tr(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.primaryColor,
                   fontWeight: FontWeight.w600,
                 ),
+
               ),
-            ),
+
           ],
         ),
       ),

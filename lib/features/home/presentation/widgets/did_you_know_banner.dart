@@ -26,7 +26,6 @@ class DidYouKnowBanner extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   color: AppColors.white,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: 8.h),

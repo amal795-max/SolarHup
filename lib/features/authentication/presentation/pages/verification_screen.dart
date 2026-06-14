@@ -54,7 +54,7 @@ class VerificationScreen extends StatelessWidget {
                     CustomButton(
                       text: 'verify_identity'.tr(),
                       onPressed: () {
-                        context.push(AppRoutes.homeScreen);
+                        context.push(AppRoutes.bottomNavBar);
                       },
                     ),
                     SizedBox(height: 24.h),

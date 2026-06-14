@@ -11,21 +11,29 @@ class AppThemes {
     primaryColor: AppColors.primaryColor,
     secondaryHeaderColor: AppColors.secondaryColor,
     scaffoldBackgroundColor: AppColors.darkMode,
-    colorScheme:const ColorScheme.dark(
-      primary: AppColors.primaryColor,
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.blue,
       surface: AppColors.darkContainer,
       onSurface: AppColors.white,
       secondary: AppColors.secondaryColor,
       outline: AppColors.darkGray,
-        tertiaryContainer: AppColors.darkGray,
-
+      tertiaryContainer: AppColors.darkGray,
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.white, size: 24.sp),
       centerTitle: true,
-      titleTextStyle:AppStyle.bodyLarge.copyWith(color: AppColors.white) ,
+      titleTextStyle: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.lightGrey,
+      indent: 20,
+      endIndent: 20,
+    ),
+    listTileTheme: ListTileThemeData(
+      iconColor: AppColors.blue,
+      titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.blue),
     ),
     textTheme: TextTheme(
       headlineLarge: AppStyle.h1.copyWith(color: AppColors.white),
@@ -63,7 +71,9 @@ class AppThemes {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.white,
         minimumSize: Size(double.infinity, 50.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
       ),
     ),
   );
@@ -86,7 +96,16 @@ class AppThemes {
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.black, size: 24.sp),
       centerTitle: true,
-      titleTextStyle:AppStyle.bodyLarge.copyWith(color: AppColors.black) ,
+      titleTextStyle: AppStyle.bodyLarge.copyWith(color: AppColors.black),
+    ),
+    dividerTheme: const DividerThemeData(
+      color: AppColors.lightGrey,
+      indent: 20,
+      endIndent: 20,
+    ),
+    listTileTheme: ListTileThemeData(
+      iconColor: AppColors.darkGray,
+      titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.darkGray),
     ),
     textTheme: TextTheme(
       headlineSmall: AppStyle.h4.copyWith(color: AppColors.primaryColor),
@@ -121,14 +140,16 @@ class AppThemes {
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.white,
         minimumSize: Size(double.infinity, 50.h),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
       ),
     ),
   );
   static final defaultPinTheme = PinTheme(
     width: 55,
     height: 50,
-    textStyle: const TextStyle(fontSize: 16, color: AppColors.greyTitle, ),
+    textStyle: const TextStyle(fontSize: 16, color: AppColors.greyTitle),
     decoration: BoxDecoration(
       color: AppColors.lightGrey,
       borderRadius: BorderRadius.circular(12),

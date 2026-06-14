@@ -7,6 +7,7 @@ import 'package:untitled1/features/authentication/presentation/pages/register_sc
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
+import 'package:untitled1/features/home/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
@@ -149,6 +150,14 @@ final GoRouter router = GoRouter(
       path: AppRoutes.activityScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ActivityScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.discountsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyDiscountsScreen(
+
+        );
       },
     ),
   ],
