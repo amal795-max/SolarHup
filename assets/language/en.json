@@ -335,5 +335,10 @@
   "help_subtitle": "Please provide details about your issue below.",
   "discount_active": "Active",
   "discount_expired": "Expired",
-  "complaints_section": "Complaints"
+  "complaints_section": "Complaints",
+  "chatbot_title": "Solar Assistant",
+  "ask_about_solar": "Ask about solar...",
+  "analyze_my_bill": "Analyze my bill",
+  "suggest_off_grid": "Suggest off-grid system",
+  "view_system": "View System"
 }

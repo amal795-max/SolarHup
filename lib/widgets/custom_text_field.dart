@@ -24,6 +24,7 @@ class CustomTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final FocusNode? focusNode;
   final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
 
   const CustomTextField({
     super.key,
@@ -46,6 +47,7 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType,
     this.focusNode,
     this.onChanged,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -72,6 +74,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
          widget.hasTitle?  Text(widget.title, style:context.textTheme.bodySmall):const SizedBox.shrink(),
           SizedBox(height: 5.h),
           TextFormField(
+            onFieldSubmitted: widget.onFieldSubmitted ,
             controller: widget.controller,
             initialValue: widget.controller == null ? widget.initialValue : null,
             obscureText: _isPassword,

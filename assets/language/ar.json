@@ -339,7 +339,10 @@
   "help_title": "نحن هنا لمساعدتك",
   "help_subtitle": "يرجى تزويدنا بتفاصيل مشكلتك أدناه",
   "discount_active": "فعّال",
-  "discount_expired": "منتهي"
-
-
+  "discount_expired": "منتهي",
+  "chatbot_title": "مساعد الطاقة الشمسية",
+  "ask_about_solar": "اسأل عن الطاقة الشمسية...",
+  "analyze_my_bill": "تحليل فاتورتي",
+  "suggest_off_grid": "اقتراح نظام خارج الشبكة",
+  "view_system": "عرض النظام"
 }
