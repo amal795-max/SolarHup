@@ -2,9 +2,8 @@ name: Flutter CI (Windows)
 
 on:
   push:
-    branches: [ main, dev ,used_system_ui ]
-  pull_request:
-    branches: [ main, dev ]
+    branches: [ "*" ]
+
 
 jobs:
   build:
@@ -19,10 +18,14 @@ jobs:
         with:
           channel: stable
 
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Clean project
+        run: flutter clean
+
       - name: Install dependencies
         run: flutter pub get
 
       - name: Analyze code
         run: dart analyze
-
-
