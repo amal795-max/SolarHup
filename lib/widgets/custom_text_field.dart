@@ -6,7 +6,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 
 class CustomTextField extends StatefulWidget {
   final double? width;
-  final bool  hasTitle;
+  final bool hasTitle;
   final TextEditingController? controller;
   final String? initialValue;
   final String title;
@@ -29,7 +29,7 @@ class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     this.width,
-    this.hasTitle=true,
+    this.hasTitle = true,
     this.controller,
     this.initialValue,
     required this.title,
@@ -71,12 +71,16 @@ class _CustomTextFieldState extends State<CustomTextField> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-         widget.hasTitle?  Text(widget.title, style:context.textTheme.bodySmall):const SizedBox.shrink(),
+          widget.hasTitle
+              ? Text(widget.title, style: context.textTheme.bodySmall)
+              : const SizedBox.shrink(),
           SizedBox(height: 5.h),
           TextFormField(
-            onFieldSubmitted: widget.onFieldSubmitted ,
+            onFieldSubmitted: widget.onFieldSubmitted,
             controller: widget.controller,
-            initialValue: widget.controller == null ? widget.initialValue : null,
+            initialValue: widget.controller == null
+                ? widget.initialValue
+                : null,
             obscureText: _isPassword,
             validator: widget.validator,
             readOnly: widget.readOnly,
@@ -98,32 +102,35 @@ class _CustomTextFieldState extends State<CustomTextField> {
               filled: true,
               fillColor: context.colorScheme.tertiaryContainer,
               labelText: widget.label,
-              hintStyle:  AppStyle.bodyXSmall.copyWith(color: Colors.grey),
+              hintStyle: AppStyle.bodyXSmall.copyWith(color: Colors.grey),
+
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
+                borderSide: BorderSide(color: context.colorScheme.outline),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: AppColors.borderColor),
+                borderSide: BorderSide(color: context.colorScheme.outline),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: const BorderSide(color: AppColors.lightGray),
+                borderSide: BorderSide(color: context.colorScheme.primary),
               ),
+
               prefixIcon: widget.prefixIcon,
               prefixIconColor: AppColors.grey,
               suffixIcon: widget.isPassword
                   ? IconButton(
-                icon: Icon(
-                  _isPassword
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility,
-                  color: Colors.grey,
-                ),
-                onPressed: () {
-                  setState(() => _isPassword = !_isPassword);
-                },
-              )
+                      icon: Icon(
+                        _isPassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() => _isPassword = !_isPassword);
+                      },
+                    )
                   : widget.suffixIcon,
             ),
           ),

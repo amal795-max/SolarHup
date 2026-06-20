@@ -33,12 +33,7 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomTextField(
-                          title: 'phone_number'.tr(),
-                          hint: '+1 (555) 000-0000',
-                          keyboardType: TextInputType.phone,
-                          prefixIcon: Icon(Icons.phone_outlined, size: 20.sp, color: AppColors.grey),
-                        ),
+
                         CustomTextField(
                           title: 'password'.tr(),
                           hint: 'enter_password_hint'.tr(),

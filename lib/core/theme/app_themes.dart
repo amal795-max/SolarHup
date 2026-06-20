@@ -19,7 +19,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.darkGray,
       tertiaryContainer: AppColors.darkGray,
-        shadow: AppColors.darkGray
+        shadow: AppColors.grey
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
