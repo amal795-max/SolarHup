@@ -7,6 +7,7 @@ import 'app_style.dart';
 class AppThemes {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
+    fontFamily:'Tajawal' ,
     brightness: Brightness.dark,
     primaryColor: AppColors.primaryColor,
     secondaryHeaderColor: AppColors.secondaryColor,
@@ -80,6 +81,7 @@ class AppThemes {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+    fontFamily:'Tajawal' ,
     brightness: Brightness.light,
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backGroundGrey,

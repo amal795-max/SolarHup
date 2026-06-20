@@ -28,11 +28,17 @@ class ApiRequest {
 
           return handler.next(options);
         },
-        onResponse: (Response<dynamic> response, ResponseInterceptorHandler handler) {
-          return handler.next(response);
-        },
+        onResponse:
+            (Response<dynamic> response, ResponseInterceptorHandler handler) {
+              return handler.next(response);
+            },
         onError: (DioException error, ErrorInterceptorHandler handler) {
-          return handler.next(error);
+          final statusCode = error.response?.statusCode;
+          print('''
+          [onError] ${error.requestOptions.hashCode} / time: ${DateTime.now().toIso8601String()}
+          \tStatus: $statusCode
+          ''');
+          return handler.resolve(error.response!);
         },
       ),
     );

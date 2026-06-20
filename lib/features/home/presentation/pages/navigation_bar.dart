@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
-import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
