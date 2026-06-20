@@ -5,6 +5,7 @@ import 'package:untitled1/features/orders/presentation/pages/activity_screen.dar
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../settings/presentation/pages/settings_screen.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key});
@@ -16,11 +17,11 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = const [
-    HomeScreen(),
-    StoresScreen(),
-    ActivityScreen(),
-    ActivityScreen(),
+  final List<Widget> pages = [
+    const HomeScreen(),
+    const StoresScreen(),
+    const ActivityScreen(),
+    const SettingsScreen(),
   ];
 
   @override

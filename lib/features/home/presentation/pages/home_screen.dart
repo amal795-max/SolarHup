@@ -13,7 +13,6 @@ import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-import 'package:untitled1/features/home/presentation/pages/drawer.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/did_you_know_banner.dart';
@@ -162,7 +161,6 @@ class _HomeViewState extends State<_HomeView> {
         return SafeArea(
           top: false,
           child: Scaffold(
-            drawer: drawer(context),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {
               context.push(AppRoutes.cartScreen);

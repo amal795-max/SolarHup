@@ -19,6 +19,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.darkGray,
       tertiaryContainer: AppColors.darkGray,
+        shadow: AppColors.darkGray
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -92,6 +93,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.borderColor,
       tertiaryContainer: AppColors.lightGrey,
+      shadow: AppColors.lightGrey
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -105,6 +107,7 @@ class AppThemes {
       indent: 20,
       endIndent: 20,
     ),
+
     listTileTheme: ListTileThemeData(
       iconColor: AppColors.darkGray,
       titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.darkGray),

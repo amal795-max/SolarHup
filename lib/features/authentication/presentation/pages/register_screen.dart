@@ -29,6 +29,7 @@ class RegisterScreen extends StatelessWidget {
                 icon: Icons.password_rounded,
               ),
               whiteSectionWidget(
+                context: context,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

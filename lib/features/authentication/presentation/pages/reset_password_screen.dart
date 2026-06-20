@@ -55,7 +55,7 @@ class ResetPasswordScreen extends StatelessWidget {
                       onPressed: () {},
                     ),
                   ],
-                ),
+                ), context: context,
               ),
               SizedBox(height: 40.h),
             ],

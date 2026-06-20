@@ -47,7 +47,7 @@ class AuthenticationScreen extends StatelessWidget {
                       textColor: AppColors.white,
                     ),
                   ],
-                ),
+                ), context: context,
               ),
 
               const SizedBox(height: 32,),
