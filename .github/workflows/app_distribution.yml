@@ -3,12 +3,11 @@ name: Flutter CI - Firebase App Distribution
 on:
   push:
     branches:
-      - api_prepare
-  workflow_dispatch:
+      - main
 
 jobs:
   build-and-distribute:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
