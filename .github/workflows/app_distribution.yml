@@ -33,5 +33,5 @@ jobs:
         run: |
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
             --app "1:987608538813:android:be0de19ba56aa44de0a1d4" \
-            --groups "Solar Hup Team" \
+            --groups "solar_hup_testers" \
             --release-notes "New build from GitHub Actions"
