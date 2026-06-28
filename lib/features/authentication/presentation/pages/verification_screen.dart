@@ -72,7 +72,7 @@ class VerificationScreen extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
+                ), context: context,
               ),
               SizedBox(height: 32.h),
               Container(

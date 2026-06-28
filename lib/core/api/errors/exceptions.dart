@@ -38,11 +38,11 @@ String getErrorMessage(int statusCode) {
 }
 String mapFailureToMessage(Failure failure) {
   switch (failure.runtimeType) {
-    case OfflineFailure:
+    case  const (OfflineFailure):
       return OFFLINE_FAILURE_MESSAGE;
-    case ServerFailure:
+    case const (ServerFailure):
       return (failure as ServerFailure).message;
-    case EmptyCacheFailure:
+    case const (CacheFailure):
       return EMPTY_CACHE_FAILURE_MESSAGE;
     default:
       return 'Unexpected errors. Please try again later.';

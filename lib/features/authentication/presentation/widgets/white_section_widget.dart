@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 
-Widget whiteSectionWidget({ required Widget child}){
+Widget whiteSectionWidget({ required Widget child,required BuildContext context,double?padding}){
   return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.all(padding ?? 20.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: const [
+        boxShadow:  [
           BoxShadow(
-            color: AppColors.lightGrey,
-            blurRadius: 20,
-            offset: Offset(0, 10),
+            color: Theme.of(context).colorScheme.shadow,
+            blurRadius:context.brightness?0:12,
+            offset: Offset(0, 4),
           ),
         ],
       ),

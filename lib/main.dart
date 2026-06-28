@@ -2,16 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/theme/theme.dart';
 import 'package:untitled1/core/theme/app_themes.dart';
+import 'package:untitled1/features/authentication/presentation/bloc/authentication_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
-
+import 'core/constants/debendency_injection.dart' as di;
 import 'core/helper/local_storage.dart';
 import 'core/routing/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
+  await di.init();
   await LocalStorage().init();
   runApp(
     EasyLocalization(
@@ -30,7 +31,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ApplicationCubit())
+        BlocProvider(create: (_) => di.getIt<ApplicationCubit>()),
+        BlocProvider(create: (_) => di.getIt<AuthenticationCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

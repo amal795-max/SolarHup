@@ -29,11 +29,11 @@ class StoreInfoDetailsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Row 1: follow button aligned to the right ────────────────────
-          Row(
+          const Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Spacer(),
-              const _FollowStoreButton(),
+              Spacer(),
+              _FollowStoreButton(),
             ],
           ),
 

@@ -91,7 +91,7 @@ class StoreKitScreen extends StatelessWidget {
                   SizedBox(height: 16.h),
                   const StoreKitSearchSection(),
                   SizedBox(height: 14.h),
-                  StoreKitProductsSection(products: _products),
+                  const StoreKitProductsSection(products: _products),
                   SizedBox(height: 16.h),
                   const StoreKitSpecialOfferSection(),
                   SizedBox(height: 20.h),

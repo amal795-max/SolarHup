@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class DataHelper {
   static bool get isIos => Platform.isIOS;
 
-
   static void showSnackBar(
  {
    Color ? color ,
@@ -21,10 +20,6 @@ class DataHelper {
     );
   }
 
-
-  static bool isDarkTheme(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark;
-  }
 
 
   // static dateFormat(String newPattern,DateTime date) {

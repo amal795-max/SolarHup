@@ -7,6 +7,7 @@ import 'app_style.dart';
 class AppThemes {
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
+    fontFamily:'Tajawal' ,
     brightness: Brightness.dark,
     primaryColor: AppColors.primaryColor,
     secondaryHeaderColor: AppColors.secondaryColor,
@@ -18,6 +19,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.darkGray,
       tertiaryContainer: AppColors.darkGray,
+        shadow: AppColors.grey
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -50,22 +52,7 @@ class AppThemes {
       labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.lightGray),
       displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.lightGray),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.darkGray.withValues(alpha: 0.3),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.darkGray),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.darkGray),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
@@ -80,6 +67,7 @@ class AppThemes {
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+    fontFamily:'Tajawal' ,
     brightness: Brightness.light,
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backGroundGrey,
@@ -90,6 +78,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.borderColor,
       tertiaryContainer: AppColors.lightGrey,
+      shadow: AppColors.lightGrey
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -103,6 +92,7 @@ class AppThemes {
       indent: 20,
       endIndent: 20,
     ),
+
     listTileTheme: ListTileThemeData(
       iconColor: AppColors.darkGray,
       titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.darkGray),
@@ -119,22 +109,7 @@ class AppThemes {
       labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.grey),
       displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.white,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.borderColor),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.borderColor),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,

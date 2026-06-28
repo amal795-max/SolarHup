@@ -6,9 +6,11 @@ import 'package:untitled1/features/authentication/presentation/pages/login_scree
 import 'package:untitled1/features/authentication/presentation/pages/register_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
+import 'package:untitled1/features/chatbot/presentation/pages/chatbot_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
-import 'package:untitled1/features/home/presentation/pages/my_discounts_screen.dart';
+import 'package:untitled1/features/settings/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
+import 'package:untitled1/features/settings/presentation/pages/settings_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
@@ -21,8 +23,6 @@ import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.d
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
-
-import '../../features/authentication/presentation/pages/check_email.dart';
 import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 
@@ -44,12 +44,7 @@ final GoRouter router = GoRouter(
         return const CustomBottomNavBar();
       },),
 
-    GoRoute(
-      path: AppRoutes.splashScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const CheckEmailPage();
-      },
-    ),
+
     GoRoute(
       path: AppRoutes.loginScreen,
       builder: (BuildContext context, GoRouterState state) {
@@ -158,6 +153,17 @@ final GoRouter router = GoRouter(
         return const MyDiscountsScreen(
 
         );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.chatBotScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ChatbotScreen();
+      },
+    ), GoRoute(
+      path: AppRoutes.settingsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const SettingsScreen();
       },
     ),
   ],

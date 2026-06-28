@@ -207,7 +207,7 @@ class _KitProductCard extends StatelessWidget {
                                 iconSize: 18.sp,
                                 onPressed: () =>
                                     context.push(AppRoutes.cartScreen),
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.shopping_cart_checkout_rounded,
                                   color: AppColors.tertiaryColor,
                                 ),

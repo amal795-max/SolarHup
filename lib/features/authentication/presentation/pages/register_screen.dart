@@ -7,7 +7,6 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../widgets/primary_button.dart';
-import '../widgets/contiune_with_google.dart';
 import '../widgets/header.dart';
 import '../widgets/white_section_widget.dart';
 
@@ -17,7 +16,6 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backGroundGrey,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
@@ -29,6 +27,7 @@ class RegisterScreen extends StatelessWidget {
                 icon: Icons.password_rounded,
               ),
               whiteSectionWidget(
+                context: context,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -61,12 +60,7 @@ class RegisterScreen extends StatelessWidget {
                       prefixIcon: const Icon(Icons.lock_outline_sharp),
                       isPassword: true,
                     ),
-                    CustomTextField(
-                      title: 'phone_number'.tr(),
-                      hint: '(555) 000-0000',
-                      keyboardType: TextInputType.phone,
-                      prefixIcon: const Icon(Icons.local_phone_outlined),
-                    ),
+
                     SizedBox(height: 8.h),
 
                     CustomButton(
@@ -106,7 +100,6 @@ class RegisterScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              continueWithGoogle(),
               const SizedBox(height: 40,)
             ],
           ),

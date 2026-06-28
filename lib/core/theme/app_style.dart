@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import'app_colors.dart';
 
 class AppStyle {
@@ -15,7 +14,7 @@ class AppStyle {
     final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
     final selectedColor = color ?? (brightness == Brightness.dark ? AppColors.white : AppColors.black);
-    return GoogleFonts.tajawal(
+    return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: selectedColor,

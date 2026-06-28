@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/constants/app_images.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -13,7 +15,6 @@ import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
-import 'package:untitled1/features/home/presentation/pages/drawer.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/did_you_know_banner.dart';
@@ -162,18 +163,21 @@ class _HomeViewState extends State<_HomeView> {
         return SafeArea(
           top: false,
           child: Scaffold(
-            drawer: drawer(context),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {
+            appBar: HomeAppBar(onMenuTap: () {
+              context.push(AppRoutes.settingsScreen);
+            }, onCartTap: () {
               context.push(AppRoutes.cartScreen);
             }),
             body: _buildBody(context, state),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                context.push(AppRoutes.chatBotScreen);
+              },
               backgroundColor: AppColors.secondaryColor,
               elevation: 4,
               shape: const CircleBorder(),
-              child: Icon(Icons.chat, color: AppColors.primaryColor, size: 22.sp),
+              child: SvgPicture.asset(AppImages.chatBotIcon),
             ),
 
           ),

@@ -9,7 +9,7 @@ class DidYouKnowBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(16.w),
@@ -33,7 +33,7 @@ class DidYouKnowBanner extends StatelessWidget {
               child: Text(
                 'home_did_you_know_body'.tr(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.white.withValues(alpha: 0.5),
+                  color: AppColors.blue,
                 ),
                 textAlign: TextAlign.center,
               ),

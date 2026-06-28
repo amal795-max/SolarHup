@@ -69,7 +69,7 @@ class MyDiscountsScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(Icons.copy,size: 16,)
+            const Icon(Icons.copy,size: 16,)
           ],
         ),
         subtitle: Text(

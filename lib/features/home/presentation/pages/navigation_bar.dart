@@ -1,11 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
-
-import '../../../../core/theme/app_colors.dart';
+import '../../../settings/presentation/pages/settings_screen.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key});
@@ -21,79 +20,52 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
     HomeScreen(),
     StoresScreen(),
     ActivityScreen(),
-    ActivityScreen(),
+    SettingsScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        extendBody: true,
-        body: pages[selectedIndex],
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            // color:context.brightness AppColors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 20,
-                spreadRadius: 2,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
-          child: StylishBottomBar(
+    final scheme = context.colorScheme;
 
-            option: DotBarOptions(
-              dotStyle: DotStyle.tile,
-              gradient: const LinearGradient(
-                colors: [
-                  AppColors.tertiaryColor,
-                  AppColors.secondaryColor,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+    return Scaffold(
+      extendBody: true,
+      body: pages[selectedIndex],
+
+      bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: scheme.surface,
+          elevation: 0,
+          selectedItemColor: scheme.primary,
+          unselectedItemColor: scheme.onSurface.withOpacity(0.6),
+
+
+          currentIndex: selectedIndex,
+          onTap: (index) => setState(() => selectedIndex = index),
+
+          items:  [
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home),
+              label: 'Home'.tr(),
             ),
-            items: [
-              BottomBarItem(
-                icon: const Icon(Icons.home_outlined),
-                title: const Text('Home'),
-                selectedColor: AppColors.primaryColor,
-                unSelectedColor: AppColors.greyTitle,
-                selectedIcon: const Icon(Icons.home),
-              ),
-              BottomBarItem(
-                icon: const Icon(Icons.storefront_outlined),
-                title: const Text('Stores'),
-                selectedColor: AppColors.primaryColor,
-                unSelectedColor: AppColors.greyTitle,
-              ),
-              BottomBarItem(
-                icon: const Icon(Icons.build_outlined),
-                title: const Text('Services'),
-                selectedColor: AppColors.primaryColor,
-                unSelectedColor: AppColors.greyTitle,
-              ),
-              BottomBarItem(
-                icon: const Icon(Icons.receipt_long_outlined),
-                title: const Text('Orders'),
-                selectedColor: AppColors.primaryColor,
-                unSelectedColor: AppColors.greyTitle,
-              ),
-            ],
-
-            currentIndex: selectedIndex,
-            onTap: (index) {
-              setState(() {
-                selectedIndex = index;
-                pages.elementAt(index);
-              });
-            },
-          ),
+             BottomNavigationBarItem(
+              icon: const Icon(Icons.storefront_outlined),
+              activeIcon: const Icon(Icons.storefront_rounded),
+              label: 'Stores'.tr(),
+            ),
+             BottomNavigationBarItem(
+              icon:  const Icon(Icons.build_outlined),
+              activeIcon: const Icon(Icons.build),
+              label: 'Services'.tr(),
+            ),
+             BottomNavigationBarItem(
+              icon: const Icon(Icons.receipt_long_outlined),
+              activeIcon: const Icon(Icons.receipt_long),
+              label: 'Orders'.tr(),
+            ),
+          ],
         ),
-      ),
+
     );
   }
 }
