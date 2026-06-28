@@ -76,6 +76,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               : const SizedBox.shrink(),
           SizedBox(height: 5.h),
           TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            style: context.textTheme.bodySmall,
             onFieldSubmitted: widget.onFieldSubmitted,
             controller: widget.controller,
             initialValue: widget.controller == null
@@ -114,7 +116,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: context.colorScheme.primary),
+                borderSide: const BorderSide(color: AppColors.grey),
+              ),
+              errorStyle:context.textTheme.labelSmall?.copyWith(
+                color: AppColors.red
               ),
 
               prefixIcon: widget.prefixIcon,

@@ -6,6 +6,7 @@ class CustomInterceptors extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     print('REQUEST[${options.method}] => PATH: ${options.path}');
+    print('body${options.data}');
 
     final token = LocalStorage().getData(key: ApiKeys.token);
     if (token != null && token.isNotEmpty) {

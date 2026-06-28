@@ -1,10 +1,5 @@
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:untitled1/core/constants/environment_config.dart';
-
-import '../constants/app_url.dart';
-import '../helper/local_storage.dart';
 import 'api_interceptor.dart';
 
 class ApiRequest {
@@ -18,6 +13,7 @@ class ApiRequest {
       sendTimeout: const Duration(seconds: 15),
       contentType: 'application/json',
       responseType: ResponseType.json,
+      validateStatus: (status) => true,
     );
 
     dio.interceptors.add(

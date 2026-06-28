@@ -23,8 +23,6 @@ import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.d
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
-
-import '../../features/authentication/presentation/pages/check_email.dart';
 import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 
@@ -46,12 +44,7 @@ final GoRouter router = GoRouter(
         return const CustomBottomNavBar();
       },),
 
-    GoRoute(
-      path: AppRoutes.splashScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const CheckEmailPage();
-      },
-    ),
+
     GoRoute(
       path: AppRoutes.loginScreen,
       builder: (BuildContext context, GoRouterState state) {
