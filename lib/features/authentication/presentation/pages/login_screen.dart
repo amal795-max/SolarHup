@@ -8,9 +8,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/confirmation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/primary_button.dart';
-
 import '../../../../core/constants/app_images.dart';
-import '../widgets/contiune_with_google.dart';
 import '../widgets/white_section_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -33,12 +31,7 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomTextField(
-                          title: 'phone_number'.tr(),
-                          hint: '+1 (555) 000-0000',
-                          keyboardType: TextInputType.phone,
-                          prefixIcon: Icon(Icons.phone_outlined, size: 20.sp, color: AppColors.grey),
-                        ),
+
                         CustomTextField(
                           title: 'password'.tr(),
                           hint: 'enter_password_hint'.tr(),
@@ -54,7 +47,6 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(height: 12.h),
                         CustomButton(text: 'login'.tr(), onPressed: () {},),
 
-                        continueWithGoogle(),
 
                         SizedBox(height: 12.h),
                         Row(

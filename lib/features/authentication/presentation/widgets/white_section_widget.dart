@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 
 Widget whiteSectionWidget({ required Widget child,required BuildContext context,double?padding}){
   return Container(
@@ -12,7 +12,7 @@ Widget whiteSectionWidget({ required Widget child,required BuildContext context,
         boxShadow:  [
           BoxShadow(
             color: Theme.of(context).colorScheme.shadow,
-            blurRadius: 12,
+            blurRadius:context.brightness?0:12,
             offset: Offset(0, 4),
           ),
         ],

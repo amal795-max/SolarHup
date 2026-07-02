@@ -343,5 +343,10 @@
   "blog_page": "Page",
   "blog_of": "of",
   "blog_no_results": "No guides or news found",
-  "blog_no_results_hint": "Try different keywords or change the category filter."
+  "blog_no_results_hint": "Try different keywords or change the category filter.",
+  "chatbot_title": "Solar Assistant",
+  "ask_about_solar": "Ask about solar...",
+  "analyze_my_bill": "Analyze my bill",
+  "suggest_off_grid": "Suggest off-grid system",
+  "view_system": "View System"
 }

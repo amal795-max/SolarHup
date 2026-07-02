@@ -347,5 +347,10 @@
   "blog_page": "صفحة",
   "blog_of": "من",
   "blog_no_results": "لم يتم العثور على أدلة أو أخبار",
-  "blog_no_results_hint": "جرّب كلمات مختلفة أو غيّر فلتر الفئة."
+  "blog_no_results_hint": "جرّب كلمات مختلفة أو غيّر فلتر الفئة.",
+  "chatbot_title": "مساعد الطاقة الشمسية",
+  "ask_about_solar": "اسأل عن الطاقة الشمسية...",
+  "analyze_my_bill": "تحليل فاتورتي",
+  "suggest_off_grid": "اقتراح نظام خارج الشبكة",
+  "view_system": "عرض النظام"
 }

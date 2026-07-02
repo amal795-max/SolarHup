@@ -4,7 +4,7 @@ String? phoneValid(String? phone) {
     return 'This field is required';
   } else if (phone.isEmpty) {
     return 'Please enter your phone number';
-  } else if (phone.length < 10 || phone.length > 10) {
+  } else if (phone.length < 10 || phone.length >= 15) {
     return 'Invalid phone number';
   }
   return null;
@@ -45,13 +45,6 @@ String? passwordValidator(String? val) {
 String? nameValidator(String? name) {
   if (name == null || name.isEmpty) {
     return 'Name is required';
-  }
-  return null;
-}
-
-String? phoneValidate(String? phone) {
-  if (phone == null || phone.isEmpty || phone.isEmpty) {
-    return 'Phone number is required';
   }
   return null;
 }
