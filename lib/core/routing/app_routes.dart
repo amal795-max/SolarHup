@@ -21,7 +21,7 @@ abstract class AppRoutes {
   static const activityScreen = '/activityScreen';
   static const discountsScreen = '/discountsScreen';
   static const bookConsultationScreen = '/bookConsultationScreen';
-  static const blogScreen = '/blogScreen';
   static const chatBotScreen = '/chatBotScreen';
-  static const  settingsScreen='/settingsScreen';
+  static const settingsScreen = '/settingsScreen';
+  static const blogScreen = '/blogScreen';
 }
