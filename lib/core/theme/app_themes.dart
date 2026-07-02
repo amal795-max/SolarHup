@@ -19,7 +19,7 @@ class AppThemes {
       secondary: AppColors.secondaryColor,
       outline: AppColors.darkGray,
       tertiaryContainer: AppColors.darkGray,
-        shadow: AppColors.darkGray
+        shadow: AppColors.grey
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -52,22 +52,7 @@ class AppThemes {
       labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.lightGray),
       displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.lightGray),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.darkGray.withValues(alpha: 0.3),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.darkGray),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.darkGray),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,
@@ -124,22 +109,7 @@ class AppThemes {
       labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.grey),
       displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
     ),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.white,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.borderColor),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.borderColor),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-    ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryColor,

@@ -22,7 +22,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       shadowColor: Colors.black.withValues(alpha: 0.08),
       leading: IconButton(
         icon: Icon(
-          Icons.menu,
+          Icons.person_2_outlined,
           color: isDark ? AppColors.white : AppColors.black,
           size: 24.sp,
         ),

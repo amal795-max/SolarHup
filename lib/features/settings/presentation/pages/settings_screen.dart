@@ -140,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
               ),
             ]),
 
-            SizedBox(height: 30.h),
+            SizedBox(height: 20.h),
             SizedBox(
               width: double.infinity,
               child: CustomButton(
@@ -150,6 +150,8 @@ class SettingsScreen extends StatelessWidget {
                 textColor: AppColors.red,
               ),
             ),
+            SizedBox(height: 20.h),
+            const Center(child:  Text('Version 0.0.1',)),
             SizedBox(height: 50.h),
           ],
         ),
@@ -192,7 +194,7 @@ class SettingsScreen extends StatelessWidget {
       }) {
     return ListTile(
       leading: Icon(icon, size: 22.sp),
-      title: Text(title, style: Theme.of(context).textTheme.bodySmall),
+      title: Text(title, style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurface)),
       trailing:
       trailing ??
           Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
@@ -206,7 +208,7 @@ class SettingsScreen extends StatelessWidget {
       builder: (context, state) {
         bool isDark = false;
         if (state is ApplicationMainState) {
-          isDark = state.themeMode == ThemeMode.dark;
+          isDark = context.brightness;
         }
         return _buildSwitchTile(
           context,
@@ -230,7 +232,7 @@ class SettingsScreen extends StatelessWidget {
       }) {
     return ListTile(
       leading: Icon(icon, size: 22.sp),
-      title: Text(title, style: Theme.of(context).textTheme.bodySmall),
+      title: Text(title, style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurface)),
       trailing: Switch(
         value: value,
         onChanged: onChanged,

@@ -1,30 +1,83 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:dio/dio.dart';
 
-import 'package:untitled1/main.dart';
+import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/constants/user-parameters.dart';
+import 'package:untitled1/features/authentication/data/data-source/authentication/authentication_remote_data_source.dart';
+
+class MockApiRequest extends Mock implements ApiRequest {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  late MockApiRequest mockApiRequest;
+  late AuthenticationRemoteDataSourceImpl dataSource;
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  setUp(() {
+    mockApiRequest = MockApiRequest();
+    dataSource = AuthenticationRemoteDataSourceImpl(mockApiRequest);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  group('checkPhoneNumber', () {
+    test('should complete successfully when statusCode = 200', () async {
+      when(() => mockApiRequest.post(
+        any(),
+        body: any(named: 'body'),
+      )).thenAnswer(
+            (_) async {
+          print("✅ MockApiRequest.post called with statusCode=200");
+          return Response(
+            requestOptions: RequestOptions(path: EndPoints.checkPhoneNumber),
+            statusCode: 200,
+            data: {'message': 'success'},
+          );
+        },
+      );
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      await expectLater(
+        dataSource.checkPhoneNumber('0999999999'),
+        completes,
+      );
+
+      print("✅ checkPhoneNumber finished without exception");
+
+      verify(() => mockApiRequest.post(
+        EndPoints.checkPhoneNumber,
+        body: AuthenticationParams('0999999999').toJson(),
+      )).called(1);
+
+      print("✅ verify passed: post called once with correct params");
+    });
+
+    test('should throw ServerException when statusCode != 200', () async {
+      when(() => mockApiRequest.post(
+        EndPoints.checkPhoneNumber,
+        body: AuthenticationParams('0999999999').toJson(),
+      )).thenAnswer(
+            (_) async {
+          print("❌ MockApiRequest.post called with statusCode=422");
+          return Response(
+            requestOptions: RequestOptions(path: ''),
+            statusCode: 422,
+          );
+        },
+      );
+
+      await expectLater(
+        dataSource.checkPhoneNumber('0999999999'),
+        throwsA(isA<ServerException>()),
+      );
+
+      print("❌ checkPhoneNumber threw ServerException as expected");
+
+      verify(() => mockApiRequest.post(
+        EndPoints.checkPhoneNumber,
+        body: AuthenticationParams('0999999999').toJson(),
+      )).called(1);
+
+      print("✅ verify passed: post called once with correct params");
+    });
+
   });
 }

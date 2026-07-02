@@ -2,8 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/constants/app_images.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -164,16 +166,20 @@ class _HomeViewState extends State<_HomeView> {
           top: false,
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {
+            appBar: HomeAppBar(onMenuTap: () {
+              context.push(AppRoutes.settingsScreen);
+            }, onCartTap: () {
               context.push(AppRoutes.cartScreen);
             }),
             body: _buildBody(context, state),
             floatingActionButton: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () {
+                context.push(AppRoutes.chatBotScreen);
+              },
               backgroundColor: AppColors.secondaryColor,
               elevation: 4,
               shape: const CircleBorder(),
-              child: Icon(Icons.chat, color: AppColors.primaryColor, size: 22.sp),
+              child: SvgPicture.asset(AppImages.chatBotIcon),
             ),
 
           ),

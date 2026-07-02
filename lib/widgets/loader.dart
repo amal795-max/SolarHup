@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import '../core/theme/app_colors.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
 
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key, this.color, this.radius});
+  const LoadingWidget({super.key,});
 
-  final Color? color;
-  final double? radius;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(
-        color: color ?? AppColors.primaryColor,
-
+    return Scaffold(
+      body: Center(
+          child: LoadingAnimationWidget.flickr(
+            leftDotColor: AppColors.primaryColor,
+            rightDotColor: AppColors.secondaryColor,
+            size: 60.r,
+          ),
       ),
     );
   }
