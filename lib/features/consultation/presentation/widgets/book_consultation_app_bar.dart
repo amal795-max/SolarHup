@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
+import 'package:untitled1/widgets/back_button_widget.dart';
 
 class BookConsultationAppBar extends StatelessWidget {
   const BookConsultationAppBar({super.key});
@@ -14,14 +14,7 @@ class BookConsultationAppBar extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(4.w, 8.h, 4.w, 4.h),
       child: Row(
         children: [
-          IconButton(
-            onPressed: () => context.pop(),
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: theme.colorScheme.onSurface,
-              size: 18.sp,
-            ),
-          ),
+          const BackButtonWidget(),
           Expanded(
             child: Text(
               'consultation_title'.tr(),

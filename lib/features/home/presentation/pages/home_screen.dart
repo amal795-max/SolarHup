@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +8,6 @@ import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
@@ -22,6 +22,8 @@ import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/products_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/used_system_banner.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 /// Entry point — provides the HomeBloc and immediately fires LoadHomeDataEvent.
 class HomeScreen extends StatelessWidget {
@@ -271,7 +273,7 @@ class _HomeViewState extends State<_HomeView> {
             SizedBox(height: 22.h),
             BlogSection(
               blogs: filteredBlogs,
-              onBlogTap: isLoading ? null : (_) {},
+              onBlogTap: isLoading ? null : (_) => context.push(AppRoutes.blogScreen),
             ),
             SizedBox(height: 24.h),
           ],
@@ -293,63 +295,30 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   Widget _buildNoResultsBody() {
-    return Padding(
+    return EmptyWidget(
+      icon: Icons.search_off_rounded,
+      iconSize: 52,
+      iconColor: AppColors.borderColor,
+      title: 'No results for "$_searchQuery"',
+      subtitle: 'Try different keywords or check the spelling.',
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
-      child: Center(
-        child: Column(
-          children: [
-            Icon(
-              Icons.search_off_rounded,
-              size: 52.sp,
-              color: AppColors.borderColor,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'No results for "$_searchQuery"',
-              style: AppStyle.bodySmall.copyWith(color: AppColors.black),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              'Try different keywords or check the spelling.',
-              style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildErrorBody(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off_rounded, size: 56.sp, color: AppColors.grey),
-            SizedBox(height: 16.h),
-            Text(
-              'Something went wrong',
-              style: AppStyle.h6.copyWith(color: AppColors.black),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'Please check your connection and try again.',
-              style: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () =>
-                  context.read<HomeBloc>().add(const LoadHomeDataEvent()),
-              icon: const Icon(Icons.refresh_rounded),
-              label: const Text('Retry'),
-            ),
-          ],
-        ),
+    return EmptyWidget(
+      icon: Icons.wifi_off_rounded,
+      iconSize: 56,
+      iconColor: AppColors.grey,
+      title: 'stores_error_title'.tr(),
+      subtitle: 'stores_error_subtitle'.tr(),
+      action: CustomButton(
+        text: 'stores_retry'.tr(),
+        icon: Icons.refresh_rounded,
+        iconLeft: true,
+        onPressed: () =>
+            context.read<HomeBloc>().add(const LoadHomeDataEvent()),
+        width: 160.w,
       ),
     );
   }

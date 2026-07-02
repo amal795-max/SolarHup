@@ -102,6 +102,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.article_outlined,
                 title: 'blog'.tr(),
+                onTap: () => context.push(AppRoutes.blogScreen),
               ),
               _buildListTile(
                 context,

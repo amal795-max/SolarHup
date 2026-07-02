@@ -9,7 +9,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
@@ -18,6 +17,8 @@ import 'package:untitled1/features/stores/presentation/bloc/stores_bloc/stores_b
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 /// Entry point — provides StoresBloc and fires the first load immediately.
 class StoresScreen extends StatelessWidget {
@@ -261,64 +262,30 @@ class _StoresViewState extends State<_StoresView> {
   // ── Empty / error bodies ──────────────────────────────────────────────────
 
   Widget _buildNoResultsBody() {
-    return Padding(
+    return EmptyWidget(
+      icon: Icons.search_off_rounded,
+      iconSize: 52,
+      iconColor: AppColors.borderColor,
+      title: 'stores_no_results'.tr(),
+      subtitle: 'stores_no_results_hint'.tr(),
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.search_off_rounded,
-              size: 52.sp,
-              color: AppColors.borderColor,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'stores_no_results'.tr(),
-              style: AppStyle.bodySmall.copyWith(color: AppColors.black),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              'stores_no_results_hint'.tr(),
-              style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildErrorBody(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.wifi_off_rounded, size: 56.sp, color: AppColors.grey),
-            SizedBox(height: 16.h),
-            Text(
-              'stores_error_title'.tr(),
-              style: AppStyle.h6.copyWith(color: AppColors.black),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'stores_error_subtitle'.tr(),
-              style: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 24.h),
-            ElevatedButton.icon(
-              onPressed: () =>
-                  context.read<StoresBloc>().add(const LoadStoresEvent()),
-              icon: const Icon(Icons.refresh_rounded),
-              label: Text('stores_retry'.tr()),
-            ),
-          ],
-        ),
+    return EmptyWidget(
+      icon: Icons.wifi_off_rounded,
+      iconSize: 56,
+      iconColor: AppColors.grey,
+      title: 'stores_error_title'.tr(),
+      subtitle: 'stores_error_subtitle'.tr(),
+      action: CustomButton(
+        text: 'stores_retry'.tr(),
+        icon: Icons.refresh_rounded,
+        iconLeft: true,
+        onPressed: () =>
+            context.read<StoresBloc>().add(const LoadStoresEvent()),
+        width: 160.w,
       ),
     );
   }

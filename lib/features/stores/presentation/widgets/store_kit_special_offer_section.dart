@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 class StoreKitSpecialOfferSection extends StatelessWidget {
   const StoreKitSpecialOfferSection({super.key});
@@ -69,30 +70,19 @@ class StoreKitSpecialOfferSection extends StatelessWidget {
               SizedBox(height: 12.h),
               Align(
                 alignment: Alignment.centerLeft,
-                child: SizedBox(
+                child: CustomButton(
+                  text: 'store_kit_shop_bundles'.tr(),
+                  backgroundColor: AppColors.white,
+                  textColor: AppColors.primaryColor,
                   height: 34.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.white,
-                      foregroundColor: AppColors.primaryColor,
-                      minimumSize: Size(112.w, 34.h),
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                    ),
-                    onPressed: () {
-                      context.push(AppRoutes.productDetailScreen,
-                          extra: 'helios-450w');
-                    },
-                    child: Text(
-                      'store_kit_shop_bundles'.tr(),
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                  width: 112.w,
+                  fontWeight: FontWeight.w600,
+                  onPressed: () {
+                    context.push(
+                      AppRoutes.productDetailScreen,
+                      extra: 'helios-450w',
+                    );
+                  },
                 ),
               ),
             ],

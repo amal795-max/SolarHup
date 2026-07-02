@@ -14,6 +14,8 @@ import 'package:untitled1/features/consultation/presentation/widgets/consultatio
 import 'package:untitled1/features/consultation/presentation/widgets/consultation_details_section.dart';
 import 'package:untitled1/features/consultation/presentation/widgets/consultation_expert_section.dart';
 import 'package:untitled1/features/consultation/presentation/widgets/consultation_type_section.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class BookConsultationScreen extends StatelessWidget {
@@ -44,109 +46,68 @@ class _BookConsultationView extends StatelessWidget {
       body: BlocBuilder<BookConsultationBloc, BookConsultationState>(
         builder: (context, state) {
           return switch (state) {
-            BookConsultationLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            BookConsultationError(:final message) => _BookConsultationErrorView(
-                message: message,
-                onRetry: () => context.read<BookConsultationBloc>().add(
-                      const LoadBookConsultationEvent(),
-                    ),
-              ),
-            BookConsultationLoaded() => SafeArea(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const BookConsultationAppBar(),
-                      SizedBox(height: 8.h),
-                      ConsultationExpertSection(
-                        experts: state.data.experts,
-                        selectedExpertId: state.selectedExpertId,
-                      ),
-                      SizedBox(height: 24.h),
-                      ConsultationTypeSection(
-                        types: state.data.types,
-                        selectedTypeId: state.selectedTypeId,
-                      ),
-                      SizedBox(height: 24.h),
-                      ConsultationDateTimeSection(
-                        monthYearLabel: state.data.monthYearLabel,
-                        calendarDays: state.data.calendarDays,
-                        timeSlots: state.data.timeSlots,
-                        selectedDate: state.selectedDate,
-                        selectedTimeSlotId: state.selectedTimeSlotId,
-                      ),
-                      SizedBox(height: 24.h),
-                      ConsultationDetailsSection(
-                        fullName: state.fullName,
-                        phone: state.phone,
-                        address: state.address,
-                        notes: state.notes,
-                      ),
-                      SizedBox(height: 8.h),
-                      ConsultationAttachmentsSection(
-                        attachments: state.attachments,
-                      ),
-                      const ConsultationConfirmButton(),
-                    ],
+            BookConsultationLoading() => const LoadingWidget(),
+            BookConsultationError(:final message) => SafeArea(
+              child: EmptyWidget(
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message,
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () => context.read<BookConsultationBloc>().add(
+                    const LoadBookConsultationEvent(),
                   ),
+                  width: 160.w,
                 ),
               ),
+            ),
+            BookConsultationLoaded() => SafeArea(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const BookConsultationAppBar(),
+                    SizedBox(height: 8.h),
+                    ConsultationExpertSection(
+                      experts: state.data.experts,
+                      selectedExpertId: state.selectedExpertId,
+                    ),
+                    SizedBox(height: 24.h),
+                    ConsultationTypeSection(
+                      types: state.data.types,
+                      selectedTypeId: state.selectedTypeId,
+                    ),
+                    SizedBox(height: 24.h),
+                    ConsultationDateTimeSection(
+                      monthYearLabel: state.data.monthYearLabel,
+                      calendarDays: state.data.calendarDays,
+                      timeSlots: state.data.timeSlots,
+                      selectedDate: state.selectedDate,
+                      selectedTimeSlotId: state.selectedTimeSlotId,
+                    ),
+                    SizedBox(height: 24.h),
+                    ConsultationDetailsSection(
+                      fullName: state.fullName,
+                      phone: state.phone,
+                      address: state.address,
+                      notes: state.notes,
+                    ),
+                    SizedBox(height: 8.h),
+                    ConsultationAttachmentsSection(
+                      attachments: state.attachments,
+                    ),
+                    const ConsultationConfirmButton(),
+                  ],
+                ),
+              ),
+            ),
             _ => const SizedBox.shrink(),
           };
         },
-      ),
-    );
-  }
-}
-
-class _BookConsultationErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
-  const _BookConsultationErrorView({
-    required this.message,
-    required this.onRetry,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 48.sp,
-              color: AppColors.red,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'stores_error_title'.tr(),
-              style: theme.textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.h),
-            CustomButton(
-              text: 'stores_retry'.tr(),
-              onPressed: onRetry,
-              width: 160.w,
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -339,7 +339,13 @@
   "help_title": "نحن هنا لمساعدتك",
   "help_subtitle": "يرجى تزويدنا بتفاصيل مشكلتك أدناه",
   "discount_active": "فعّال",
-  "discount_expired": "منتهي"
-
-
+  "discount_expired": "منتهي",
+  "blog_search_hint": "ابحث في الأدلة والأخبار الشمسية...",
+  "blog_filter_all": "الكل",
+  "blog_featured_label": "خبر مميز",
+  "blog_read_more": "اقرأ المزيد",
+  "blog_page": "صفحة",
+  "blog_of": "من",
+  "blog_no_results": "لم يتم العثور على أدلة أو أخبار",
+  "blog_no_results_hint": "جرّب كلمات مختلفة أو غيّر فلتر الفئة."
 }

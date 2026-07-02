@@ -7,6 +7,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store_kit_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
 
 class StoreKitProductsSection extends StatelessWidget {
   final List<StoreKitProductData> products;
@@ -24,14 +25,13 @@ class StoreKitProductsSection extends StatelessWidget {
         );
 
         if (filteredProducts.isEmpty) {
-          return Padding(
+          return EmptyWidget(
+            icon: Icons.search_off_rounded,
+            iconSize: 48,
+            iconColor: AppColors.grey,
+            title: 'stores_no_results'.tr(),
+            subtitle: 'stores_no_results_hint'.tr(),
             padding: EdgeInsets.symmetric(vertical: 24.h),
-            child: Center(
-              child: Text(
-                'stores_no_results'.tr(),
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
           );
         }
 

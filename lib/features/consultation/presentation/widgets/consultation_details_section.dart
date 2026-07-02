@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/features/consultation/presentation/bloc/book_consultation_bloc/book_consultation_bloc.dart';
+import 'package:untitled1/widgets/custom_text_field.dart';
 
-class ConsultationDetailsSection extends StatelessWidget {
+class ConsultationDetailsSection extends StatefulWidget {
   final String fullName;
   final String phone;
   final String address;
@@ -17,6 +18,56 @@ class ConsultationDetailsSection extends StatelessWidget {
     required this.address,
     required this.notes,
   });
+
+  @override
+  State<ConsultationDetailsSection> createState() =>
+      _ConsultationDetailsSectionState();
+}
+
+class _ConsultationDetailsSectionState extends State<ConsultationDetailsSection> {
+  late final TextEditingController _fullNameController;
+  late final TextEditingController _phoneController;
+  late final TextEditingController _addressController;
+  late final TextEditingController _notesController;
+
+  @override
+  void initState() {
+    super.initState();
+    _fullNameController = TextEditingController(text: widget.fullName);
+    _phoneController = TextEditingController(text: widget.phone);
+    _addressController = TextEditingController(text: widget.address);
+    _notesController = TextEditingController(text: widget.notes);
+  }
+
+  @override
+  void didUpdateWidget(covariant ConsultationDetailsSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.fullName != widget.fullName &&
+        _fullNameController.text != widget.fullName) {
+      _fullNameController.text = widget.fullName;
+    }
+    if (oldWidget.phone != widget.phone &&
+        _phoneController.text != widget.phone) {
+      _phoneController.text = widget.phone;
+    }
+    if (oldWidget.address != widget.address &&
+        _addressController.text != widget.address) {
+      _addressController.text = widget.address;
+    }
+    if (oldWidget.notes != widget.notes &&
+        _notesController.text != widget.notes) {
+      _notesController.text = widget.notes;
+    }
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,135 +83,36 @@ class ConsultationDetailsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        _ConsultationField(
-          label: 'consultation_full_name'.tr(),
-          value: fullName,
-          filled: true,
-          onChanged: (v) =>
-              context.read<BookConsultationBloc>().add(UpdateFullNameEvent(v)),
+        CustomTextField(
+          controller: _fullNameController,
+          title: 'consultation_full_name'.tr(),
+          onChanged: (value) => context
+              .read<BookConsultationBloc>()
+              .add(UpdateFullNameEvent(value)),
         ),
-        _ConsultationField(
-          label: 'consultation_phone'.tr(),
-          value: phone,
-          filled: true,
+        CustomTextField(
+          controller: _phoneController,
+          title: 'consultation_phone'.tr(),
           keyboardType: TextInputType.phone,
-          onChanged: (v) =>
-              context.read<BookConsultationBloc>().add(UpdatePhoneEvent(v)),
+          onChanged: (value) =>
+              context.read<BookConsultationBloc>().add(UpdatePhoneEvent(value)),
         ),
-        _ConsultationField(
-          label: 'consultation_address'.tr(),
-          value: address,
-          filled: false,
-          onChanged: (v) =>
-              context.read<BookConsultationBloc>().add(UpdateAddressEvent(v)),
+        CustomTextField(
+          controller: _addressController,
+          title: 'consultation_address'.tr(),
+          onChanged: (value) => context
+              .read<BookConsultationBloc>()
+              .add(UpdateAddressEvent(value)),
         ),
-        _ConsultationField(
-          label: 'consultation_notes'.tr(),
-          value: notes,
-          filled: false,
+        CustomTextField(
+          controller: _notesController,
+          title: 'consultation_notes'.tr(),
           hint: 'consultation_notes_hint'.tr(),
           isMultiline: true,
-          onChanged: (v) =>
-              context.read<BookConsultationBloc>().add(UpdateNotesEvent(v)),
+          onChanged: (value) =>
+              context.read<BookConsultationBloc>().add(UpdateNotesEvent(value)),
         ),
       ],
-    );
-  }
-}
-
-class _ConsultationField extends StatefulWidget {
-  final String label;
-  final String value;
-  final String? hint;
-  final bool filled;
-  final bool isMultiline;
-  final TextInputType? keyboardType;
-  final ValueChanged<String> onChanged;
-
-  const _ConsultationField({
-    required this.label,
-    required this.value,
-    required this.filled,
-    required this.onChanged,
-    this.hint,
-    this.isMultiline = false,
-    this.keyboardType,
-  });
-
-  @override
-  State<_ConsultationField> createState() => _ConsultationFieldState();
-}
-
-class _ConsultationFieldState extends State<_ConsultationField> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.value);
-  }
-
-  @override
-  void didUpdateWidget(covariant _ConsultationField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.value != widget.value && _controller.text != widget.value) {
-      _controller.text = widget.value;
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: 14.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            widget.label,
-            style: theme.textTheme.bodySmall,
-          ),
-          SizedBox(height: 6.h),
-          TextFormField(
-            controller: _controller,
-            keyboardType: widget.keyboardType,
-            maxLines: widget.isMultiline ? 4 : 1,
-            onChanged: widget.onChanged,
-            style: theme.textTheme.bodyMedium,
-            decoration: InputDecoration(
-              hintText: widget.hint,
-              hintStyle: theme.textTheme.bodySmall,
-              filled: widget.filled,
-              fillColor: widget.filled
-                  ? theme.colorScheme.tertiaryContainer
-                  : theme.colorScheme.surface,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 14.w,
-                vertical: widget.isMultiline ? 14.h : 12.h,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: theme.colorScheme.outline),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: theme.colorScheme.outline),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: theme.colorScheme.primary),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -10,6 +10,7 @@ import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/settings/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
@@ -120,6 +121,12 @@ final GoRouter router = GoRouter(
       path: AppRoutes.bookConsultationScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const BookConsultationScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.blogScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const BlogScreen();
       },
     ),
     GoRoute(

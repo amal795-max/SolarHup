@@ -14,6 +14,8 @@ import 'package:untitled1/features/stores/presentation/widgets/product_detail_ga
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_info_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_reviews_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_technical_sheet_section.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class ProductDetailScreen extends StatelessWidget {
@@ -48,14 +50,22 @@ class _ProductDetailView extends StatelessWidget {
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: switch (state) {
-            ProductDetailLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ProductDetailError(:final message) => _ProductDetailErrorView(
-                message: message,
-                onRetry: () => context.read<ProductDetailBloc>().add(
-                      LoadProductDetailEvent(productId: productId),
-                    ),
+            ProductDetailLoading() => const LoadingWidget(),
+            ProductDetailError(:final message) => SafeArea(
+                child: EmptyWidget(
+                  icon: Icons.error_outline_rounded,
+                  iconSize: 48,
+                  iconColor: AppColors.red,
+                  title: 'stores_error_title'.tr(),
+                  subtitle: message,
+                  action: CustomButton(
+                    text: 'stores_retry'.tr(),
+                    onPressed: () => context.read<ProductDetailBloc>().add(
+                          LoadProductDetailEvent(productId: productId),
+                        ),
+                    width: 160.w,
+                  ),
+                ),
               ),
             ProductDetailLoaded(
               :final product,
@@ -105,55 +115,6 @@ class _ProductDetailView extends StatelessWidget {
           },
         );
       },
-    );
-  }
-}
-
-class _ProductDetailErrorView extends StatelessWidget {
-  final String message;
-  final VoidCallback onRetry;
-
-  const _ProductDetailErrorView({
-    required this.message,
-    required this.onRetry,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline_rounded,
-              size: 48.sp,
-              color: AppColors.red,
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'stores_error_title'.tr(),
-              style: theme.textTheme.titleMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              message,
-              style: theme.textTheme.bodyMedium,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.h),
-            CustomButton(
-              text: 'stores_retry'.tr(),
-              onPressed: onRetry,
-              width: 160.w,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
