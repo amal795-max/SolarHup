@@ -30,4 +30,19 @@ abstract class AppRoutes {
       '$blogArticleDetailBase/$articleId';
   static const solarLearningHubScreen = '/solarLearningHubScreen';
   static const allQuestionsScreen = '/allQuestionsScreen';
+  static const scheduleServiceBase = '/scheduleServiceScreen';
+
+  static String scheduleService(String serviceId) =>
+      '$scheduleServiceBase/$serviceId';
+  static const serviceAddressBase = '/serviceAddressScreen';
+
+  static String serviceAddress(String serviceId) =>
+      '$serviceAddressBase/$serviceId';
+  static const bookingConfirmationBase = '/bookingConfirmationScreen';
+
+  static String bookingConfirmation(String serviceId) =>
+      '$bookingConfirmationBase/$serviceId';
+  static const rateServiceBase = '/rateServiceScreen';
+
+  static String rateService(String serviceId) => '$rateServiceBase/$serviceId';
 }

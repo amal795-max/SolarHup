@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/expert_services_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
-import '../../../settings/presentation/pages/settings_screen.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key});
@@ -19,8 +19,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   final List<Widget> pages = const [
     HomeScreen(),
     StoresScreen(),
+    ExpertServicesScreen(),
     ActivityScreen(),
-    SettingsScreen(),
   ];
 
   @override
@@ -42,26 +42,26 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
           currentIndex: selectedIndex,
           onTap: (index) => setState(() => selectedIndex = index),
 
-          items:  [
+          items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.home_outlined),
               activeIcon: const Icon(Icons.home),
-              label: 'Home'.tr(),
+              label: 'nav_home'.tr(),
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: const Icon(Icons.storefront_outlined),
               activeIcon: const Icon(Icons.storefront_rounded),
-              label: 'Stores'.tr(),
+              label: 'nav_store'.tr(),
             ),
-             BottomNavigationBarItem(
-              icon:  const Icon(Icons.build_outlined),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.build_outlined),
               activeIcon: const Icon(Icons.build),
-              label: 'Services'.tr(),
+              label: 'nav_services'.tr(),
             ),
-             BottomNavigationBarItem(
+            BottomNavigationBarItem(
               icon: const Icon(Icons.receipt_long_outlined),
               activeIcon: const Icon(Icons.receipt_long),
-              label: 'Orders'.tr(),
+              label: 'nav_orders'.tr(),
             ),
           ],
         ),

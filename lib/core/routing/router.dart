@@ -17,6 +17,10 @@ import 'package:untitled1/features/blog/presentation/pages/solar_learning_hub_sc
 import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/rate_service_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
@@ -153,6 +157,34 @@ final GoRouter router = GoRouter(
       path: AppRoutes.allQuestionsScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const AllQuestionsScreen();
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.scheduleServiceBase}/:serviceId',
+      builder: (BuildContext context, GoRouterState state) {
+        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
+        return ScheduleServiceScreen(serviceId: serviceId);
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.serviceAddressBase}/:serviceId',
+      builder: (BuildContext context, GoRouterState state) {
+        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
+        return ServiceAddressScreen(serviceId: serviceId);
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.bookingConfirmationBase}/:serviceId',
+      builder: (BuildContext context, GoRouterState state) {
+        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
+        return BookingConfirmationScreen(serviceId: serviceId);
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.rateServiceBase}/:serviceId',
+      builder: (BuildContext context, GoRouterState state) {
+        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
+        return RateServiceScreen(serviceId: serviceId);
       },
     ),
     GoRoute(

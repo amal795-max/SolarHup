@@ -1,0 +1,31 @@
+class BookingTechnicianModel {
+  final String name;
+  final String? avatarUrl;
+  final int avatarColorValue;
+
+  const BookingTechnicianModel({
+    required this.name,
+    this.avatarUrl,
+    this.avatarColorValue = 0xFF7592B0,
+  });
+}
+
+class BookingConfirmationModel {
+  final String bookingId;
+  final String serviceId;
+  final String serviceType;
+  final String dateTimeLabel;
+  final BookingTechnicianModel technician;
+  final String address;
+  final String? receiptUrl;
+
+  const BookingConfirmationModel({
+    required this.bookingId,
+    required this.serviceId,
+    required this.serviceType,
+    required this.dateTimeLabel,
+    required this.technician,
+    required this.address,
+    this.receiptUrl,
+  });
+}
