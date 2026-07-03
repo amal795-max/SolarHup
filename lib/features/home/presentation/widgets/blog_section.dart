@@ -7,7 +7,7 @@ import 'blog_card.dart';
 
 class BlogSection extends StatelessWidget {
   final List<BlogCardData> blogs;
-  final void Function(int index)? onBlogTap;
+  final void Function(String articleId)? onBlogTap;
 
   const BlogSection({
     super.key,
@@ -34,7 +34,7 @@ class BlogSection extends StatelessWidget {
         ...blogs.asMap().entries.map(
           (entry) => BlogCard(
             data: entry.value,
-            onTap: onBlogTap != null ? () => onBlogTap!(entry.key) : null,
+            onTap: onBlogTap != null ? () => onBlogTap!(entry.value.id) : null,
           ),
         ),
       ],

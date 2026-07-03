@@ -84,14 +84,14 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<List<BlogModel>> getBlogPosts() async {
     return const [
       BlogModel(
-        id: 'b1',
+        id: 'blog-2',
         title: 'How to maximize your solar output in Winter',
         meta: '5 min read • Solar Tips',
         imagePlaceholderColorValue: 0xFF4A7B9D,
         iconType: 'sun',
       ),
       BlogModel(
-        id: 'b2',
+        id: 'blog-1',
         title: 'Government Rebates: What you need to know',
         meta: '8 min read • Finance',
         imagePlaceholderColorValue: 0xFF7B6241,

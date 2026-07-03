@@ -4,12 +4,14 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 class BlogCardData {
+  final String id;
   final String title;
   final String meta;
   final int imagePlaceholderColorValue;
   final IconData imageIcon;
 
   const BlogCardData({
+    required this.id,
     required this.title,
     required this.meta,
     required this.imagePlaceholderColorValue,

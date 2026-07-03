@@ -12,6 +12,9 @@ import 'package:untitled1/features/settings/presentation/pages/my_discounts_scre
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/settings/presentation/pages/settings_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/features/blog/presentation/pages/all_questions_screen.dart';
+import 'package:untitled1/features/blog/presentation/pages/solar_learning_hub_screen.dart';
+import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
@@ -122,6 +125,34 @@ final GoRouter router = GoRouter(
       path: AppRoutes.blogScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const BlogScreen();
+      },
+      routes: [
+        GoRoute(
+          path: ':articleId',
+          builder: (BuildContext context, GoRouterState state) {
+            final articleId = state.pathParameters['articleId'] ?? 'blog-2';
+            return BlogArticleDetailScreen(articleId: articleId);
+          },
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '${AppRoutes.blogArticleDetailBase}/:articleId',
+      builder: (BuildContext context, GoRouterState state) {
+        final articleId = state.pathParameters['articleId'] ?? 'blog-2';
+        return BlogArticleDetailScreen(articleId: articleId);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.solarLearningHubScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const SolarLearningHubScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.allQuestionsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const AllQuestionsScreen();
       },
     ),
     GoRoute(

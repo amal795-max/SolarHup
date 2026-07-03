@@ -111,7 +111,8 @@ class _HomeViewState extends State<_HomeView> {
 
   static final List<BlogCardData> _skeletonBlogs = List.generate(
     2,
-    (i) => const BlogCardData(
+    (i) => BlogCardData(
+      id: 'blog-$i',
       title: 'Loading blog post title here',
       meta: '5 min read • Category',
       imagePlaceholderColorValue: 0xFF4A7B9D,
@@ -136,6 +137,7 @@ class _HomeViewState extends State<_HomeView> {
   );
 
   BlogCardData _mapBlog(BlogModel m) => BlogCardData(
+    id: m.id,
     title: m.title,
     meta: m.meta,
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
@@ -279,7 +281,11 @@ class _HomeViewState extends State<_HomeView> {
             SizedBox(height: 22.h),
             BlogSection(
               blogs: filteredBlogs,
-              onBlogTap: isLoading ? null : (_) => context.push(AppRoutes.blogScreen),
+              onBlogTap: isLoading
+                  ? null
+                  : (articleId) => context.push(
+                        AppRoutes.blogArticleDetail(articleId),
+                      ),
             ),
             SizedBox(height: 24.h),
           ],

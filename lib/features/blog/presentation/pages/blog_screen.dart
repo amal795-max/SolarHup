@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -15,6 +17,7 @@ import 'package:untitled1/features/blog/presentation/widgets/blog_search_section
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/text_with_icon.dart';
 
 class BlogScreen extends StatelessWidget {
   const BlogScreen({super.key});
@@ -85,6 +88,16 @@ class _BlogLoadedBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const BlogSearchSection(),
+          SizedBox(height: 10.h),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextWithIcon(
+              title: 'learning_hub_entry'.tr(),
+              icon: Icons.school_outlined,
+              color: AppColors.primaryColor,
+              onTap: () => context.push(AppRoutes.solarLearningHubScreen),
+            ),
+          ),
           SizedBox(height: 14.h),
           const BlogCategorySection(),
           SizedBox(height: 16.h),
@@ -105,7 +118,9 @@ class _BlogLoadedBody extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 14.h),
                 child: BlogArticleCard(
                   article: article,
-                  onTap: () {},
+                  onTap: () => context.push(
+                    AppRoutes.blogArticleDetail(article.id),
+                  ),
                 ),
               ),
             ),
