@@ -257,7 +257,9 @@ class _HomeViewState extends State<_HomeView> {
             SizedBox(height: 16.h),
             QuickActionsSection(
               onCalculatorTap: isLoading ? null : () {},
-              onCompareTap: isLoading ? null : () {},
+              onCompareTap: isLoading
+                  ? null
+                  : () => context.push(AppRoutes.packageComparisonScreen),
             ),
             SizedBox(height: 22.h),
           ],
