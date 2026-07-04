@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -97,7 +98,7 @@ class CustomButton extends StatelessWidget {
             if (icon != null && iconLeft) SizedBox(width: 8.w),
 
             Text(
-              text,
+              text.tr(),
               style: AppStyle.labelSmall.copyWith(
                 color: resolvedText,
                 fontSize: fontSize,

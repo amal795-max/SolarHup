@@ -1,11 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/validators.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/authentication/presentation/bloc/authentication_cubit.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import '../../../../core/routing/app_routes.dart';
+import '../../../../widgets/loader.dart';
 import '../../../../widgets/primary_button.dart';
 import '../widgets/header.dart';
 import '../widgets/white_section_widget.dart';
@@ -15,6 +20,27 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      listener: _listen,
+      builder: _builder,
+    );
+  }
+
+  void _listen(BuildContext context, AuthenticationState state) {
+    if (state is RegisterSuccess) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+      context.go(AppRoutes.bottomNavBar);
+    }
+    if (state is AuthenticationFailure) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+    }
+  }
+
+  Widget _builder(BuildContext context, AuthenticationState state) {
+    final authBloc = context.read<AuthenticationCubit>();
+    if (state is AuthenticationLoading) {
+      return const LoadingWidget();
+    }
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -28,79 +54,52 @@ class RegisterScreen extends StatelessWidget {
               ),
               whiteSectionWidget(
                 context: context,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'join_solarhub'.tr(),
-                        style: AppStyle.h5.copyWith(
-                          color: AppColors.primaryColor,
+                child: Form(
+                  key: authBloc.registerKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'join_solarhub'.tr(),
+                          style: AppStyle.h5.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        'complete_details'.tr(),
-                        style: AppStyle.labelSmall.copyWith(
-                          color: AppColors.grey,
-                        ),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                    ),
-                    SizedBox(height: 12.h),
-                    CustomTextField(
-                      title: 'full_name'.tr(),
-                      hint: 'enter_name_hint'.tr(),
-                      keyboardType: TextInputType.name,
-                      prefixIcon: const Icon(Icons.person_2_outlined),
-                    ),
-                    CustomTextField(
-                      title: 'password'.tr(),
-                      hint: 'enter_password_hint'.tr(),
-                      keyboardType: TextInputType.visiblePassword,
-                      prefixIcon: const Icon(Icons.lock_outline_sharp),
-                      isPassword: true,
-                    ),
-
-                    SizedBox(height: 8.h),
-
-                    CustomButton(
-                      text: 'create_account'.tr(),
-                      onPressed: () {
-                        context.pushReplacement(AppRoutes.verificationScreen);
-                      },
-                      textColor: AppColors.white,
-                      icon: Icons.arrow_forward_rounded,
-                    ),
-
-
-                    SizedBox(height: 12.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'already_have_account'.tr(),
-                          style: AppStyle.bodyXSmall.copyWith(
+                        subtitle: Text(
+                          'complete_details'.tr(),
+                          style: AppStyle.labelSmall.copyWith(
                             color: AppColors.grey,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            context.pushReplacement(AppRoutes.loginScreen);
-                          },
-                          child: Text(
-                            'log_in'.tr(),
-                            style: AppStyle.bodyXSmall.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      SizedBox(height: 12.h),
+
+                      CustomTextField(
+                        controller: authBloc.passwordController,
+                        validator: passwordValidator,
+                        title: 'password'.tr(),
+                        hint: 'enter_password_hint'.tr(),
+                        keyboardType: TextInputType.visiblePassword,
+                        prefixIcon: const Icon(Icons.lock_outline_sharp),
+                        isPassword: true,
+                      ),
+
+                      SizedBox(height: 8.h),
+
+                      CustomButton(
+                        text: 'create_account'.tr(),
+                        onPressed: () {
+                          authBloc.register();
+                        },
+                        textColor: AppColors.white,
+                        icon: Icons.arrow_forward_rounded,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 40,)
             ],
           ),
         ),

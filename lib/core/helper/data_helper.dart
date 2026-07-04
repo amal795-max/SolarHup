@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class DataHelper {
@@ -15,12 +16,19 @@ class DataHelper {
         margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         behavior: SnackBarBehavior.floating,
         backgroundColor:color,
-        content: Text(message),
+        content: Text(message.tr()),
       ),
     );
   }
 
 
+  static String formatePhoneNumber(String phoneNumber) {
+    String raw = phoneNumber.trim();
+    if (raw.startsWith('0')) {
+      raw = raw.substring(1);
+    }
+    return  '+963$raw';
+  }
 
   // static dateFormat(String newPattern,DateTime date) {
   //   return DateFormat(newPattern).format(date);

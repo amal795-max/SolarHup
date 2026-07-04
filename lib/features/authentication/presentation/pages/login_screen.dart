@@ -26,57 +26,38 @@ class LoginScreen extends StatelessWidget {
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
-                whiteSectionWidget(
-                  context:context,
-                  child: Column(
+                  whiteSectionWidget(
+                    context: context,
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         CustomTextField(
                           title: 'password'.tr(),
                           hint: 'enter_password_hint'.tr(),
                           isPassword: true,
-                          prefixIcon: Icon(Icons.lock_outline, size: 20.sp,
-                              color: AppColors.grey),
+                          prefixIcon: Icon(
+                            Icons.lock_outline,
+                            size: 20.sp,
+                            color: AppColors.grey,
+                          ),
                         ),
                         InkWell(
                           onTap: () {
                             context.push(AppRoutes.resetPasswordScreen);
-                          }, child: Text('forget_password'.tr(), style: AppStyle
-                            .labelXSmall),),
-                        SizedBox(height: 12.h),
-                        CustomButton(text: 'login'.tr(), onPressed: () {},),
-
-
-                        SizedBox(height: 12.h),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'dont_have_account'.tr(),
-                              style: AppStyle.bodyXSmall.copyWith(
-                                  color: AppColors.grey),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                context.pushReplacement(AppRoutes.registerScreen);
-                              },
-                              child: Text(
-                                'create_account'.tr(),
-                                style: AppStyle.bodyXSmall.copyWith(
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
+                          },
+                          child: Text(
+                            'forget_password'.tr(),
+                            style: AppStyle.labelXSmall,
+                          ),
                         ),
+                        SizedBox(height: 12.h),
+                        CustomButton(text: 'login'.tr(), onPressed: () {}),
                       ],
                     ),
                   ),
 
                   SizedBox(height: 12.h),
-                  confirmationWidget()
+                  confirmationWidget(),
                 ],
               ),
             ),
@@ -99,7 +80,9 @@ class LoginScreen extends StatelessWidget {
             ),
 
             image: const DecorationImage(
-              image: AssetImage(AppImages.solrPanelsIcon), fit: BoxFit.cover,),
+              image: AssetImage(AppImages.solrPanelsIcon),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
         Container(
@@ -113,10 +96,7 @@ class LoginScreen extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                Colors.black12,
-                Colors.black87,
-              ],
+              colors: [Colors.black12, Colors.black87],
             ),
           ),
           padding: EdgeInsets.all(24.w),
@@ -141,6 +121,5 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
     );
-
   }
 }

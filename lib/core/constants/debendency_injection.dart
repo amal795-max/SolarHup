@@ -22,16 +22,9 @@ Future<void> init() async {
 
   getIt.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 
-  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(
-        () => AuthenticationRemoteDataSourceImpl(getIt()),
-  );
+  getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImpl(getIt()));
 
-  getIt.registerLazySingleton<ResetPasswordRepositories>(
-        () => ResetPasswordRepositoriesImpl(
-      remoteAuth: getIt(),
-      networkInfo: getIt(),
-    ),
-  );
+  getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ApplicationCubit());

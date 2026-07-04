@@ -35,7 +35,7 @@ class AuthenticationRemoteDataSourceImpl
       EndPoints.register,
       body: body.toJson(),
     );
-    if (response.statusCode != 200) {
+    if ( response.statusCode != 201) {
       throw ServerException(message: getErrorMessage(response.statusCode ?? 0));
     } else {
       return RegisterModel.fromJson(response.data);

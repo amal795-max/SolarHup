@@ -1,11 +1,11 @@
 
 String? phoneValid(String? phone) {
-  if (phone == null) {
+  if (phone!.trim().isEmpty) {
     return 'This field is required';
-  } else if (phone.isEmpty) {
-    return 'Please enter your phone number';
-  } else if (phone.length < 10 || phone.length >= 15) {
-    return 'Invalid phone number';
+  }else if (!phone.startsWith('09')) {
+    return'Phone number must start with 09';
+  }  else if (!RegExp(r'^[0-9]+$').hasMatch(phone)) {
+    return 'Phone number must contain only digits';
   }
   return null;
 }
