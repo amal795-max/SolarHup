@@ -33,4 +33,13 @@ final class AuthenticationFailure extends AuthenticationState {
   // TODO: implement props
   List<Object?> get props => [message];
 
+}final class RegisterSuccess extends AuthenticationState {
+  final String message;
+
+  const RegisterSuccess({required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
+
 }

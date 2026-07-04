@@ -3,7 +3,7 @@ const String OFFLINE_FAILURE_MESSAGE = 'No internet connection , Check your netw
 
 
 
-const String REGISTER_SUCCESS_MESSAGE = 'Registration successful!';
+const String registerSuccessMessage = 'Registration Successful!';
 // const String checkPhoneNumberSuccess = '';
 const String LOGOUT_SUCCESS_MESSAGE = 'Logout Successfully';
 
