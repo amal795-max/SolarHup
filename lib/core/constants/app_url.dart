@@ -5,6 +5,7 @@ class EndPoints {
   static const String baseUrl = EnvironmentConfig.apiEndpoint;
   static const String _auth = '${baseUrl}auth/';
   static const String checkPhoneNumber = '${_auth}check-phone';
+  static const String register = '${_auth}signup';
 
 }
 
