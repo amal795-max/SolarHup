@@ -22,7 +22,7 @@ Widget confirmationWidget() {
         child: Text(
           ' ${'terms_of_service'.tr()}',
           style: AppStyle.bodyXSmall.copyWith(
-            color: AppColors.lightGray,
+            color: AppColors.blue,
             fontSize: 11.sp,
             decoration: TextDecoration.underline,
           ),
@@ -40,7 +40,7 @@ Widget confirmationWidget() {
         child: Text(
           'privacy_policy'.tr(),
           style: AppStyle.bodyXSmall.copyWith(
-            color: AppColors.lightGray,
+            color: AppColors.blue,
             fontSize: 11.sp,
             decoration: TextDecoration.underline,
           ),

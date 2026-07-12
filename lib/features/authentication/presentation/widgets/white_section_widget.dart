@@ -13,7 +13,7 @@ Widget whiteSectionWidget({ required Widget child,required BuildContext context,
           BoxShadow(
             color: Theme.of(context).colorScheme.shadow,
             blurRadius:context.brightness?0:12,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),

@@ -30,10 +30,10 @@ class HomeRepositoryImpl implements HomeRepository {
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       } catch (_) {
-        return Left(ServerFailure('Unexpected error'));
+        return const Left(ServerFailure('Unexpected error'));
       }
     } else {
-      return Left(OfflineFailure());
+      return const Left(OfflineFailure());
     }
   }
 

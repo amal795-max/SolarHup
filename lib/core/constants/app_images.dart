@@ -8,6 +8,8 @@ class AppImages {
   static const String solarIcon = '${_icons}solar.svg';
   static const String inverterIcon = '${_icons}inverter.svg';
   static const String solrPanelsIcon = '${_images}Solar panels.png';
+  static const String onboardingImage = '${_images}onboarding.jpg';
+  static const String logoImage = '${_images}logo.png';
   static const String googleIcon = '${_icons}google.svg';
   static const String chatBotIcon = '${_icons}chatbot.svg';
 

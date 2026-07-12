@@ -19,13 +19,14 @@ import 'package:untitled1/features/home/presentation/widgets/blog_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/did_you_know_banner.dart';
 import 'package:untitled1/features/home/presentation/widgets/home_app_bar.dart';
-import 'package:untitled1/features/home/presentation/widgets/home_search_bar.dart';
 import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/products_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
-import 'package:untitled1/features/home/presentation/widgets/used_system_banner.dart';
+import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_background.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+
+import '../widgets/home_search_bar.dart';
 
 /// Entry point — provides the HomeBloc and immediately fires LoadHomeDataEvent.
 class HomeScreen extends StatelessWidget {
@@ -127,7 +128,7 @@ class _HomeViewState extends State<_HomeView> {
     price: m.price,
     originalPrice: m.originalPrice,
     badgeText: m.badgeText,
-    badgeColor: m.badgeColorValue != null ? Color(m.badgeColorValue!) : null,
+    badgeColor: m.badgeColorValue,
     metaText: m.metaText,
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     discountPercent: m.discountPercent,
@@ -164,16 +165,18 @@ class _HomeViewState extends State<_HomeView> {
         }
       },
       builder: (context, state) {
-        return SafeArea(
+          return SafeArea(
           top: false,
-          child: Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          child: SolarDynamicBackground(
+              child: Scaffold(
+            backgroundColor: Colors.transparent,
             appBar: HomeAppBar(onMenuTap: () {
               context.push(AppRoutes.settingsScreen);
             }, onCartTap: () {
               context.push(AppRoutes.cartScreen);
             }),
             body: _buildBody(context, state),
+            
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 context.push(AppRoutes.chatBotScreen);
@@ -183,7 +186,7 @@ class _HomeViewState extends State<_HomeView> {
               shape: const CircleBorder(),
               child: SvgPicture.asset(AppImages.chatBotIcon),
             ),
-
+              )
           ),
         );
       },
@@ -239,30 +242,30 @@ class _HomeViewState extends State<_HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12.h),
-          HomeSearchBar(
-            controller: _searchController,
-            enabled: !isLoading,
-            onChanged: (value) =>
-                setState(() => _searchQuery = value.trim().toLowerCase()),
-            onClear: () => setState(() => _searchQuery = ''),
+          Padding(
+            padding: const EdgeInsets.symmetric( horizontal: 20),
+            child: HomeSearchBar(
+              controller: _searchController,
+              enabled: !isLoading,
+              onChanged: (value) =>
+                  setState(() => _searchQuery = value.trim().toLowerCase()),
+              onClear: () => setState(() => _searchQuery = ''),
+            ),
           ),
-          SizedBox(height: 16.h),
 
           // Collapse banners + quick actions while actively searching
           if (!isSearching) ...[
-            const DidYouKnowBanner(),
-            SizedBox(height: 12.h),
-            const UsedSystemBanner(),
-            SizedBox(height: 16.h),
+
+            // const UsedSystemBanner(),
+            // SizedBox(height: 16.h),
             QuickActionsSection(
               onCalculatorTap: isLoading ? null : () {},
               onCompareTap: isLoading
                   ? null
                   : () => context.push(AppRoutes.packageComparisonScreen),
             ),
-            SizedBox(height: 22.h),
-          ],
+            SizedBox(height: 16.h),
+
 
           if (hasNoResults)
             _buildNoResultsBody()
@@ -273,14 +276,16 @@ class _HomeViewState extends State<_HomeView> {
               onViewAll: isLoading ? null : _navigateToUsedProducts,
               onProductTap: isLoading ? null : (_) => _navigateToUsedProducts(),
             ),
-            SizedBox(height: 22.h),
+            SizedBox(height: 24.h),
+            const DidYouKnowBanner(),
+            SizedBox(height: 16.h), ],
             ProductsSection(
               titleKey: 'home_new_offer',
               products: filteredNew,
               onViewAll: isLoading ? null : _navigateToUsedProducts,
               onProductTap: isLoading ? null : (_) => _navigateToUsedProducts(),
             ),
-            SizedBox(height: 22.h),
+            SizedBox(height: 24.h),
             BlogSection(
               blogs: filteredBlogs,
               onBlogTap: isLoading

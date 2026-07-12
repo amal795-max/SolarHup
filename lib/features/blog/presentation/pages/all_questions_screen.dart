@@ -48,7 +48,7 @@ class _AllQuestionsView extends StatelessWidget {
         child: BlocBuilder<FaqHubBloc, FaqHubState>(
           builder: (context, state) {
             return switch (state) {
-              FaqHubLoading() => const LoadingWidget(),
+              FaqHubLoading() => const LoadingIndicator(),
               FaqHubError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

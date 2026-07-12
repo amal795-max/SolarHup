@@ -50,7 +50,7 @@ class _ProductDetailView extends StatelessWidget {
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: switch (state) {
-            ProductDetailLoading() => const LoadingWidget(),
+            ProductDetailLoading() => const LoadingIndicator(),
             ProductDetailError(:final message) => SafeArea(
                 child: EmptyWidget(
                   icon: Icons.error_outline_rounded,

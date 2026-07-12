@@ -98,7 +98,7 @@ class _CategoryChip extends StatelessWidget {
         AppColors.primaryColor.withValues(alpha: 0.10);
     final unselectedIconColor = AppColors.primaryColor;
     final unselectedTextColor =
-        isDark ? AppColors.lightGray : AppColors.deepGrey;
+        isDark ? AppColors.blue : AppColors.deepGrey;
 
     return Container(
       width: 76.w,

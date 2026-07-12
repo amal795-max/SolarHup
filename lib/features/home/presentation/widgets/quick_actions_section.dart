@@ -22,19 +22,19 @@ class QuickActionsSection extends StatelessWidget {
         children: [
           Expanded(
             child: _QuickActionCard(
-              iconBgColor: AppColors.secondaryColor,
+              iconBgColor: const Color(0xFFFFE08A),
               iconColor: AppColors.brown,
-              icon: Icons.calculate_outlined,
-              title: 'home_calculator'.tr(),
-              subtitle: 'home_roi_savings'.tr(),
+              icon: Icons.support_agent,
+              title: 'home_expert_call'.tr(),
+              subtitle: 'home_expert_call_sub'.tr(),
               onTap: onCalculatorTap,
             ),
           ),
           SizedBox(width: 12.w),
           Expanded(
             child: _QuickActionCard(
-              iconBgColor: AppColors.lightGray.withValues(alpha: 0.15),
-              iconColor: AppColors.lightGray,
+              iconBgColor: AppColors.blue.withValues(alpha: 0.3),
+              iconColor: AppColors.primaryColor,
               icon: Icons.compare_arrows_rounded,
               title: 'home_compare'.tr(),
               subtitle: 'home_compare_desc'.tr(),
@@ -75,11 +75,11 @@ class _QuickActionCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkContainer : AppColors.backGroundGrey,
-            borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(
-              color: isDark ? AppColors.darkGray : AppColors.borderColor,
-            ),
+            color: isDark ? AppColors.darkContainer : AppColors.lightGrey,
+            borderRadius: BorderRadius.circular(18.r),
+            // border: Border.all(
+            //   color: isDark ? AppColors.darkGray : AppColors.borderColor,
+            // ),
             boxShadow: isDark
                 ? null
                 : [
@@ -113,6 +113,7 @@ class _QuickActionCard extends StatelessWidget {
               SizedBox(height: 2.h),
               Text(
                 subtitle,
+                overflow: TextOverflow.ellipsis,
                 style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
               ),
             ],

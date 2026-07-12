@@ -26,7 +26,7 @@ void main() {
         body: any(named: 'body'),
       )).thenAnswer(
             (_) async {
-          print("✅ MockApiRequest.post called with statusCode=200");
+          print('✅ MockApiRequest.post called with statusCode=200');
           return Response(
             requestOptions: RequestOptions(path: EndPoints.checkPhoneNumber),
             statusCode: 200,
@@ -40,14 +40,14 @@ void main() {
         completes,
       );
 
-      print("✅ checkPhoneNumber finished without exception");
+      print('✅ checkPhoneNumber finished without exception');
 
       verify(() => mockApiRequest.post(
         EndPoints.checkPhoneNumber,
         body: AuthenticationParams('0999999999').toJson(),
       )).called(1);
 
-      print("✅ verify passed: post called once with correct params");
+      print('✅ verify passed: post called once with correct params');
     });
 
     test('should throw ServerException when statusCode != 200', () async {
@@ -56,7 +56,7 @@ void main() {
         body: AuthenticationParams('0999999999').toJson(),
       )).thenAnswer(
             (_) async {
-          print("❌ MockApiRequest.post called with statusCode=422");
+          print('❌ MockApiRequest.post called with statusCode=422');
           return Response(
             requestOptions: RequestOptions(path: ''),
             statusCode: 422,
@@ -69,14 +69,14 @@ void main() {
         throwsA(isA<ServerException>()),
       );
 
-      print("❌ checkPhoneNumber threw ServerException as expected");
+      print('❌ checkPhoneNumber threw ServerException as expected');
 
       verify(() => mockApiRequest.post(
         EndPoints.checkPhoneNumber,
         body: AuthenticationParams('0999999999').toJson(),
       )).called(1);
 
-      print("✅ verify passed: post called once with correct params");
+      print('✅ verify passed: post called once with correct params');
     });
 
   });

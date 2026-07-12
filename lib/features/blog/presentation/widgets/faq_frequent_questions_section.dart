@@ -122,7 +122,7 @@ class _FaqAccordionTile extends StatelessWidget {
                 Text(
                   question.answer,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+                    color: isDark ? AppColors.blue : AppColors.deepGrey,
                     height: 1.5,
                   ),
                 ),

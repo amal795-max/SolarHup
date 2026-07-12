@@ -23,7 +23,7 @@ class StoresRepositoryImpl implements StoresRepository {
   Future<Either<Failure, List<StoreModel>>> getStores() async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final stores = await remote.getStores();

@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import'app_colors.dart';
 
 class AppStyle {
 
@@ -9,15 +8,11 @@ class AppStyle {
     double ?fontSize,
     FontWeight? fontWeight,
     double ?height,
-    Color? color,
   }) {
-    final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
-    final selectedColor = color ?? (brightness == Brightness.dark ? AppColors.white : AppColors.black);
     return TextStyle(
       fontSize: fontSize,
       fontWeight: fontWeight,
-      color: selectedColor,
       height: height,
     );
 
@@ -101,20 +96,17 @@ class AppStyle {
   static TextStyle get buttonLarge =>  getFontStyle(
     fontSize: 16.sp,
     fontWeight: FontWeight.w600,
-    color: AppColors.white,
     height: 1.2,
   );
 
   static TextStyle get buttonMedium =>  getFontStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w500,
-    color: AppColors.white,
   );
 
   static TextStyle get buttonSmall =>  getFontStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w500,
-    color: AppColors.white,
   );
 
   static TextStyle get buttonOutlined =>  getFontStyle(
@@ -140,7 +132,6 @@ class AppStyle {
   static TextStyle get inputError =>  getFontStyle(
     fontSize: 12.sp,
     fontWeight: FontWeight.w400,
-    color: AppColors.red,
     height: 1.4,
   );
 
@@ -153,7 +144,6 @@ class AppStyle {
   static TextStyle get labelSmallCard =>  getFontStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
-    color: AppColors.grey,
   );
 
   static TextStyle get labelXSmallCard =>  getFontStyle(
@@ -164,13 +154,11 @@ class AppStyle {
   static TextStyle get labelMoreStyle =>  getFontStyle(
       fontSize: 16.sp,
       fontWeight: FontWeight.w400,
-      color: AppColors.primaryColor
   );
 
 
   static TextStyle get disabled => getFontStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
-    color: AppColors.grey,
   );
 }

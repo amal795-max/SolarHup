@@ -28,7 +28,7 @@ class BookingConfirmationRepositoryImpl implements BookingConfirmationRepository
   ) async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final data = await remote.getBookingConfirmation(serviceId);
@@ -42,7 +42,7 @@ class BookingConfirmationRepositoryImpl implements BookingConfirmationRepository
   Future<Either<Failure, void>> downloadReceipt(String bookingId) async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       await remote.downloadReceipt(bookingId);

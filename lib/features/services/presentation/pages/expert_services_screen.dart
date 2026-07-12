@@ -45,7 +45,7 @@ class _ExpertServicesView extends StatelessWidget {
         child: BlocBuilder<ServicesBloc, ServicesState>(
           builder: (context, state) {
             return switch (state) {
-              ServicesLoading() => const LoadingWidget(),
+              ServicesLoading() => const LoadingIndicator(),
               ServicesError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

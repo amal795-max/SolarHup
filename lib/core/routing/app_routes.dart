@@ -1,9 +1,12 @@
 abstract class AppRoutes {
-  static const bottomNavBar = '/bottomNavBar';
-  static const homeScreen = '/homeScreen';
+  static const splashScreen = '/splashScreen';
+  static const onboardingScreen = '/onboardingScreen';
   static const loginScreen = '/loginScreen';
   static const registerScreen = '/registerScreen';
-  static const splashScreen = '/splashScreen';
+  static const authenticationScreen='/serviceAddressScreen';
+  static const bottomNavBar = '/bottomNavBar';
+  static const homeScreen = '/homeScreen';
+
   static const verificationScreen = '/verificationScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
   static const addProductScreen = '/addProductScreen';
@@ -46,4 +49,5 @@ abstract class AppRoutes {
 
   static String rateService(String serviceId) => '$rateServiceBase/$serviceId';
   static const packageComparisonScreen = '/packageComparisonScreen';
+
 }

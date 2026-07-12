@@ -52,11 +52,11 @@ class BlogDetailHeroSection extends StatelessWidget {
               ),
             ),
           ),
-          SafeArea(
+          const SafeArea(
             bottom: false,
             child: Align(
               alignment: Alignment.topLeft,
-              child: const BackButtonWidget(),
+              child: BackButtonWidget(),
             ),
           ),
           if (article.sponsoredProduct != null)

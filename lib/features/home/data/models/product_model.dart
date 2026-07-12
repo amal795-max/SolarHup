@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 
 class ProductModel extends Equatable {
@@ -7,7 +9,7 @@ class ProductModel extends Equatable {
   final double price;
   final double? originalPrice;
   final String? badgeText;
-  final int? badgeColorValue;
+  final Color? badgeColorValue;
   final String? metaText;
   final int imagePlaceholderColorValue;
   final int? discountPercent;

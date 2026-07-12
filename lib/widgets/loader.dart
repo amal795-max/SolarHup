@@ -4,8 +4,8 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 
 
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({super.key,});
+class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({super.key,});
 
 
   @override
@@ -19,5 +19,4 @@ class LoadingWidget extends StatelessWidget {
           ),
       ),
     );
-  }
-}
+  }}

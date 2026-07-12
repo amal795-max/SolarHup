@@ -46,7 +46,7 @@ class _BookConsultationView extends StatelessWidget {
       body: BlocBuilder<BookConsultationBloc, BookConsultationState>(
         builder: (context, state) {
           return switch (state) {
-            BookConsultationLoading() => const LoadingWidget(),
+            BookConsultationLoading() => const LoadingIndicator(),
             BookConsultationError(:final message) => SafeArea(
               child: EmptyWidget(
                 icon: Icons.error_outline_rounded,

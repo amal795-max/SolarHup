@@ -39,7 +39,7 @@ class RegisterScreen extends StatelessWidget {
   Widget _builder(BuildContext context, AuthenticationState state) {
     final authBloc = context.read<AuthenticationCubit>();
     if (state is AuthenticationLoading) {
-      return const LoadingWidget();
+      return const LoadingIndicator();
     }
     return Scaffold(
       body: SafeArea(
@@ -91,7 +91,8 @@ class RegisterScreen extends StatelessWidget {
                       CustomButton(
                         text: 'create_account'.tr(),
                         onPressed: () {
-                          authBloc.register();
+                          context.go(AppRoutes.bottomNavBar);
+                          // authBloc.register();
                         },
                         textColor: AppColors.white,
                         icon: Icons.arrow_forward_rounded,

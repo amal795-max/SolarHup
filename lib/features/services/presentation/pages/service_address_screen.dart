@@ -49,7 +49,7 @@ class _ServiceAddressView extends StatelessWidget {
         child: BlocBuilder<ServiceAddressBloc, ServiceAddressState>(
           builder: (context, state) {
             return switch (state) {
-              ServiceAddressLoading() => const LoadingWidget(),
+              ServiceAddressLoading() => const LoadingIndicator(),
               ServiceAddressError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

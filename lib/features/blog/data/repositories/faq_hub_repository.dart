@@ -23,7 +23,7 @@ class FaqHubRepositoryImpl implements FaqHubRepository {
   Future<Either<Failure, FaqHubModel>> getFaqHub() async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final data = await remote.getFaqHub();

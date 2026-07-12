@@ -34,7 +34,7 @@ class CustomButton extends StatelessWidget {
     this.fontSize,
     this.height,
     this.width,
-    this.borderRadius = 10,
+    this.borderRadius = 14,
     this.borderWidth = 1.2,
     this.fontWeight = FontWeight.w600,
     this.isLoading = false,
@@ -99,7 +99,7 @@ class CustomButton extends StatelessWidget {
 
             Text(
               text.tr(),
-              style: AppStyle.labelSmall.copyWith(
+              style: AppStyle.labelMedium.copyWith(
                 color: resolvedText,
                 fontSize: fontSize,
                 fontWeight: fontWeight,

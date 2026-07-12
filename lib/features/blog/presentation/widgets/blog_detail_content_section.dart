@@ -48,7 +48,7 @@ class _ContentBlock extends StatelessWidget {
           block.text ?? '',
           style: theme.textTheme.bodyMedium?.copyWith(
             height: 1.55,
-            color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+            color: isDark ? AppColors.blue : AppColors.deepGrey,
           ),
         ),
       BlogContentBlockType.heading => Text(
@@ -125,7 +125,7 @@ class _ProTipBox extends StatelessWidget {
                   body,
                   style: theme.textTheme.bodySmall?.copyWith(
                     height: 1.5,
-                    color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+                    color: isDark ? AppColors.blue : AppColors.deepGrey,
                   ),
                 ),
               ],

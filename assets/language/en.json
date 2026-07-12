@@ -146,15 +146,17 @@
   "privacy_policy": "Privacy Policy",
   "terms_of_use": "Terms Of Use",
   "logout": "Logout",
+  "welcome_to": "Welcome to",
+  "topsolar": "TopSolar",
   "home_search_hint": "Search panels, inverters, services...",
   "home_did_you_know": "DID YOU KNOW?",
   "home_did_you_know_body": "One hour of sunlight can power the Earth for a year, and so, your solar journey start here, Maximize your savings today?",
   "home_used_system_label": "Used System",
   "home_used_system_desc": "A seamless marketplace for buying and selling used solar systems",
-  "home_calculator": "Calculator",
-  "home_roi_savings": "ROI & Savings",
+  "home_expert_call": "Call an Expert",
+  "home_expert_call_sub": "Connect with a solar energy specialist",
   "home_compare": "Compare",
-  "home_compare_desc": "compare system",
+  "home_compare_desc": "Find the best solar system for your needs",
   "home_used_systems": "Used Systems",
   "home_view_all": "View all",
   "home_new_offer": "New Offer",
@@ -164,6 +166,7 @@
   "home_blog_rebates_title": "Government Rebates: What you need to know",
   "home_blog_rebates_meta": "8 min read • Finance",
   "nav_home": "Home",
+  "nav_profile": "Profile",
   "nav_store": "Store",
   "nav_services": "Services",
   "nav_orders": "Orders",
@@ -443,10 +446,29 @@
 
   "empty_cache_failure_message": "No cached data available. Please refresh.",
   "offline_failure_message": "No internet connection, check your network and try again.",
-  "register_success_message": "Registration Successful!",
+  "connection_refused": "Connection refused: server unreachable",
+  "network_error": "Network error",
+  "connection_timeout": "Connection timeout: server took too long to respond",
+  "send_timeout": "Send timeout: request not sent properly",
+  "receive_timeout": "Receive timeout: no response from server",
+  "bad_response": "Bad response from server",
+  "request_cancelled": "Request was cancelled",
+  "unexpected_network_error": "Unexpected network error",
 
-}
+ "register_success_message": "Registration Successful!",
+  "onboarding_title": "Compare and Choose",
+  "onboarding_desc": "Make informed decisions by comparing efficiency, cost, and long-term savings side-by-side.",
+  "invest_now_btn": "Invest Now",
 
+  "splash_subtitle": "YOUR SOLAR ENERGY PARTNER",
+
+  "onboarding_title_1": "Discover solar solutions",
+  "onboarding_desc_1": "Explore modern solar options tailored to your needs.",
+  "onboarding_title_2": "Connect with Experts",
+  "onboarding_desc_2": "Get professional advice from certified technicians to optimize your home's energy flow.",
+  "onboarding_title_3": "Compare and Choose the best system for you",
+  "onboarding_desc_3": "Make informed decisions by comparing efficiency, cost, and long-term savings side-by-side.",
+  "onboarding_next": "Next"
 }
 
 

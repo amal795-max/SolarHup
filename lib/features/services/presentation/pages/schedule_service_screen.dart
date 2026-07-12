@@ -52,7 +52,7 @@ class _ScheduleServiceView extends StatelessWidget {
         child: BlocBuilder<ScheduleServiceBloc, ScheduleServiceState>(
           builder: (context, state) {
             return switch (state) {
-              ScheduleServiceLoading() => const LoadingWidget(),
+              ScheduleServiceLoading() => const LoadingIndicator(),
               ScheduleServiceError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

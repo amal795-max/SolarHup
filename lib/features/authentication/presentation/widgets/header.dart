@@ -13,28 +13,25 @@ Widget headerWidget({
   child: Column(
     children: [
       Container(
-        width: 70.w,
-        height: 70.w,
+        width: 70.r,
+        height: 70.r,
         decoration: BoxDecoration(
           color: AppColors.secondaryColor,
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Icon(icon, color: AppColors.tertiaryColor, size: 30.sp),
       ),
-      SizedBox(height: 12.h),
+      SizedBox(height: 16.h),
       Text(
         title.tr(),
-        style: AppStyle.h4.copyWith(color: AppColors.primaryColor),
+        style: AppStyle.h3.copyWith(color: AppColors.primaryColor),
       ),
-      SizedBox(height: 8.h),
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Text(
+       Text(
           subTitle.tr(),
           textAlign: TextAlign.center,
-          style: AppStyle.labelMedium.copyWith(color: AppColors.grey),
+          style: AppStyle.bodyMedium.copyWith(color: AppColors.grey),
         ),
-      ),
+
       SizedBox(height: 24.h),
     ],
   ),

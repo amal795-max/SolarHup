@@ -43,19 +43,17 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 162.w,
+        width: 175.w,
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkContainer : AppColors.white,
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkGray : AppColors.borderColor,
-          ),
+
           boxShadow: isDark
               ? null
               : [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
+                    color: AppColors.shadowColor,
+                    blurRadius: 2,
                     offset: const Offset(0, 3),
                   ),
                 ],
@@ -147,15 +145,15 @@ class _CardImage extends StatelessWidget {
             top: 8.h,
             left: 8.w,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: data.badgeColor ?? AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(6.r),
+                color: data.badgeColor ?? AppColors.secondaryColor,
+                borderRadius: BorderRadius.circular(16.r),
               ),
               child: Text(
                 data.badgeText!,
                 style: AppStyle.labelXSmall.copyWith(
-                  color: AppColors.white,
+                  color: data.badgeColor==AppColors.secondaryColor?AppColors.brown:AppColors.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -168,8 +166,8 @@ class _CardImage extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
               decoration: BoxDecoration(
-                color: AppColors.red,
-                borderRadius: BorderRadius.circular(6.r),
+                color: AppColors.blue,
+                borderRadius: BorderRadius.circular(16.r),
               ),
               child: Text(
                 '-${data.discountPercent}%',

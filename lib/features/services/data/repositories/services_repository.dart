@@ -23,7 +23,7 @@ class ServicesRepositoryImpl implements ServicesRepository {
   Future<Either<Failure, ServicesFeedModel>> getServicesFeed() async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final data = await remote.getServicesFeed();

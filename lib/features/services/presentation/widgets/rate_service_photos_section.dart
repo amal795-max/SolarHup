@@ -77,7 +77,7 @@ class RateServicePhotosSection extends StatelessWidget {
                         width: 80.w,
                         height: 80.w,
                         color: AppColors.lightGrey,
-                        child: Icon(Icons.image_outlined, color: AppColors.grey),
+                        child: const Icon(Icons.image_outlined, color: AppColors.grey),
                       ),
                     ),
                   ),

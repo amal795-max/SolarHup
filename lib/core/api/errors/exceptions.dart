@@ -1,14 +1,19 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+
 import '../../constants/failure_success_message.dart';
 import 'failures.dart';
 
-class ServerException implements Exception{
+class ServerException implements Exception {
   final String message;
 
   ServerException({required this.message});
-
 }
-class EmptyCacheException implements Exception{}
-class OfflineException implements Exception{}
+
+class EmptyCacheException implements Exception {}
+
+class OfflineException implements Exception {}
 
 String getErrorMessage(int statusCode) {
   switch (statusCode) {
@@ -34,11 +39,41 @@ String getErrorMessage(int statusCode) {
     default:
       return 'An unexpected errors occurred. Please try again.';
   }
-
 }
+
+String mapDioError(DioException e) {
+  switch (e.type) {
+    case DioExceptionType.connectionError:
+      if (e.error is SocketException) {
+        return 'Connection refused: server unreachable';
+      }
+      return 'Network error: ${e.message}';
+
+    case DioExceptionType.connectionTimeout:
+      return 'Connection timeout: server took too long to respond';
+
+    case DioExceptionType.sendTimeout:
+      return 'Send timeout: request not sent properly';
+
+    case DioExceptionType.receiveTimeout:
+      return 'Receive timeout: no response from server';
+
+    case DioExceptionType.badResponse:
+      final statusCode = e.response?.statusCode ?? 0;
+      return getErrorMessage(statusCode);
+
+    case DioExceptionType.cancel:
+      return 'Request was cancelled';
+
+    case DioExceptionType.unknown:
+    default:
+      return 'Unexpected network error: ${e.message}';
+  }
+}
+
 String mapFailureToMessage(Failure failure) {
   switch (failure.runtimeType) {
-    case  const (OfflineFailure):
+    case const (OfflineFailure):
       return OFFLINE_FAILURE_MESSAGE;
     case const (ServerFailure):
       return (failure as ServerFailure).message;

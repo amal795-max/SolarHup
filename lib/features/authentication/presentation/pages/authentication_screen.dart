@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -39,51 +40,63 @@ class AuthenticationScreen extends StatelessWidget {
   Widget _builder(BuildContext context, AuthenticationState state) {
     final authBloc = context.read<AuthenticationCubit>();
     if (state is AuthenticationLoading) {
-      return const LoadingWidget();
+      return const LoadingIndicator();
     }
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
-          child: Column(
-            children: <Widget>[
-              headerWidget(
-                icon: Icons.solar_power_rounded,
-                title: 'auth_solar_hub',
-                subTitle: 'auth_solar_hub_sub',
-              ),
+           child:  Column(
+              children: <Widget>[
+                headerWidget(
+                  icon: Icons.solar_power_rounded,
+                  title: 'auth_solar_hub',
+                  subTitle: 'auth_solar_hub_sub',
+                )
+                    .animate()
+                    .fadeIn(duration: 600.ms, curve: Curves.easeOut)
+                    .slideY(begin: -0.3, end: 0, duration: 600.ms),
 
-              Form(
-                key: authBloc.authKey,
-                child: whiteSectionWidget(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomTextField(
-                        controller: authBloc.phoneNumberController,
-                        validator: (val) => phoneValid(val),
-                        maxLength: 10,
-                        title: 'phone_number'.tr(),
-                        hint: '09XX XXX XXX',
-                        keyboardType: TextInputType.phone,
-                        prefixIcon: const Icon(Icons.phone),
-                      ),
-                      SizedBox(height: 8.h),
-                      CustomButton(
-                        text: 'continue',
-                        onPressed: () {
-                          authBloc.checkPhoneNumber();
-                        },
-                        textColor: AppColors.white,
-                        icon: Icons.arrow_forward_rounded,
-                      ),
-                    ],
+                Form(
+                  key: authBloc.authKey,
+                  child: whiteSectionWidget(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomTextField(
+                          controller: authBloc.phoneNumberController,
+                          validator: (val) => phoneValid(val),
+                          maxLength: 10,
+                          title: 'phone_number'.tr(),
+                          hint: '09XX XXX XXX',
+                          keyboardType: TextInputType.phone,
+                          prefixIcon: const Icon(Icons.phone),
+                        )
+                            .animate()
+                            .fadeIn(duration: 500.ms, delay: 300.ms)
+                            .slideX(begin: -0.2, end: 0, duration: 500.ms),
+
+                        SizedBox(height: 8.h),
+
+                        CustomButton(
+
+                          text: 'continue',
+                          onPressed: () {
+                            // authBloc.checkPhoneNumber();
+                            context.push(AppRoutes.registerScreen);
+                          },
+                          textColor: AppColors.white,
+                          icon: Icons.arrow_forward_rounded,
+                        )
+                            .animate()
+                            .fadeIn(duration: 500.ms, delay: 600.ms)
+                      ],
+                    ),
+                    context: context,
                   ),
-                  context: context,
                 ),
-              ),
-            ],
-          ),
+              ],
+            )
         ),
       ),
     );

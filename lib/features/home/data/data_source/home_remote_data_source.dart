@@ -1,3 +1,4 @@
+import '../../../../core/theme/app_colors.dart';
 import '../models/blog_model.dart';
 import '../models/product_model.dart';
 
@@ -19,7 +20,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         name: 'EcoGen 300W Panel',
         price: 149.00,
         badgeText: 'Refurbished',
-        badgeColorValue: 0xFF2E7D32,
+        badgeColorValue: AppColors.secondaryColor,
         metaText: 'Used • Grade A',
         imagePlaceholderColorValue: 0xFF3A6B45,
         iconType: 'solar',
@@ -29,7 +30,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         name: 'Hybrid Inv...',
         price: 680.00,
         badgeText: 'Certified',
-        badgeColorValue: 0xFF0A2A43,
+        badgeColorValue:AppColors.lightGrey,
         imagePlaceholderColorValue: 0xFF1A3A5E,
         iconType: 'inverter',
       ),
@@ -38,7 +39,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         name: 'EcoGen 300W Panel',
         price: 149.00,
         badgeText: 'Refurbished',
-        badgeColorValue: 0xFF2E7D32,
+        badgeColorValue: AppColors.secondaryColor,
         metaText: 'Used • Grade A',
         imagePlaceholderColorValue: 0xFF4A6A35,
         iconType: 'solar',
@@ -64,7 +65,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         name: 'Hybrid Inv...',
         price: 680.00,
         badgeText: 'Certified',
-        badgeColorValue: 0xFF0A2A43,
+        badgeColorValue: AppColors.lightGrey,
         imagePlaceholderColorValue: 0xFF1A3A5E,
         iconType: 'inverter',
       ),

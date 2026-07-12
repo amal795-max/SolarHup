@@ -46,11 +46,11 @@ class AppThemes {
       titleSmall: AppStyle.h6.copyWith(color: AppColors.white),
       bodyLarge: AppStyle.bodyLarge.copyWith(color: AppColors.white),
       bodyMedium: AppStyle.bodyMedium.copyWith(color: AppColors.white),
-      bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.lightGray),
+      bodySmall: AppStyle.bodySmall.copyWith(color: AppColors.blue),
       labelLarge: AppStyle.labelLarge.copyWith(color: AppColors.white),
       labelMedium: AppStyle.labelMedium.copyWith(color: AppColors.white),
-      labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.lightGray),
-      displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.lightGray),
+      labelSmall: AppStyle.labelSmall.copyWith(color: AppColors.blue),
+      displaySmall: AppStyle.bodyXSmall.copyWith(color: AppColors.blue),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -124,7 +124,7 @@ class AppThemes {
   static final defaultPinTheme = PinTheme(
     width: 55,
     height: 50,
-    textStyle: const TextStyle(fontSize: 16, color: AppColors.greyTitle),
+    textStyle: const TextStyle(fontSize: 16, color: AppColors.grey),
     decoration: BoxDecoration(
       color: AppColors.lightGrey,
       borderRadius: BorderRadius.circular(12),

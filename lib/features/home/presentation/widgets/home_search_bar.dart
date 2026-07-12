@@ -55,9 +55,7 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: CustomTextField(
+    return CustomTextField(
         hasTitle: false,
         title: '',
         controller: widget.controller,
@@ -79,7 +77,7 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
                 splashRadius: 18,
               )
             : null,
-      ),
+
     );
   }
 }

@@ -15,7 +15,6 @@ import 'package:untitled1/features/blog/presentation/widgets/learning_hub_header
 import 'package:untitled1/features/blog/presentation/widgets/learning_hub_quick_guides_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/learning_hub_safety_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/learning_hub_troubleshooting_section.dart';
-import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -49,7 +48,7 @@ class _SolarLearningHubView extends StatelessWidget {
         child: BlocBuilder<LearningHubBloc, LearningHubState>(
           builder: (context, state) {
             return switch (state) {
-              LearningHubLoading() => const LoadingWidget(),
+              LearningHubLoading() => const LoadingIndicator(),
               LearningHubError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,
@@ -85,7 +84,7 @@ class _LearningHubBody extends StatelessWidget {
 
     return Column(
       children: [
-        Align(
+        const Align(
           
         ),
         Expanded(

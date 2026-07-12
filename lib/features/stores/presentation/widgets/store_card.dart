@@ -340,7 +340,7 @@ class _TagChip extends StatelessWidget {
       child: Text(
         label,
         style: AppStyle.labelXSmall.copyWith(
-          color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+          color: isDark ? AppColors.blue : AppColors.deepGrey,
           fontWeight: FontWeight.w500,
         ),
       ),

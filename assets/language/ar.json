@@ -134,10 +134,11 @@
   "home_did_you_know_body": "ساعة واحدة من أشعة الشمس يمكنها إمداد الأرض بالطاقة لمدة عام، ابدأ رحلتك الشمسية هنا وعظّم مدخراتك اليوم.",
   "home_used_system_label": "نظام مستعمل",
   "home_used_system_desc": "سوق سلس لشراء وبيع الأنظمة الشمسية المستعملة",
-  "home_calculator": "حاسبة",
-  "home_roi_savings": "العائد والتوفير",
-  "home_compare": "مقارنة",
-  "home_compare_desc": "مقارنة الأنظمة",
+  "home_expert_call": "مكالمة مع الخبير",
+  "home_expert_call_sub": "تواصل مباشرة مع خبير الطاقة الشمسية",
+  "home_compare": "قارن",
+  "home_compare_desc": "قارن بين الأنظمة الشمسية واختر الأنسب لك",
+
   "home_used_systems": "أنظمة مستعملة",
   "home_view_all": "عرض الكل",
   "home_new_offer": "عروض جديدة",
@@ -148,6 +149,7 @@
   "home_blog_rebates_title": "الإعانات الحكومية: ما تحتاج أن تعرفه",
   "home_blog_rebates_meta": "قراءة 8 دقائق • تمويل",
   "nav_home": "الرئيسية",
+  "nav_profile": "حسابي",
   "nav_store": "المتجر",
   "nav_services": "الخدمات",
   "nav_orders": "الطلبات",
@@ -320,7 +322,9 @@
   "dark_mode": "الوضع الداكن",
   "terms_conditions": "الشروط والأحكام",
   "logout": "تسجيل الخروج",
-  "settings": "الإعدادات",
+"welcome_to": "مرحبًا بك في",
+"topsolar": "توب سولار",
+   "settings": "الإعدادات",
   "account_section": "الحساب",
   "my_used_products": "منتجاتي المستعملة",
   "security_section": "الأمان",
@@ -447,9 +451,28 @@
 
   "empty_cache_failure_message": "لا توجد بيانات مخزنة، يرجى التحديث.",
   "offline_failure_message": "لا يوجد اتصال بالإنترنت، تحقق من الشبكة وحاول مرة أخرى.",
-  "register_success_message": "تم التسجيل بنجاح!",
+  "connection_refused": "تم رفض الاتصال: الخادم غير متاح",
+  "network_error": "خطأ في الشبكة",
+  "connection_timeout": "انتهت مهلة الاتصال: الخادم لم يستجب",
+  "send_timeout": "انتهت مهلة الإرسال: الطلب لم يُرسل بشكل صحيح",
+  "receive_timeout": "انتهت مهلة الاستقبال: لا يوجد رد من الخادم",
+  "bad_response": "استجابة غير صحيحة من الخادم",
+  "request_cancelled": "تم إلغاء الطلب",
+  "unexpected_network_error": "خطأ غير متوقع في الشبكة",
+"register_success_message": "تم التسجيل بنجاح!",
+  "onboarding_title": "قارن واختار الأنسب",
+  "onboarding_desc": "اتخذ قرارات واعية عبر مقارنة الكفاءة والتكلفة والتوفير طويل المدى بشكل واضح وسهل.",
 
+  "invest_now_btn": "استثمر الآن",
+
+  "splash_subtitle": "شريكك في الطاقة الشمسية",
+
+  "onboarding_title_1": "اكتشف حلول الطاقة الشمسية",
+  "onboarding_desc_1": "استكشف خيارات الطاقة الشمسية الحديثة المصممة حسب احتياجاتك.",
+  "onboarding_title_2": "تواصل مع الخبراء",
+  "onboarding_desc_2": "احصل على استشارات احترافية من فنيين معتمدين لتحسين تدفق الطاقة في منزلك.",
+  "onboarding_title_3": "قارن واختر أفضل نظام لك",
+  "onboarding_desc_3": "اتخذ قرارات واعية من خلال مقارنة الكفاءة والتكلفة والتوفير طويل المدى.",
+  "onboarding_next": "التالي"
 }
 
-
-}

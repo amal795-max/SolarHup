@@ -48,7 +48,7 @@ class _BlogView extends StatelessWidget {
         child: BlocBuilder<BlogBloc, BlogState>(
           builder: (context, state) {
             return switch (state) {
-              BlogLoading() => const LoadingWidget(),
+              BlogLoading() => const LoadingIndicator(),
               BlogError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

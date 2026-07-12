@@ -48,7 +48,7 @@ class _BlogArticleDetailView extends StatelessWidget {
       body: BlocBuilder<BlogDetailBloc, BlogDetailState>(
         builder: (context, state) {
           return switch (state) {
-            BlogDetailLoading() => const LoadingWidget(),
+            BlogDetailLoading() => const LoadingIndicator(),
             BlogDetailError(:final message) => SafeArea(
                 child: EmptyWidget(
                   icon: Icons.error_outline_rounded,

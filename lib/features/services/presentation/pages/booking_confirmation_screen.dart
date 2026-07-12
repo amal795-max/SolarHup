@@ -63,7 +63,7 @@ class _BookingConfirmationView extends StatelessWidget {
           },
           builder: (context, state) {
             return switch (state) {
-              BookingConfirmationLoading() => const LoadingWidget(),
+              BookingConfirmationLoading() => const LoadingIndicator(),
               BookingConfirmationError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

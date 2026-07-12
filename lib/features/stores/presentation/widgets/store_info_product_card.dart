@@ -347,7 +347,7 @@ class _CartIconButton extends StatelessWidget {
             child: Icon(
               Icons.shopping_cart_outlined,
               size: 18.sp,
-              color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+              color: isDark ? AppColors.blue : AppColors.deepGrey,
             ),
           ),
         ),

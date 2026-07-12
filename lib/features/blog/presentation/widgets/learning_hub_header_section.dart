@@ -27,7 +27,7 @@ class LearningHubHeaderSection extends StatelessWidget {
         Text(
           'learning_hub_description'.tr(),
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: isDark ? AppColors.lightGray : AppColors.deepGrey,
+            color: isDark ? AppColors.blue : AppColors.deepGrey,
             height: 1.55,
           ),
         ),

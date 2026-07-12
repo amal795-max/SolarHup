@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
-import 'package:untitled1/features/authentication/presentation/pages/authentication_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/login_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/register_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
+import 'package:untitled1/features/authentication/presentation/pages/splash_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
 import 'package:untitled1/features/chatbot/presentation/pages/chatbot_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
@@ -32,6 +32,8 @@ import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.d
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
+import '../../features/authentication/presentation/pages/authentication_screen.dart';
+import '../../features/authentication/presentation/pages/onboarding_screen.dart';
 import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 
@@ -40,7 +42,22 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
+        return const SplashScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.onboardingScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OnboardingScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.authenticationScreen,
+      builder: (BuildContext context, GoRouterState state) {
         return const AuthenticationScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.bottomNavBar,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CustomBottomNavBar();
       },),
     GoRoute(
       path: AppRoutes.homeScreen,

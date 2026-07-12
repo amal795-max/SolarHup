@@ -24,7 +24,7 @@ class PackageComparisonRepositoryImpl implements PackageComparisonRepository {
   Future<Either<Failure, PackageComparisonModel>> getPackageComparison() async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final data = await remote.getPackageComparison();
@@ -38,7 +38,7 @@ class PackageComparisonRepositoryImpl implements PackageComparisonRepository {
   Future<Either<Failure, void>> addPackageToCart(String packageId) async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       await Future<void>.delayed(const Duration(milliseconds: 400));

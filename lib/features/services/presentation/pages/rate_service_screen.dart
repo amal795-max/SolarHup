@@ -69,7 +69,7 @@ class _RateServiceView extends StatelessWidget {
           },
           builder: (context, state) {
             return switch (state) {
-              ServiceRatingLoading() => const LoadingWidget(),
+              ServiceRatingLoading() => const LoadingIndicator(),
               ServiceRatingError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,

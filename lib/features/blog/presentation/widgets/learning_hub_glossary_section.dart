@@ -64,7 +64,7 @@ class _LearningHubGlossarySectionState extends State<LearningHubGlossarySection>
           Text(
             'learning_glossary_description'.tr(),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: AppColors.lightGray,
+              color: AppColors.blue,
               height: 1.45,
             ),
           ),
@@ -86,7 +86,7 @@ class _LearningHubGlossarySectionState extends State<LearningHubGlossarySection>
                   .add(UpdateGlossarySearchEvent(value)),
               prefixIcon: Icon(
                 Icons.search_rounded,
-                color: AppColors.lightGray,
+                color: AppColors.blue,
                 size: 20.sp,
               ),
             ),
@@ -97,7 +97,7 @@ class _LearningHubGlossarySectionState extends State<LearningHubGlossarySection>
               child: Text(
                 'learning_glossary_no_results'.tr(),
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppColors.lightGray,
+                  color: AppColors.blue,
                 ),
               ),
             )
@@ -119,7 +119,7 @@ class _LearningHubGlossarySectionState extends State<LearningHubGlossarySection>
                     Text(
                       entry.definition,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.lightGray,
+                        color: AppColors.blue,
                         height: 1.45,
                       ),
                     ),

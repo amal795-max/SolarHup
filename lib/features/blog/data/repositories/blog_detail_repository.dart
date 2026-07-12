@@ -27,7 +27,7 @@ class BlogDetailRepositoryImpl implements BlogDetailRepository {
   ) async {
     if (useNetworkCheck) {
       final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return Left(OfflineFailure());
+      if (!isConnected) return const Left(OfflineFailure());
     }
     try {
       final detail = await remote.getArticleDetail(articleId);

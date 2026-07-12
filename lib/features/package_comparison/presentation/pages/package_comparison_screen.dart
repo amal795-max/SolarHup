@@ -60,7 +60,7 @@ class _PackageComparisonView extends StatelessWidget {
           },
           builder: (context, state) {
             return switch (state) {
-              PackageComparisonLoading() => const LoadingWidget(),
+              PackageComparisonLoading() => const LoadingIndicator(),
               PackageComparisonError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,
