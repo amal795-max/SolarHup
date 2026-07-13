@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/white_section_widget.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -16,26 +17,15 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String userName = 'Marcus Sterling';
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('settings'.tr(), style: Theme.of(context).textTheme.titleLarge,),
+        title: Text('settings'.tr()),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            whiteSectionWidget(
-              child: Text(
-                userName,
-                style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-              ), context: context,
-            ),
-
-            SizedBox(height: 20.h),
-
             _buildSectionHeader(context, 'account_section'.tr()),
             _buildSectionCard(context, [
               _buildListTile(
@@ -47,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
                   children: [
                     Text(
                       context.locale.languageCode.toUpperCase(),
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: AppStyle.bodySmall,
                     ),
                     Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
                   ],
@@ -162,7 +152,7 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
       padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
-      child: Text(title, style: Theme.of(context).textTheme.bodySmall),
+      child: Text(title, style: AppStyle.bodySmall.copyWith(color: AppColors.grey)),
     );
   }
 
@@ -194,7 +184,7 @@ class SettingsScreen extends StatelessWidget {
       }) {
     return ListTile(
       leading: Icon(icon, size: 22.sp),
-      title: Text(title, style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurface)),
+      title: Text(title, style:AppStyle.bodySmall),
       trailing:
       trailing ??
           Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
@@ -232,7 +222,7 @@ class SettingsScreen extends StatelessWidget {
       }) {
     return ListTile(
       leading: Icon(icon, size: 22.sp),
-      title: Text(title, style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.onSurface)),
+      title: Text(title, style: AppStyle.bodySmall),
       trailing: Switch(
         value: value,
         onChanged: onChanged,

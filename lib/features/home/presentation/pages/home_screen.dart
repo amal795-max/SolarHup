@@ -106,7 +106,7 @@ class _HomeViewState extends State<_HomeView> {
     (i) => const ProductCardData(
       name: 'Loading Product Name',
       price: 149.00,
-      imagePlaceholderColorValue: 0xFF3A6B45,
+      imagePlaceholderColorValue: AppImages.batteryTest1,
     ),
   );
 
@@ -130,7 +130,7 @@ class _HomeViewState extends State<_HomeView> {
     badgeText: m.badgeText,
     badgeColor: m.badgeColorValue,
     metaText: m.metaText,
-    imagePlaceholderColorValue: m.imagePlaceholderColorValue,
+    imagePlaceholderColorValue: m.image,
     discountPercent: m.discountPercent,
     imageIcon: m.iconType == 'inverter'
         ? Icons.electrical_services
@@ -171,8 +171,9 @@ class _HomeViewState extends State<_HomeView> {
               child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: HomeAppBar(onMenuTap: () {
-              context.push(AppRoutes.settingsScreen);
-            }, onCartTap: () {
+              // context.push(AppRoutes.settingsScreen);
+            },
+                onCartTap: () {
               context.push(AppRoutes.cartScreen);
             }),
             body: _buildBody(context, state),
@@ -252,14 +253,18 @@ class _HomeViewState extends State<_HomeView> {
               onClear: () => setState(() => _searchQuery = ''),
             ),
           ),
-
+          SizedBox(height: 16.h),
+          const DidYouKnowBanner(),
+          SizedBox(height: 16.h),
           // Collapse banners + quick actions while actively searching
           if (!isSearching) ...[
 
             // const UsedSystemBanner(),
             // SizedBox(height: 16.h),
             QuickActionsSection(
-              onCalculatorTap: isLoading ? null : () {},
+              onCalculatorTap: isLoading ? null : () {
+                context.push(AppRoutes.bookConsultationScreen);
+              },
               onCompareTap: isLoading
                   ? null
                   : () => context.push(AppRoutes.packageComparisonScreen),
@@ -276,8 +281,7 @@ class _HomeViewState extends State<_HomeView> {
               onViewAll: isLoading ? null : _navigateToUsedProducts,
               onProductTap: isLoading ? null : (_) => _navigateToUsedProducts(),
             ),
-            SizedBox(height: 24.h),
-            const DidYouKnowBanner(),
+
             SizedBox(height: 16.h), ],
             ProductsSection(
               titleKey: 'home_new_offer',

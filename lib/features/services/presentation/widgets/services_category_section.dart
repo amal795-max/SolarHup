@@ -54,10 +54,10 @@ class ServicesCategorySection extends StatelessWidget {
                       child: Text(
                         _categoryKeys[index].tr(),
                         style: theme.textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
                           color: isActive
-                              ? AppColors.black
-                              : theme.textTheme.bodyMedium?.color,
+                              ? AppColors.tertiaryColor
+                              : AppColors.grey
+                          ,
                         ),
                       ),
                     ),

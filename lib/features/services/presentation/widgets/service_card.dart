@@ -8,6 +8,8 @@ import 'package:untitled1/features/services/data/models/expert_service_model.dar
 import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 
+import '../../../../core/helper/extensions.dart';
+
 class ServiceCard extends StatelessWidget {
   final ExpertServiceModel service;
   final VoidCallback? onBookTap;
@@ -22,15 +24,13 @@ class ServiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
+    final titleColor = context.brightness ? AppColors.blue : AppColors.primaryColor;
 
     return Material(
-      color: theme.colorScheme.surface,
+      color: context.colorScheme.surface,
       borderRadius: BorderRadius.circular(16.r),
       clipBehavior: Clip.antiAlias,
-      elevation: isDark ? 0 : 1,
+      elevation: context.brightness ? 0 : 1,
       shadowColor: Colors.black.withValues(alpha: 0.06),
       child: Padding(
         padding: EdgeInsets.all(12.w),
@@ -54,7 +54,7 @@ class ServiceCard extends StatelessWidget {
                   SizedBox(height: 12.h),
                   Text(
                     '\$${service.price.toStringAsFixed(0)}',
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: titleColor,
                     ),
@@ -77,18 +77,20 @@ class ServiceCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        service.title,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: titleColor,
-                          height: 1.3,
+                      Flexible(
+                        child: Text(
+                          service.title,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: titleColor,
+                            height: 1.3,
+                          ),
                         ),
                       ),
                       TextWithIcon(
                         title: service.rating.toStringAsFixed(1),
                         icon: Icons.star_rounded,
-                        color: AppColors.secondaryColor,
+                        color: AppColors.tertiaryColor,
                       ),
                     ],
                   ),
@@ -106,19 +108,18 @@ class ServiceCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: isPrimary
-                              ? AppColors.blue.withValues(alpha: 0.12)
-                              : (isDark
-                                    ? theme.colorScheme.tertiaryContainer
+                              ? AppColors.blue.withValues(alpha: 0.19)
+                              : (context.brightness
+                                    ? context.colorScheme.tertiaryContainer
                                     : AppColors.lightGrey),
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: Text(
                           badge,
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
+                          style: context.textTheme.displaySmall?.copyWith(
                             color: isPrimary
                                 ? AppColors.primaryColor
-                                : AppColors.grey,
+                                : AppColors.deepGrey,
                             letterSpacing: 0.2,
                           ),
                         ),
@@ -136,6 +137,7 @@ class ServiceCard extends StatelessWidget {
                           text: 'services_book_now'.tr(),
                           height: 36.h,
                           fontSize: 12.sp,
+                          textColor: AppColors.blue,
                           onPressed:
                               onBookTap ??
                               () => context.push(

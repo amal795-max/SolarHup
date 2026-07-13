@@ -97,7 +97,7 @@ class _ExpertServicesBody extends StatelessWidget {
           const ServicesSearchSection(),
           SizedBox(height: 4.h),
           const ServicesCategorySection(),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
           if (services.isEmpty && !showFeatured)
             EmptyWidget(
               icon: Icons.search_off_rounded,
@@ -115,7 +115,7 @@ class _ExpertServicesBody extends StatelessWidget {
               ),
             ),
             if (showFeatured) ...[
-              SizedBox(height: 4.h),
+              SizedBox(height: 8.h),
               FeaturedServiceCard(service: featured),
             ],
           ],

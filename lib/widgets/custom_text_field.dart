@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -18,6 +19,7 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final bool isMultiline;
   final int? maxLines;
+  final TextDirection ? textDirection;
   final int? maxLength;
   final VoidCallback? onTap;
   final String? Function(String?)? validator;
@@ -41,6 +43,7 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.isMultiline = false,
     this.maxLines = 1,
+    this.textDirection ,
     this.maxLength,
     this.onTap,
     this.validator,
@@ -72,12 +75,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
         mainAxisSize: MainAxisSize.min,
         children: [
           widget.hasTitle
-              ? Text(widget.title, style: context.textTheme.bodySmall)
+              ? Text(widget.title, style: AppStyle.bodySmall.copyWith(
+            color: context.brightness?AppColors.blue:AppColors.grey
+          ))
               : const SizedBox.shrink(),
           SizedBox(height: 5.h),
           TextFormField(
+            textDirection: widget.textDirection ?? Directionality.of(context),
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            style: context.textTheme.bodySmall,
+            style: AppStyle.bodySmall,
             onFieldSubmitted: widget.onFieldSubmitted,
             controller: widget.controller,
             initialValue: widget.controller == null
@@ -118,7 +124,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 borderRadius: BorderRadius.circular(12.r),
                 borderSide: const BorderSide(color: AppColors.grey),
               ),
-              errorStyle:context.textTheme.labelSmall?.copyWith(
+              errorStyle:AppStyle.labelSmall.copyWith(
                 color: AppColors.red
               ),
 
@@ -141,6 +147,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         ],
       ),
-    );
+    )  .animate()
+        .fadeIn(duration: 500.ms, delay: 300.ms)
+        .slideX(begin: -0.2, end: 0, duration: 500.ms);
   }
 }

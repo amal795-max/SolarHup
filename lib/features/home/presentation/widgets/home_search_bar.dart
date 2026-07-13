@@ -62,21 +62,27 @@ class _HomeSearchBarState extends State<HomeSearchBar> {
         hint: 'home_search_hint'.tr(),
         readOnly: !widget.enabled,
         onChanged: widget.onChanged,
-        prefixIcon: Icon(Icons.search, color: AppColors.grey, size: 20.sp),
-        suffixIcon: _hasText
-            ? IconButton(
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: AppColors.grey,
-                  size: 18.sp,
-                ),
-                onPressed: () {
-                  widget.controller.clear();
-                  widget.onClear?.call();
-                },
-                splashRadius: 18,
-              )
-            : null,
+      prefixIcon: Icon(
+        Icons.search,
+        color: AppColors.primaryColor,
+        size: 20.sp,
+      ),
+
+      suffixIcon: _hasText
+          ? IconButton(
+        icon: Icon(
+          Icons.close_rounded,
+          color: AppColors.primaryColor,
+          size: 18.sp,
+        ),
+        onPressed: () {
+          widget.controller.clear();
+          widget.onClear?.call();
+        },
+        splashRadius: 18,
+      )
+          : null,
+
 
     );
   }

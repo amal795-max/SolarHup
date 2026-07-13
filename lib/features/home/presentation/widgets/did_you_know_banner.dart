@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class DidYouKnowBanner extends StatefulWidget {
   const DidYouKnowBanner({super.key});
@@ -8,10 +11,32 @@ class DidYouKnowBanner extends StatefulWidget {
   @override
   State<DidYouKnowBanner> createState() => _DidYouKnowBannerState();
 }
-
 class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
   final PageController _controller = PageController(viewportFraction: 0.88);
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(Duration.zero, () {
+      Timer.periodic(const Duration(seconds: 5), (timer) {
+        if (_controller.hasClients) {
+          int nextPage = _currentIndex + 1;
+
+          if (nextPage >= 3) {
+            nextPage = 0;
+          }
+
+          _controller.animateToPage(
+            nextPage,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    });
+  }
 
   final List<Map<String, String>> tips = [
     {
@@ -30,9 +55,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 170.h,
-      child: Column(
+    return Column(
         children: [
           SizedBox(
             height: 130.h,
@@ -57,17 +80,24 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        tips[index]['title']!,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          color: AppColors.lightGrey,
-                        ),
-                        textAlign: TextAlign.center,
+                      Row(
+                        spacing: 8,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            tips[index]['title']!,
+                            style: AppStyle.bodySmall.copyWith(
+                              color: AppColors.lightGrey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Icon(Icons.tips_and_updates,color: AppColors.secondaryColor,),
+                        ],
                       ),
                       SizedBox(height: 10.h),
                       Text(
                         tips[index]['body']!,
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        style: AppStyle.bodyXSmall.copyWith(
                           color: AppColors.blue,
                           height: 1.4,
                         ),
@@ -102,7 +132,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
             ),
           ),
         ],
-      ),
+
     );
   }
 }

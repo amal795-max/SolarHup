@@ -15,13 +15,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'your_cart'.tr(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 24.sp,
-          ),
-        ),
+        title: Text('your_cart'.tr(),),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),

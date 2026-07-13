@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -10,7 +11,7 @@ class CategoryFilterSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60.h,
+      height: 70.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -40,7 +41,7 @@ class _CategoryChip extends StatelessWidget {
     final theme = Theme.of(context);
     return Container(
       margin: EdgeInsets.only(right: 10.w),
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
       decoration: BoxDecoration(
         color: isSelected ? AppColors.tertiaryColor : AppColors.lightGrey,
         borderRadius: BorderRadius.circular(25.r),
@@ -53,13 +54,13 @@ class _CategoryChip extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 18.sp,
-            color: isSelected ? Colors.white : AppColors.primaryColor,
+            size: 16.sp,
+            color: isSelected ? AppColors.lighOrange : AppColors.primaryColor,
           ),
           Text(
             label,
-            style: theme.textTheme.displaySmall?.copyWith(
-              color: isSelected ? AppColors.white : null,
+            style: AppStyle.bodyXSmall.copyWith(
+              color: isSelected ? AppColors.lighOrange : null,
               fontWeight: isSelected ? FontWeight.bold : null,
             ),
           ),

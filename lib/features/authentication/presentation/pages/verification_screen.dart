@@ -33,7 +33,7 @@ class VerificationScreen extends StatelessWidget {
               headerWidget(
                 title: 'verification',
                 subTitle: 'verification_subtitle',
-                icon:Icons.verified_user,),
+                ),
               whiteSectionWidget(
                 child:Column(
                   children: [

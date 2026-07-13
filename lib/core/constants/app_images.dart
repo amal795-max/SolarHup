@@ -12,5 +12,8 @@ class AppImages {
   static const String logoImage = '${_images}logo.png';
   static const String googleIcon = '${_icons}google.svg';
   static const String chatBotIcon = '${_icons}chatbot.svg';
+  static const String batteryTest1 = '${_images}battery.jpg';
+  static const String batteryTest2 = '${_images}batt.jpg';
+  static const String batteryTest3 = '${_images}test3.jpg';
 
 }

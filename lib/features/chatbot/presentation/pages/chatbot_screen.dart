@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/helper/extensions.dart';
@@ -150,7 +151,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 ),
               ],
             ),
-            child: Text(text, style: context.textTheme.bodyMedium),
+            child: Text(text, style: AppStyle.bodyMedium),
           ),
         ),
       ],
@@ -176,7 +177,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             ),
             child: Text(
               text,
-              style: context.textTheme.bodyMedium?.copyWith(
+              style: AppStyle.bodyMedium.copyWith(
                 color: Colors.white,
               ),
             ),
@@ -226,12 +227,12 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
               children: [
                 Text(
                   data['name'],
-                  style: context.textTheme.titleMedium?.copyWith(
+                  style: AppStyle.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 4.h),
-                Text(data['desc'], style: context.textTheme.bodySmall),
+                Text(data['desc'], style: AppStyle.bodySmall),
                 SizedBox(height: 12.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

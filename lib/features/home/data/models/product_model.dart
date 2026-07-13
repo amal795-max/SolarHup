@@ -11,7 +11,7 @@ class ProductModel extends Equatable {
   final String? badgeText;
   final Color? badgeColorValue;
   final String? metaText;
-  final int imagePlaceholderColorValue;
+  final String image;
   final int? discountPercent;
 
   /// 'solar' | 'inverter'
@@ -26,7 +26,7 @@ class ProductModel extends Equatable {
     this.badgeText,
     this.badgeColorValue,
     this.metaText,
-    required this.imagePlaceholderColorValue,
+    required this.image,
     this.discountPercent,
     this.iconType = 'solar',
   });
@@ -41,7 +41,7 @@ class ProductModel extends Equatable {
         badgeText,
         badgeColorValue,
         metaText,
-        imagePlaceholderColorValue,
+        image,
         discountPercent,
         iconType,
       ];

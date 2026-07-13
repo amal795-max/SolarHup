@@ -7,6 +7,7 @@ import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
+import '../../../../widgets/header_section.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -20,22 +21,26 @@ class _ActivityScreenState extends State<ActivityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('activity_title'.tr())),
-      body: Column(
-        children: [
-          _TabSwitcher(
-            selectedIndex: _selectedTab,
-            onTabChanged: (index) {
-              setState(() {
-                _selectedTab = index;
-              });
-            },
-          ),
-          Expanded(
-            child: _selectedTab == 0 ? _buildOrdersTab() : _buildServicesTab(),
-          ),
-        ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Column(
+          children: [
+            headerSection(title:'activity_title',subTitle:'activity_subtitle'),
+            SizedBox(height:  16.h),
+            _TabSwitcher(
+              selectedIndex: _selectedTab,
+              onTabChanged: (index) {
+                setState(() {
+                  _selectedTab = index;
+                });
+              },
+            ),
+            Expanded(
+              child: _selectedTab == 0 ? _buildOrdersTab() : _buildServicesTab(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -210,7 +215,7 @@ class _OrderCard extends StatelessWidget {
             productName,
             style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
-          const Divider(color: AppColors.borderColor),
+          Divider(color: AppColors.borderColor),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -238,21 +243,24 @@ class _StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Text(
+    return Chip(
+      label: Text(
         text,
         style: TextStyle(
           color: color,
           fontSize: 10.sp,
-          fontWeight: FontWeight.bold,
         ),
+        textAlign: TextAlign.center,
       ),
+      backgroundColor: color.withOpacity(0.1),
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24.r),
+        side: BorderSide(color: color)
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
     );
+
   }
 }
 

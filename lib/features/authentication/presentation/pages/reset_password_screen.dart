@@ -29,8 +29,7 @@ class ResetPasswordScreen extends StatelessWidget {
             children: [
              headerWidget(
                title: 'reset_password',
-               subTitle: 'reset_password_subtitle',
-               icon:Icons.password_rounded,),
+               subTitle: 'reset_password_subtitle',),
 
               whiteSectionWidget(
                 child:Column(

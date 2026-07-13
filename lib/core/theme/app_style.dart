@@ -11,12 +11,11 @@ class AppStyle {
   }) {
 
     return TextStyle(
+      fontFamily: 'Tajawal',
       fontSize: fontSize,
       fontWeight: fontWeight,
       height: height,
     );
-
-
   }
   static TextStyle get h1 =>  getFontStyle(
     fontSize: 32.sp,

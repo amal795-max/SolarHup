@@ -27,15 +27,14 @@ class StoreInfoCategoriesSection extends StatelessWidget {
           child: Text('categories'.tr(), style: theme.textTheme.titleMedium),
         ),
 
-        SizedBox(height: 12.h),
 
         // ── Horizontally scrollable chips ─────────────────────────────────
         BlocBuilder<StoreInfoBloc, StoreInfoState>(
           buildWhen: (prev, curr) =>
-              prev.selectedCategoryIndex != curr.selectedCategoryIndex,
+          prev.selectedCategoryIndex != curr.selectedCategoryIndex,
           builder: (context, state) {
             return SizedBox(
-              height: 84.h,
+              height: 120.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
@@ -91,103 +90,63 @@ class _CategoryChip extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final unselectedBg =
-        isDark ? AppColors.darkContainer : AppColors.white;
+    isDark ? AppColors.darkContainer : AppColors.white;
     final unselectedBorder =
-        isDark ? AppColors.darkGray : AppColors.borderColor;
+    isDark ? AppColors.darkGray : AppColors.borderColor;
     final unselectedIconBg =
-        AppColors.primaryColor.withValues(alpha: 0.10);
+    AppColors.primaryColor.withValues(alpha: 0.10);
     final unselectedIconColor = AppColors.primaryColor;
     final unselectedTextColor =
-        isDark ? AppColors.blue : AppColors.deepGrey;
+    isDark ? AppColors.blue : AppColors.deepGrey;
 
-    return Container(
-      width: 76.w,
-      // Outer container for shadow — not clipped so shadow shows
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14.r),
-        boxShadow: isSelected || isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(14.r),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryColor : unselectedBg,
-            borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(
-              color: isSelected ? AppColors.primaryColor : unselectedBorder,
-              width: isSelected ? 0 : 1,
-            ),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 6.w,
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              splashColor: (isSelected ? AppColors.white : AppColors.primaryColor)
-                  .withValues(alpha: 0.18),
-              highlightColor: (isSelected
-                      ? AppColors.white
-                      : AppColors.primaryColor)
-                  .withValues(alpha: 0.08),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 10.h,
-                  horizontal: 6.w,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon circle
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 55.w,
+                height: 55.w,
+                decoration: BoxDecoration(
+                  color: unselectedIconBg,
+                  shape: BoxShape.circle,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Icon circle
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 36.w,
-                      height: 36.w,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.white.withValues(alpha: 0.18)
-                            : unselectedIconBg,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        item.icon,
-                        color: isSelected ? AppColors.white : unselectedIconColor,
-                        size: 18.sp,
-                      ),
-                    ),
-
-                    SizedBox(height: 6.h),
-
-                    // Label
-                    Text(
-                      item.label,
-                      style: AppStyle.labelXSmall.copyWith(
-                        color: isSelected
-                            ? AppColors.white
-                            : unselectedTextColor,
-                        fontWeight: isSelected
-                            ? FontWeight.w700
-                            : FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                child: Icon(
+                  item.icon,
+                  color: unselectedIconColor,
+                  size: 24.sp,
                 ),
               ),
-            ),
+
+              SizedBox(height: 6.h),
+
+              // Label
+              Text(
+                item.label,
+                style: AppStyle.labelXSmall.copyWith(
+                  color:unselectedTextColor,
+                  fontWeight: isSelected
+                      ? FontWeight.w700
+                      : FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
         ),
       ),
+
     );
   }
 }

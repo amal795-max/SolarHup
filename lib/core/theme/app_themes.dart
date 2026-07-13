@@ -11,7 +11,7 @@ class AppThemes {
     brightness: Brightness.dark,
     primaryColor: AppColors.primaryColor,
     secondaryHeaderColor: AppColors.secondaryColor,
-    scaffoldBackgroundColor: AppColors.darkMode,
+    scaffoldBackgroundColor: AppColors.deepPrimaryColor,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.blue,
       surface: AppColors.darkContainer,
@@ -28,14 +28,15 @@ class AppThemes {
       centerTitle: true,
       titleTextStyle: AppStyle.bodyLarge.copyWith(color: AppColors.white),
     ),
-    dividerTheme: const DividerThemeData(
-      color: AppColors.lightGrey,
+    dividerTheme: DividerThemeData(
+      color: AppColors.borderColor,
       indent: 20,
       endIndent: 20,
     ),
+
     listTileTheme: ListTileThemeData(
       iconColor: AppColors.blue,
-      titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.blue),
+      titleTextStyle: AppStyle.bodySmall.copyWith(color: AppColors.lightGrey),
     ),
     textTheme: TextTheme(
       headlineLarge: AppStyle.h1.copyWith(color: AppColors.white),
@@ -71,7 +72,7 @@ class AppThemes {
     brightness: Brightness.light,
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.backGroundGrey,
-    colorScheme: const ColorScheme.light(
+    colorScheme: ColorScheme.light(
       primary: AppColors.primaryColor,
       surface: AppColors.white,
       onSurface: AppColors.black,
@@ -85,7 +86,7 @@ class AppThemes {
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.black, size: 24.sp),
       centerTitle: true,
-      titleTextStyle: AppStyle.bodyLarge.copyWith(color: AppColors.black),
+      titleTextStyle: AppStyle.h3.copyWith(color: AppColors.black),
     ),
     dividerTheme: const DividerThemeData(
       color: AppColors.lightGrey,

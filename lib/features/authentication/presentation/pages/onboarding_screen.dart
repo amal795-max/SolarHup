@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/constants/app_images.dart';
-import '../../../../core/helper/extensions.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/primary_button.dart';
@@ -78,16 +78,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       Text(
                         titleKeys[index].tr(),
-                        style: context.textTheme.headlineLarge?.copyWith(
+                        style: AppStyle.h1.copyWith(
                           color: Colors.white,
-                          fontWeight: FontWeight.w800,
                           height: 1.25,
                         ),
                       ),
                       SizedBox(height: 12.h),
                       Text(
                         descriptionKeys[index].tr(),
-                        style: context.textTheme.bodyMedium?.copyWith(
+                        style: AppStyle.bodyMedium.copyWith(
                           color: AppColors.grey,
                           height: 1.4,
                         ),

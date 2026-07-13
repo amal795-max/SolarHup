@@ -214,7 +214,7 @@ class _StoreInfoView extends StatelessWidget {
                     ),
                     Positioned(
                       left: 30.w,
-                      bottom: 50.h,
+                      bottom: 80.h,
                       child: _FloatingStoreLogoBadge(data: data),
                     ),
                   ],
@@ -232,8 +232,6 @@ class _StoreInfoView extends StatelessWidget {
             ),
           ),
 
-          // ── Back button — floats over the hero while scrolling ────────────
-          Positioned(top: topInset + 8, left: 8.w, child: _BackButton()),
         ],
       ),
     );
@@ -276,25 +274,3 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
 // Back button — always white so it's legible over the hero image when expanded
 // ---------------------------------------------------------------------------
 
-class _BackButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.w),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.35),
-          shape: BoxShape.circle,
-        ),
-        child: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.white,
-            size: 18.sp,
-          ),
-          onPressed: () => context.pop(),
-        ),
-      ),
-    );
-  }
-}

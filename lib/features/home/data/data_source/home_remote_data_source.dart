@@ -1,3 +1,4 @@
+import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/blog_model.dart';
 import '../models/product_model.dart';
@@ -22,7 +23,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         badgeText: 'Refurbished',
         badgeColorValue: AppColors.secondaryColor,
         metaText: 'Used • Grade A',
-        imagePlaceholderColorValue: 0xFF3A6B45,
+        image: AppImages.batteryTest2,
         iconType: 'solar',
       ),
       ProductModel(
@@ -31,7 +32,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         price: 680.00,
         badgeText: 'Certified',
         badgeColorValue:AppColors.lightGrey,
-        imagePlaceholderColorValue: 0xFF1A3A5E,
+        image: AppImages.batteryTest1,
         iconType: 'inverter',
       ),
       ProductModel(
@@ -41,7 +42,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         badgeText: 'Refurbished',
         badgeColorValue: AppColors.secondaryColor,
         metaText: 'Used • Grade A',
-        imagePlaceholderColorValue: 0xFF4A6A35,
+        image: AppImages.batteryTest3,
         iconType: 'solar',
       ),
     ];
@@ -57,16 +58,18 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         price: 133.00,
         originalPrice: 149.00,
         discountPercent: 15,
-        imagePlaceholderColorValue: 0xFF1C1C1E,
+        image: AppImages.batteryTest1,
         iconType: 'solar',
       ),
       ProductModel(
         id: 'n2',
-        name: 'Hybrid Inv...',
-        price: 680.00,
+        name: 'Hybrid Inverter',
+        category: 'Hybrid inverter that combines solar and battery ',
+        price: 500.00,
+        originalPrice: 545.00,
         badgeText: 'Certified',
         badgeColorValue: AppColors.lightGrey,
-        imagePlaceholderColorValue: 0xFF1A3A5E,
+        image: AppImages.batteryTest2,
         iconType: 'inverter',
       ),
       ProductModel(
@@ -75,7 +78,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         price: 120.00,
         originalPrice: 149.00,
         discountPercent: 20,
-        imagePlaceholderColorValue: 0xFF2D4A2D,
+        image: AppImages.batteryTest3,
         iconType: 'solar',
       ),
     ];

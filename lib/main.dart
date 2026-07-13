@@ -11,9 +11,9 @@ import 'core/routing/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
   await di.init();
   await LocalStorage().init();
+  await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
       supportedLocales: const <Locale>[Locale('en'), Locale('ar')],
@@ -55,15 +55,7 @@ class MyApp extends StatelessWidget {
                 themeMode: mode,
                 localizationsDelegates: context.localizationDelegates,
                 supportedLocales: context.supportedLocales,
-                locale: locale,
-                localeResolutionCallback: (deviceLocal, supportedLocales) {
-                  for (var local in supportedLocales) {
-                    if (deviceLocal != null && deviceLocal.languageCode == local.languageCode) {
-                      return deviceLocal;
-                    }
-                  }
-                  return supportedLocales.first;
-                },
+                locale: context.locale,
                 routerConfig: router,
               );
             },

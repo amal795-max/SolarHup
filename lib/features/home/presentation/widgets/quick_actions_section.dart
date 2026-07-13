@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
@@ -66,7 +67,6 @@ class _QuickActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -75,12 +75,9 @@ class _QuickActionCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.darkContainer : AppColors.lightGrey,
+            color: context.brightness ? AppColors.darkContainer : Color(0xFFE3E2E4),
             borderRadius: BorderRadius.circular(18.r),
-            // border: Border.all(
-            //   color: isDark ? AppColors.darkGray : AppColors.borderColor,
-            // ),
-            boxShadow: isDark
+            boxShadow: context.brightness
                 ? null
                 : [
                     BoxShadow(
@@ -90,33 +87,40 @@ class _QuickActionCard extends StatelessWidget {
                     ),
                   ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 38.w,
-                height: 38.w,
-                decoration: BoxDecoration(
-                  color: iconBgColor,
-                  borderRadius: BorderRadius.circular(10.r),
+          child: SizedBox(
+            height: 130.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 40.r,
+                  height: 40.r,
+                  decoration: BoxDecoration(
+                    color: iconBgColor,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 20.sp),
                 ),
-                child: Icon(icon, color: iconColor, size: 20.sp),
-              ),
-              SizedBox(height: 10.h),
-              Text(
-                title,
-                style: AppStyle.bodySmall.copyWith(
-                  color: isDark ? AppColors.white : AppColors.black,
-                  fontWeight: FontWeight.w700,
+                SizedBox(height: 10.h),
+                Text(
+                  title,
+                  style: AppStyle.bodySmall.copyWith(
+                    color: context.brightness ? AppColors.white : AppColors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                subtitle,
-                overflow: TextOverflow.ellipsis,
-                style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
-              ),
-            ],
+                SizedBox(height: 2.h),
+                Expanded(
+                  child: Text(
+                    subtitle,
+                    overflow: TextOverflow.visible,
+                    style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

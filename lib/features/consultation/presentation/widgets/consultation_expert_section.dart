@@ -30,7 +30,7 @@ class ConsultationExpertSection extends StatelessWidget {
         ),
         SizedBox(height: 12.h),
         SizedBox(
-          height: 210.h,
+          height: 220.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: experts.length,

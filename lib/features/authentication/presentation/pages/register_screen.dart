@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/validators.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/authentication_cubit.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import '../../../../core/routing/app_routes.dart';
@@ -48,9 +47,8 @@ class RegisterScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               headerWidget(
-                title: 'solar_hub',
-                subTitle: 'empowering_future',
-                icon: Icons.password_rounded,
+                title: 'join_top_solar',
+                subTitle: 'complete_details',
               ),
               whiteSectionWidget(
                 context: context,
@@ -59,22 +57,6 @@ class RegisterScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ListTile(
-                        title: Text(
-                          'join_solarhub'.tr(),
-                          style: AppStyle.h5.copyWith(
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                        subtitle: Text(
-                          'complete_details'.tr(),
-                          style: AppStyle.labelSmall.copyWith(
-                            color: AppColors.grey,
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      SizedBox(height: 12.h),
 
                       CustomTextField(
                         controller: authBloc.passwordController,

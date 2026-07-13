@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import '../../../../core/helper/extensions.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuTap;
@@ -19,26 +19,27 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: false,
       actions: [
         CircleAvatar(
-          backgroundColor:AppColors.lightGrey,
+          backgroundColor: AppColors.lightGrey,
           child: IconButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.shopping_cart_outlined,
-              color: AppColors.blue,
-              size: 22,
+              color: AppColors.primaryColor,
+              size: 20.r,
             ),
             onPressed: onCartTap,
           ),
         ),
+
         SizedBox(width: 8.w,),
         CircleAvatar(
-          backgroundColor:AppColors.lightGrey,
+          backgroundColor: AppColors.lightGrey,
           child: IconButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.notifications_none,
-              color: AppColors.blue,
-              size: 24,
+              color: AppColors.primaryColor,
+              size: 22.r,
             ),
-            onPressed: onCartTap,
+            onPressed: onMenuTap,
           ),
         ),
         SizedBox(width: 16.w,),
@@ -48,12 +49,10 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             Row(
               children: [
                 Column(
-                  spacing: 4,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    
-                     Text('welcome_to'.tr(), style: context.textTheme.labelMedium),
-                    Text('topsolar'.tr(), style: context.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
+                     Text('welcome_to'.tr(), style: AppStyle.bodyMedium),
+                    Text('topsolar'.tr(), style: AppStyle.h4),
                   ],
                 ),
 

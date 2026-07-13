@@ -55,7 +55,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 children: [
                   _SectionTitle(title: 'categories'.tr()),
                   SizedBox(height: 12.h),
-                  const CategoryFilterSection(),
+                  // const CategoryFilterSection(),
                   SizedBox(height: 24.h),
                   _SectionTitle(
                     title: 'price_range'.tr(),

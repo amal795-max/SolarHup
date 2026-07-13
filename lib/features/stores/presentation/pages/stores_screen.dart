@@ -9,16 +9,16 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_bloc/stores_bloc.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
-import 'package:untitled1/features/stores/presentation/widgets/stores_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+
+import '../../../../widgets/header_section.dart';
 
 /// Entry point — provides StoresBloc and fires the first load immediately.
 class StoresScreen extends StatelessWidget {
@@ -158,7 +158,9 @@ class _StoresViewState extends State<_StoresView> {
       },
       builder: (context, state) => Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: HomeAppBar(onMenuTap: () {}, onCartTap: () {}),
+        // appBar: AppBar(
+        //   title: Text('stores'.tr(), style: Theme.of(context).textTheme.titleLarge,),
+        // ),
         body: _buildBody(context, state),
 
       ),
@@ -206,9 +208,8 @@ class _StoresViewState extends State<_StoresView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              headerSection(title:'stores_title',subTitle:'stores_subtitle'),
               SizedBox(height: 16.h),
-              const StoresHeaderSection(),
-              SizedBox(height: 14.h),
               StoresSearchBar(
                 controller: _searchController,
                 enabled: !isLoading,

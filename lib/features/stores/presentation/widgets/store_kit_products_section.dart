@@ -43,7 +43,7 @@ class StoreKitProductsSection extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 12.h,
             crossAxisSpacing: 10.w,
-            childAspectRatio: 0.68,
+            childAspectRatio: 0.62,
           ),
           itemBuilder: (context, index) => _KitProductCard(
             product: filteredProducts[index],

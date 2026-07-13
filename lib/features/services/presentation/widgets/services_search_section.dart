@@ -87,7 +87,7 @@ class _ServicesSearchSectionState extends State<ServicesSearchSection> {
               height: 48.h,
               child: Icon(
                 Icons.tune_rounded,
-                color: AppColors.white,
+                color: AppColors.blue,
                 size: 22.sp,
               ),
             ),

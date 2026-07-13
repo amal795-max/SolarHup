@@ -11,7 +11,7 @@ class ProductCardData {
   final String? badgeText;
   final Color? badgeColor;
   final String? metaText;
-  final int imagePlaceholderColorValue;
+  final String imagePlaceholderColorValue;
   final int? discountPercent;
   final IconData imageIcon;
 
@@ -28,7 +28,6 @@ class ProductCardData {
     this.imageIcon = Icons.solar_power,
   });
 
-  Color get imagePlaceholderColor => Color(imagePlaceholderColorValue);
 }
 
 class ProductCard extends StatelessWidget {
@@ -43,6 +42,7 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+
         width: 175.w,
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkContainer : AppColors.white,
@@ -73,6 +73,7 @@ class ProductCard extends StatelessWidget {
                       data.category!,
                       style: AppStyle.labelXSmall.copyWith(
                         color: AppColors.primaryColor,
+                        overflow: TextOverflow.ellipsis,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.6,
                       ),
@@ -88,10 +89,10 @@ class ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 4.h),
                   _PriceRow(data: data, isDark: isDark),
                   if (data.metaText != null) ...[
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 2.h),
                     Text(
                       data.metaText!,
                       style: AppStyle.labelXSmall.copyWith(
@@ -120,22 +121,12 @@ class _CardImage extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
           child: Container(
-            height: 115.h,
+            height: 105.h,
             width: double.infinity,
-            color: data.imagePlaceholderColor,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: Colors.black.withValues(alpha: 0.08),
-                  ),
-                ),
-                Icon(
-                  data.imageIcon,
-                  color: Colors.white.withValues(alpha: 0.35),
-                  size: 44.sp,
-                ),
+                Image.asset(data.imagePlaceholderColorValue,),
               ],
             ),
           ),

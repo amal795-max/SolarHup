@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -71,8 +72,8 @@ class _SplashScreenState extends State<SplashScreen> {
                         Text(
                           'TOPSOLAR',
                           textAlign: TextAlign.center,
-                          style: context.textTheme.headlineLarge
-                              ?.copyWith(
+                          style: AppStyle.h2
+                              .copyWith(
                                 color: Colors.white,
                                 letterSpacing: 6,
                               ),
@@ -83,9 +84,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         Text(
                           'splash_subtitle'.tr(),
                           textAlign: TextAlign.center,
-                          style: context.textTheme.bodySmall
-                              ?.copyWith(
-                                color: AppColors.lightGrey,
+                          style:AppStyle.bodySmall
+                              .copyWith(
+                                color: AppColors.blue,
                                 letterSpacing: 1.5,
                               ),
                         ).animate(delay: 300.ms).fade(duration: 500.ms),

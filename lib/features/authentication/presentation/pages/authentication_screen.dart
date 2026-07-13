@@ -49,14 +49,9 @@ class AuthenticationScreen extends StatelessWidget {
            child:  Column(
               children: <Widget>[
                 headerWidget(
-                  icon: Icons.solar_power_rounded,
-                  title: 'auth_solar_hub',
-                  subTitle: 'auth_solar_hub_sub',
-                )
-                    .animate()
-                    .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-                    .slideY(begin: -0.3, end: 0, duration: 600.ms),
-
+                  title: 'auth_solar_top',
+                  subTitle: 'auth_solar_top_sub',
+                ),
                 Form(
                   key: authBloc.authKey,
                   child: whiteSectionWidget(
@@ -64,6 +59,7 @@ class AuthenticationScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomTextField(
+                          // textDirection: TextDirection.RTL,
                           controller: authBloc.phoneNumberController,
                           validator: (val) => phoneValid(val),
                           maxLength: 10,

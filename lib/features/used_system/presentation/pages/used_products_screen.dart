@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/widgets/custom_text_field.dart';
 
 import '../../../../core/theme/app_style.dart';
+import '../../../../widgets/header_section.dart';
 import '../widgets/category_chip.dart';
 
 class UsedProductsScreen extends StatelessWidget {
@@ -13,38 +15,39 @@ class UsedProductsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Used system', style: Theme
-            .of(context)
-            .textTheme
-            .headlineSmall,),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const _HeaderSection(),
-            const CategoryFilterSection(),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16.h),
-                    const _ProductGrid(),
-                    SizedBox(height: 100.h),
-                  ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body:  Column(
+            children: [
+              SizedBox(height: 56.h),
+             headerSection(title:'home_used_systems',subTitle:'home_used_system_desc'),
+              SizedBox(height: 16.h),
+              const _HeaderSection(),
+              const CategoryFilterSection(),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 16.h),
+                      const _ProductGrid(),
+                      SizedBox(height: 100.h),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: const _SellSystemButton(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: const _SellSystemButton(),
     );
   }
 }
+
+
 
 class _HeaderSection extends StatelessWidget {
   const _HeaderSection();
@@ -52,18 +55,15 @@ class _HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20.r),
+      padding: EdgeInsets.symmetric(horizontal:  20.r),
       child: Row(
         children: [
           Expanded(
-            child:
-            TextField(
-              decoration: InputDecoration(
-                hintStyle: AppStyle.bodyXSmall.copyWith(color: Colors.grey),
-                hintText: 'search_hint'.tr(),
-                prefixIcon: const Icon(Icons.search, color: AppColors.grey,),
-                contentPadding: EdgeInsets.symmetric(vertical: 12.h),
-              ),
+            child: CustomTextField(
+              title: 'title',
+              hasTitle: false,
+              hint: 'search_hint'.tr(),
+              prefixIcon: const Icon(Icons.search, color: AppColors.grey),
             ),
           ),
           SizedBox(width: 12.w),
@@ -85,7 +85,6 @@ class _HeaderSection extends StatelessWidget {
     );
   }
 }
-
 
 class _ProductGrid extends StatelessWidget {
   const _ProductGrid();
@@ -119,11 +118,11 @@ class _ProductCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: const[
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 10,
-            offset:  Offset(0, 4),
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -137,11 +136,15 @@ class _ProductCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.lightGrey.withOpacity(0.5),
                     borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16.r)),
+                      top: Radius.circular(16.r),
+                    ),
                   ),
                   child: Center(
                     child: Icon(
-                        Icons.battery_std, size: 40.sp, color: AppColors.grey),
+                      Icons.battery_std,
+                      size: 40.sp,
+                      color: AppColors.grey,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -149,7 +152,9 @@ class _ProductCard extends StatelessWidget {
                   right: 8,
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                        horizontal: 8.w, vertical: 4.h),
+                      horizontal: 8.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8.r),
@@ -185,7 +190,8 @@ class _ProductCard extends StatelessWidget {
                     Text(
                       'San Jose, CA',
                       style: theme.textTheme.bodySmall?.copyWith(
-                          fontSize: 10.sp),
+                        fontSize: 10.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -223,7 +229,7 @@ class _Tag extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: AppColors.lightGrey,
         borderRadius: BorderRadius.circular(4.r),
@@ -231,7 +237,9 @@ class _Tag extends StatelessWidget {
       child: Text(
         label,
         style: theme.textTheme.bodySmall?.copyWith(
-            fontSize: 8.sp, color: AppColors.grey),
+          fontSize: 8.sp,
+          color: AppColors.grey,
+        ),
       ),
     );
   }
@@ -244,18 +252,16 @@ class _SellSystemButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return FloatingActionButton.extended(
-        onPressed: () {
-          context.push(AppRoutes.addProductScreen);
-        },
-        backgroundColor: AppColors.secondaryColor,
-        foregroundColor: AppColors.brown,
-        label: Text(
-          'sell_your_system'.tr(),
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: AppColors.brown
-          ),
-        ),
-        icon: const Icon(Icons.add_circle_outline),
-      );
+      onPressed: () {
+        context.push(AppRoutes.addProductScreen);
+      },
+      backgroundColor: AppColors.secondaryColor,
+      foregroundColor: AppColors.brown,
+      label: Text(
+        'sell_your_system'.tr(),
+        style: theme.textTheme.labelSmall?.copyWith(color: AppColors.brown),
+      ),
+      icon: const Icon(Icons.add_circle_outline),
+    );
   }
 }

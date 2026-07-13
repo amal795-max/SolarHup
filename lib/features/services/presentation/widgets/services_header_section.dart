@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 
+import '../../../../core/theme/app_style.dart';
+
 class ServicesHeaderSection extends StatelessWidget {
   const ServicesHeaderSection({super.key});
 
@@ -18,26 +20,24 @@ class ServicesHeaderSection extends StatelessWidget {
         Text(
           'services_professional_care'.tr(),
           style: theme.textTheme.labelSmall?.copyWith(
-            color: AppColors.secondaryColor,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.2,
+            color: AppColors.tertiaryColor,
+
           ),
         ),
         SizedBox(height: 6.h),
         Text(
           'expert_services_title'.tr(),
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w800,
-            color: titleColor,
-            height: 1.15,
+          style: AppStyle.h3.copyWith(
+            height: 1.2,
           ),
+
         ),
         SizedBox(height: 8.h),
         Text(
           'expert_services_description'.tr(),
-          style: theme.textTheme.bodyMedium?.copyWith(
+          style: AppStyle.bodySmall.copyWith(
             color: AppColors.grey,
-            height: 1.45,
+            height: 1.4,
           ),
         ),
       ],
