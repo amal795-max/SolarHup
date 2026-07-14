@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/blog/presentation/bloc/blog_bloc/blog_bloc.dart';
+import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class BlogCategorySection extends StatelessWidget {
@@ -21,7 +21,7 @@ class BlogCategorySection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return BlocBuilder<BlogBloc, BlogState>(
+    return BlocBuilder<BlogCubit, BlogState>(
       buildWhen: (prev, curr) =>
           curr is BlogLoaded &&
           (prev is! BlogLoaded ||
@@ -51,9 +51,8 @@ class BlogCategorySection extends StatelessWidget {
                     textColor: isActive
                         ? AppColors.black
                         : theme.textTheme.bodyMedium?.color,
-                    onPressed: () => context
-                        .read<BlogBloc>()
-                        .add(SelectBlogCategoryEvent(index)),
+                    onPressed: () =>
+                        context.read<BlogCubit>().selectCategory(index),
                   ),
                 ),
               );

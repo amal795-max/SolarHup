@@ -18,6 +18,29 @@ class BlogArticleModel {
     required this.imagePlaceholderColorValue,
     this.iconType = 'document',
   });
+
+  BlogArticleModel copyWith({
+    String? id,
+    String? title,
+    String? excerpt,
+    String? dateLabel,
+    String? categoryKey,
+    String? categoryLabel,
+    int? imagePlaceholderColorValue,
+    String? iconType,
+  }) {
+    return BlogArticleModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      excerpt: excerpt ?? this.excerpt,
+      dateLabel: dateLabel ?? this.dateLabel,
+      categoryKey: categoryKey ?? this.categoryKey,
+      categoryLabel: categoryLabel ?? this.categoryLabel,
+      imagePlaceholderColorValue:
+          imagePlaceholderColorValue ?? this.imagePlaceholderColorValue,
+      iconType: iconType ?? this.iconType,
+    );
+  }
 }
 
 class BlogFeedModel {

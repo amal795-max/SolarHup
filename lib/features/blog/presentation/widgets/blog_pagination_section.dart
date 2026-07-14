@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/blog/presentation/bloc/blog_bloc/blog_bloc.dart';
+import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 
 class BlogPaginationSection extends StatelessWidget {
   const BlogPaginationSection({super.key});
@@ -15,7 +15,7 @@ class BlogPaginationSection extends StatelessWidget {
     final buttonColor =
         isDark ? theme.colorScheme.surface : AppColors.lightGrey;
 
-    return BlocBuilder<BlogBloc, BlogState>(
+    return BlocBuilder<BlogCubit, BlogState>(
       buildWhen: (prev, curr) =>
           curr is BlogLoaded &&
           (prev is! BlogLoaded || prev.currentPage != curr.currentPage),
@@ -29,8 +29,7 @@ class BlogPaginationSection extends StatelessWidget {
               color: buttonColor,
               icon: Icons.chevron_left_rounded,
               enabled: state.canGoPrevious,
-              onTap: () =>
-                  context.read<BlogBloc>().add(const BlogPreviousPageEvent()),
+              onTap: () => context.read<BlogCubit>().goToPreviousPage(),
             ),
             SizedBox(width: 16.w),
             Text(
@@ -42,8 +41,7 @@ class BlogPaginationSection extends StatelessWidget {
               color: buttonColor,
               icon: Icons.chevron_right_rounded,
               enabled: state.canGoNext,
-              onTap: () =>
-                  context.read<BlogBloc>().add(const BlogNextPageEvent()),
+              onTap: () => context.read<BlogCubit>().goToNextPage(),
             ),
           ],
         );

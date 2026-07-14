@@ -8,6 +8,8 @@ class EndPoints {
   static const String register = '${_auth}signup';
   static const String login='${_auth}login';
 
+  static const String blogArticles = '${baseUrl}blog';
+  static String blogArticle(String articleId) => '${baseUrl}blog/$articleId';
 }
 
 class ApiKeys {

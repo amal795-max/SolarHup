@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/features/blog/data/data_source/blog_remote_data_source.dart';
@@ -11,25 +12,23 @@ abstract class BlogRepository {
 class BlogRepositoryImpl implements BlogRepository {
   final BlogRemoteDataSource remote;
   final NetworkInfo networkInfo;
-  final bool useNetworkCheck;
 
-  const BlogRepositoryImpl({
+  BlogRepositoryImpl({
     required this.remote,
     required this.networkInfo,
-    this.useNetworkCheck = false,
   });
 
   @override
   Future<Either<Failure, BlogFeedModel>> getBlogFeed() async {
-    if (useNetworkCheck) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return const Left(OfflineFailure());
-    }
-    try {
-      final data = await remote.getBlogFeed();
-      return Right(data);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
+    if (await networkInfo.isConnected) {
+      try {
+        final data = await remote.getBlogFeed();
+        return Right(data);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
     }
   }
 }

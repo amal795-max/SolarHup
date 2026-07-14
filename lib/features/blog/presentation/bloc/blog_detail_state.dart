@@ -1,4 +1,4 @@
-part of 'blog_detail_bloc.dart';
+part of 'blog_detail_cubit.dart';
 
 @immutable
 sealed class BlogDetailState extends Equatable {

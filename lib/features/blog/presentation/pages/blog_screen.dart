@@ -4,11 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/network/check_internet.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/blog/data/data_source/blog_remote_data_source.dart';
-import 'package:untitled1/features/blog/data/repositories/blog_repository.dart';
-import 'package:untitled1/features/blog/presentation/bloc/blog_bloc/blog_bloc.dart';
+import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_article_card.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_category_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_featured_card.dart';
@@ -25,13 +23,7 @@ class BlogScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BlogBloc(
-        BlogRepositoryImpl(
-          remote: const BlogRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(const LoadBlogEvent()),
+      create: (_) => getIt<BlogCubit>()..loadBlog(),
       child: const _BlogView(),
     );
   }
@@ -45,7 +37,7 @@ class _BlogView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: BlocBuilder<BlogBloc, BlogState>(
+        child: BlocBuilder<BlogCubit, BlogState>(
           builder: (context, state) {
             return switch (state) {
               BlogLoading() => const LoadingIndicator(),
@@ -57,8 +49,7 @@ class _BlogView extends StatelessWidget {
                   subtitle: message,
                   action: CustomButton(
                     text: 'stores_retry'.tr(),
-                    onPressed: () =>
-                        context.read<BlogBloc>().add(const LoadBlogEvent()),
+                    onPressed: () => context.read<BlogCubit>().loadBlog(),
                     width: 160.w,
                   ),
                 ),
