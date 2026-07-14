@@ -91,7 +91,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          Icon(Icons.tips_and_updates,color: AppColors.secondaryColor,),
+                          const Icon(Icons.tips_and_updates,color: AppColors.secondaryColor,),
                         ],
                       ),
                       SizedBox(height: 10.h),

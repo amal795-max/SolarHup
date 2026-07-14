@@ -6,7 +6,6 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 
-import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
 import '../widgets/category_chip.dart';
 

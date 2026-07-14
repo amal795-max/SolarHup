@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_style.dart';
 
-headerSection({required String title, required String subTitle}) {
+Padding headerSection({required String title, required String subTitle}) {
   return  Padding(
     padding: EdgeInsets.symmetric(horizontal: 20.w),
     child: Column(

@@ -75,7 +75,7 @@ class _QuickActionCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: context.brightness ? AppColors.darkContainer : Color(0xFFE3E2E4),
+            color: context.brightness ? AppColors.darkContainer : const Color(0xFFE3E2E4),
             borderRadius: BorderRadius.circular(18.r),
             boxShadow: context.brightness
                 ? null

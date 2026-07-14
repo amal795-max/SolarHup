@@ -120,7 +120,7 @@ class _CardImage extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
-          child: Container(
+          child: SizedBox(
             height: 105.h,
             width: double.infinity,
             child: Stack(

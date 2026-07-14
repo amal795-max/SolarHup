@@ -1,7 +1,7 @@
 {
   "hello": "hello",
   "welcome_back": "Welcome back",
-  "sign_in_subtitle": "Sign in to monitor your clean energy.",
+  "sign_in_subtitle": "Sign in to start using our solar services",
   "phone_number": "Phone Number",
   "password": "Password",
   "enter_password_hint": "Enter strong password",
@@ -447,10 +447,7 @@
   "validation_phone_start": "Phone number must start with 09",
   "validation_phone_length": "Invalid phone number",
   "validation_phone_digits": "Phone number must contain only digits",
-  "validation_email_required": "Email is required",
-  "validation_email_invalid": "Invalid email format",
   "validation_password_required": "Password is required and must be at least 6 characters",
-  "validation_name_required": "Name is required",
 
   "empty_cache_failure_message": "No cached data available. Please refresh.",
   "offline_failure_message": "No internet connection, check your network and try again.",

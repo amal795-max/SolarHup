@@ -21,18 +21,17 @@ class AuthenticationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AuthenticationCubit, AuthenticationState>(
-      listener: _listen,
+      listener: _listener,
       builder: _builder,
     );
   }
 
-  void _listen(BuildContext context, AuthenticationState state) {
+  void _listener(BuildContext context, AuthenticationState state) {
     if (state is AuthenticationSuccess) {
       state.isExists
           ? context.pushReplacement(AppRoutes.loginScreen)
           : context.pushReplacement(AppRoutes.registerScreen);
-    }
-    else if (state is AuthenticationFailure) {
+    } else if (state is AuthenticationFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
   }
@@ -46,53 +45,44 @@ class AuthenticationScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
-           child:  Column(
-              children: <Widget>[
-                headerWidget(
-                  title: 'auth_solar_top',
-                  subTitle: 'auth_solar_top_sub',
-                ),
-                Form(
-                  key: authBloc.authKey,
-                  child: whiteSectionWidget(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomTextField(
-                          // textDirection: TextDirection.RTL,
-                          controller: authBloc.phoneNumberController,
-                          validator: (val) => phoneValid(val),
-                          maxLength: 10,
-                          title: 'phone_number'.tr(),
-                          hint: '09XX XXX XXX',
-                          keyboardType: TextInputType.phone,
-                          prefixIcon: const Icon(Icons.phone),
-                        )
-                            .animate()
-                            .fadeIn(duration: 500.ms, delay: 300.ms)
-                            .slideX(begin: -0.2, end: 0, duration: 500.ms),
+          child: Column(
+            children: <Widget>[
+              headerWidget(
+                title: 'auth_solar_top',
+                subTitle: 'auth_solar_top_sub',
+              ),
+              Form(
+                key: authBloc.authKey,
+                child: whiteSectionWidget(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomTextField(
+                            controller: authBloc.phoneNumberController,
+                            validator: (val) => phoneValid(val),
+                            title: 'phone_number'.tr(),
+                            hint: '09XX XXX XXX',
+                            keyboardType: TextInputType.phone,
+                            prefixIcon: const Icon(Icons.phone),
+                          ),
 
-                        SizedBox(height: 8.h),
+                      SizedBox(height: 8.h),
 
-                        CustomButton(
-
-                          text: 'continue',
-                          onPressed: () {
-                            // authBloc.checkPhoneNumber();
-                            context.push(AppRoutes.registerScreen);
-                          },
-                          textColor: AppColors.white,
-                          icon: Icons.arrow_forward_rounded,
-                        )
-                            .animate()
-                            .fadeIn(duration: 500.ms, delay: 600.ms)
-                      ],
-                    ),
-                    context: context,
+                      CustomButton(
+                        text: 'continue',
+                        onPressed: () {
+                          authBloc.checkPhoneNumber();
+                        },
+                        textColor: AppColors.white,
+                        icon: Icons.arrow_forward_rounded,
+                      ),
+                    ],
                   ),
+                  context: context,
                 ),
-              ],
-            )
+              ),
+            ],
+          ),
         ),
       ),
     );

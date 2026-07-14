@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 
-import '../widgets/category_chip.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});

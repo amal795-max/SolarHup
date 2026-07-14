@@ -1,7 +1,7 @@
 {
   "hello": "مرحبا",
   "welcome_back": "مرحباً بعودتك",
-  "sign_in_subtitle": "سجل الدخول لمراقبة طاقتك النظيفة.",
+  "sign_in_subtitle": "سجل الدخول للبدء باستخدام خدمات الطاقة الشمسية",
   "phone_number": "رقم الهاتف",
   "password": "كلمة المرور",
   "enter_password_hint": "أدخل كلمة مرور قوية",
@@ -451,10 +451,7 @@
   "validation_phone_start": "يجب أن يبدأ رقم الهاتف بـ 09",
   "validation_phone_length": "رقم الهاتف غير صالح",
   "validation_phone_digits": "يجب أن يحتوي رقم الهاتف على أرقام فقط",
-  "validation_email_required": "البريد الإلكتروني مطلوب",
-  "validation_email_invalid": "صيغة البريد الإلكتروني غير صحيحة",
   "validation_password_required": "كلمة المرور مطلوبة ويجب ألا تقل عن 6 أحرف",
-  "validation_name_required": "الاسم مطلوب",
 
   "empty_cache_failure_message": "لا توجد بيانات مخزنة، يرجى التحديث.",
   "offline_failure_message": "لا يوجد اتصال بالإنترنت، تحقق من الشبكة وحاول مرة أخرى.",

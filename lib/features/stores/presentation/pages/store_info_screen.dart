@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_categories_section.dart';
@@ -167,7 +166,7 @@ class _StoreInfoView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardColor = Theme.of(context).scaffoldBackgroundColor;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final topInset = MediaQuery.of(context).padding.top;
+     MediaQuery.of(context).padding.top;
 
     return Scaffold(
       backgroundColor: cardColor,

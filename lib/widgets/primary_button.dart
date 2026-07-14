@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -113,6 +114,7 @@ class CustomButton extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ).animate()
+        .fadeIn(duration: 500.ms, delay: 600.ms);
   }
 }
