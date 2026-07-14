@@ -7,10 +7,14 @@ import '../../../../core/api/errors/exceptions.dart';
 import '../../../../core/api/errors/failures.dart';
 import '../../../../core/network/check_internet.dart';
 import '../data-source/authentication/authentication_remote_data_source.dart';
+import '../model/login_model.dart';
 
-abstract class AuthenticationRepositories{
-  Future<Either<Failure,bool>>checkPhoneNumber(String phoneNumber);
-  Future<Either<Failure,RegisterModel>>register(RegisterParams body);
+abstract class AuthenticationRepositories {
+  Future<Either<Failure, bool>> checkPhoneNumber(String phoneNumber);
+
+  Future<Either<Failure, RegisterModel>> register(RegisterParams body);
+
+  Future<Either<Failure, LoginModel>> login(LoginParams body);
 }
 
 class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
@@ -26,22 +30,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
   Future<Either<Failure, bool>> checkPhoneNumber(String phoneNumber) async {
     if (await networkInfo.isConnected) {
       try {
-      final response =await remoteAuth.checkPhoneNumber(phoneNumber);
-        return  Right(response);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      }
-    } else {
-      return const Left(OfflineFailure());
-    }
-  }
-
-  @override
-  Future<Either<Failure, RegisterModel>> register(RegisterParams body) async{
-    if (await networkInfo.isConnected) {
-      try {
-        final response = await remoteAuth.register(body);
-        LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken);
+        final response = await remoteAuth.checkPhoneNumber(phoneNumber);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -51,5 +40,39 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
     }
   }
 
+  @override
+  Future<Either<Failure, RegisterModel>> register(RegisterParams body) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteAuth.register(body);
+        LocalStorage().saveData(
+          key: ApiKeys.token,
+          value: response.accessToken,
+        );
+        return Right(response);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
 
+  @override
+  Future<Either<Failure, LoginModel>> login(LoginParams body) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteAuth.login(body);
+        LocalStorage().saveData(
+          key: ApiKeys.token,
+          value: response.accessToken,
+        );
+        return Right(response);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
 }

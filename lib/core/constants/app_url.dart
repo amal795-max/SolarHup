@@ -6,6 +6,7 @@ class EndPoints {
   static const String _auth = '${baseUrl}auth/';
   static const String checkPhoneNumber = '${_auth}check-phone';
   static const String register = '${_auth}signup';
+  static const String login='${_auth}login';
 
 }
 

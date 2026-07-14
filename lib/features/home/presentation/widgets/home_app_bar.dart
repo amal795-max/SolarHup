@@ -18,30 +18,58 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       automaticallyImplyLeading: false,
       actions: [
-        CircleAvatar(
-          backgroundColor: AppColors.lightGrey,
-          child: IconButton(
-            icon:  Icon(
-              Icons.shopping_cart_outlined,
-              color: AppColors.primaryColor,
-              size: 20.r,
-            ),
-            onPressed: onCartTap,
+      Container(
+      width: 40.r,
+      height: 40.r,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.borderColor),
+        boxShadow: [
+          BoxShadow(
+            color:AppColors.shadowColor,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
+        ],
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Icon(
+          Icons.shopping_cart_outlined,
+          color: AppColors.primaryColor,
+          size: 18.r,
         ),
+        onPressed: onCartTap,
+      ),
+    ),
+        SizedBox(width: 6.w,),
+        Container(
+      width: 40.r,
+      height: 40.r,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.borderColor),
+        boxShadow: [
+          BoxShadow(
+            color:AppColors.shadowColor,
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Icon(
+          Icons.notifications_none,
+          color: AppColors.primaryColor,
+          size: 20.r,
+        ),
+        onPressed: onMenuTap,
+      ),
+    ),
 
-        SizedBox(width: 8.w,),
-        CircleAvatar(
-          backgroundColor: AppColors.lightGrey,
-          child: IconButton(
-            icon:  Icon(
-              Icons.notifications_none,
-              color: AppColors.primaryColor,
-              size: 22.r,
-            ),
-            onPressed: onMenuTap,
-          ),
-        ),
         SizedBox(width: 16.w,),
       ],
         title: Column(

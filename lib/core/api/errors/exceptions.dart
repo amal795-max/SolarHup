@@ -19,25 +19,25 @@ String getErrorMessage(int statusCode) {
   switch (statusCode) {
     case 400:
     case 401:
-      return 'Invalid credentials. Please try again.';
+      return 'error_invalid_credentials';
     case 403:
-      return 'Access denied. You do not have permission.';
+      return 'error_access_denied';
     case 404:
-      return 'Resource not found! Please check and try again.';
+      return 'error_not_found';
     case 408:
-      return 'Request timeout! Please check your internet connection.';
+      return 'error_timeout';
     case 422:
-      return 'Invalid input data. Please check the format of the email and password.';
+      return 'error_invalid_input';
     case 429:
-      return 'Too many requests. Please wait a moment and try again.';
+      return 'error_too_many_requests';
     case 500:
-      return 'Server errors! Please try again later.';
+      return 'error_server';
     case 502:
-      return 'Bad gateway. The server received an invalid response.';
+      return 'error_bad_gateway';
     case 503:
-      return 'Service unavailable. Please try again shortly.';
+      return 'error_service_unavailable';
     default:
-      return 'An unexpected errors occurred. Please try again.';
+      return 'error_unexpected';
   }
 }
 
@@ -45,29 +45,29 @@ String mapDioError(DioException e) {
   switch (e.type) {
     case DioExceptionType.connectionError:
       if (e.error is SocketException) {
-        return 'Connection refused: server unreachable';
+        return 'connection_refused';
       }
-      return 'Network error: ${e.message}';
+      return 'network_error';
 
     case DioExceptionType.connectionTimeout:
-      return 'Connection timeout: server took too long to respond';
+      return 'connection_timeout';
 
     case DioExceptionType.sendTimeout:
-      return 'Send timeout: request not sent properly';
+      return 'send_timeout';
 
     case DioExceptionType.receiveTimeout:
-      return 'Receive timeout: no response from server';
+      return 'receive_timeout';
 
     case DioExceptionType.badResponse:
       final statusCode = e.response?.statusCode ?? 0;
       return getErrorMessage(statusCode);
 
     case DioExceptionType.cancel:
-      return 'Request was cancelled';
+      return 'request_cancelled';
 
     case DioExceptionType.unknown:
     default:
-      return 'Unexpected network error: ${e.message}';
+      return 'unexpected_network_error';
   }
 }
 
@@ -80,6 +80,6 @@ String mapFailureToMessage(Failure failure) {
     case const (CacheFailure):
       return EMPTY_CACHE_FAILURE_MESSAGE;
     default:
-      return 'Unexpected errors. Please try again later.';
+      return 'error_unexpected';
   }
 }

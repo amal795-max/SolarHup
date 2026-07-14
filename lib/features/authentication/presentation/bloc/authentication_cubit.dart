@@ -15,6 +15,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   final passwordController = TextEditingController();
   final GlobalKey<FormState> authKey = GlobalKey<FormState>();
   final GlobalKey<FormState> registerKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
 
   AuthenticationCubit(this.repository) : super(AuthenticationInitial());
 
@@ -46,6 +47,23 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
             emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
         (success) =>
             emit(const RegisterSuccess(message: registerSuccessMessage)),
+      );
+    }
+  }
+
+  void login() async {
+    LoginParams loginParams = LoginParams(
+      DataHelper.formatePhoneNumber(phoneNumberController.text),
+      passwordController.text.trim(),
+    );
+    if (loginKey.currentState!.validate()) {
+      emit(AuthenticationLoading());
+      final result = await repository.login(loginParams);
+      result.fold(
+        (failure) =>
+            emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
+        (success) =>
+            emit(const LoginSuccess(message: loginSuccessMessage)),
       );
     }
   }

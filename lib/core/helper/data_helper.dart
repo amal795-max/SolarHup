@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class DataHelper {
   static bool get isIos => Platform.isIOS;
@@ -18,7 +18,7 @@ class DataHelper {
         margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         behavior: SnackBarBehavior.floating,
         backgroundColor:color,
-        content: Text(message.tr(),style: context.textTheme.bodySmall?.copyWith(color: AppColors.white),),
+        content: Text(message.tr(),style:AppStyle.bodySmall.copyWith(color: AppColors.white),),
       ),
     );
   }

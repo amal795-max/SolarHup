@@ -28,4 +28,10 @@ class LoginParams {
   final String phoneNumber;
   final String password;
   LoginParams(this.phoneNumber, this.password,);
+
+  Map<String, dynamic> toJson() => {
+    'phone_number': phoneNumber,
+    'password': password,
+  };
 }
+

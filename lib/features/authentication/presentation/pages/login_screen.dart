@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/validators.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -9,6 +11,9 @@ import 'package:untitled1/features/authentication/presentation/widgets/confirmat
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/constants/app_images.dart';
+import '../../../../core/helper/data_helper.dart';
+import '../../../../widgets/loader.dart';
+import '../bloc/authentication_cubit.dart';
 import '../widgets/white_section_widget.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,49 +21,71 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return  BlocConsumer<AuthenticationCubit, AuthenticationState>(
+      listener: _listener,
+      builder: _builder,
+    );
+  }
+
+  void _listener(BuildContext context, AuthenticationState state) {
+    if (state is LoginSuccess) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+      context.pushReplacement(AppRoutes.bottomNavBar);
+    } else if (state is AuthenticationFailure) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+    }
+  }
+
+  Widget _builder(BuildContext context, AuthenticationState state) {
+    final authBloc = context.read<AuthenticationCubit>();
+    if (state is AuthenticationLoading) {
+      return const LoadingIndicator();
+    }
     return Scaffold(
-      backgroundColor: AppColors.backGroundGrey,
       body: SingleChildScrollView(
         child: Column(
           children: [
             _imageWidget(),
             Padding(
               padding: EdgeInsets.all(20.w),
-              child: Column(
-                children: [
-                  whiteSectionWidget(
-                    context: context,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomTextField(
-                          title: 'password'.tr(),
-                          hint: 'enter_password_hint'.tr(),
-                          isPassword: true,
-                          prefixIcon: Icon(
-                            Icons.lock_outline,
-                            size: 20.sp,
-                            color: AppColors.grey,
+              child: Form(
+                key: authBloc.loginKey,
+                child: Column(
+                  children: [
+                    whiteSectionWidget(
+                      context: context,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextField(
+                            title: 'password'.tr(),
+                            hint: 'enter_password_hint'.tr(),
+                            isPassword: true,
+                            prefixIcon: const Icon(Icons.lock_outline,),
+                            validator: passwordValidator,
+                            controller: authBloc.passwordController,
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            context.push(AppRoutes.resetPasswordScreen);
-                          },
-                          child: Text(
-                            'forget_password'.tr(),
-                            style: AppStyle.labelXSmall,
+                          InkWell(
+                            onTap: () {
+                              context.push(AppRoutes.resetPasswordScreen);
+                            },
+                            child: Text(
+                              'forget_password'.tr(),
+                              style: AppStyle.labelXSmall,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 12.h),
-                        CustomButton(text: 'login'.tr(), onPressed: () {}),
-                      ],
+                          SizedBox(height: 12.h),
+                          CustomButton(text: 'login'.tr(), onPressed: () {
+                            authBloc.login();
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 12.h),
-                  confirmationWidget(),
-                ],
+                    SizedBox(height: 16.h),
+                    confirmationWidget(),
+                  ],
+                ),
               ),
             ),
           ],
@@ -112,7 +139,7 @@ class LoginScreen extends StatelessWidget {
               Text(
                 'sign_in_subtitle'.tr(),
                 style: AppStyle.bodySmall.copyWith(
-                  color: Colors.white.withOpacity(0.9),
+                  color: AppColors.lightGrey,
                   fontWeight: FontWeight.w400,
                 ),
               ),

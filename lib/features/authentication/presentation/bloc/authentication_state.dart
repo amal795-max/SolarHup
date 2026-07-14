@@ -43,3 +43,13 @@ final class AuthenticationFailure extends AuthenticationState {
   List<Object?> get props => [message];
 
 }
+final class LoginSuccess extends AuthenticationState {
+  final String message;
+
+  const LoginSuccess({required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
+
+}
