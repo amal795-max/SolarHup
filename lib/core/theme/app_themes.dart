@@ -125,7 +125,7 @@ class AppThemes {
   static final defaultPinTheme = PinTheme(
     width: 55,
     height: 50,
-    textStyle: const TextStyle(fontSize: 16, color: AppColors.grey),
+    textStyle: const TextStyle(fontSize: 16, color: AppColors.grey,),
     decoration: BoxDecoration(
       color: AppColors.lightGrey,
       borderRadius: BorderRadius.circular(12),
@@ -137,4 +137,11 @@ class AppThemes {
       border: Border.all(color: AppColors.borderColor),
     ),
   );
+  static final errorPinTheme = defaultPinTheme.copyWith(
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.red),
+      borderRadius: BorderRadius.circular(8),
+    ),
+  );
+
 }

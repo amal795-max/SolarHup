@@ -35,8 +35,9 @@ final class AuthenticationFailure extends AuthenticationState {
 
 }final class RegisterSuccess extends AuthenticationState {
   final String message;
+  final String securityCode;
 
-  const RegisterSuccess({required this.message});
+  const RegisterSuccess({required this.message, required this.securityCode});
 
   @override
   // TODO: implement props

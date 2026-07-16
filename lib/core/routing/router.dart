@@ -84,7 +84,7 @@ final GoRouter router = GoRouter(
    GoRoute(
       path: AppRoutes.verificationScreen,
       builder: (BuildContext context, GoRouterState state) {
-        return const VerificationScreen();
+        return  VerificationScreen();
       },),
     GoRoute(
       path: AppRoutes.resetPasswordScreen,

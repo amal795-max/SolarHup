@@ -25,7 +25,7 @@
   "confirm_password": "Confirm Password",
   "forget_password": "Forget password ?",
   "reset": "Reset",
-  "verification_subtitle": "Enter the 6-digit code we've sent to your registered phone number for SolarHub.",
+  "verification_subtitle": "Enter the 6-digit code we've sent to you via Telegram for TopSolar.",
   "verify_identity": "Verify Identity",
   "didnt_receive_code": "Didn't receive the code?",
   "resend_code": "Resend Code",
@@ -150,8 +150,6 @@
   "welcome_to": "Welcome to",
   "topsolar": "TopSolar",
   "home_search_hint": "Search panels, inverters, services...",
-  "home_did_you_know": "DID YOU KNOW?",
-  "home_did_you_know_body": "One hour of sunlight can power the Earth for a year, and so, your solar journey start here, Maximize your savings today?",
   "home_used_system_label": "Used System",
   "home_used_system_desc": "A seamless marketplace for buying and selling used solar systems",
   "home_expert_call": "Call an Expert",
@@ -224,6 +222,9 @@
   "estimated_tax": "Estimated Tax",
   "total": "Total",
   "continue": "Continue",
+  "copy": "Copy",
+  "security_title": "Your Security Code",
+  "security_desc": "Use this code to activate your account via Telegram.",
   "continue_shopping": "Continue Shopping",
   "promo_code": "Promo code",
   "apply": "Apply",
@@ -469,6 +470,7 @@
   "error_bad_gateway": "Bad gateway. The server received an invalid response.",
   "error_service_unavailable": "Service unavailable. Please try again shortly.",
   "error_unexpected": "An unexpected error occurred. Please try again.",
+  "error_otp": "The verification code you entered is incorrect. Please try again.",
 
 
  "register_success_message": "Registration Successful!",
@@ -485,7 +487,25 @@
   "onboarding_desc_2": "Get professional advice from certified technicians to optimize your home's energy flow.",
   "onboarding_title_3": "Compare and Choose the best system for you",
   "onboarding_desc_3": "Make informed decisions by comparing efficiency, cost, and long-term savings side-by-side.",
-  "onboarding_next": "Next"
+  "onboarding_next": "Next",
+  "verification_banner_title": "Your account is not verified",
+  "verification_banner_subtitle": "Complete verification via Telegram to unlock all features.",
+    "activate": "Activate",
+  "cancel": "Cancel",
+  "verification_steps_title": "Account Verification Steps",
+  "your_security_code": "your security code",
+  "btn_go_to_otp": "Go to OTP",
+  "btn_close": "Close",
+  "how_to_verify_title": "How to verify your account?",
+  "guide_step_1_title": "Copy the security code",
+  "guide_step_1_desc": "Tap the copy icon next to the code at the top to copy it to your clipboard.",
+  "guide_step_2_title": "Open the Telegram bot",
+  "guide_step_2_desc": "Tap the 'Go to Telegram' button, and the chat will open automatically. Paste the code and send it to the bot.",
+  "guide_step_3_title": "Enter the verification code (OTP)",
+  "guide_step_3_desc": "The bot will send you a 6-digit code. Return to the app, enter the code in the fields, and tap 'Verify'.",
+  "got_it": "Got it",
+  "go_to_telegram": "Got To Telegram",
+  "step_3_enter_otp": "Enter OTP"
 }
 
 

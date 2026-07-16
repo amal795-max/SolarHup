@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -40,16 +41,16 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
 
   final List<Map<String, String>> tips = [
     {
-      'title': 'هل تعلم؟',
-      'body': 'تنظيف الألواح الشمسية بشكل دوري يزيد إنتاج الطاقة بنسبة قد تصل إلى 15٪.'
+      'title': 'tip_1_title',
+      'body': 'tip_1_body'
     },
     {
-      'title': 'نصيحة الطاقة',
-      'body': 'تجنب تفريغ البطارية بالكامل للحفاظ على عمرها الافتراضي.'
+      'title': 'tip_2_title',
+      'body':'tip_2_body'
     },
     {
-      'title': 'معلومة مهمة',
-      'body': 'اختيار زاوية تركيب مناسبة يمكن أن يرفع كفاءة النظام بشكل كبير.'
+      'title': 'tip_3_title',
+      'body': 'tip_3_body'
     },
   ];
 
@@ -85,7 +86,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            tips[index]['title']!,
+                            tips[index]['title']!.tr(),
                             style: AppStyle.bodySmall.copyWith(
                               color: AppColors.lightGrey,
                             ),
@@ -96,7 +97,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                       ),
                       SizedBox(height: 10.h),
                       Text(
-                        tips[index]['body']!,
+                        tips[index]['body']!.tr(),
                         style: AppStyle.bodyXSmall.copyWith(
                           color: AppColors.blue,
                           height: 1.4,

@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  BlocConsumer<AuthenticationCubit, AuthenticationState>(
+    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
       listener: _listener,
       builder: _builder,
     );
@@ -30,7 +30,7 @@ class LoginScreen extends StatelessWidget {
   void _listener(BuildContext context, AuthenticationState state) {
     if (state is LoginSuccess) {
       DataHelper.showSnackBar(message: state.message, context: context);
-      context.pushReplacement(AppRoutes.bottomNavBar);
+      context.go(AppRoutes.bottomNavBar);
     } else if (state is AuthenticationFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
@@ -61,7 +61,7 @@ class LoginScreen extends StatelessWidget {
                             title: 'password'.tr(),
                             hint: 'enter_password_hint'.tr(),
                             isPassword: true,
-                            prefixIcon: const Icon(Icons.lock_outline,),
+                            prefixIcon: const Icon(Icons.lock_outline),
                             validator: passwordValidator,
                             controller: authBloc.passwordController,
                           ),
@@ -75,9 +75,12 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 12.h),
-                          CustomButton(text: 'login'.tr(), onPressed: () {
-                            authBloc.login();
-                          }),
+                          CustomButton(
+                            text: 'login'.tr(),
+                            onPressed: () {
+                              authBloc.login();
+                            },
+                          ),
                         ],
                       ),
                     ),

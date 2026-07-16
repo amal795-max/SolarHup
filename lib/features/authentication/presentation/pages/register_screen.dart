@@ -28,7 +28,7 @@ class RegisterScreen extends StatelessWidget {
   void _listen(BuildContext context, AuthenticationState state) {
     if (state is RegisterSuccess) {
       DataHelper.showSnackBar(message: state.message, context: context);
-      context.go(AppRoutes.bottomNavBar);
+
     }
     if (state is AuthenticationFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
@@ -57,7 +57,6 @@ class RegisterScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       CustomTextField(
                         controller: authBloc.passwordController,
                         validator: passwordValidator,

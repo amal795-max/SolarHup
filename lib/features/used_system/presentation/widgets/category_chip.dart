@@ -55,12 +55,12 @@ class _CategoryChip extends StatelessWidget {
           Icon(
             icon,
             size: 16.sp,
-            color: isSelected ? AppColors.lighOrange : AppColors.primaryColor,
+            color: isSelected ? AppColors.lightOrange : AppColors.primaryColor,
           ),
           Text(
             label,
             style: AppStyle.bodyXSmall.copyWith(
-              color: isSelected ? AppColors.lighOrange : null,
+              color: isSelected ? AppColors.lightOrange : null,
               fontWeight: isSelected ? FontWeight.bold : null,
             ),
           ),

@@ -34,4 +34,15 @@ class LoginParams {
     'password': password,
   };
 }
+class OtpParams {
+  final String phoneNumber;
+  final String otpCode;
+  OtpParams(this.phoneNumber, this.otpCode);
+
+  Map<String, dynamic> toJson() => {
+    'phone_number': phoneNumber,
+    'otp_code': otpCode,
+    'purpose': 'verify',
+  };
+}
 

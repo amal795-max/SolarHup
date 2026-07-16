@@ -15,7 +15,10 @@ class EmptyCacheException implements Exception {}
 
 class OfflineException implements Exception {}
 
-String getErrorMessage(int statusCode) {
+String getErrorMessage(int statusCode, {String? message}) {
+  if (message != null && message.isNotEmpty) {
+    return message;
+  }
   switch (statusCode) {
     case 400:
     case 401:
@@ -40,6 +43,7 @@ String getErrorMessage(int statusCode) {
       return 'error_unexpected';
   }
 }
+
 
 String mapDioError(DioException e) {
   switch (e.type) {

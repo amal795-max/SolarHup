@@ -15,6 +15,7 @@ abstract class AuthenticationRepositories {
   Future<Either<Failure, RegisterModel>> register(RegisterParams body);
 
   Future<Either<Failure, LoginModel>> login(LoginParams body);
+  Future<Either<Failure, Unit>> otpVerification(OtpParams body);
 }
 
 class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
@@ -31,6 +32,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteAuth.checkPhoneNumber(phoneNumber);
+        LocalStorage().saveData(key: ApiKeys.phoneNumber, value: phoneNumber);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -49,7 +51,11 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
           key: ApiKeys.token,
           value: response.accessToken,
         );
-        return Right(response);
+        LocalStorage().saveData(
+          key: ApiKeys.securityCode,
+          value: response.securityCode,
+        );
+              return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }
@@ -63,11 +69,25 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteAuth.login(body);
-        LocalStorage().saveData(
-          key: ApiKeys.token,
-          value: response.accessToken,
-        );
+        LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken,);
+        if (response.securityCode != null) {
+          LocalStorage().saveData(key: ApiKeys.securityCode, value: response.securityCode,);
+        }
         return Right(response);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> otpVerification(OtpParams body) async{
+    if (await networkInfo.isConnected) {
+      try {
+         await remoteAuth.otpVerification(body);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }
