@@ -141,8 +141,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                       onPressed: () {
                         if (currentIndex == 2) {
-                          // context.push(AppRoutes.authenticationScreen);
-                          context.push(AppRoutes.bottomNavBar);
+                          context.push(AppRoutes.authenticationScreen);
+                          // context.push(AppRoutes.bottomNavBar);
                         } else {
                           controller.nextPage(
                             duration: const Duration(milliseconds: 400),
