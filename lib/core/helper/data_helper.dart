@@ -29,7 +29,7 @@ class DataHelper {
 
   static String formatePhoneNumber(String phoneNumber) {
     String? phone = LocalStorage().getDataString(key: ApiKeys.phoneNumber);
-    if (phone != null) {
+    if (phoneNumber == '' && phone != null) {
       return phone;
     }
     String raw = phoneNumber.trim();

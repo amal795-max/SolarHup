@@ -1,14 +1,14 @@
 abstract class AppRoutes {
-  static const splashScreen = '/splashScreen';
+  static const splashScreen = '/';
   static const onboardingScreen = '/onboardingScreen';
   static const loginScreen = '/loginScreen';
   static const registerScreen = '/registerScreen';
   static const authenticationScreen='/serviceAddressScreen';
   static const bottomNavBar = '/bottomNavBar';
   static const homeScreen = '/homeScreen';
-
   static const verificationScreen = '/verificationScreen';
   static const resetPasswordScreen = '/resetPasswordScreen';
+  static const changePasswordScreen = '/changePasswordScreen';
   static const addProductScreen = '/addProductScreen';
   static const usedProductScreen = '/usedProductScreen';
   static const filterProductScreen = '/filterProductScreen';

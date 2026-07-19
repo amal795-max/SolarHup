@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/features/authentication/data/model/login_model.dart';
@@ -11,7 +10,7 @@ abstract class AuthenticationRemoteDataSource {
   Future<bool> checkPhoneNumber(String email);
   Future<RegisterModel> register(RegisterParams body);
   Future<LoginModel> login(LoginParams body);
-  Future<Unit> otpVerification(OtpParams body);
+
 }
 
 class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSource {
@@ -76,24 +75,6 @@ class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSour
     }
   }
 
-  @override
-  Future<Unit> otpVerification(OtpParams body) async{
-    try {
-      final response = await apiRequest.post(
-        EndPoints.otpVerification,
-        body: body.toJson(),
-      );
-      if (response.statusCode != 200) {
-        throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0,message: 'error_otp'),
-        );
-      } else {
-        return unit;
-      }
-    } on DioException catch (e) {
-      throw ServerException(message: mapDioError(e));
-    }
-  }
 
 }
 

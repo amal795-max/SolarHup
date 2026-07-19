@@ -28,7 +28,6 @@ import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_backg
 import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/home_search_bar.dart';
 

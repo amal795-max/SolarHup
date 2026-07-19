@@ -58,28 +58,16 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       passwordController.text.trim(),
     );
     if (loginKey.currentState!.validate()) {
-      emit(AuthenticationLoading());
+      emit(const LoginLoading());
       final result = await repository.login(loginParams);
       result.fold(
         (failure) =>
-            emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
+            emit(LoginFailure(message: mapFailureToMessage(failure))),
         (success) =>
             emit(const LoginSuccess(message: loginSuccessMessage)),
       );
     }
-  }  void otpVerification() async {
-    OtpParams otpParams = OtpParams(
-      DataHelper.formatePhoneNumber(phoneNumberController.text),
-      otpController.text.trim(),
-    );
-      emit(AuthenticationLoading());
-      final result = await repository.otpVerification(otpParams);
-      result.fold(
-        (failure) =>
-            emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
-        (success) =>
-            emit(const LoginSuccess(message: loginSuccessMessage)),
-      );
-    }
+  }
+
   }
 

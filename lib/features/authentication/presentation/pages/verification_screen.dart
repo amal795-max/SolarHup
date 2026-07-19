@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:untitled1/features/authentication/presentation/widgets/help_verify_widget.dart';
+import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/pinput.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -17,11 +17,13 @@ import '../../../../core/helper/data_helper.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/helper/local_storage.dart';
 import '../../../../widgets/loader.dart';
-import '../bloc/authentication_cubit.dart';
+import '../widgets/help_verify_widget.dart';
 import '../widgets/white_section_widget.dart';
 
 class VerificationScreen extends StatelessWidget {
-  VerificationScreen({super.key});
+  final bool isResetPassword;
+
+  VerificationScreen({super.key, required this.isResetPassword});
 
   final String securityCode = LocalStorage().getData(key: ApiKeys.securityCode);
 
@@ -43,37 +45,42 @@ class VerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AuthenticationCubit, AuthenticationState>(
+    return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
       listener: _listener,
       builder: _builder,
     );
   }
 
-  void _listener(BuildContext context, AuthenticationState state) {
-    if (state is AuthenticationSuccess) {
-      DataHelper.showSnackBar(message: 'state.message', context: context);
-      context.go(AppRoutes.bottomNavBar);
-    } else if (state is AuthenticationFailure) {
+  void _listener(BuildContext context, ResetPasswordState state) {
+    if (state is VerificationSuccess) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+      !isResetPassword ? context.go(AppRoutes.bottomNavBar) : null;
+    }    if (state is ConfirmOtpSuccess) {
+      context.go(AppRoutes.resetPasswordScreen);
+    }
+    else if (state is VerificationFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
   }
 
-  Widget _builder(BuildContext context, AuthenticationState state) {
-    final authBloc = context.read<AuthenticationCubit>();
-    if (state is AuthenticationLoading) {
+  Widget _builder(BuildContext context, ResetPasswordState state) {
+    final cubit = context.read<ResetPasswordCubit>();
+    if (state is VerificationLoading) {
       return const LoadingIndicator();
     }
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actionsPadding: const EdgeInsets.all(12),
-        actions: [
-          IconButton(
-            onPressed: () => showHelpGuide(context),
-            icon: const Icon(Icons.help_outline, size: 24),
-          ),
-        ],
-      ),
+      appBar: !isResetPassword
+          ? AppBar(
+              automaticallyImplyLeading: false,
+              actionsPadding: const EdgeInsets.all(12),
+              actions: [
+                IconButton(
+                  onPressed: () => showHelpGuide(context),
+                  icon: const Icon(Icons.help_outline, size: 24),
+                ),
+              ],
+            )
+          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
@@ -88,39 +95,46 @@ class VerificationScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _buildSecurityCodeBox(),
-                    SizedBox(height: 16.h),
-                    CustomButton(
-                      text: 'go_to_telegram',
-                      type: ButtonType.outlined,
-                      onPressed: () => openTelegram('green_energy_system_bot'),
-                    ),
-
-                    SizedBox(height: 24.h),
-                    Row(
-                      children: [
-                        const Expanded(child: Divider()),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w),
-                          child: Text(
-                            'step_3_enter_otp'.tr(),
-                            style: AppStyle.bodyXSmall.copyWith(
-                              color: AppColors.grey,
+                    if (!isResetPassword) ...[
+                      _buildSecurityCodeBox(),
+                      SizedBox(height: 16.h),
+                      CustomButton(
+                        text: 'go_to_telegram',
+                        type: ButtonType.outlined,
+                        onPressed: () =>
+                            openTelegram('green_energy_system_bot'),
+                      ),
+                      SizedBox(height: 24.h),
+                      Row(
+                        children: [
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Text(
+                              'step_3_enter_otp'.tr(),
+                              style: AppStyle.bodyXSmall.copyWith(
+                                color: AppColors.grey,
+                              ),
                             ),
                           ),
-                        ),
-                        const Expanded(child: Divider()),
-                      ],
-                    ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ),
+                      SizedBox(height: 24.h),
+                    ],
+
+                    pinPut(cubit.otpCodeController),
                     SizedBox(height: 24.h),
-                    pinPut(authBloc.otpController),
-                    SizedBox(height: 32.h),
 
                     CustomButton(
                       text: 'verify_identity',
+                      isLoading: state is ConfirmOtpLoading,
                       onPressed: () {
-                        if(authBloc.otpController.text.isNotEmpty){
-                        authBloc.otpVerification();}
+                        if (cubit.otpCodeController.text.isNotEmpty) {
+                          cubit.confirmOtp(
+                            isReset: isResetPassword ? true : false,
+                          );
+                        }
                       },
                     ),
                   ],

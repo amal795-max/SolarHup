@@ -20,3 +20,16 @@ class LoadingIndicator extends StatelessWidget {
       ),
     );
   }}
+
+GlobalKey<State> loaderKey = GlobalKey<State>();
+
+void showLoader(BuildContext context) {
+  showDialog<dynamic>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return  const LoadingIndicator();
+    },
+
+  ).then((_) => loaderKey.currentState?.dispose());
+}

@@ -31,14 +31,14 @@ class LoginScreen extends StatelessWidget {
     if (state is LoginSuccess) {
       DataHelper.showSnackBar(message: state.message, context: context);
       context.go(AppRoutes.bottomNavBar);
-    } else if (state is AuthenticationFailure) {
+    } else if (state is LoginFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
   }
 
   Widget _builder(BuildContext context, AuthenticationState state) {
     final authBloc = context.read<AuthenticationCubit>();
-    if (state is AuthenticationLoading) {
+    if (state is LoginLoading) {
       return const LoadingIndicator();
     }
     return Scaffold(

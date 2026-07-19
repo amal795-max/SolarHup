@@ -78,8 +78,10 @@ class VerificationBanner extends StatelessWidget {
             backgroundColor: AppColors.tertiaryColor,
             text: 'activate',
             onPressed: () {
-              context.push(AppRoutes.verificationScreen,);
-            },
+              context.push(
+                AppRoutes. verificationScreen,
+                extra: false,
+              );            },
           ),
         ],
       ),

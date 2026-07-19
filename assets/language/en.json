@@ -4,6 +4,10 @@
   "sign_in_subtitle": "Sign in to start using our solar services",
   "phone_number": "Phone Number",
   "password": "Password",
+  "incorrect_password": "Password is incorrect",
+  "change_password_subtitle": "Change your password easily.",
+  "old_password": "Old Password",
+  "change": "Change",
   "enter_password_hint": "Enter strong password",
   "login": "Login",
   "create_account": "Create Account",
@@ -445,6 +449,7 @@
   "suggest_off_grid": "Suggest off-grid system",
   "view_system": "View System",
   "validation_required": "This field is required",
+  "passwords_do_not_match": "Passwords do not match",
   "validation_phone_start": "Phone number must start with 09",
   "validation_phone_length": "Invalid phone number",
   "validation_phone_digits": "Phone number must contain only digits",
@@ -452,6 +457,7 @@
 
   "empty_cache_failure_message": "No cached data available. Please refresh.",
   "offline_failure_message": "No internet connection, check your network and try again.",
+  "send_otp_success": "OTP sent successfully",
   "connection_refused": "Connection refused: server unreachable",
   "network_error": "Network error",
   "connection_timeout": "Connection timeout: server took too long to respond",
@@ -471,10 +477,10 @@
   "error_service_unavailable": "Service unavailable. Please try again shortly.",
   "error_unexpected": "An unexpected error occurred. Please try again.",
   "error_otp": "The verification code you entered is incorrect. Please try again.",
-
-
  "register_success_message": "Registration Successful!",
- "login_success_message": "Welcome Back",
+ "change_password_message": "Password changed successfully",
+  "reset_password_message": "Your password has been reset successfully",
+
   "onboarding_title": "Compare and Choose",
   "onboarding_desc": "Make informed decisions by comparing efficiency, cost, and long-term savings side-by-side.",
   "invest_now_btn": "Invest Now",

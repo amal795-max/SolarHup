@@ -73,6 +73,7 @@ class SettingsScreen extends StatelessWidget {
             _buildSectionHeader(context, 'security_section'.tr()),
             _buildSectionCard(context, [
               _buildListTile(
+                onTap: ()=>context.push(AppRoutes.changePasswordScreen),
                 context,
                 icon: Icons.lock_outline,
                 title: 'change_password'.tr(),
