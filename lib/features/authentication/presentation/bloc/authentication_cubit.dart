@@ -13,6 +13,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   final AuthenticationRepositories repository;
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
+  final otpController = TextEditingController();
   final GlobalKey<FormState> authKey = GlobalKey<FormState>();
   final GlobalKey<FormState> registerKey = GlobalKey<FormState>();
   final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
@@ -41,12 +42,12 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     );
     if (registerKey.currentState!.validate()) {
       emit(AuthenticationLoading());
-      final result = await repository.register(registerParams);
+      final  result = await repository.register(registerParams);
       result.fold(
         (failure) =>
             emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
         (success) =>
-            emit(const RegisterSuccess(message: registerSuccessMessage)),
+            emit( RegisterSuccess(message: registerSuccessMessage,securityCode: success.securityCode)),
       );
     }
   }
@@ -57,14 +58,16 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       passwordController.text.trim(),
     );
     if (loginKey.currentState!.validate()) {
-      emit(AuthenticationLoading());
+      emit(const LoginLoading());
       final result = await repository.login(loginParams);
       result.fold(
         (failure) =>
-            emit(AuthenticationFailure(message: mapFailureToMessage(failure))),
+            emit(LoginFailure(message: mapFailureToMessage(failure))),
         (success) =>
             emit(const LoginSuccess(message: loginSuccessMessage)),
       );
     }
   }
-}
+
+  }
+

@@ -213,8 +213,8 @@ class _FloatingIcon extends StatelessWidget {
               ),
             );
           },
-        )
-        .animate(onComplete: (controller) => controller.repeat());
+        );
+        // .animate(onComplete: (controller) => controller.repeat());
   }
 }
 

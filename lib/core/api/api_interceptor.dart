@@ -19,6 +19,7 @@ class CustomInterceptors extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     print('RESPONSE[${response.statusCode}] => PATH: ${response.requestOptions.path}');
+    print('body${response.data}');
     handler.next(response);
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/features/authentication/presentation/pages/change_password_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/login_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/register_screen.dart';
 import 'package:untitled1/features/authentication/presentation/pages/reset_password_screen.dart';
@@ -84,12 +85,18 @@ final GoRouter router = GoRouter(
    GoRoute(
       path: AppRoutes.verificationScreen,
       builder: (BuildContext context, GoRouterState state) {
-        return const VerificationScreen();
+        final isReset = state.extra as bool? ?? false;
+        return  VerificationScreen(isResetPassword: isReset);
       },),
     GoRoute(
       path: AppRoutes.resetPasswordScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ResetPasswordScreen();
+      },),
+    GoRoute(
+      path: AppRoutes.changePasswordScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ChangePasswordScreen();
       },),
     GoRoute(
       path: AppRoutes.addProductScreen,

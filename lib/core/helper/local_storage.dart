@@ -28,8 +28,8 @@ class LocalStorage {
   }
 
 
-  dynamic getData({required String key}) {
-    return sharedPreferences.get(key);
+  dynamic getData({required String key, dynamic defaultValue}) {
+    return sharedPreferences.get(key) ?? defaultValue;
   }
 
   Future<bool> removeData({required String key}) async {

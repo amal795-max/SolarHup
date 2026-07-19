@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
+import '../constants/app_url.dart';
+import 'local_storage.dart';
+
 class DataHelper {
   static bool get isIos => Platform.isIOS;
 
@@ -25,6 +28,10 @@ class DataHelper {
 
 
   static String formatePhoneNumber(String phoneNumber) {
+    String? phone = LocalStorage().getDataString(key: ApiKeys.phoneNumber);
+    if (phoneNumber == '' && phone != null) {
+      return phone;
+    }
     String raw = phoneNumber.trim();
     if (raw.startsWith('0')) {
       raw = raw.substring(1);

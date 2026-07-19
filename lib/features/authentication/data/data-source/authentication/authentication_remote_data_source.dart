@@ -10,6 +10,7 @@ abstract class AuthenticationRemoteDataSource {
   Future<bool> checkPhoneNumber(String email);
   Future<RegisterModel> register(RegisterParams body);
   Future<LoginModel> login(LoginParams body);
+
 }
 
 class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSource {
@@ -74,4 +75,7 @@ class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSour
     }
   }
 
+
 }
+
+

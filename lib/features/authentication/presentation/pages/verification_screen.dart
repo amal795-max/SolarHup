@@ -1,30 +1,86 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pinput/pinput.dart';
+import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
+import 'package:untitled1/features/authentication/presentation/widgets/pinput.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/header.dart';
 import 'package:untitled1/widgets/primary_button.dart';
-
-import '../../../../core/theme/app_themes.dart';
+import '../../../../core/constants/app_url.dart';
+import '../../../../core/helper/data_helper.dart';
+import '../../../../core/helper/extensions.dart';
+import '../../../../core/helper/local_storage.dart';
+import '../../../../widgets/loader.dart';
+import '../widgets/help_verify_widget.dart';
 import '../widgets/white_section_widget.dart';
 
 class VerificationScreen extends StatelessWidget {
-  const VerificationScreen({super.key});
+  final bool isResetPassword;
+
+  VerificationScreen({super.key, required this.isResetPassword});
+
+  final String securityCode = LocalStorage().getData(key: ApiKeys.securityCode);
+
+  Future<void> openTelegram(String username) async {
+    final telegramApp = Uri.parse('tg://resolve?domain=$username');
+    final telegramWeb = Uri.parse('https://t.me/$username');
+
+    if (await canLaunchUrl(telegramApp)) {
+      await launchUrl(telegramApp, mode: LaunchMode.externalApplication);
+    } else {
+      await launchUrl(telegramWeb, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  void _copySecurityCode() {
+    final String code = securityCode;
+    Clipboard.setData(ClipboardData(text: code));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    return BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
+      listener: _listener,
+      builder: _builder,
+    );
+  }
+
+  void _listener(BuildContext context, ResetPasswordState state) {
+    if (state is VerificationSuccess) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+      !isResetPassword ? context.go(AppRoutes.bottomNavBar) : null;
+    }    if (state is ConfirmOtpSuccess) {
+      context.go(AppRoutes.resetPasswordScreen);
+    }
+    else if (state is VerificationFailure) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+    }
+  }
+
+  Widget _builder(BuildContext context, ResetPasswordState state) {
+    final cubit = context.read<ResetPasswordCubit>();
+    if (state is VerificationLoading) {
+      return const LoadingIndicator();
+    }
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () =>context.pop,
-        ),
-      ),
+      appBar: !isResetPassword
+          ? AppBar(
+              automaticallyImplyLeading: false,
+              actionsPadding: const EdgeInsets.all(12),
+              actions: [
+                IconButton(
+                  onPressed: () => showHelpGuide(context),
+                  icon: const Icon(Icons.help_outline, size: 24),
+                ),
+              ],
+            )
+          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
@@ -33,64 +89,83 @@ class VerificationScreen extends StatelessWidget {
               headerWidget(
                 title: 'verification',
                 subTitle: 'verification_subtitle',
-                ),
+              ),
               whiteSectionWidget(
-                child:Column(
+                context: context,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Pinput(
-                      // controller: resetBloc.otpCodeController,
-                      length: 6,
-                      defaultPinTheme: AppThemes.defaultPinTheme,
-                      focusedPinTheme: AppThemes.focusedPinTheme,
-                      keyboardType: TextInputType.text,
-                      validator: (s) {
-                        return s!.isEmpty ? 'Please enter the code' : null;
-                      },
-                      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                      showCursor: true,
-                    ),
-
-                    SizedBox(height: 32.h),
-                    CustomButton(
-                      text: 'verify_identity'.tr(),
-                      onPressed: () {
-                        context.push(AppRoutes.bottomNavBar);
-                      },
-                    ),
-                    SizedBox(height: 24.h),
-                    Text(
-                      'didnt_receive_code'.tr(),
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.refresh, size: 18,color: AppColors.tertiaryColor,),
-                      label: Text(
-                        'resend_code'.tr(),
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: AppColors.tertiaryColor)
+                    if (!isResetPassword) ...[
+                      _buildSecurityCodeBox(),
+                      SizedBox(height: 16.h),
+                      CustomButton(
+                        text: 'go_to_telegram',
+                        type: ButtonType.outlined,
+                        onPressed: () =>
+                            openTelegram('green_energy_system_bot'),
                       ),
+                      SizedBox(height: 24.h),
+                      Row(
+                        children: [
+                          const Expanded(child: Divider()),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            child: Text(
+                              'step_3_enter_otp'.tr(),
+                              style: AppStyle.bodyXSmall.copyWith(
+                                color: AppColors.grey,
+                              ),
+                            ),
+                          ),
+                          const Expanded(child: Divider()),
+                        ],
+                      ),
+                      SizedBox(height: 24.h),
+                    ],
+
+                    pinPut(cubit.otpCodeController),
+                    SizedBox(height: 24.h),
+
+                    CustomButton(
+                      text: 'verify_identity',
+                      isLoading: state is ConfirmOtpLoading,
+                      onPressed: () {
+                        if (cubit.otpCodeController.text.isNotEmpty) {
+                          cubit.confirmOtp(
+                            isReset: isResetPassword ? true : false,
+                          );
+                        }
+                      },
                     ),
                   ],
-                ), context: context,
+                ),
               ),
+
               SizedBox(height: 32.h),
+
               Container(
                 padding: EdgeInsets.all(16.w),
                 decoration: BoxDecoration(
-                  color: theme.brightness == Brightness.light ? Colors.grey[100]
-                      : theme.colorScheme.surface.withOpacity(0.5),
+                  color: context.brightness
+                      ? AppColors.lightYellow.withOpacity(0.5)
+                      : context.colorScheme.surface.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.info_outline, size: 20.sp, color: AppColors.grey),
+                    Icon(
+                      Icons.info_outline,
+                      size: 20.sp,
+                      color: AppColors.tertiaryColor,
+                    ),
                     SizedBox(width: 12.w),
                     Expanded(
                       child: Text(
                         'security_info'.tr(),
-                        style: theme.textTheme.bodySmall?.copyWith(fontSize: 12.sp),
+                        style: AppStyle.bodyXSmall.copyWith(
+                          color: AppColors.tertiaryColor,
+                        ),
                       ),
                     ),
                   ],
@@ -100,6 +175,51 @@ class VerificationScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSecurityCodeBox() {
+    final String code = securityCode;
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: AppColors.lightGrey,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.borderColor),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'your_security_code'.tr(),
+                style: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
+              ),
+              Text(
+                code,
+                style: AppStyle.bodyMedium.copyWith(
+                  letterSpacing: 1.5,
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          IconButton(
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+            onPressed: _copySecurityCode,
+            icon: Icon(
+              Icons.copy_rounded,
+              size: 22.sp,
+              color: AppColors.primaryColor,
+            ),
+          ),
+        ],
       ),
     );
   }

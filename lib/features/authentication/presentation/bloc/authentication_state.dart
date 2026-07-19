@@ -14,6 +14,7 @@ final class AuthenticationLoading extends AuthenticationState {
   // TODO: implement props
   List<Object?> get props => [];
 }
+
 final class AuthenticationSuccess extends AuthenticationState {
   final bool isExists;
 
@@ -22,8 +23,8 @@ final class AuthenticationSuccess extends AuthenticationState {
   @override
   // TODO: implement props
   List<Object?> get props => [isExists];
-
 }
+
 final class AuthenticationFailure extends AuthenticationState {
   final String message;
 
@@ -32,17 +33,27 @@ final class AuthenticationFailure extends AuthenticationState {
   @override
   // TODO: implement props
   List<Object?> get props => [message];
+}
 
-}final class RegisterSuccess extends AuthenticationState {
+final class RegisterSuccess extends AuthenticationState {
   final String message;
+  final String securityCode;
 
-  const RegisterSuccess({required this.message});
+  const RegisterSuccess({required this.message, required this.securityCode});
 
   @override
   // TODO: implement props
   List<Object?> get props => [message];
-
 }
+
+final class LoginLoading extends AuthenticationState {
+  const LoginLoading();
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [];
+}
+
 final class LoginSuccess extends AuthenticationState {
   final String message;
 
@@ -51,5 +62,14 @@ final class LoginSuccess extends AuthenticationState {
   @override
   // TODO: implement props
   List<Object?> get props => [message];
+}
 
+final class LoginFailure extends AuthenticationState {
+  final String message;
+
+  const LoginFailure({required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [message];
 }

@@ -15,11 +15,11 @@ class EmptyCacheException implements Exception {}
 
 class OfflineException implements Exception {}
 
-String getErrorMessage(int statusCode) {
+String getErrorMessage(int statusCode, {String? message}) {
   switch (statusCode) {
     case 400:
     case 401:
-      return 'error_invalid_credentials';
+      return message??'error_invalid_credentials';
     case 403:
       return 'error_access_denied';
     case 404:
@@ -40,6 +40,7 @@ String getErrorMessage(int statusCode) {
       return 'error_unexpected';
   }
 }
+
 
 String mapDioError(DioException e) {
   switch (e.type) {

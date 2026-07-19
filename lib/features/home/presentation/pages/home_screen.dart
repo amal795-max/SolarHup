@@ -6,7 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/app_images.dart';
+import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -23,6 +25,7 @@ import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/products_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_background.dart';
+import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
@@ -149,6 +152,9 @@ class _HomeViewState extends State<_HomeView> {
 
   void _navigateToUsedProducts() => context.push(AppRoutes.usedProductScreen);
 
+
+
+
   // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
@@ -255,6 +261,12 @@ class _HomeViewState extends State<_HomeView> {
           ),
           SizedBox(height: 16.h),
           const DidYouKnowBanner(),
+          if (!isLoading && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
+
+            Padding(
+              padding: EdgeInsets.only(top: 16.h),
+              child: const VerificationBanner(),
+            ),
           SizedBox(height: 16.h),
           // Collapse banners + quick actions while actively searching
           if (!isSearching) ...[
@@ -297,9 +309,7 @@ class _HomeViewState extends State<_HomeView> {
                   : (articleId) => context.push(
                         AppRoutes.blogArticleDetail(articleId),
                       ),
-            ),
-            SizedBox(height: 24.h),
-          ],
+            )],
         ],
       ),
     );

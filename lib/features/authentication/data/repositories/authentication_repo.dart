@@ -31,6 +31,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteAuth.checkPhoneNumber(phoneNumber);
+        LocalStorage().saveData(key: ApiKeys.phoneNumber, value: phoneNumber);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -49,6 +50,8 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
           key: ApiKeys.token,
           value: response.accessToken,
         );
+        LocalStorage().saveData(
+          key: ApiKeys.securityCode, value: response.securityCode,);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -64,9 +67,11 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
       try {
         final response = await remoteAuth.login(body);
         LocalStorage().saveData(
-          key: ApiKeys.token,
-          value: response.accessToken,
-        );
+          key: ApiKeys.token, value: response.accessToken,);
+        if (response.securityCode != null) {
+          LocalStorage().saveData(
+            key: ApiKeys.securityCode, value: response.securityCode,);
+        }
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -75,4 +80,6 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
       return const Left(OfflineFailure());
     }
   }
+
+
 }
