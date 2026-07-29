@@ -14,6 +14,9 @@ import 'package:untitled1/features/blog/data/repositories/blog_repository.dart';
 import 'package:untitled1/features/blog/data/repositories/blog_detail_repository.dart';
 import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 import 'package:untitled1/features/blog/presentation/bloc/blog_detail_cubit.dart';
+import 'package:untitled1/features/chatbot/data/data_source/chat_bot_remote_data_source.dart';
+import 'package:untitled1/features/chatbot/data/repositories/chat_bot-repo.dart';
+import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import '../network/check_internet.dart';
 
@@ -33,27 +36,20 @@ Future<void> init() async {
 
   getIt.registerLazySingleton<AuthenticationRemoteDataSource>(() => AuthenticationRemoteDataSourceImpl(getIt()));
   getIt.registerLazySingleton<ResetPasswordRemoteDataSource>(() => ResetPasswordRemoteDataSourceImpl(getIt()));
+  getIt.registerLazySingleton<ChatBotRemoteDataSource>(() => ChatBotRemoteDataSourceImpl(getIt()));
+  getIt.registerLazySingleton<BlogRemoteDataSource>(() => BlogRemoteDataSourceImpl(getIt()),);
+  getIt.registerLazySingleton<BlogDetailRemoteDataSource>(() => BlogDetailRemoteDataSourceImpl(getIt()),);
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
+  getIt.registerLazySingleton<ChatBotRepository>(() => ChatBotRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
+  getIt.registerLazySingleton<BlogRepository>(() => BlogRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
+  getIt.registerLazySingleton<BlogDetailRepository>(() => BlogDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
   getIt.registerFactory(() => ApplicationCubit());
-
-  getIt.registerLazySingleton<BlogRemoteDataSource>(() => BlogRemoteDataSourceImpl(getIt()),);
-
-  getIt.registerLazySingleton<BlogRepository>(() => BlogRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
-
+  getIt.registerFactory(() => ChatBotCubit(getIt()));
   getIt.registerFactory(() => BlogCubit(getIt()));
-
-  getIt.registerLazySingleton<BlogDetailRemoteDataSource>(
-    () => BlogDetailRemoteDataSourceImpl(getIt()),
-  );
-
-  getIt.registerLazySingleton<BlogDetailRepository>(
-    () => BlogDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),
-  );
-
   getIt.registerFactory(() => BlogDetailCubit(getIt()));
 }

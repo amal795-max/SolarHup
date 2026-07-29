@@ -39,8 +39,8 @@ class DataHelper {
     return  '+963$raw';
   }
 
-  // static dateFormat(String newPattern,DateTime date) {
-  //   return DateFormat(newPattern).format(date);
-  //
-  // }
+  static String dateFormat(String newPattern,DateTime date) {
+    return DateFormat(newPattern).format(date);
+
+  }
 }

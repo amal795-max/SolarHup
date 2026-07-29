@@ -49,6 +49,8 @@
   "new_in_box": "جديد في الصندوق",
   "bundle": "حزمة",
   "clearance": "تصفية",
+  "clear": "مسح",
+  "confirm": "تأكيد",
   "items_listed_count": "1.2k+",
   "items_listed_label": "عناصر مدرجة",
   "secure_label": "آمن",
@@ -453,7 +455,9 @@
   "suggest_off_grid": "اقتراح نظام خارج الشبكة",
   "view_system": "عرض النظام",
   "validation_required": "هذا الحقل مطلوب",
+  "set_budget_title": "تحديد الميزانية",
   "passwords_do_not_match": "كلمتا المرور غير متطابقتين",
+  "enter_budget_hint": "أدخل ميزانيتك",
   "validation_phone_start": "يجب أن يبدأ رقم الهاتف بـ 09",
   "validation_phone_length": "رقم الهاتف غير صالح",
   "validation_phone_digits": "يجب أن يحتوي رقم الهاتف على أرقام فقط",
@@ -523,7 +527,12 @@
   "guide_step_3_desc": "سيقوم البوت بإرسال رمز مكوّن من 6 أرقام. ارجع إلى التطبيق، أدخل الرمز في الحقول، ثم اضغط 'تحقق'.",
   "got_it": "فهمت",
   "go_to_telegram": "الانتقال إلى تيليجرام",
-  "step_3_enter_otp": "أدخل رمز OTP"
+  "step_3_enter_otp": "أدخل رمز OTP",
+  "no_solar_consultations": "لا توجد استشارات بعد",
+  "ask_first_question": "اطرح سؤالك الأول للبدء",
+  "chat_image_selected": "تم اختيار الصورة بنجاح"
+
+
 
 
 }

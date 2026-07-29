@@ -1,4 +1,5 @@
 
+
 class AuthenticationParams {
   final String phoneNumber;
 
@@ -92,4 +93,27 @@ class ChangePasswordParams {
     'current_password': currentPassword,
     'new_password': newPassword,
   };
+}
+
+class RecommendParams {
+  final String message;
+  final String? image;
+  final String? budget;
+  final int? conversationId;
+
+  RecommendParams({
+    required this.message,
+    this.image,
+    this.budget,
+    this.conversationId,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'message': message,
+      if (image != null) 'image': image,
+      if (budget != null) 'budget': budget,
+      if (conversationId != null) 'conversation_id': conversationId,
+    };
+  }
 }

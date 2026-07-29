@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../core/theme/app_style.dart';
 import '../core/theme/app_colors.dart';
@@ -30,6 +31,7 @@ class EmptyWidget extends StatelessWidget {
       child: Padding(
         padding: padding,
         child: Column(
+          spacing: 4,
           mainAxisAlignment: alignment,
           children: [
             Icon(
@@ -38,14 +40,14 @@ class EmptyWidget extends StatelessWidget {
               color: iconColor ?? AppColors.lightGrey,
             ),
             Text(
-              title ?? 'No Items Added',
+              title?.tr()?? 'No Items Added',
               textAlign: TextAlign.center,
               style: AppStyle.bodyMedium.copyWith(
                 color: AppColors.grey,
               ),
             ),
             Text(
-              subtitle ?? 'Add your first item',
+              subtitle?.tr() ?? 'Add your first item',
               style: AppStyle.bodySmall.copyWith(
                 color: AppColors.grey,
               ),

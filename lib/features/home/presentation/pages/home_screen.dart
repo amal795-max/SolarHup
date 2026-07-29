@@ -102,7 +102,7 @@ class _HomeViewState extends State<_HomeView> {
     }).toList();
   }
 
-  // ── Skeleton mock data (shown while HomeLoading) ──────────────────────────
+  // ── Skeleton mock data_source (shown while HomeLoading) ──────────────────────────
 
   static final List<ProductCardData> _skeletonProducts = List.generate(
     3,
@@ -123,7 +123,7 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
-  // ── Model → UI data mappers ───────────────────────────────────────────────
+  // ── Model → UI data_source mappers ───────────────────────────────────────────────
 
   ProductCardData _mapProduct(ProductModel m) => ProductCardData(
     name: m.name,

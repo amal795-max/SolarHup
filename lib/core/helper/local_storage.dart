@@ -40,7 +40,7 @@ class LocalStorage {
     return sharedPreferences.containsKey(key);
   }
 
-//clear all data
+//clear all data_source
   Future<bool> clearData() async {
     return await sharedPreferences.clear();
   }

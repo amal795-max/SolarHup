@@ -111,8 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                         Text(
                           'v1.0.0',
-                          style: context.textTheme.labelSmall
-                              ?.copyWith(
+                          style:AppStyle.labelSmall.copyWith(
                                 color: Colors.white.withOpacity(0.25),
                                 letterSpacing: 1,
                               ),

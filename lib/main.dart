@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_themes.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/authentication_cubit.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
+import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'core/constants/debendency_injection.dart' as di;
 import 'core/helper/local_storage.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<ApplicationCubit>()),
         BlocProvider(create: (_) => di.getIt<AuthenticationCubit>()),
         BlocProvider(create: (_) => di.getIt<ResetPasswordCubit>()),
+        BlocProvider(create: (_) => di.getIt<ChatBotCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

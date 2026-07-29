@@ -13,6 +13,11 @@ class EndPoints {
   static const String changePassword = '${_auth}change-password';
   static const String blogArticles = '${baseUrl}blog';
   static String blogArticle(String articleId) => '${baseUrl}blog/$articleId';
+
+  static const String _assistant = '${baseUrl}assistant/';
+  static const String recommend = '${_assistant}recommend';
+  static const String conversations = '${_assistant}conversations';
+  static String conversationDetails(int id) => '${_assistant}conversations/$id';
 }
 
 class ApiKeys {

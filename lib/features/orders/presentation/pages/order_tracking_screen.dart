@@ -100,11 +100,11 @@ class _HeaderItem extends StatelessWidget {
       children: [
         Text(
           label,
-          style: context.textTheme.labelSmall?.copyWith(color: AppColors.grey, letterSpacing: 1.2),
+          style: AppStyle.labelSmall.copyWith(color: AppColors.grey, letterSpacing: 1.2),
         ),
         Text(
           value,
-          style:context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+          style:AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );
@@ -163,7 +163,7 @@ class _OrderTrackingTimeline extends StatelessWidget {
         children: [
           Text(
             'order_tracking_title'.tr(),
-            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 24.h),
           _TimelineItem(
@@ -261,14 +261,14 @@ class _TimelineItem extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: context.textTheme.bodyMedium?.copyWith(
+                  style: AppStyle.bodyMedium.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isCompleted ? null : AppColors.grey,
                       ),
                 ),
                 Text(
                   subtitle,
-                  style: context.textTheme.bodySmall?.copyWith(color: AppColors.grey, fontSize: 12.sp),
+                  style: AppStyle.bodySmall?.copyWith(color: AppColors.grey, fontSize: 12.sp),
                 ),
                 if (trackingId != null) ...[
                   SizedBox(height: 8.h),
@@ -278,7 +278,7 @@ class _TimelineItem extends StatelessWidget {
                       color: AppColors.lightGrey,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
-                    child: Text('ID: $trackingId', style: context.textTheme.labelSmall),
+                    child: Text('ID: $trackingId', style: AppStyle.labelSmall),
 
                   ),
                 ],
@@ -310,7 +310,7 @@ class _ShippingAddressSection extends StatelessWidget {
         children: [
           Text(
             'shipping_address_title'.tr(),
-            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
           Row(
             spacing: 12.w,
@@ -321,10 +321,10 @@ class _ShippingAddressSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Robert J. Henderson', style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    Text('Robert J. Henderson', style: AppStyle.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
                     Text(
                       '4522 Oakridge Lane, Portland, OR 97201\n+1 (503) 555-0128',
-                      style: context.textTheme.bodySmall?.copyWith(color: AppColors.grey),
+                      style: AppStyle.bodySmall?.copyWith(color: AppColors.grey),
                     ),
                   ],
                 ),
@@ -349,7 +349,7 @@ class _OrderSummarySection extends StatelessWidget {
           padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
           child: Text(
             'order_summary_label'.tr(),
-            style: context.textTheme.labelSmall?.copyWith(color: AppColors.grey, letterSpacing: 1.2),
+            style: AppStyle.labelSmall?.copyWith(color: AppColors.grey, letterSpacing: 1.2),
           ),
         ),
         Container(
@@ -414,12 +414,12 @@ class _SummaryItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
-                Text(desc, style: context.textTheme.bodySmall?.copyWith(color: AppColors.grey, fontSize: 10.sp)),
+                Text(name, style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+                Text(desc, style: AppStyle.bodySmall?.copyWith(color: AppColors.grey, fontSize: 10.sp)),
               ],
             ),
           ),
-          Text(price, style: context.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(price, style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),
     );

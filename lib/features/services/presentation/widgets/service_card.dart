@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/models/expert_service_model.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
@@ -54,7 +55,7 @@ class ServiceCard extends StatelessWidget {
                   SizedBox(height: 12.h),
                   Text(
                     '\$${service.price.toStringAsFixed(0)}',
-                    style: context.textTheme.titleMedium?.copyWith(
+                    style:AppStyle.bodyMedium.copyWith(
                       fontWeight: FontWeight.w800,
                       color: titleColor,
                     ),
@@ -80,7 +81,7 @@ class ServiceCard extends StatelessWidget {
                       Flexible(
                         child: Text(
                           service.title,
-                          style: context.textTheme.titleSmall?.copyWith(
+                          style: AppStyle.bodySmall.copyWith(
                             fontWeight: FontWeight.w700,
                             color: titleColor,
                             height: 1.3,
@@ -116,7 +117,7 @@ class ServiceCard extends StatelessWidget {
                         ),
                         child: Text(
                           badge,
-                          style: context.textTheme.displaySmall?.copyWith(
+                          style:AppStyle.bodyMedium.copyWith(
                             color: isPrimary
                                 ? AppColors.primaryColor
                                 : AppColors.deepGrey,
