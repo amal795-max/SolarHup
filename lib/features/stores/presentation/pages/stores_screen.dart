@@ -62,7 +62,7 @@ class _StoresViewState extends State<_StoresView> {
     super.dispose();
   }
 
-  // ── Skeleton mock data (shown while bloc is in loading state) ─────────────
+  // ── Skeleton mock data_source (shown while bloc is in loading state) ─────────────
 
   static final List<StoreCardData> _skeletonStores = List.generate(
     3,

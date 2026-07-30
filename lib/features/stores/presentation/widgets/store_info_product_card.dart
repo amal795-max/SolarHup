@@ -9,7 +9,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_info_screen.d
 import 'package:untitled1/widgets/primary_button.dart';
 
 /// Full-width product card used inside the Featured Products section.
-/// Handles three display modes automatically based on [StoreProductItem] data:
+/// Handles three display modes automatically based on [StoreProductItem] data_source:
 ///   - Standard  : image + category + name + price + cart icon + optional "New" badge
 ///   - Discounted: same as above with crossed-out original price + %-off badge
 ///   - Kit       : image + category + name + description + price + "Configure Kit" button

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/constants/app_images.dart';
+import '../../../../core/constants/app_url.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/primary_button.dart';
@@ -51,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.primaryColor.withOpacity(0.4), // دمج لون الـ Splash مع الصورة
+                    AppColors.primaryColor.withOpacity(0.4),
                     AppColors.black.withOpacity(0.9),
                   ],
                 ),
@@ -139,10 +141,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       borderColor: currentIndex == 2 ? Colors.transparent : Colors.white.withOpacity(0.15),
 
 
-                      onPressed: () {
+                      onPressed: () async{
                         if (currentIndex == 2) {
-                          context.push(AppRoutes.authenticationScreen);
-                          // context.push(AppRoutes.bottomNavBar);
+                          await LocalStorage().saveData(key: StorageKeys.onboardingCompleted, value: true);
+                          context.push(AppRoutes.loginScreen);
+
                         } else {
                           controller.nextPage(
                             duration: const Duration(milliseconds: 400),

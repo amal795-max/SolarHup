@@ -6,7 +6,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 // ---------------------------------------------------------------------------
-// UI model — keeps the widget layer decoupled from the data layer
+// UI model — keeps the widget layer decoupled from the data_source layer
 // ---------------------------------------------------------------------------
 
 class StoreCardData {

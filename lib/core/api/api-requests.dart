@@ -28,12 +28,12 @@ class ApiRequest {
   Future<Response> get(String path, {Map<String, dynamic>? query}) =>
       dio.get(path, queryParameters: query);
 
-  Future<Response> post(String path, {Map<String, dynamic>? body}) =>
+  Future<Response> post(String path, {dynamic body}) =>
       dio.post(path, data: body);
 
-  Future<Response> delete(String path, {Map<String, dynamic>? body}) =>
+  Future<Response> delete(String path, {dynamic body}) =>
       dio.delete(path, data: body);
 
-  Future<Response> put(String path, {Map<String, dynamic>? body}) =>
+  Future<Response> put(String path, {dynamic body}) =>
       dio.put(path, data: body);
 }

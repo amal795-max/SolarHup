@@ -273,7 +273,7 @@ class _StoreInfoCard extends StatelessWidget {
         spacing: 4.h,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Volt Masters', style: context.textTheme.bodyMedium),
+          Text('Volt Masters', style: AppStyle.bodyMedium),
           Row(
             spacing: 4.w,
             children: [

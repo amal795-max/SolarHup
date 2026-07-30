@@ -17,7 +17,7 @@ import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 // ---------------------------------------------------------------------------
-// UI data models — kept in this file so the page and its widgets stay in sync
+// UI data_source models — kept in this file so the page and its widgets stay in sync
 // ---------------------------------------------------------------------------
 
 class StoreInfoData {
@@ -84,7 +84,7 @@ class StoreProductItem {
 }
 
 // ---------------------------------------------------------------------------
-// Sample / mock data — used when no real data is provided yet
+// Sample / mock data_source — used when no real data_source is provided yet
 // ---------------------------------------------------------------------------
 
 final StoreInfoData sampleStoreInfo = const StoreInfoData(

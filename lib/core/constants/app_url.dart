@@ -14,6 +14,11 @@ class EndPoints {
   static const String blogArticles = '${baseUrl}blog';
   static String blogArticle(String articleId) => '${baseUrl}blog/$articleId';
 
+  static const String _assistant = '${baseUrl}assistant/';
+  static const String recommend = '${_assistant}recommend';
+  static const String conversations = '${_assistant}conversations';
+  static String conversationDetails(int id) => '${_assistant}conversations/$id';
+
   static const String stores = '${baseUrl}stores';
   static String store(String businessId) => '${baseUrl}stores/$businessId';
   static String storeProducts(String businessId) =>
@@ -36,6 +41,7 @@ class ApiKeys {
 class StorageKeys {
   static const String mode = 'mode';
   static const String langCode = 'langCode';
+  static const String onboardingCompleted = 'onboardingCompleted';
 
 
 }

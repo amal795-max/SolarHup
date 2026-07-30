@@ -227,7 +227,7 @@ class _OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(

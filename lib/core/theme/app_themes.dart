@@ -26,7 +26,7 @@ class AppThemes {
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.white, size: 24.sp),
       centerTitle: true,
-      titleTextStyle: AppStyle.bodyLarge.copyWith(color: AppColors.white),
+      titleTextStyle: AppStyle.h4.copyWith(color: AppColors.white),
     ),
     dividerTheme: DividerThemeData(
       color: AppColors.borderColor,
@@ -86,7 +86,7 @@ class AppThemes {
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.black, size: 24.sp),
       centerTitle: true,
-      titleTextStyle: AppStyle.h3.copyWith(color: AppColors.black),
+      titleTextStyle: AppStyle.h4.copyWith(color: AppColors.black),
     ),
     dividerTheme: const DividerThemeData(
       color: AppColors.lightGrey,

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 import '../constants/app_url.dart';
@@ -21,7 +20,7 @@ class DataHelper {
         margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         behavior: SnackBarBehavior.floating,
         backgroundColor:color,
-        content: Text(message.tr(),style:AppStyle.bodySmall.copyWith(color: AppColors.white),),
+        content: Text(message.tr(),style:AppStyle.bodySmall),
       ),
     );
   }
@@ -39,8 +38,8 @@ class DataHelper {
     return  '+963$raw';
   }
 
-  // static dateFormat(String newPattern,DateTime date) {
-  //   return DateFormat(newPattern).format(date);
-  //
-  // }
+  static String dateFormat(String newPattern,DateTime date) {
+    return DateFormat(newPattern).format(date);
+
+  }
 }

@@ -10,6 +10,7 @@ import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
+import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
@@ -94,7 +95,7 @@ class _HomeViewState extends State<_HomeView> {
     }).toList();
   }
 
-  // ── Skeleton mock data (shown while HomeLoading) ──────────────────────────
+  // ── Skeleton mock data_source (shown while HomeLoading) ──────────────────────────
 
   static final List<ProductCardData> _skeletonProducts = List.generate(
     3,
@@ -105,6 +106,17 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
+  static final List<BlogCardData> _skeletonBlogs = List.generate(
+    2,
+    (i) => BlogCardData(
+      id: 'blog-$i',
+      title: 'Loading blog post title here',
+      meta: '5 min read • Category',
+      imagePlaceholderColorValue: 0xFF4A7B9D,
+    ),
+  );
+
+  // ── Model → UI data_source mappers ───────────────────────────────────────────────
   // ── Model → UI data mappers ───────────────────────────────────────────────
 
   ProductCardData _mapProduct(ProductModel m) => ProductCardData(
@@ -189,7 +201,7 @@ class _HomeViewState extends State<_HomeView> {
         isLoading: true,
         usedProducts: _skeletonProducts,
         newOffers: _skeletonProducts,
-        blogPosts: const [],
+        blogPosts: _skeletonBlogs,
       );
     }
     if (state is HomeLoaded) {

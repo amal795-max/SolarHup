@@ -47,6 +47,8 @@
   "new_in_box": "New in Box",
   "bundle": "Bundle",
   "clearance": "Clearance",
+  "clear": "Clear",
+  "confirm": "Confirm",
   "items_listed_count": "1.2k+",
   "items_listed_label": "ITEMS LISTED",
   "secure_label": "Secure",
@@ -446,10 +448,13 @@
   "chatbot_title": "Solar Assistant",
   "ask_about_solar": "Ask about solar...",
   "analyze_my_bill": "Analyze my bill",
-  "suggest_off_grid": "Suggest off-grid system",
+  "batteries_difference": "What is the difference between lithium batteries and regular batteries?",
+  "compare_systems": "Compare on-grid, off-grid and hybrid systems",
   "view_system": "View System",
   "validation_required": "This field is required",
+  "set_budget_title": "Set Budget",
   "passwords_do_not_match": "Passwords do not match",
+  "enter_budget_hint": "ُEnter your budget",
   "validation_phone_start": "Phone number must start with 09",
   "validation_phone_length": "Invalid phone number",
   "validation_phone_digits": "Phone number must contain only digits",
@@ -511,7 +516,10 @@
   "guide_step_3_desc": "The bot will send you a 6-digit code. Return to the app, enter the code in the fields, and tap 'Verify'.",
   "got_it": "Got it",
   "go_to_telegram": "Got To Telegram",
-  "step_3_enter_otp": "Enter OTP"
+  "step_3_enter_otp": "Enter OTP",
+  "no_solar_consultations": "No consultations yet",
+  "ask_first_question": "Start your first chat now"
+
 }
 
 
