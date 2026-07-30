@@ -8,8 +8,6 @@ import 'package:untitled1/features/chatbot/data/model/chat_message.dart';
 import 'package:untitled1/features/chatbot/data/model/recommend_model.dart'
     hide ChatMessage;
 import 'package:untitled1/features/chatbot/data/repositories/chat_bot-repo.dart';
-
-import '../../../../core/constants/failure_success_message.dart';
 import '../../data/model/conversation_details_model.dart';
 import '../../data/model/list_conversations_model.dart';
 

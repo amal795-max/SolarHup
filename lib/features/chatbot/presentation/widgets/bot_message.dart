@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
+
 import '../../../../core/theme/app_style.dart';
 
 Widget buildBotMessage(BuildContext context, String text) {

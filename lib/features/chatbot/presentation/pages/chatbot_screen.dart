@@ -1,20 +1,14 @@
-import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/chatbot/presentation/pages/list_conversations.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/budget_bottom_sheet.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/chat_message_tile.dart';
-import 'package:untitled1/widgets/custom_text_field.dart';
-import '../../../../core/helper/extensions.dart';
-import '../../../../core/theme/app_style.dart';
 import '../widgets/chat_input_section.dart' show ChatInputSection;
-import '../widgets/quick_action_widget.dart';
 
 class ChatbotScreen extends StatefulWidget {
   const ChatbotScreen({super.key});

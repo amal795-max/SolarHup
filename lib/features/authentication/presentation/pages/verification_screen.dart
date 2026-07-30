@@ -130,12 +130,13 @@ class VerificationScreen extends StatelessWidget {
                       text: 'verify_identity',
                       isLoading: state is ConfirmOtpLoading,
                       onPressed: () {
-                        if (cubit.otpCodeController.text.isNotEmpty) {
-                          cubit.confirmOtp(
-                            isReset: isResetPassword ? true : false,
-                          );
-                        }
-                      },
+                        cubit.sendOtpVerification(isReset: false);
+                      //   if (cubit.otpCodeController.text.isNotEmpty) {
+                      //     cubit.confirmOtp(
+                      //       isReset: isResetPassword ? true : false,
+                      //     );
+                      //   }
+                       },
                     ),
                   ],
                 ),

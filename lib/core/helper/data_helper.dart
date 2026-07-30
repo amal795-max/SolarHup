@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 import '../constants/app_url.dart';

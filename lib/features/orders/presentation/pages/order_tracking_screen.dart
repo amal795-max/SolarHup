@@ -163,7 +163,7 @@ class _OrderTrackingTimeline extends StatelessWidget {
         children: [
           Text(
             'order_tracking_title'.tr(),
-            style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 24.h),
           _TimelineItem(
@@ -268,7 +268,7 @@ class _TimelineItem extends StatelessWidget {
                 ),
                 Text(
                   subtitle,
-                  style: AppStyle.bodySmall?.copyWith(color: AppColors.grey, fontSize: 12.sp),
+                  style: AppStyle.bodySmall.copyWith(color: AppColors.grey, fontSize: 12.sp),
                 ),
                 if (trackingId != null) ...[
                   SizedBox(height: 8.h),
@@ -321,10 +321,10 @@ class _ShippingAddressSection extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Robert J. Henderson', style: AppStyle.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
+                    Text('Robert J. Henderson', style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
                     Text(
                       '4522 Oakridge Lane, Portland, OR 97201\n+1 (503) 555-0128',
-                      style: AppStyle.bodySmall?.copyWith(color: AppColors.grey),
+                      style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
                     ),
                   ],
                 ),
@@ -349,7 +349,7 @@ class _OrderSummarySection extends StatelessWidget {
           padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
           child: Text(
             'order_summary_label'.tr(),
-            style: AppStyle.labelSmall?.copyWith(color: AppColors.grey, letterSpacing: 1.2),
+            style: AppStyle.labelSmall.copyWith(color: AppColors.grey, letterSpacing: 1.2),
           ),
         ),
         Container(
@@ -414,12 +414,12 @@ class _SummaryItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
-                Text(desc, style: AppStyle.bodySmall?.copyWith(color: AppColors.grey, fontSize: 10.sp)),
+                Text(name, style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+                Text(desc, style: AppStyle.bodySmall.copyWith(color: AppColors.grey, fontSize: 10.sp)),
               ],
             ),
           ),
-          Text(price, style: AppStyle.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(price, style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),
     );
