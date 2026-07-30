@@ -126,9 +126,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.storeInfoScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final data = state.extra as StoreInfoData? ?? sampleStoreInfo;
-        return StoreInfoScreen(data: data);
-
+        final storeId = state.extra as String? ?? '';
+        return StoreInfoScreen(storeId: storeId);
       },
     ),
     GoRoute(

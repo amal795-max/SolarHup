@@ -3,10 +3,12 @@ import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
+import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
 
 abstract class StoresRepository {
   Future<Either<Failure, List<StoreModel>>> getStores({String? region});
+  Future<Either<Failure, StoreDetailModel>> getStore(String businessId);
 }
 
 class StoresRepositoryImpl implements StoresRepository {
@@ -24,6 +26,20 @@ class StoresRepositoryImpl implements StoresRepository {
       try {
         final stores = await remote.getStores(region: region);
         return Right(stores);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, StoreDetailModel>> getStore(String businessId) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final store = await remote.getStore(businessId);
+        return Right(store);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }

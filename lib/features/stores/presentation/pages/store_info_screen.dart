@@ -1,13 +1,20 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
+import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_categories_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_details_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_expert_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/loader.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 // ---------------------------------------------------------------------------
 // UI data models — kept in this file so the page and its widgets stay in sync
@@ -138,29 +145,74 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
 // StoreInfoScreen — main page
 // ---------------------------------------------------------------------------
 
-/// Entry point — provides [StoreInfoBloc] for the entire screen subtree.
+/// Entry point — loads store details from the API and provides [StoreInfoBloc]
+/// for local UI state (follow, category selection).
 class StoreInfoScreen extends StatelessWidget {
-  final StoreInfoData data;
+  final String storeId;
 
-  const StoreInfoScreen({super.key, required this.data});
+  const StoreInfoScreen({super.key, required this.storeId});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => StoreInfoBloc(),
-      child: _StoreInfoView(data: data),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<StoreDetailCubit>()..loadStore(storeId),
+        ),
+        BlocProvider(create: (_) => StoreInfoBloc()),
+      ],
+      child: _StoreInfoView(storeId: storeId),
     );
   }
 }
 
 // ---------------------------------------------------------------------------
-// Private view — reads the bloc from context
+// Private view — reads cubit + bloc from context
 // ---------------------------------------------------------------------------
 
 class _StoreInfoView extends StatelessWidget {
+  final String storeId;
+
+  const _StoreInfoView({required this.storeId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: BlocBuilder<StoreDetailCubit, StoreDetailState>(
+        builder: (context, state) {
+          return switch (state) {
+            StoreDetailLoading() => const LoadingIndicator(),
+            StoreDetailError(:final message) => SafeArea(
+                child: EmptyWidget(
+                  icon: Icons.error_outline_rounded,
+                  iconSize: 48,
+                  iconColor: AppColors.red,
+                  title: 'stores_error_title'.tr(),
+                  subtitle: message.tr(),
+                  action: CustomButton(
+                    text: 'stores_retry'.tr(),
+                    onPressed: () =>
+                        context.read<StoreDetailCubit>().loadStore(storeId),
+                    width: 160.w,
+                  ),
+                ),
+              ),
+            StoreDetailLoaded(:final store) => _StoreInfoContent(
+                data: storeDetailToInfoData(store),
+              ),
+            _ => const SizedBox.shrink(),
+          };
+        },
+      ),
+    );
+  }
+}
+
+class _StoreInfoContent extends StatelessWidget {
   final StoreInfoData data;
 
-  const _StoreInfoView({required this.data});
+  const _StoreInfoContent({required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -219,12 +271,15 @@ class _StoreInfoView extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 112.h),
-                StoreInfoCategoriesSection(categories: data.categories),
-                SizedBox(height: 8.h),
-                StoreInfoFeaturedProductsSection(
-                  products: data.featuredProducts,
-                ),
-                SizedBox(height: 16.h),
+                if (data.categories.isNotEmpty) ...[
+                  StoreInfoCategoriesSection(categories: data.categories),
+                  SizedBox(height: 8.h),
+                ],
+                if (data.featuredProducts.isNotEmpty)
+                  StoreInfoFeaturedProductsSection(
+                    products: data.featuredProducts,
+                  ),
+                if (data.featuredProducts.isNotEmpty) SizedBox(height: 16.h),
                 const StoreInfoExpertSection(),
                 SizedBox(height: 32.h),
               ],

@@ -20,6 +20,7 @@ import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
+import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import '../network/check_internet.dart';
 
@@ -86,4 +87,6 @@ Future<void> init() async {
   );
 
   getIt.registerFactory(() => StoresCubit(getIt()));
+
+  getIt.registerFactory(() => StoreDetailCubit(getIt()));
 }
