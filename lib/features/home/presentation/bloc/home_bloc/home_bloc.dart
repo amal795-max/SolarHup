@@ -63,13 +63,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     blogResult.fold(
-      (f) => error = _mapFailureToMessage(f),
+      (_) => blogPosts = [],
       (data) => blogPosts = data,
     );
-    if (error != null) {
-      emit(HomeError(message: error!));
-      return;
-    }
 
     emit(HomeLoaded(
       usedProducts: usedProducts,

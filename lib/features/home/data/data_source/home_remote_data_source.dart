@@ -1,12 +1,10 @@
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../models/blog_model.dart';
 import '../models/product_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<ProductModel>> getUsedProducts();
   Future<List<ProductModel>> getNewOffers();
-  Future<List<BlogModel>> getBlogPosts();
 }
 
 /// Mock implementation — replace bodies with real API calls when backend is ready.
@@ -80,26 +78,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         discountPercent: 20,
         image: AppImages.batteryTest3,
         iconType: 'solar',
-      ),
-    ];
-  }
-
-  @override
-  Future<List<BlogModel>> getBlogPosts() async {
-    return const [
-      BlogModel(
-        id: 'blog-2',
-        title: 'How to maximize your solar output in Winter',
-        meta: '5 min read • Solar Tips',
-        imagePlaceholderColorValue: 0xFF4A7B9D,
-        iconType: 'sun',
-      ),
-      BlogModel(
-        id: 'blog-1',
-        title: 'Government Rebates: What you need to know',
-        meta: '8 min read • Finance',
-        imagePlaceholderColorValue: 0xFF7B6241,
-        iconType: 'finance',
       ),
     ];
   }

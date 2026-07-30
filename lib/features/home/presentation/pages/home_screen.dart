@@ -7,15 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/app_images.dart';
 import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
-import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
-import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
@@ -38,13 +36,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HomeBloc(
-        HomeRepositoryImpl(
-          remote: const HomeRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(const LoadHomeDataEvent(showLoading: false)),
+      create: (_) => getIt<HomeBloc>()..add(const LoadHomeDataEvent(showLoading: false)),
       child: const _HomeView(),
     );
   }
@@ -110,16 +102,6 @@ class _HomeViewState extends State<_HomeView> {
       name: 'Loading Product Name',
       price: 149.00,
       imagePlaceholderColorValue: AppImages.batteryTest1,
-    ),
-  );
-
-  static final List<BlogCardData> _skeletonBlogs = List.generate(
-    2,
-    (i) => BlogCardData(
-      id: 'blog-$i',
-      title: 'Loading blog post title here',
-      meta: '5 min read • Category',
-      imagePlaceholderColorValue: 0xFF4A7B9D,
     ),
   );
 
@@ -207,7 +189,7 @@ class _HomeViewState extends State<_HomeView> {
         isLoading: true,
         usedProducts: _skeletonProducts,
         newOffers: _skeletonProducts,
-        blogPosts: _skeletonBlogs,
+        blogPosts: const [],
       );
     }
     if (state is HomeLoaded) {
@@ -309,7 +291,8 @@ class _HomeViewState extends State<_HomeView> {
                   : (articleId) => context.push(
                         AppRoutes.blogArticleDetail(articleId),
                       ),
-            )],
+            ),
+          ],
         ],
       ),
     );

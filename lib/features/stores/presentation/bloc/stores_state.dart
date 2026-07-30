@@ -1,4 +1,4 @@
-part of 'stores_bloc.dart';
+part of 'stores_cubit.dart';
 
 @immutable
 sealed class StoresState extends Equatable {

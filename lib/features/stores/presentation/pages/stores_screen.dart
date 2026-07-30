@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
-import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
-import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
-import 'package:untitled1/features/stores/presentation/bloc/stores_bloc/stores_bloc.dart';
+import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
@@ -20,20 +18,14 @@ import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../widgets/header_section.dart';
 
-/// Entry point — provides StoresBloc and fires the first load immediately.
+/// Entry point — provides StoresCubit and fires the first load immediately.
 class StoresScreen extends StatelessWidget {
   const StoresScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => StoresBloc(
-        StoresRepositoryImpl(
-          remote: const StoresRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(const LoadStoresEvent(showLoading: false)),
+      create: (_) => getIt<StoresCubit>()..loadStores(),
       child: const _StoresView(),
     );
   }
@@ -145,7 +137,7 @@ class _StoresViewState extends State<_StoresView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<StoresBloc, StoresState>(
+    return BlocConsumer<StoresCubit, StoresState>(
       listenWhen: (_, curr) => curr is StoresError,
       listener: (context, state) {
         if (state is StoresError) {
@@ -284,8 +276,7 @@ class _StoresViewState extends State<_StoresView> {
         text: 'stores_retry'.tr(),
         icon: Icons.refresh_rounded,
         iconLeft: true,
-        onPressed: () =>
-            context.read<StoresBloc>().add(const LoadStoresEvent()),
+        onPressed: () => context.read<StoresCubit>().loadStores(),
         width: 160.w,
       ),
     );
