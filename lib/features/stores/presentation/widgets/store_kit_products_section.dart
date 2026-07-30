@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store_kit_bloc.dart';
+import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 
@@ -97,7 +98,13 @@ class _KitProductCard extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         child: InkWell(
           onTap: () {
-            context.push(AppRoutes.productDetailScreen, extra: product.id);
+            context.push(
+              AppRoutes.productDetailScreen,
+              extra: ProductDetailRouteArgs(
+                businessId: '0',
+                productId: product.id,
+              ),
+            );
           },
           child: Container(
             decoration: BoxDecoration(

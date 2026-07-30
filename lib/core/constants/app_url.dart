@@ -18,6 +18,8 @@ class EndPoints {
   static String store(String businessId) => '${baseUrl}stores/$businessId';
   static String storeProducts(String businessId) =>
       '${baseUrl}stores/$businessId/products';
+  static String storeProduct(String businessId, String productId) =>
+      '${baseUrl}stores/$businessId/products/$productId';
 }
 
 class ApiKeys {

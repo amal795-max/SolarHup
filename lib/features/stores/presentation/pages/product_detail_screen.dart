@@ -2,11 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/network/check_internet.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/stores/data/data_source/product_detail_remote_data_source.dart';
-import 'package:untitled1/features/stores/data/repositories/product_detail_repository.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
+import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_app_bar.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_bottom_bar.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_core_specs_section.dart';
@@ -19,29 +18,29 @@ import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  final String productId;
+  final ProductDetailRouteArgs args;
 
-  const ProductDetailScreen({super.key, required this.productId});
+  const ProductDetailScreen({super.key, required this.args});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ProductDetailBloc(
-        ProductDetailRepositoryImpl(
-          remote: const ProductDetailRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
+      create: (_) => getIt<ProductDetailBloc>()
+        ..add(
+          LoadProductDetailEvent(
+            businessId: args.businessId,
+            productId: args.productId,
+          ),
         ),
-      )..add(LoadProductDetailEvent(productId: productId)),
-      child: _ProductDetailView(productId: productId),
+      child: _ProductDetailView(args: args),
     );
   }
 }
 
 class _ProductDetailView extends StatelessWidget {
-  final String productId;
+  final ProductDetailRouteArgs args;
 
-  const _ProductDetailView({required this.productId});
+  const _ProductDetailView({required this.args});
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +56,14 @@ class _ProductDetailView extends StatelessWidget {
                   iconSize: 48,
                   iconColor: AppColors.red,
                   title: 'stores_error_title'.tr(),
-                  subtitle: message,
+                  subtitle: message.tr(),
                   action: CustomButton(
                     text: 'stores_retry'.tr(),
                     onPressed: () => context.read<ProductDetailBloc>().add(
-                          LoadProductDetailEvent(productId: productId),
+                          LoadProductDetailEvent(
+                            businessId: args.businessId,
+                            productId: args.productId,
+                          ),
                         ),
                     width: 160.w,
                   ),
@@ -98,10 +100,12 @@ class _ProductDetailView extends StatelessWidget {
                             ProductDetailTechnicalSheetSection(
                               data: product.technicalData,
                             ),
-                            SizedBox(height: 24.h),
-                            ProductDetailReviewsSection(
-                              reviews: product.reviews,
-                            ),
+                            if (product.reviews.isNotEmpty) ...[
+                              SizedBox(height: 24.h),
+                              ProductDetailReviewsSection(
+                                reviews: product.reviews,
+                              ),
+                            ],
                             SizedBox(height: 16.h),
                           ],
                         ),

@@ -1,3 +1,4 @@
+import '../models/product_detail_model.dart';
 import '../models/store_product_model.dart';
 
 class StoreProductApiModel {
@@ -56,6 +57,40 @@ class StoreProductApiModel {
       imageUrl: images.isNotEmpty ? images.first : null,
       isAvailable: isAvailable,
       imagePlaceholderColorValue: _placeholderColor(id),
+    );
+  }
+
+  ProductDetailModel toProductDetailModel() {
+    final colors = images.isEmpty
+        ? [_placeholderColor(id)]
+        : List.generate(images.length, (index) => _placeholderColor(id + index));
+
+    return ProductDetailModel(
+      id: id.toString(),
+      title: name,
+      description: description,
+      currentPrice: _parsePrice(price),
+      rating: 0,
+      reviewCount: 0,
+      isBestseller: false,
+      imagePlaceholderColors: colors,
+      coreSpecs: ProductCoreSpecs(
+        maxPowerOutput: quantity > 0 ? '$quantity in stock' : 'Out of stock',
+        efficiency: isAvailable ? 'Available' : 'Unavailable',
+        warranty: 'Category $categoryId',
+        brand: 'Store #$businessId',
+        cellTechnology: description.isNotEmpty ? description : '—',
+      ),
+      technicalData: const ProductTechnicalData(
+        weight: '—',
+        dimensions: '—',
+        connectors: '—',
+        maxSystemVoltage: '—',
+        operatingTemp: '—',
+        material: '—',
+        outputType: '—',
+      ),
+      reviews: const [],
     );
   }
 }

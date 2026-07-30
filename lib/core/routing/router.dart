@@ -23,6 +23,7 @@ import 'package:untitled1/features/services/presentation/pages/rate_service_scre
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
@@ -139,8 +140,14 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.productDetailScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final productId = state.extra as String? ?? 'helios-450w';
-        return ProductDetailScreen(productId: productId);
+        final args = state.extra as ProductDetailRouteArgs?;
+        return ProductDetailScreen(
+          args: args ??
+              const ProductDetailRouteArgs(
+                businessId: '0',
+                productId: '0',
+              ),
+        );
       },
     ),
     GoRoute(

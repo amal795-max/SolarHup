@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class StoreKitSpecialOfferSection extends StatelessWidget {
@@ -80,7 +81,10 @@ class StoreKitSpecialOfferSection extends StatelessWidget {
                   onPressed: () {
                     context.push(
                       AppRoutes.productDetailScreen,
-                      extra: 'helios-450w',
+                      extra: const ProductDetailRouteArgs(
+                        businessId: '0',
+                        productId: 'helios-450w',
+                      ),
                     );
                   },
                 ),

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/core/api/errors/failures.dart';
+import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/features/stores/data/repositories/product_detail_repository.dart';
 
@@ -23,9 +23,13 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
   ) async {
     emit(ProductDetailLoading());
 
-    final result = await repository.getProductDetail(event.productId);
+    final result = await repository.getProductDetail(
+      businessId: event.businessId,
+      productId: event.productId,
+    );
     result.fold(
-      (failure) => emit(ProductDetailError(message: _mapFailureToMessage(failure))),
+      (failure) =>
+          emit(ProductDetailError(message: mapFailureToMessage(failure))),
       (product) => emit(
         ProductDetailLoaded(
           product: product,
@@ -57,16 +61,5 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
     // TODO: Wire up cart repository when available
     await Future<void>.delayed(const Duration(milliseconds: 400));
     emit(current.copyWith(isAddingToCart: false, addedToCart: true));
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case const (OfflineFailure):
-        return 'No internet connection';
-      case const (ServerFailure):
-        return (failure as ServerFailure).message;
-      default:
-        return 'Unexpected error occurred';
-    }
   }
 }

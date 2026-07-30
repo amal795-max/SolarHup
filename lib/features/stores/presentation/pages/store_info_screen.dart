@@ -277,6 +277,7 @@ class _StoreInfoContent extends StatelessWidget {
                 ],
                 SizedBox(height: 8.h),
                 StoreInfoFeaturedProductsSection(
+                  storeId: data.id,
                   products: data.featuredProducts,
                 ),
                 SizedBox(height: 16.h),
