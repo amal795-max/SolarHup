@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/user-parameters.dart';
 import 'package:untitled1/features/chatbot/data/model/chat_message.dart';
-import 'package:untitled1/features/chatbot/data/model/recommend_model.dart' hide ChatMessage;
+import 'package:untitled1/features/chatbot/data/model/recommend_model.dart'
+    hide ChatMessage;
 import 'package:untitled1/features/chatbot/data/repositories/chat_bot-repo.dart';
 
 import '../../../../core/constants/failure_success_message.dart';
@@ -23,7 +24,9 @@ class ChatBotCubit extends Cubit<ChatBotState> {
   int? currentConversationId;
 
   final List<ChatMessage> messages = [
-    ChatMessage.assistant('Hello! I can help you find the perfect solar solution. How can I assist you today?')
+    ChatMessage.assistant(
+      'Hello! I can help you find the perfect solar solution. How can I assist you today?',
+    ),
   ];
 
   ChatBotCubit(this.repository) : super(ChatBotInitial());
@@ -34,9 +37,13 @@ class ChatBotCubit extends Cubit<ChatBotState> {
 
     if (image != null) {
       selectedImagePath = image.path;
-      emit(ChatImageSelected(image.path,chatImageSelected));
+      emit(ChatImageSelected(image.path));
     }
   }
+  Future<void> deleteImage() async {
+    selectedImagePath=null;
+      emit(const ChatImageDeleted());
+    }
 
   void sendMessage() async {
     final text = messageController.text.trim();
@@ -44,7 +51,7 @@ class ChatBotCubit extends Cubit<ChatBotState> {
 
     final String? imageToSend = selectedImagePath;
 
-    messages.add(ChatMessage.user( text, imagePath: imageToSend));
+    messages.add(ChatMessage.user(text, imagePath: imageToSend));
     emit(ChatNewMessageAdded());
 
     recommend();
@@ -96,23 +103,32 @@ class ChatBotCubit extends Cubit<ChatBotState> {
         currentConversationId = id;
         messages.clear();
         for (var msg in success.messages) {
-           messages.add(msg.role == 'user'
-            ? ChatMessage.user(msg.content)
-            : ChatMessage.assistant(msg.content));
+          messages.add(
+            msg.role == 'user'
+                ? ChatMessage.user(msg.content)
+                : ChatMessage.assistant(msg.content),
+          );
         }
         emit(ConversationDetailsSuccess(success));
       },
     );
   }
+
   void startNewChat() {
-    messages.clear();
-    // messages.add(ChatMessage.assistant('Hello! ...'));
+    messages.add(
+      ChatMessage.assistant(
+        'Hello! I can help you find the perfect solar solution. '
+        'How can I assist you today?',
+      ),
+    );
+
     selectedImagePath = null;
     messageController.clear();
     budgetController.clear();
     currentConversationId = null;
     emit(ChatNewMessageAdded());
   }
+
   //
   // @override
   // Future<void> close() {

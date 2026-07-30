@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/constants/app_images.dart';
-import '../../../../core/helper/extensions.dart';
+import '../../../../core/constants/app_url.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/routing/app_routes.dart';
 
@@ -20,9 +21,28 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+
     Future.delayed(const Duration(milliseconds: 3000), () {
-      if (mounted) {
-        context.go(AppRoutes.onboardingScreen);
+      bool onboardingCompleted = LocalStorage().getData(
+          key: StorageKeys.onboardingCompleted,
+          defaultValue: false
+      );
+
+      bool isLoggedIn = LocalStorage().getData(
+          key: ApiKeys.userIsLogin,
+          defaultValue: false
+      );
+
+      if (!onboardingCompleted) {
+        context.push(AppRoutes.onboardingScreen);
+      } else {
+        if (isLoggedIn) {
+          context.push(AppRoutes.bottomNavBar);
+
+        } else {
+          context.push(AppRoutes.loginScreen);
+
+        }
       }
     });
   }

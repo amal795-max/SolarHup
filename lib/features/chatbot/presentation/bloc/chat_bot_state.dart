@@ -31,11 +31,18 @@ class ChatNewMessageAdded extends ChatBotState {}
 
 class ChatImageSelected extends ChatBotState {
   final String path;
-  final String message;
-  const ChatImageSelected(this.path,this.message);
+  const ChatImageSelected(this.path);
 
   @override
   List<Object?> get props => [path];
+
+}
+
+class ChatImageDeleted extends ChatBotState {
+  const ChatImageDeleted();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class ConversationsLoading extends ChatBotState {}

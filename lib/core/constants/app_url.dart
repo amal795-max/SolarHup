@@ -34,6 +34,7 @@ class ApiKeys {
 class StorageKeys {
   static const String mode = 'mode';
   static const String langCode = 'langCode';
+  static const String onboardingCompleted = 'onboardingCompleted';
 
 
 }

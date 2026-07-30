@@ -452,7 +452,8 @@
   "chatbot_title": "مساعد الطاقة الشمسية",
   "ask_about_solar": "اسأل عن الطاقة الشمسية...",
   "analyze_my_bill": "تحليل فاتورتي",
-  "suggest_off_grid": "اقتراح نظام خارج الشبكة",
+  "batteries_difference": "ما الفرق بين البطاريات الليثيوم والبطاريات العادية؟",
+  "compare_systems": "قارن بين الأنظمة: المرتبط بالشبكة، المنفصل عن الشبكة، والهجين",
   "view_system": "عرض النظام",
   "validation_required": "هذا الحقل مطلوب",
   "set_budget_title": "تحديد الميزانية",
@@ -529,8 +530,7 @@
   "go_to_telegram": "الانتقال إلى تيليجرام",
   "step_3_enter_otp": "أدخل رمز OTP",
   "no_solar_consultations": "لا توجد استشارات بعد",
-  "ask_first_question": "اطرح سؤالك الأول للبدء",
-  "chat_image_selected": "تم اختيار الصورة بنجاح"
+  "ask_first_question": "اطرح سؤالك الأول للبدء"
 
 
 

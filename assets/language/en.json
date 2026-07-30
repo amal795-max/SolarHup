@@ -448,7 +448,8 @@
   "chatbot_title": "Solar Assistant",
   "ask_about_solar": "Ask about solar...",
   "analyze_my_bill": "Analyze my bill",
-  "suggest_off_grid": "Suggest off-grid system",
+  "batteries_difference": "What is the difference between lithium batteries and regular batteries?",
+  "compare_systems": "Compare on-grid, off-grid and hybrid systems",
   "view_system": "View System",
   "validation_required": "This field is required",
   "set_budget_title": "Set Budget",
@@ -517,8 +518,7 @@
   "go_to_telegram": "Got To Telegram",
   "step_3_enter_otp": "Enter OTP",
   "no_solar_consultations": "No consultations yet",
-  "ask_first_question": "Start your first chat now",
-  "chat_image_selected": "Image selected successfully"
+  "ask_first_question": "Start your first chat now"
 
 }
 

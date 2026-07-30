@@ -21,7 +21,7 @@ class DataHelper {
         margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
         behavior: SnackBarBehavior.floating,
         backgroundColor:color,
-        content: Text(message.tr(),style:AppStyle.bodySmall.copyWith(color: AppColors.white),),
+        content: Text(message.tr(),style:AppStyle.bodySmall),
       ),
     );
   }

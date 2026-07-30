@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../bloc/chat_bot_cubit.dart';
@@ -24,17 +25,18 @@ class QuickActions extends StatelessWidget {
               cubit.sendMessage();
             },
           ),
+
           _QuickActionItem(
-            label: 'suggest_off_grid'.tr(),
+            label: 'batteries_difference'.tr(),
             onTap: () {
-              cubit.messageController.text = 'suggest_off_grid'.tr();
+              cubit.messageController.text = 'batteries_difference'.tr();
               cubit.sendMessage();
             },
           ),
           _QuickActionItem(
-            label: 'Compare on-grid, off-grid and hybrid systems',
+            label: 'compare_systems',
             onTap: () {
-              cubit.messageController.text = 'Compare on-grid, off-grid and hybrid systems';
+              cubit.messageController.text = 'compare_systems'.tr();
               cubit.sendMessage();
             },
           ),
@@ -61,7 +63,7 @@ class _QuickActionItem extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: AppColors.lightGrey,
+          color:context.colorScheme.tertiaryContainer,
           borderRadius: BorderRadius.circular(20.r),
         ),
         child:Text(

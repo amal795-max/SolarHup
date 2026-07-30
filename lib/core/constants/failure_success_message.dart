@@ -8,5 +8,4 @@ const String loginSuccessMessage = 'login_success_message';
 const String sendOtpSuccessMessage = 'send_otp_success';
 const String resetPasswordSuccessMessage = 'reset_password_message';
 const String changePasswordSuccessMessage = 'change_password_message';
-const String chatImageSelected = 'chat_image_selected';
 
