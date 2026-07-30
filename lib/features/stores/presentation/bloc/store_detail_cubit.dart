@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
+import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 
 part 'store_detail_state.dart';
@@ -12,13 +13,25 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
 
   StoreDetailCubit(this.repository) : super(StoreDetailInitial());
 
-  Future<void> loadStore(String businessId) async {
+  Future<void> loadStore(String businessId, {int? categoryId}) async {
     emit(StoreDetailLoading());
-    final result = await repository.getStore(businessId);
-    result.fold(
-      (failure) =>
-          emit(StoreDetailError(message: mapFailureToMessage(failure))),
-      (store) => emit(StoreDetailLoaded(store: store)),
+
+    final storeResult = await repository.getStore(businessId);
+    await storeResult.fold(
+      (failure) async {
+        emit(StoreDetailError(message: mapFailureToMessage(failure)));
+      },
+      (store) async {
+        final productsResult = await repository.getStoreProducts(
+          businessId,
+          categoryId: categoryId,
+        );
+        final products = productsResult.fold(
+          (_) => <StoreProductModel>[],
+          (items) => items,
+        );
+        emit(StoreDetailLoaded(store: store, products: products));
+      },
     );
   }
 }

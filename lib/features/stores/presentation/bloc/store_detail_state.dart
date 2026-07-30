@@ -14,11 +14,15 @@ final class StoreDetailLoading extends StoreDetailState {}
 
 final class StoreDetailLoaded extends StoreDetailState {
   final StoreDetailModel store;
+  final List<StoreProductModel> products;
 
-  const StoreDetailLoaded({required this.store});
+  const StoreDetailLoaded({
+    required this.store,
+    required this.products,
+  });
 
   @override
-  List<Object?> get props => [store];
+  List<Object?> get props => [store, products];
 }
 
 final class StoreDetailError extends StoreDetailState {

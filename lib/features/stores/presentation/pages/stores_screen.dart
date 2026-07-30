@@ -81,22 +81,22 @@ class _StoresViewState extends State<_StoresView> {
   // ── Data mapping (StoreModel → StoreCardData) ─────────────────────────────
 
   StoreCardData _mapStore(StoreModel m) => StoreCardData(
-        id: m.id,
-        name: m.name,
-        location: m.location,
-        rating: m.rating,
-        tags: m.tags,
-        iconData: _iconForType(m.iconType),
-        iconColorValue: m.iconColorValue,
-        imagePlaceholderColorValue: m.imagePlaceholderColorValue,
-        imageUrl: m.imageUrl,
-      );
+    id: m.id,
+    name: m.name,
+    location: m.location,
+    rating: m.rating,
+    tags: m.tags,
+    iconData: _iconForType(m.iconType),
+    iconColorValue: m.iconColorValue,
+    imagePlaceholderColorValue: m.imagePlaceholderColorValue,
+    imageUrl: m.imageUrl,
+  );
 
   IconData _iconForType(String type) => switch (type) {
-        'sun' => Icons.wb_sunny_rounded,
-        'eco' => Icons.eco_rounded,
-        _ => Icons.bolt_rounded,
-      };
+    'sun' => Icons.wb_sunny_rounded,
+    'eco' => Icons.eco_rounded,
+    _ => Icons.bolt_rounded,
+  };
 
   // ── Search filtering ──────────────────────────────────────────────────────
 
@@ -111,13 +111,8 @@ class _StoresViewState extends State<_StoresView> {
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
-
-
   void _onStoreTap(StoreCardData store) {
-    context.push(
-      AppRoutes.storeInfoScreen,
-      extra: store.id,
-    );
+    context.push(AppRoutes.storeInfoScreen, extra: store.id);
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────
@@ -141,7 +136,6 @@ class _StoresViewState extends State<_StoresView> {
         //   title: Text('stores'.tr(), style: Theme.of(context).textTheme.titleLarge,),
         // ),
         body: _buildBody(context, state),
-
       ),
     );
   }
@@ -156,9 +150,7 @@ class _StoresViewState extends State<_StoresView> {
       return _buildScrollable(isLoading: true, stores: _skeletonStores);
     }
     if (state is StoresLoaded) {
-      return _buildScrollable(
-        stores: state.stores.map(_mapStore).toList(),
-      );
+      return _buildScrollable(stores: state.stores.map(_mapStore).toList());
     }
     if (state is StoresError) {
       return _buildErrorBody(context);
@@ -187,7 +179,7 @@ class _StoresViewState extends State<_StoresView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              headerSection(title:'stores_title',subTitle:'stores_subtitle'),
+              headerSection(title: 'stores_title', subTitle: 'stores_subtitle'),
               SizedBox(height: 16.h),
               StoresSearchBar(
                 controller: _searchController,

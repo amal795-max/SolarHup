@@ -6,9 +6,15 @@ import 'package:untitled1/features/stores/data/data_source/stores_remote_data_so
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
 
+import 'package:untitled1/features/stores/data/models/store_product_model.dart';
+
 abstract class StoresRepository {
   Future<Either<Failure, List<StoreModel>>> getStores({String? region});
   Future<Either<Failure, StoreDetailModel>> getStore(String businessId);
+  Future<Either<Failure, List<StoreProductModel>>> getStoreProducts(
+    String businessId, {
+    int? categoryId,
+  });
 }
 
 class StoresRepositoryImpl implements StoresRepository {
@@ -40,6 +46,24 @@ class StoresRepositoryImpl implements StoresRepository {
       try {
         final store = await remote.getStore(businessId);
         return Right(store);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<StoreProductModel>>> getStoreProducts(
+    String businessId, {
+    int? categoryId,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final products =
+            await remote.getStoreProducts(businessId, categoryId: categoryId);
+        return Right(products);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }

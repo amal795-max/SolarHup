@@ -198,8 +198,8 @@ class _StoreInfoView extends StatelessWidget {
                   ),
                 ),
               ),
-            StoreDetailLoaded(:final store) => _StoreInfoContent(
-                data: storeDetailToInfoData(store),
+            StoreDetailLoaded(:final store, :final products) => _StoreInfoContent(
+                data: storeDetailToInfoData(store, products: products),
               ),
             _ => const SizedBox.shrink(),
           };
@@ -275,11 +275,11 @@ class _StoreInfoContent extends StatelessWidget {
                   StoreInfoCategoriesSection(categories: data.categories),
                   SizedBox(height: 8.h),
                 ],
-                if (data.featuredProducts.isNotEmpty)
-                  StoreInfoFeaturedProductsSection(
-                    products: data.featuredProducts,
-                  ),
-                if (data.featuredProducts.isNotEmpty) SizedBox(height: 16.h),
+                SizedBox(height: 8.h),
+                StoreInfoFeaturedProductsSection(
+                  products: data.featuredProducts,
+                ),
+                SizedBox(height: 16.h),
                 const StoreInfoExpertSection(),
                 SizedBox(height: 32.h),
               ],

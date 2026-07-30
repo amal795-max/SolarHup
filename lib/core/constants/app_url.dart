@@ -16,6 +16,8 @@ class EndPoints {
 
   static const String stores = '${baseUrl}stores';
   static String store(String businessId) => '${baseUrl}stores/$businessId';
+  static String storeProducts(String businessId) =>
+      '${baseUrl}stores/$businessId/products';
 }
 
 class ApiKeys {
