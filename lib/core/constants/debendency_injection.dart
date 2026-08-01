@@ -60,6 +60,9 @@ Future<void> init() async {
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
   getIt.registerFactory(() => ApplicationCubit());
   getIt.registerFactory(() => ChatBotCubit(getIt()));
+  getIt.registerFactory(() => HomeBloc(getIt()));
+  getIt.registerFactory(() => BlogCubit(getIt()));
+  getIt.registerFactory(() => StoresCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),
@@ -73,43 +76,15 @@ Future<void> init() async {
     ),
   );
 
-  getIt.registerFactory(() => HomeBloc(getIt()));
-
-  getIt.registerLazySingleton<BlogRemoteDataSource>(() => BlogRemoteDataSourceImpl(getIt()),);
-
-  getIt.registerLazySingleton<BlogRepository>(() => BlogRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
-
-  getIt.registerFactory(() => BlogCubit(getIt()));
-
-  getIt.registerLazySingleton<BlogDetailRemoteDataSource>(
-    () => BlogDetailRemoteDataSourceImpl(getIt()),
-  );
-
-  getIt.registerLazySingleton<BlogDetailRepository>(
-    () => BlogDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),
-  );
 
   getIt.registerFactory(() => BlogDetailCubit(getIt()));
+  getIt.registerLazySingleton<StoresRemoteDataSource>(() => StoresRemoteDataSourceImpl(getIt()),);
+  getIt.registerLazySingleton<StoresRepository>(() => StoresRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
 
-  getIt.registerLazySingleton<StoresRemoteDataSource>(
-    () => StoresRemoteDataSourceImpl(getIt()),
-  );
-
-  getIt.registerLazySingleton<StoresRepository>(
-    () => StoresRepositoryImpl(remote: getIt(), networkInfo: getIt()),
-  );
-
-  getIt.registerFactory(() => StoresCubit(getIt()));
 
   getIt.registerFactory(() => StoreDetailCubit(getIt()));
-
-  getIt.registerLazySingleton<ProductDetailRemoteDataSource>(
-    () => ProductDetailRemoteDataSourceImpl(getIt()),
-  );
-
-  getIt.registerLazySingleton<ProductDetailRepository>(
-    () => ProductDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),
-  );
+  getIt.registerLazySingleton<ProductDetailRemoteDataSource>(() => ProductDetailRemoteDataSourceImpl(getIt()),);
+  getIt.registerLazySingleton<ProductDetailRepository>(() => ProductDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
 
   getIt.registerFactory(() => ProductDetailBloc(getIt()));
 }

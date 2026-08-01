@@ -8,7 +8,7 @@ import '../bloc/chat_bot_cubit.dart';
 class QuickActions extends StatelessWidget {
   final ChatBotCubit cubit;
 
-  const QuickActions({required this.cubit});
+  const QuickActions({super.key, required this.cubit});
 
   @override
   Widget build(BuildContext context) {

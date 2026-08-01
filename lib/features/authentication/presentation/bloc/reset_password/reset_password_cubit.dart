@@ -64,16 +64,15 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   void sendOtpVerification({required  bool isReset}) async {
     OtpParams otpParams = OtpParams(
         DataHelper.formatePhoneNumber(''),
-        otpCodeController.text.trim(),
         isReset: isReset
     );
-    emit(VerificationLoading());
+    emit(SendVerificationLoading());
     final result = await repository.otpVerification(otpParams);
     result.fold(
           (failure) =>
-          emit(VerificationFailure(message: mapFailureToMessage(failure))),
+          emit(SendVerificationFailure(message: mapFailureToMessage(failure))),
           (success) =>
-          emit(const VerificationSuccess(message: sendOtpSuccessMessage)),
+          emit(const SendVerificationSuccess(message: sendOtpSuccessMessage)),
     );
   }
 
@@ -96,6 +95,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
   Future<void> close() {
     oldPasswordController.dispose();
     newPasswordController.dispose();
+    otpCodeController.dispose();
     return super.close();
   }
 }

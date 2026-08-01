@@ -27,22 +27,22 @@ class ResetPasswordFailure extends ResetPasswordState {
   List<Object> get props => [message];
 }
 
-final class VerificationLoading extends ResetPasswordState {
+final class SendVerificationLoading extends ResetPasswordState {
   @override
   List<Object> get props => [];}
 
-final class VerificationFailure extends ResetPasswordState {
+final class SendVerificationFailure extends ResetPasswordState {
   final String message;
 
-  const VerificationFailure({required this.message});
+  const SendVerificationFailure({required this.message});
 
   @override
   List<Object> get props => [message];}
 
-final class VerificationSuccess extends ResetPasswordState {
+final class SendVerificationSuccess extends ResetPasswordState {
   final String message;
 
-  const VerificationSuccess({required this.message});
+  const SendVerificationSuccess({required this.message});
 
   @override
   List<Object> get props => [message];}

@@ -46,12 +46,8 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
     if (await networkInfo.isConnected) {
       try {
         final response = await remoteAuth.register(body);
-        LocalStorage().saveData(
-          key: ApiKeys.token,
-          value: response.accessToken,
-        );
-        LocalStorage().saveData(
-          key: ApiKeys.securityCode, value: response.securityCode,);
+        LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken,);
+        LocalStorage().saveData(key: ApiKeys.securityCode, value: response.securityCode,);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

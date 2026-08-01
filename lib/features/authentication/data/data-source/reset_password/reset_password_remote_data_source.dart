@@ -63,7 +63,7 @@ class ResetPasswordRemoteDataSourceImpl implements ResetPasswordRemoteDataSource
       );
       if (response.statusCode != 200) {
         throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0,message: 'error_otp'),
+          message: getErrorMessage(response.statusCode ?? 0,message: response.data['detail']),
         );
       } else {
         return unit;

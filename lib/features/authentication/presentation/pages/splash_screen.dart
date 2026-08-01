@@ -40,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
           context.push(AppRoutes.bottomNavBar);
 
         } else {
-          context.push(AppRoutes.loginScreen);
+          context.push(AppRoutes.authenticationScreen);
 
         }
       }

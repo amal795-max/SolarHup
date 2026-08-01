@@ -10,7 +10,6 @@ import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
-import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';

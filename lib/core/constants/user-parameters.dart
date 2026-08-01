@@ -36,14 +36,12 @@ class LoginParams {
 
 class OtpParams {
   final String phoneNumber;
-  final String otpCode;
   final bool isReset;
 
-  OtpParams(this.phoneNumber, this.otpCode, {required this.isReset});
+  OtpParams(this.phoneNumber,{required this.isReset});
 
   Map<String, dynamic> toJson() => {
     'phone_number': phoneNumber,
-    'otp_code': otpCode,
     'purpose': isReset ? 'reset' : 'verify',
   };
 }

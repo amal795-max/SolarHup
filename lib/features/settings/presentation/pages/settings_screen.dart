@@ -19,7 +19,7 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('settings'.tr()),
+        title: Text('settings'.tr(),style: AppStyle.h5,),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -239,12 +239,12 @@ class SettingsScreen extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('language'.tr()),
+          title: Text('language'.tr(),style:  AppStyle.bodyMedium,),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('English'),
+                title:  Text('English',style: AppStyle.bodySmall,),
                 trailing: context.locale.languageCode == 'en'
                     ? const Icon(Icons.check, color: Colors.green)
                     : null,
@@ -257,7 +257,7 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text('العربية'),
+                title:  Text('العربية',style: AppStyle.bodySmall,),
                 trailing: context.locale.languageCode == 'ar'
                     ? const Icon(Icons.check, color: Colors.green)
                     : null,

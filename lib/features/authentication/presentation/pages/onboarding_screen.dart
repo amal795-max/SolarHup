@@ -144,7 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       onPressed: () async{
                         if (currentIndex == 2) {
                           await LocalStorage().saveData(key: StorageKeys.onboardingCompleted, value: true);
-                          context.push(AppRoutes.loginScreen);
+                          context.push(AppRoutes.authenticationScreen);
 
                         } else {
                           controller.nextPage(

@@ -28,6 +28,7 @@ class RegisterScreen extends StatelessWidget {
   void _listen(BuildContext context, AuthenticationState state) {
     if (state is RegisterSuccess) {
       DataHelper.showSnackBar(message: state.message, context: context);
+      context.go(AppRoutes.bottomNavBar);
 
     }
     if (state is AuthenticationFailure) {
@@ -72,8 +73,7 @@ class RegisterScreen extends StatelessWidget {
                       CustomButton(
                         text: 'create_account'.tr(),
                         onPressed: () {
-                          context.go(AppRoutes.bottomNavBar);
-                          // authBloc.register();
+                          authBloc.register();
                         },
                         textColor: AppColors.white,
                         icon: Icons.arrow_forward_rounded,

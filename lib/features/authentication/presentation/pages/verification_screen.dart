@@ -16,16 +16,21 @@ import '../../../../core/constants/app_url.dart';
 import '../../../../core/helper/data_helper.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/helper/local_storage.dart';
-import '../../../../widgets/loader.dart';
 import '../widgets/help_verify_widget.dart';
 import '../widgets/white_section_widget.dart';
 
-class VerificationScreen extends StatelessWidget {
+class VerificationScreen extends StatefulWidget {
   final bool isResetPassword;
 
-  VerificationScreen({super.key, required this.isResetPassword});
+  const VerificationScreen({super.key, required this.isResetPassword});
 
-  final String securityCode = LocalStorage().getData(key: ApiKeys.securityCode);
+  @override
+  State<VerificationScreen> createState() => _VerificationScreenState();
+}
+
+class _VerificationScreenState extends State<VerificationScreen> {
+  final String securityCode = LocalStorage().getData(key: ApiKeys.securityCode) ?? '';
+  bool _isCodeSent = false;
 
   Future<void> openTelegram(String username) async {
     final telegramApp = Uri.parse('tg://resolve?domain=$username');
@@ -39,8 +44,8 @@ class VerificationScreen extends StatelessWidget {
   }
 
   void _copySecurityCode() {
-    final String code = securityCode;
-    Clipboard.setData(ClipboardData(text: code));
+    Clipboard.setData(ClipboardData(text: securityCode));
+    DataHelper.showSnackBar(message: 'code_copied'.tr(), context: context);
   }
 
   @override
@@ -52,24 +57,29 @@ class VerificationScreen extends StatelessWidget {
   }
 
   void _listener(BuildContext context, ResetPasswordState state) {
-    if (state is VerificationSuccess) {
+    if (state is SendVerificationSuccess) {
+      setState(() => _isCodeSent = true);
       DataHelper.showSnackBar(message: state.message, context: context);
-      !isResetPassword ? context.go(AppRoutes.bottomNavBar) : null;
-    }    if (state is ConfirmOtpSuccess) {
-      context.go(AppRoutes.resetPasswordScreen);
     }
-    else if (state is VerificationFailure) {
+    if (state is ConfirmOtpSuccess) {
+      if (widget.isResetPassword) {
+        context.go(AppRoutes.resetPasswordScreen);
+      } else {
+        LocalStorage().saveData(key: ApiKeys.isVerified, value: true);
+        context.go(AppRoutes.bottomNavBar);
+      }
+    } else if (state is SendVerificationFailure) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+    } else if (state is ConfirmOtpFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
   }
 
   Widget _builder(BuildContext context, ResetPasswordState state) {
     final cubit = context.read<ResetPasswordCubit>();
-    if (state is VerificationLoading) {
-      return const LoadingIndicator();
-    }
+
     return Scaffold(
-      appBar: !isResetPassword
+      appBar: !widget.isResetPassword
           ? AppBar(
               automaticallyImplyLeading: false,
               actionsPadding: const EdgeInsets.all(12),
@@ -80,14 +90,17 @@ class VerificationScreen extends StatelessWidget {
                 ),
               ],
             )
-          : null,
+          : AppBar(
+              title: Text('verification'.tr()),
+              centerTitle: true,
+            ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.w),
           child: Column(
             children: [
               headerWidget(
-                title: 'verification',
+                title: widget.isResetPassword ? 'reset_password' : 'verification',
                 subTitle: 'verification_subtitle',
               ),
               whiteSectionWidget(
@@ -95,83 +108,51 @@ class VerificationScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    if (!isResetPassword) ...[
+                    if (!widget.isResetPassword) ...[
                       _buildSecurityCodeBox(),
                       SizedBox(height: 16.h),
                       CustomButton(
                         text: 'go_to_telegram',
                         type: ButtonType.outlined,
-                        onPressed: () =>
-                            openTelegram('green_energy_system_bot'),
+                        onPressed: () => openTelegram('green_energy_system_bot'),
                       ),
                       SizedBox(height: 24.h),
-                      Row(
-                        children: [
-                          const Expanded(child: Divider()),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w),
-                            child: Text(
-                              'step_3_enter_otp'.tr(),
-                              style: AppStyle.bodyXSmall.copyWith(
-                                color: AppColors.grey,
-                              ),
-                            ),
-                          ),
-                          const Expanded(child: Divider()),
-                        ],
-                      ),
+                      _buildStepDivider('step_3_enter_otp'.tr()),
                       SizedBox(height: 24.h),
                     ],
 
-                    pinPut(cubit.otpCodeController),
-                    SizedBox(height: 24.h),
+                    if (_isCodeSent || widget.isResetPassword) ...[
+                      pinPut(cubit.otpCodeController),
+                      SizedBox(height: 24.h),
+                    ],
 
                     CustomButton(
-                      text: 'verify_identity',
-                      isLoading: state is ConfirmOtpLoading,
+                      text: _isCodeSent ? 'confirm_otp' : 'send_code_to_telegram',
+                      isLoading: state is SendVerificationLoading || state is ConfirmOtpLoading,
                       onPressed: () {
-                        cubit.sendOtpVerification(isReset: false);
-                      //   if (cubit.otpCodeController.text.isNotEmpty) {
-                      //     cubit.confirmOtp(
-                      //       isReset: isResetPassword ? true : false,
-                      //     );
-                      //   }
-                       },
+                        if (!_isCodeSent) {
+                          cubit.sendOtpVerification(isReset: widget.isResetPassword);
+                        } else {
+                          if (cubit.otpCodeController.text.isNotEmpty) {
+                            cubit.confirmOtp(isReset: widget.isResetPassword);
+                          } else {
+                            DataHelper.showSnackBar(message: 'please_enter_otp'.tr(), context: context);
+                          }
+                        }
+                      },
                     ),
+
+                    if (_isCodeSent)
+                      TextButton(
+                        onPressed: () => cubit.sendOtpVerification(isReset: widget.isResetPassword),
+                        child: Text('resend_code'.tr(), style: AppStyle.bodySmall.copyWith(color: AppColors.primaryColor)),
+                      ),
                   ],
                 ),
               ),
 
               SizedBox(height: 32.h),
-
-              Container(
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: context.brightness
-                      ? AppColors.lightYellow.withOpacity(0.5)
-                      : context.colorScheme.surface.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 20.sp,
-                      color: AppColors.tertiaryColor,
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Text(
-                        'security_info'.tr(),
-                        style: AppStyle.bodyXSmall.copyWith(
-                          color: AppColors.tertiaryColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildInfoBox(context),
               SizedBox(height: 40.h),
             ],
           ),
@@ -180,8 +161,52 @@ class VerificationScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildStepDivider(String text) {
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.w),
+          child: Text(
+            text,
+            style: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
+          ),
+        ),
+        const Expanded(child: Divider()),
+      ],
+    );
+  }
+
+  Widget _buildInfoBox(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.brightness
+            ? AppColors.lightYellow.withOpacity(0.5)
+            : context.colorScheme.surface.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 20.sp,
+            color: AppColors.tertiaryColor,
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text(
+              'security_info'.tr(),
+              style: AppStyle.bodyXSmall.copyWith(color: AppColors.tertiaryColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSecurityCodeBox() {
-    final String code = securityCode;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
       decoration: BoxDecoration(
@@ -200,7 +225,7 @@ class VerificationScreen extends StatelessWidget {
                 style: AppStyle.bodyXSmall.copyWith(color: AppColors.grey),
               ),
               Text(
-                code,
+                securityCode,
                 style: AppStyle.bodyMedium.copyWith(
                   letterSpacing: 1.5,
                   color: AppColors.primaryColor,
