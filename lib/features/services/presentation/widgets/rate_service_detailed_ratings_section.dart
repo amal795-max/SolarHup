@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_rating_bloc/service_rating_bloc.dart';
 
 class RateServiceDetailedRatingsSection extends StatelessWidget {
@@ -13,8 +14,7 @@ class RateServiceDetailedRatingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.brightness ;
     final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
     final cardColor = isDark
         ? AppColors.darkGray.withValues(alpha: 0.5)
@@ -75,7 +75,6 @@ class _RatingSliderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isDark = context.brightness;
 
     return Column(
@@ -85,13 +84,13 @@ class _RatingSliderRow extends StatelessWidget {
           children: [
             Text(
               label,
-              style: theme.textTheme.labelMedium?.copyWith(
+              style: AppStyle.labelMedium.copyWith(
                 color: AppColors.grey,
               ),
             ),
             Text(
               value.round().toString(),
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: AppStyle.labelSmall.copyWith(
                 fontWeight: FontWeight.w800,
                 color: valueColor,
               ),

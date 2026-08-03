@@ -11,6 +11,7 @@ import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../core/helper/extensions.dart';
+import '../../../used_system/presentation/bloc/used_system_cubit.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -65,6 +66,10 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.bar_chart,
                 title: 'my_used_products'.tr(),
+                onTap: (){
+                  context.push(AppRoutes.myListeningScreen);
+                  context.read<UsedSystemCubit>().getMyUsedProducts();
+                }
               ),
             ]),
 
@@ -77,11 +82,6 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.lock_outline,
                 title: 'change_password'.tr(),
-              ),
-              _buildListTile(
-                context,
-                icon: Icons.verified_outlined,
-                title: 'verification'.tr(),
               ),
             ]),
 

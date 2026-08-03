@@ -33,7 +33,7 @@ class QuickActions extends StatelessWidget {
             },
           ),
           _QuickActionItem(
-            label: 'compare_systems',
+            label: 'compare_systems'.tr(),
             onTap: () {
               cubit.messageController.text = 'compare_systems'.tr();
               cubit.sendMessage();

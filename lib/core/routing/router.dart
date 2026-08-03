@@ -32,11 +32,13 @@ import 'package:untitled1/features/orders/presentation/pages/shipping_informatio
 import 'package:untitled1/features/orders/presentation/pages/order_tracking_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/pages/add_used_system/add_used_product_screen.dart';
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 import '../../features/authentication/presentation/pages/authentication_screen.dart';
 import '../../features/authentication/presentation/pages/onboarding_screen.dart';
 import '../../features/used_system/presentation/pages/filters_screen.dart';
+import '../../features/used_system/presentation/pages/used_product_details_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 
 final GoRouter router = GoRouter(
@@ -271,6 +273,13 @@ final GoRouter router = GoRouter(
       path: AppRoutes.settingsScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const SettingsScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.usedProductDetailScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as UsedProductModel;
+        return  UsedProductDetailsScreen( product: args,);
       },
     ),
   ],

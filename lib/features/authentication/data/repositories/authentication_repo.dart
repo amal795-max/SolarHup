@@ -48,6 +48,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
         final response = await remoteAuth.register(body);
         LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken,);
         LocalStorage().saveData(key: ApiKeys.securityCode, value: response.securityCode,);
+        LocalStorage().saveData(key: ApiKeys.userIsLogin, value: true);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -64,6 +65,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
         final response = await remoteAuth.login(body);
         LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken,);
         LocalStorage().saveData(key: ApiKeys.userIsLogin, value: true);
+        LocalStorage().saveData(key: ApiKeys.isVerified, value: response.isVerified);
         if (response.securityCode != null) {
           LocalStorage().saveData(key: ApiKeys.securityCode, value: response.securityCode,);
         }

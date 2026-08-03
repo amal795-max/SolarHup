@@ -29,11 +29,11 @@ abstract class AppRoutes {
   static const blogScreen = '/blogScreen';
   static const blogArticleDetailBase = '/blogArticleDetailScreen';
 
-  static String blogArticleDetail(String articleId) =>
-      '$blogArticleDetailBase/$articleId';
+  static String blogArticleDetail(String articleId) => '$blogArticleDetailBase/$articleId';
   static const solarLearningHubScreen = '/solarLearningHubScreen';
   static const allQuestionsScreen = '/allQuestionsScreen';
   static const scheduleServiceBase = '/scheduleServiceScreen';
+  static const usedProductDetailScreen = '/usedProductDetailScreen';
 
   static String scheduleService(String serviceId) =>
       '$scheduleServiceBase/$serviceId';

@@ -115,3 +115,33 @@ class RecommendParams {
     };
   }
 }
+
+class AddUsedProductParams {
+  final String name;
+  final String description;
+  final String category;
+  final String condition;
+  final double price;
+  final String region;
+  final List<String> images;
+
+  AddUsedProductParams({
+    required this.name,
+    required this.description,
+    required this.category,
+    required this.condition,
+    required this.price,
+    required this.region,
+    required this.images,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'description': description,
+    'category': category,
+    'condition': condition,
+    'price': price,
+    'region': region,
+    'images': images,
+  };
+}

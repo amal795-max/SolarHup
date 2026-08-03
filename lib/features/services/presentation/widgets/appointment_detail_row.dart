@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class AppointmentDetailRow extends StatelessWidget {
   final IconData? icon;
@@ -21,7 +22,6 @@ class AppointmentDetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final iconBg = context.brightness
         ? AppColors.darkGray.withValues(alpha: 0.6)
         : AppColors.lightGrey.withValues(alpha: 0.8);
@@ -50,14 +50,14 @@ class AppointmentDetailRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: theme.textTheme.labelSmall?.copyWith(
+                style: AppStyle.labelSmall.copyWith(
                   color: AppColors.grey,
                 ),
               ),
               SizedBox(height: 2.h),
               Text(
                 value,
-                style: theme.textTheme.titleSmall?.copyWith(
+                style: AppStyle.labelSmall.copyWith(
                   fontWeight: FontWeight.w700,
                   color: valueColor,
                   height: 1.35,

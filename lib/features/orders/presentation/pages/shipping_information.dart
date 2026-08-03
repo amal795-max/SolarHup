@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 
@@ -17,7 +18,7 @@ class ShippingInformationScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'shipping_information'.tr(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          style:AppStyle.bodyMedium.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
@@ -30,7 +31,7 @@ class ShippingInformationScreen extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               'shipping_subtitle'.tr(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              style: AppStyle.bodyMedium.copyWith(
                     color: AppColors.grey,
                   ),
               textAlign: TextAlign.center,
@@ -53,7 +54,7 @@ class _ShippingAddressForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.brightness;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -77,7 +78,7 @@ class _ShippingAddressForm extends StatelessWidget {
               SizedBox(width: 8.w),
               Text(
                 'shipping_address'.tr(),
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                style: AppStyle.bodyLarge.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryColor,
                     ),
@@ -216,7 +217,7 @@ class _BottomActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.brightness;
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
       decoration: BoxDecoration(

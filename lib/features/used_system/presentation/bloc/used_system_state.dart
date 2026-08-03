@@ -1,0 +1,66 @@
+part of 'used_system_cubit.dart';
+
+abstract class UsedSystemState extends Equatable {
+  const UsedSystemState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class UsedSystemInitial extends UsedSystemState {}
+
+class UsedProductsLoading extends UsedSystemState {}
+
+class UsedProductsSuccess extends UsedSystemState {
+  final List<UsedProductModel> products;
+  const UsedProductsSuccess(this.products);
+
+  @override
+  List<Object?> get props => [products];
+}
+
+class UsedProductsFailure extends UsedSystemState {
+  final String message;
+  const UsedProductsFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class MyUsedProductsLoading extends UsedSystemState {}
+
+class MyUsedProductsSuccess extends UsedSystemState {
+  final List<UsedProductModel> products;
+  const MyUsedProductsSuccess(this.products);
+
+  @override
+  List<Object?> get props => [products];
+}
+
+class MyUsedProductsFailure extends UsedSystemState {
+  final String message;
+  const MyUsedProductsFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AddUsedProductLoading extends UsedSystemState {}
+class UploadImage extends UsedSystemState {}
+
+class AddUsedProductSuccess extends UsedSystemState {
+  final UsedProductModel product;
+  final String message;
+  const AddUsedProductSuccess(this.product, this.message);
+
+  @override
+  List<Object?> get props => [product];
+}
+
+class AddUsedProductFailure extends UsedSystemState {
+  final String message;
+  const AddUsedProductFailure(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

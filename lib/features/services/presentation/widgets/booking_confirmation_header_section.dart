@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 
+import '../../../../core/helper/extensions.dart';
+import '../../../../core/theme/app_style.dart';
+
 class BookingConfirmationHeaderSection extends StatelessWidget {
   const BookingConfirmationHeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.brightness;
     final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
 
     return Column(
@@ -48,7 +50,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
         Text(
           'booking_confirmed_title'.tr(),
           textAlign: TextAlign.center,
-          style: theme.textTheme.headlineSmall?.copyWith(
+          style:AppStyle.labelSmall.copyWith(
             fontWeight: FontWeight.w800,
             color: titleColor,
           ),
@@ -59,7 +61,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
           child: Text(
             'booking_confirmed_subtitle'.tr(),
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style: AppStyle.bodyMedium.copyWith(
               color: AppColors.grey,
               height: 1.5,
             ),

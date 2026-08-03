@@ -40,19 +40,20 @@ class EmptyWidget extends StatelessWidget {
               color: iconColor ?? AppColors.lightGrey,
             ),
             Text(
-              title?.tr()?? 'No Items Added',
+              title?.tr()?? 'no_items_added'.tr(),
               textAlign: TextAlign.center,
               style: AppStyle.bodyMedium.copyWith(
                 color: AppColors.grey,
               ),
             ),
             Text(
-              subtitle?.tr() ?? 'Add your first item',
+              subtitle?.tr() ?? 'add_your_first_item'.tr(),
               style: AppStyle.bodySmall.copyWith(
                 color: AppColors.grey,
               ),
               textAlign: TextAlign.center,
             ),
+            SizedBox(height: 4,),
             if (action != null) ...[
               action!,
             ]

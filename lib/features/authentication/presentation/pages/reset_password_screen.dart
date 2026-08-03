@@ -92,7 +92,7 @@ class ResetPasswordScreen extends StatelessWidget {
                           builder: (context, state) {
                             return CustomButton(
                               text: 'reset'.tr(),
-                              // isLoading: state is ResetPasswordLoading,
+                              isLoading: state is ResetPasswordLoading,
                               onPressed: () {
                                 cubit.setNewPassword();
                               },

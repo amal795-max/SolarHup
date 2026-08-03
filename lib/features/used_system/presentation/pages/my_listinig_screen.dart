@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
+import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/widgets/header_section.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../widgets/empty_widget.dart';
 
 class MyListingScreen extends StatelessWidget {
   const MyListingScreen({super.key});
@@ -15,44 +24,76 @@ class MyListingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _HeaderSection(),
+            headerSection(title: 'my_listings', subTitle: 'manage_listings_subtitle'),
             Expanded(
-              child: ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                itemCount: 4,
-                separatorBuilder: (context, index) => SizedBox(height: 16.h),
-                itemBuilder: (context, index) {
-                  final listings = [
-                    const _ListingData(
-                      title: '5kW Hybrid System',
-                      subtitle: 'Huawei Inverter + 10 Jinko Panels',
-                      price: r'$4,250',
-                      status: 'active',
-                      imagePath: 'assets/images/solar_system_1.png',
+              child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
+                builder: (context, state) {
+                  if (state is MyUsedProductsFailure) {
+                    return EmptyWidget(
+                      icon: Icons.error_outline,
+                      iconSize: 56,
+                      iconColor: AppColors.grey,
+                      title: 'stores_error_title'.tr(),
+                      subtitle: 'stores_error_subtitle'.tr(),
+                      action: CustomButton(
+                        text: 'stores_retry'.tr(),
+                        icon: Icons.refresh_rounded,
+                        iconLeft: true,
+                        onPressed: () =>
+                            context.read<UsedSystemCubit>().getMyUsedProducts(),
+                      ),
+                    );
+                  }
+                  final isLoading = state is MyUsedProductsLoading;
+                  final List<UsedProductModel> products =
+                      (state is MyUsedProductsSuccess)
+                      ? state.products
+                      : List.generate(
+                          4,
+                          (index) => UsedProductModel(
+                            id: 0,
+                            sellerId: 0,
+                            sellerPhone: '',
+                            name: 'Loading product name...',
+                            description: 'Loading description...',
+                            category: 'solar_panel',
+                            condition: 'new',
+                            price: '0.00',
+                            region: 'Loading...',
+                            status: 'active',
+                            images: [],
+                            createdAt: DateTime.now(),
+                            updatedAt: DateTime.now(),
+                          ),
+                        );
+
+                  if (!isLoading && products.isEmpty) {
+                    return EmptyWidget(
+                      action: CustomButton(
+                        width: 0.6.sw,
+                        text: 'add_used_product',
+                        onPressed: () {
+                          context.push(AppRoutes.addProductScreen);
+                        },
+                      ),
+                    );
+                  }
+
+                  return Skeletonizer(
+                    enabled: isLoading,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 10.h,
+                      ),
+                      itemCount: products.length,
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 16.h),
+                      itemBuilder: (context, index) {
+                        return _ListingCard(product: products[index]);
+                      },
                     ),
-                    const _ListingData(
-                      title: '10kWh Lithium Battery',
-                      subtitle: 'Wall-mounted, 3000 cycles',
-                      price: r'$2,800',
-                      status: 'sold',
-                      imagePath: 'assets/images/battery_1.png',
-                    ),
-                    const _ListingData(
-                      title: 'Growatt 3kW Inverter',
-                      subtitle: 'Single phase, WIFI enabled',
-                      price: r'\$890',
-                      status: 'active',
-                      imagePath: 'assets/images/inverter_1.png',
-                    ),
-                    const _ListingData(
-                      title: 'Growatt 3kW Inverter',
-                      subtitle: 'Single phase, WIFI enabled',
-                      price: r'$890',
-                      status: 'draft',
-                      imagePath: 'assets/images/inverter_1.png',
-                    ),
-                  ];
-                  return _ListingCard(data: listings[index]);
+                  );
                 },
               ),
             ),
@@ -63,57 +104,11 @@ class MyListingScreen extends StatelessWidget {
   }
 }
 
-class _ListingData {
-  final String title;
-  final String subtitle;
-  final String price;
-  final String status;
-  final String imagePath;
-
-  const _ListingData({
-    required this.title,
-    required this.subtitle,
-    required this.price,
-    required this.status,
-    required this.imagePath,
-  });
-}
-
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 30.h),
-          Text(
-            'my_listings'.tr(),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.white
-                  : AppColors.primaryColor,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            'manage_listings_subtitle'.tr(),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _ListingCard extends StatelessWidget {
-  final _ListingData data;
+  final UsedProductModel product;
 
-  const _ListingCard({required this.data});
+  const _ListingCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -142,8 +137,16 @@ class _ListingCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.backGroundGrey,
                     borderRadius: BorderRadius.circular(12.r),
+                    image: product.images.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(product.images.first),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
-                  child: Icon(Icons.inventory_2_outlined, size: 40.sp),
+                  child: product.images.isEmpty
+                      ? Icon(Icons.inventory_2_outlined, size: 40.sp)
+                      : null,
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
@@ -155,30 +158,29 @@ class _ListingCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              data.title,
-                              style: Theme.of(context).textTheme.titleMedium,
+                              product.name,
+                              style: AppStyle.bodyMedium,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          _StatusBadge(status: data.status),
+                          _StatusBadge(status: product.status),
                         ],
                       ),
                       SizedBox(height: 4.h),
                       Text(
-                        data.subtitle,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        product.description,
+                        style: AppStyle.bodySmall,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 12.h),
                       Text(
-                        data.price,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        '${product.price} USD',
+                        style: AppStyle.bodyMedium.copyWith(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -186,7 +188,7 @@ class _ListingCard extends StatelessWidget {
               ],
             ),
           ),
-          _ActionButtons(status: data.status),
+          _ActionButtons(status: product.status),
         ],
       ),
     );
@@ -253,9 +255,9 @@ class _ActionButtons extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child:CustomButton(
+              child: CustomButton(
                 type: ButtonType.outlined,
-                text:'view_history'.tr(),
+                text: 'view_history'.tr(),
                 height: 40,
                 onPressed: () {},
                 icon: Icons.history,
@@ -280,7 +282,7 @@ class _ActionButtons extends StatelessWidget {
               text: 'edit'.tr(),
               height: 40,
               onPressed: () {},
-              icon:  Icons.mode_edit_outline_outlined,
+              icon: Icons.mode_edit_outline_outlined,
             ),
           ),
           SizedBox(width: 8.w),
@@ -290,11 +292,9 @@ class _ActionButtons extends StatelessWidget {
               text: 'mark_as_sold'.tr(),
               height: 40,
               onPressed: () {},
-              icon:  Icons.check_circle_outline,
+              icon: Icons.check_circle_outline,
               type: ButtonType.outlined,
             ),
-
-
           ),
           SizedBox(width: 8.w),
           _DeleteButton(onPressed: () {}),
@@ -303,7 +303,6 @@ class _ActionButtons extends StatelessWidget {
     );
   }
 }
-
 
 class _DeleteButton extends StatelessWidget {
   final VoidCallback onPressed;

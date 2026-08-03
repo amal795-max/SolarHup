@@ -49,7 +49,7 @@ class _OrderHeaderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.colorScheme.surface,
       borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           if (!context.brightness)
@@ -65,11 +65,11 @@ class _OrderHeaderCard extends StatelessWidget {
         children: [
           Text(
             'order_id_label'.tr(),
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.grey),
+            style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
           ),
           Text(
             '#SH-98234-LX',
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+            style:AppStyle.labelLarge.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primaryColor,
                 ),

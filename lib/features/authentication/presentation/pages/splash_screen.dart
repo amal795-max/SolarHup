@@ -34,13 +34,13 @@ class _SplashScreenState extends State<SplashScreen> {
       );
 
       if (!onboardingCompleted) {
-        context.push(AppRoutes.onboardingScreen);
+        context.go(AppRoutes.onboardingScreen);
       } else {
         if (isLoggedIn) {
-          context.push(AppRoutes.bottomNavBar);
+          context.go(AppRoutes.bottomNavBar);
 
         } else {
-          context.push(AppRoutes.authenticationScreen);
+          context.go(AppRoutes.authenticationScreen);
 
         }
       }

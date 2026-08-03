@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/data_source/schedule_service_remote_data_source.dart';
 import 'package:untitled1/features/services/data/repositories/schedule_service_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/schedule_service_bloc/schedule_service_bloc.dart';
@@ -89,8 +91,7 @@ class _ScheduleServiceBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.brightness;
     final headingColor = isDark ? AppColors.blue : AppColors.primaryColor;
 
     return Column(
@@ -104,7 +105,7 @@ class _ScheduleServiceBody extends StatelessWidget {
               Expanded(
                 child: Text(
                   'schedule_service_title'.tr(),
-                  style: theme.textTheme.titleLarge?.copyWith(
+                  style: AppStyle.bodyLarge.copyWith(
                     fontWeight: FontWeight.w700,
                     color: headingColor,
                   ),

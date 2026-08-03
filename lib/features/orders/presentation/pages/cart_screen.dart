@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 
@@ -117,7 +118,7 @@ class _CartItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark =context.brightness;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -145,20 +146,20 @@ class _CartItem extends StatelessWidget {
                   Expanded(
                     child: Text(
                       name,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      style: AppStyle.bodyLarge.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                   Text(
                     '\$${price.toStringAsFixed(2)}',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    style: AppStyle.bodyLarge.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              Text('SKU: $sku', style: Theme.of(context).textTheme.labelSmall),
+              Text('SKU: $sku', style: AppStyle.labelSmall),
               SizedBox(height: 8.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +176,7 @@ class _CartItem extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 12.w),
                           child: Text(
                             '$quantity',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: AppStyle.bodyMedium,
                           ),
                         ),
                         _QtyBtn(icon: Icons.add, onTap: () {}),
@@ -227,7 +228,6 @@ class _OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(

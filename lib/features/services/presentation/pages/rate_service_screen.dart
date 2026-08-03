@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/data_source/service_rating_remote_data_source.dart';
 import 'package:untitled1/features/services/data/repositories/service_rating_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_rating_bloc/service_rating_bloc.dart';
@@ -112,7 +113,7 @@ class _RateServiceBody extends StatelessWidget {
                 child: Text(
                   'rate_service_title'.tr(),
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: AppStyle.bodyMedium.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                 ),

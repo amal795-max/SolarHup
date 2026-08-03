@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -9,13 +10,12 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       spacing: 4.h,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-        Text(subtitle, style: theme.textTheme.bodySmall),
+        Text(title, style: AppStyle.h4.copyWith(fontWeight: FontWeight.bold)),
+        Text(subtitle, style: AppStyle.bodySmall),
       ],
     );
   }

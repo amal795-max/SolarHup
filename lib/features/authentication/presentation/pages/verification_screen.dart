@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -84,10 +85,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
               automaticallyImplyLeading: false,
               actionsPadding: const EdgeInsets.all(12),
               actions: [
-                IconButton(
-                  onPressed: () => showHelpGuide(context),
-                  icon: const Icon(Icons.help_outline, size: 24),
-                ),
+               IconButton(
+                    onPressed: () => showHelpGuide(context),
+                    icon: const Icon(Icons.help_outline, size: 24).animate()
+                        .scale(duration: 500.ms, curve: Curves.easeInOut,begin: const Offset(0,0),end: const Offset(1.4, 1.4))
+                        .animate(onPlay: (controller) => controller.repeat()),
+
+               ),
               ],
             )
           : AppBar(
@@ -99,7 +103,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
           padding: EdgeInsets.all(20.w),
           child: Column(
             children: [
-              headerWidget(
+          headerWidget(
                 title: widget.isResetPassword ? 'reset_password' : 'verification',
                 subTitle: 'verification_subtitle',
               ),

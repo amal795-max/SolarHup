@@ -4,40 +4,104 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 
 import '../../../../widgets/header_section.dart';
 import '../widgets/category_chip.dart';
 
-class UsedProductsScreen extends StatelessWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
+import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+
+class UsedProductsScreen extends StatefulWidget {
   const UsedProductsScreen({super.key});
+
+  @override
+  State<UsedProductsScreen> createState() => _UsedProductsScreenState();
+}
+
+class _UsedProductsScreenState extends State<UsedProductsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<UsedSystemCubit>().getUsedProducts();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
-        body:  Column(
+        body: RefreshIndicator(
+          onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
+          child: Column(
             children: [
-              SizedBox(height: 56.h),
-             headerSection(title:'home_used_systems',subTitle:'home_used_system_desc'),
+              headerSection(
+                title: 'home_used_systems',
+                subTitle: 'home_used_system_desc',
+              ),
               SizedBox(height: 16.h),
-              const _HeaderSection(),
+              const _SearchAndFilterRow(),
               const CategoryFilterSection(),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 16.h),
-                      const _ProductGrid(),
-                      SizedBox(height: 100.h),
-                    ],
-                  ),
+                child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
+                  buildWhen: (previous, current) =>
+                      current is UsedProductsLoading ||
+                      current is UsedProductsSuccess ||
+                      current is UsedProductsFailure,
+                  builder: (context, state) {
+                    if (state is UsedProductsFailure) {
+                      return Center(child: Text(state.message));
+                    }
+
+                    final isLoading = state is UsedProductsLoading;
+                    final products = state is UsedProductsSuccess
+                        ? state.products
+                        : List.generate(
+                            6,
+                            (index) => UsedProductModel(
+                              id: 0,
+                              sellerId: 0,
+                              sellerPhone: '',
+                              name: 'Loading product...',
+                              description: '',
+                              category: '',
+                              condition: 'new',
+                              price: '0.00',
+                              region: 'Loading...',
+                              status: 'active',
+                              images: [],
+                              createdAt: DateTime.now(),
+                              updatedAt: DateTime.now(),
+                            ),
+                          );
+
+                    if (state is UsedProductsSuccess && products.isEmpty) {
+                      return const EmptyWidget(subtitle: '');
+                    }
+
+                    return Skeletonizer(
+                      enabled: isLoading,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 16.h),
+                            _ProductGrid(products: products),
+                            SizedBox(height: 100.h),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],
-
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: const _SellSystemButton(),
@@ -46,15 +110,14 @@ class UsedProductsScreen extends StatelessWidget {
   }
 }
 
-
-
-class _HeaderSection extends StatelessWidget {
-  const _HeaderSection();
+class _SearchAndFilterRow extends StatelessWidget {
+  const _SearchAndFilterRow();
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<UsedSystemCubit>();
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal:  20.r),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Row(
         children: [
           Expanded(
@@ -63,6 +126,9 @@ class _HeaderSection extends StatelessWidget {
               hasTitle: false,
               hint: 'search_hint'.tr(),
               prefixIcon: const Icon(Icons.search, color: AppColors.grey),
+              onChanged: (value) {
+                cubit.getUsedProducts();
+              },
             ),
           ),
           SizedBox(width: 12.w),
@@ -86,7 +152,9 @@ class _HeaderSection extends StatelessWidget {
 }
 
 class _ProductGrid extends StatelessWidget {
-  const _ProductGrid();
+  final List<UsedProductModel> products;
+
+  const _ProductGrid({required this.products});
 
   @override
   Widget build(BuildContext context) {
@@ -99,121 +167,140 @@ class _ProductGrid extends StatelessWidget {
         mainAxisSpacing: 15.h,
         childAspectRatio: 0.72,
       ),
-      itemCount: 4,
+      itemCount: products.length,
       itemBuilder: (context, index) {
-        return const _ProductCard();
+        return _ProductCard(product: products[index]);
       },
     );
   }
 }
 
 class _ProductCard extends StatelessWidget {
-  const _ProductCard();
+  final UsedProductModel product;
+
+  const _ProductCard({required this.product});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.lightGrey.withOpacity(0.5),
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(16.r),
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.battery_std,
-                      size: 40.sp,
-                      color: AppColors.grey,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 6.h,
-                    ),
+    return GestureDetector(
+      onTap: () =>
+          context.push(AppRoutes.usedProductDetailScreen, extra: product),
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(16.r),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.r),
+                      color: AppColors.lightGrey.withOpacity(0.5),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
                     ),
-                    child: Text(
-                      'good'.tr(),
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: AppColors.brown,
-                        fontWeight: FontWeight.bold,
+                    child: product.images.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(16.r),
+                            ),
+                            child: Image.network(
+                              product.images.first,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(Icons.image_not_supported, size: 40.sp),
+                            ),
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.battery_std,
+                              size: 40.sp,
+                              color: AppColors.grey,
+                            ),
+                          ),
+                  ),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 6.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Text(
+                        product.condition.tr(),
+                        style: AppStyle.labelSmall.copyWith(
+                          color: AppColors.brown,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(12.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Lithium-Ion Wall Battery 10kWh',
-                  style: theme.textTheme.titleSmall?.copyWith(fontSize: 12.sp),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 4.h),
-                Row(
-                  children: [
-                    Icon(Icons.location_on, size: 12.sp, color: AppColors.grey),
-                    SizedBox(width: 4.w),
-                    Text(
-                      'San Jose, CA',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontSize: 10.sp,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  '\$3,200',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product.name,
+                    style: AppStyle.bodyMedium.copyWith(fontSize: 12.sp),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    _Tag(label: 'used'.tr()),
-                    SizedBox(width: 4.w),
-                    _Tag(label: 'four_years_old'.tr()),
-                  ],
-                ),
-              ],
+                  SizedBox(height: 4.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        size: 12.sp,
+                        color: AppColors.grey,
+                      ),
+                      SizedBox(width: 4.w),
+                      Expanded(
+                        child: Text(
+                          product.region,
+                          style: AppStyle.bodySmall.copyWith(fontSize: 10.sp),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    '\$${product.price}',
+                    style: AppStyle.bodyMedium.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Row(children: [_Tag(label: product.category.tr())]),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -226,7 +313,6 @@ class _Tag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
       decoration: BoxDecoration(
@@ -235,7 +321,7 @@ class _Tag extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: theme.textTheme.bodySmall?.copyWith(
+        style: AppStyle.bodySmall.copyWith(
           fontSize: 8.sp,
           color: AppColors.grey,
         ),
@@ -249,7 +335,6 @@ class _SellSystemButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return FloatingActionButton.extended(
       onPressed: () {
         context.push(AppRoutes.addProductScreen);
@@ -258,7 +343,7 @@ class _SellSystemButton extends StatelessWidget {
       foregroundColor: AppColors.brown,
       label: Text(
         'sell_your_system'.tr(),
-        style: theme.textTheme.labelSmall?.copyWith(color: AppColors.brown),
+        style: AppStyle.labelSmall.copyWith(color: AppColors.brown),
       ),
       icon: const Icon(Icons.add_circle_outline),
     );

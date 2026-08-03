@@ -2,39 +2,35 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class DropdownField extends StatelessWidget {
   final String title;
-  final String value;
-  final IconData? icon;
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
+  final String? value;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
 
-  final valueListenable = ValueNotifier<String?>(null);
-   DropdownField({super.key, required this.title, required this.value, this.icon});
+  const DropdownField({
+    super.key,
+    required this.title,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return  Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 5,
       children: [
-        Text(title, style:theme.textTheme.labelSmall),
+        Text(title, style: AppStyle.labelSmall),
+        SizedBox(height: 5.h),
         DropdownButtonHideUnderline(
           child: DropdownButton2<String>(
             isExpanded: true,
-            hint:  Text(
-              'select_item'.tr(),
+            hint: Text(
+              value?.tr()??'select_item'.tr(),
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -42,29 +38,29 @@ class DropdownField extends StatelessWidget {
               ),
               overflow: TextOverflow.ellipsis,
             ),
-
-            items: items.map((String item) => DropdownItem<String>(
-              value: item,
-              height: 40,
-              child: Text(
-                item,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold,),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            )
+            items: items.map(
+                  (String item) => DropdownItem<String>(
+                    value: item,
+                    child: Text(
+                      item.tr(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )
                 .toList(),
-            valueListenable: valueListenable,
-            onChanged: (value) {
-              valueListenable.value = value;
-            },
+            onChanged: onChanged,
             buttonStyleData: ButtonStyleData(
               height: 55.h,
               padding: const EdgeInsets.only(left: 14, right: 14),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color:AppColors.borderColor), color: AppColors.white,),
-
+                border: Border.all(color: AppColors.borderColor),
+                color: AppColors.white,
+              ),
             ),
             iconStyleData: const IconStyleData(
               icon: Icon(
@@ -75,7 +71,6 @@ class DropdownField extends StatelessWidget {
             ),
             dropdownStyleData: DropdownStyleData(
               maxHeight: 200.h,
-              width: 150.w,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
               ),

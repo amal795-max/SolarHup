@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/presentation/widgets/step_instruction_card.dart';
 
 class BookingWhatsNextSection extends StatelessWidget {
@@ -9,8 +11,7 @@ class BookingWhatsNextSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.brightness;
     final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
 
     return Column(
@@ -18,7 +19,7 @@ class BookingWhatsNextSection extends StatelessWidget {
       children: [
         Text(
           'section_whats_next'.tr(),
-          style: theme.textTheme.titleMedium?.copyWith(
+          style: AppStyle.bodyMedium.copyWith(
             fontWeight: FontWeight.w800,
             color: titleColor,
           ),

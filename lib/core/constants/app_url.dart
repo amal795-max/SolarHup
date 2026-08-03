@@ -25,6 +25,9 @@ class EndPoints {
       '${baseUrl}stores/$businessId/products';
   static String storeProduct(String businessId, String productId) =>
       '${baseUrl}stores/$businessId/products/$productId';
+
+  static const String usedProducts = '${baseUrl}used-products';
+  static const String myUsedProducts = '${baseUrl}used-products/me';
 }
 
 class ApiKeys {

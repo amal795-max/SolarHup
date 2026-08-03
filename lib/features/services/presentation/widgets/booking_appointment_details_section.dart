@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/presentation/widgets/appointment_detail_row.dart';
 import 'package:untitled1/widgets/text_rich_widget.dart';
@@ -21,8 +22,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.brightness;
     final valueColor = isDark ? AppColors.blue : AppColors.primaryColor;
     final footerColor = isDark
         ? AppColors.darkGray.withValues(alpha: 0.5)
@@ -30,7 +30,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           if (!context.brightness)
@@ -52,7 +52,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'appointment_details_header'.tr(),
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style:AppStyle.labelSmall.copyWith(
                       color: AppColors.grey,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.8,
@@ -69,7 +69,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                   ),
                   child: Text(
                     'status_confirmed'.tr(),
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style: AppStyle.labelSmall.copyWith(
                       color: AppColors.tertiaryColor,
                       fontWeight: FontWeight.w700,
                     ),
@@ -123,10 +123,10 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                   child: TextRichWidget(
                     label: 'label_booking_id'.tr(),
                     value: booking.bookingId,
-                    style: theme.textTheme.labelSmall?.copyWith(
+                    style: AppStyle.labelSmall.copyWith(
                       color: AppColors.grey,
                     ),
-                    valueStyle: theme.textTheme.labelMedium?.copyWith(
+                    valueStyle: AppStyle.labelMedium.copyWith(
                       fontWeight: FontWeight.w700,
                       color: valueColor,
                     ),
@@ -143,7 +143,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.r),
                         side: BorderSide(
-                          color: theme.colorScheme.outline.withValues(alpha: 0.4),
+                          color: context.colorScheme.outline.withValues(alpha: 0.4),
                         ),
                       ),
                     ),
@@ -159,7 +159,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                         : Icon(Icons.download_outlined, size: 18.sp),
                     label: Text(
                       'btn_receipt'.tr(),
-                      style: theme.textTheme.labelMedium?.copyWith(
+                      style: AppStyle.labelMedium.copyWith(
                         fontWeight: FontWeight.w600,
                         color: valueColor,
                       ),

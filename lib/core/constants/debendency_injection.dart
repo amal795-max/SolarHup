@@ -28,6 +28,9 @@ import 'package:untitled1/features/stores/data/repositories/product_detail_repos
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
+import 'package:untitled1/features/used_system/data/data-source/used_system_remote_data_source.dart';
+import 'package:untitled1/features/used_system/data/repositories/used_system_repository.dart';
+import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -49,12 +52,14 @@ Future<void> init() async {
   getIt.registerLazySingleton<ChatBotRemoteDataSource>(() => ChatBotRemoteDataSourceImpl(getIt()));
   getIt.registerLazySingleton<BlogRemoteDataSource>(() => BlogRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<BlogDetailRemoteDataSource>(() => BlogDetailRemoteDataSourceImpl(getIt()),);
+  getIt.registerLazySingleton<UsedSystemRemoteDataSource>(() => UsedSystemRemoteDataSourceImpl(getIt()),);
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
   getIt.registerLazySingleton<ChatBotRepository>(() => ChatBotRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
   getIt.registerLazySingleton<BlogRepository>(() => BlogRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
   getIt.registerLazySingleton<BlogDetailRepository>(() => BlogDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
+  getIt.registerLazySingleton<UsedSystemRepository>(() => UsedSystemRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()),);
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
@@ -63,6 +68,7 @@ Future<void> init() async {
   getIt.registerFactory(() => HomeBloc(getIt()));
   getIt.registerFactory(() => BlogCubit(getIt()));
   getIt.registerFactory(() => StoresCubit(getIt()));
+  getIt.registerFactory(() => UsedSystemCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),
