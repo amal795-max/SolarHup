@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/widgets/header_section.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/empty_widget.dart';
+import '../widgets/badge_product_status.dart';
 import 'add_used_system/add_used_product_screen.dart';
 
 class MyListingScreen extends StatelessWidget {
@@ -30,73 +32,11 @@ class MyListingScreen extends StatelessWidget {
               subTitle: 'manage_listings_subtitle',
             ),
             Expanded(
-              child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
-                builder: (context, state) {
-                  if (state is MyUsedProductsFailure) {
-                    return EmptyWidget(
-                      icon: Icons.error_outline,
-                      iconSize: 56,
-                      iconColor: AppColors.grey,
-                      title: 'stores_error_title',
-                      subtitle: state.message,
-                      action: CustomButton(
-                        text: 'stores_retry'.tr(),
-                        icon: Icons.refresh_rounded,
-                        iconLeft: true,
-                        onPressed: () =>
-                            context.read<UsedSystemCubit>().getMyUsedProducts(),
-                      ),
-                    );
-                  }
-                  final isLoading = state is MyUsedProductsLoading;
-                  final List<UsedProductModel> products =
-                  isLoading
-                      ? List.generate(4, (index) => UsedProductModel(
-                      id: 0,
-                      sellerId: 0,
-                      sellerPhone: '',
-                      name: 'Loading...',
-                      description: 'Loading...',
-                      category: '',
-                      condition: '',
-                      price: '',
-                      region: '',
-                      status: 'active',
-                      images: [],
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    ),
-                  )
-                      : context.read<UsedSystemCubit>().myProducts;
+              child: BlocConsumer<UsedSystemCubit, UsedSystemState>(
+                listener: _listener,
+                listenWhen: _listenWhen,
 
-                  if (!isLoading && products.isEmpty) {
-                    return EmptyWidget(
-                      action: CustomButton(
-                        width: 0.6.sw,
-                        text: 'add_used_product',
-                        onPressed: () {
-                          context.push(AppRoutes.addProductScreen);
-                        },
-                      ),
-                    );
-                  }
-
-                  return Skeletonizer(
-                    enabled: isLoading,
-                    child: ListView.separated(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 10.h,
-                      ),
-                      itemCount: products.length,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: 16.h),
-                      itemBuilder: (context, index) {
-                        return _ListingCard(product: products[index]);
-                      },
-                    ),
-                  );
-                },
+                builder: _builder,
               ),
             ),
           ],
@@ -104,7 +44,106 @@ class MyListingScreen extends StatelessWidget {
       ),
     );
   }
-}
+
+  void _listener(BuildContext context, UsedSystemState state) {
+    if (state is DeleteProductSuccess) {
+        DataHelper.showSnackBar(
+          message: state.message,
+          context: context,
+        );
+      }
+      if (state is DeleteProductFailure ) {
+        DataHelper.showSnackBar(
+          message: state.message,
+          context: context,
+          color: AppColors.red,
+        );
+      }
+      if (state is UpdateProductStatusSuccess) {
+        DataHelper.showSnackBar(
+          message: state.message,
+          context: context,
+        );
+      }
+      if (state is UpdateProductStatusFailure ) {
+        DataHelper.showSnackBar(
+          message: state.message,
+          context: context,
+          color: AppColors.red,
+        );
+      }}
+
+  bool _listenWhen(UsedSystemState previous, UsedSystemState current) =>
+    (current is UpdateProductStatusFailure)||
+        (current is UpdateProductStatusSuccess)||
+        (current is DeleteProductFailure)||
+        (current is DeleteProductSuccess);
+
+  Widget _builder(BuildContext context, UsedSystemState state) {
+
+      if (state is DeleteProductLoading || state is UpdateProductStatusLoading) {
+        return const LoadingIndicator();
+      }
+      if (state is MyUsedProductsFailure) {
+        return EmptyWidget(
+          icon: Icons.error_outline,
+          iconSize: 56,
+          iconColor: AppColors.grey,
+          title: 'stores_error_title',
+          subtitle: state.message,
+          action: CustomButton(
+            text: 'stores_retry'.tr(),
+            icon: Icons.refresh_rounded,
+            iconLeft: true,
+            onPressed: () =>
+                context.read<UsedSystemCubit>().getMyUsedProducts(),
+          ),
+        );
+      }
+      final isLoading = state is MyUsedProductsLoading;
+      final List<UsedProductModel> products = isLoading
+          ? List.generate(4,
+            (index) => UsedProductModel(
+          id: 0,
+          sellerId: 0,
+          sellerPhone: '',
+          name: 'Loading...',
+          description: 'Loading...',
+          category: '',
+          condition: '',
+          price: '',
+          region: '',
+          status: 'active',
+          images: [],
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      )
+          : context.read<UsedSystemCubit>().myProducts;
+
+      if (!isLoading && products.isEmpty) {
+        return const EmptyWidget();
+      }
+
+      return Skeletonizer(
+        enabled: isLoading,
+        child: ListView.separated(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.w,
+            vertical: 10.h,
+          ),
+          itemCount: products.length,
+          separatorBuilder: (context, index) =>
+              SizedBox(height: 16.h),
+          itemBuilder: (context, index) {
+            return _ListingCard(product: products[index])
+                .animate()
+                .fadeIn(duration: 400.ms, delay: (index * 100).ms)
+                .slideX(begin: 0.2, end: 0);
+          },
+        ),
+      );
+    }}
 
 class _ListingCard extends StatelessWidget {
   final UsedProductModel product;
@@ -165,7 +204,7 @@ class _ListingCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          _StatusBadge(status: product.status),
+                          StatusBadge(status: product.status),
                         ],
                       ),
                       SizedBox(height: 4.h),
@@ -196,53 +235,6 @@ class _ListingCard extends StatelessWidget {
   }
 }
 
-class _StatusBadge extends StatelessWidget {
-  final String status;
-
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    Color bgColor;
-    Color textColor = Colors.white;
-    String label = status;
-
-    switch (status) {
-      case 'active':
-        bgColor = AppColors.secondaryColor;
-        textColor = Colors.black87;
-        label = 'active'.tr();
-        break;
-      case 'sold':
-        bgColor = Colors.grey;
-        label = 'sold'.tr();
-        break;
-      case 'draft':
-        bgColor = AppColors.primaryColor;
-        label = 'draft'.tr();
-        break;
-      default:
-        bgColor = AppColors.red;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.bold,
-          color: textColor,
-        ),
-      ),
-    );
-  }
-}
-
 class _ActionButtons extends StatelessWidget {
   final UsedProductModel product;
 
@@ -253,15 +245,16 @@ class _ActionButtons extends StatelessWidget {
     if (product.status == 'sold') {
       return Padding(
         padding: EdgeInsets.all(12.w),
-        child:CustomButton(
+        child: CustomButton(
           type: ButtonType.outlined,
-                textColor: AppColors.red,
-                borderColor:AppColors.red,
-                text: 'delete'.tr(),
-                height: 40,
-                onPressed: () {_showDeleteConfirmation(context, product.id);},
-                icon: Icons.delete_outline,
-
+          textColor: AppColors.red,
+          borderColor: AppColors.red,
+          text: 'delete'.tr(),
+          height: 40,
+          onPressed: () {
+            _showDeleteConfirmation(context, product.id);
+          },
+          icon: Icons.delete_outline,
         ),
       );
     }

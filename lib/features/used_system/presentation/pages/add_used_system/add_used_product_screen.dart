@@ -167,16 +167,6 @@ class _AddUsedProductScreenState extends State<AddUsedProductScreen> {
                   );
                 },
               ),
-              if (widget.product == null) ...[
-                SizedBox(height: 12.h),
-                CustomButton(
-                  text: 'save_draft'.tr(),
-                  onPressed: () {},
-                  backgroundColor: AppColors.backGroundGrey,
-                  textColor: AppColors.primaryColor,
-                  borderColor: AppColors.primaryColor,
-                ),
-              ],
               SizedBox(height: 24.h),
             ],
           ),

@@ -123,6 +123,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
         (failure) => emit(AddUsedProductFailure(mapFailureToMessage(failure))),
         (success) {
           clearForm();
+          getUsedProducts();
           emit(AddUsedProductSuccess(success, productAddedSuccessfully));
         },
       );
@@ -180,6 +181,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
       myProducts[index] = myProducts[index].copyWith(status: status);
       emit(MyUsedProductsSuccess(List.from(myProducts)));
     }
+    emit(const UpdateProductStatusLoading());
 
     final result = await repository.updateProductStatus(id, status);
     result.fold(
@@ -199,6 +201,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     myProducts.removeWhere((p) => p.id == id);
     emit(MyUsedProductsSuccess(List.from(myProducts)));
 
+    emit(const DeleteProductLoading());
     final result = await repository.deleteProduct(id);
     result.fold(
       (failure) {

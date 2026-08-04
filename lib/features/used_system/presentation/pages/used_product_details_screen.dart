@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/features/used_system/presentation/widgets/badge_product_status.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -41,7 +42,9 @@ class UsedProductDetailsScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomSheet: _buildBottomAction(context),
+        bottomSheet: product.status != 'removed' || product.status != 'sold'
+            ? _buildBottomAction(context)
+            : null,
       ),
     );
   }
@@ -50,7 +53,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
     return SliverAppBar(
       expandedHeight: 0.35.sh,
       pinned: true,
-      backgroundColor: AppColors.primaryColor,
+      automaticallyImplyLeading: false,
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           fit: StackFit.expand,
@@ -59,21 +62,20 @@ class UsedProductDetailsScreen extends StatelessWidget {
               PageView.builder(
                 itemCount: product.images.length,
                 itemBuilder: (context, index) {
-                  final imageWidget = ImageWidget(
-                    image: product.images[index],
-                  );
+                  final imageWidget = ImageWidget(image: product.images[index]);
                   return index == 0
-                      ? Hero(
-                          tag: 'product_${product.id}',
-                          child: imageWidget,
-                        )
+                      ? Hero(tag: 'product_${product.id}', child: imageWidget,)
                       : imageWidget;
                 },
               )
             else
               Container(
                 color: AppColors.lightGrey,
-                child: Icon(Icons.image_not_supported, size: 100.sp, color: AppColors.grey),
+                child: Icon(
+                  Icons.image_not_supported,
+                  size: 80.sp,
+                  color: AppColors.grey,
+                ),
               ),
             if (product.images.length > 1)
               Positioned(
@@ -95,6 +97,10 @@ class UsedProductDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+              Positioned(
+                top: 48.h, right: 16,
+                child: StatusBadge(status: product.status),
               ),
           ],
         ),
@@ -141,43 +147,10 @@ class UsedProductDetailsScreen extends StatelessWidget {
           color: AppColors.lightOrange,
           textColor: AppColors.tertiaryColor,
         ),
-        _buildStatusBadge(),
       ],
     );
   }
-
-  Widget _buildStatusBadge() {
-    Color bgColor;
-    Color textColor = Colors.white;
-    IconData icon;
-
-    switch (product.status) {
-      case 'active':
-        bgColor = AppColors.secondaryColor;
-        textColor = Colors.black87;
-        icon = Icons.check_circle_outline;
-        break;
-      case 'sold':
-        bgColor = Colors.grey;
-        icon = Icons.sell_outlined;
-        break;
-      case 'removed':
-        bgColor = AppColors.red;
-        icon = Icons.remove_circle_outline;
-        break;
-      default:
-        bgColor = AppColors.primaryColor;
-        icon = Icons.info_outline;
-    }
-
-    return _Badge(
-      label: product.status.tr(),
-      icon: icon,
-      color: bgColor,
-      textColor: textColor,
-    );
-  }
-
+  
   Widget _buildLocation() {
     return Row(
       children: [
@@ -202,7 +175,10 @@ class UsedProductDetailsScreen extends StatelessWidget {
         SizedBox(height: 8.h),
         Text(
           product.description,
-          style: AppStyle.bodyMedium.copyWith(color: AppColors.grey, height: 1.5),
+          style: AppStyle.bodyMedium.copyWith(
+            color: AppColors.grey,
+            height: 1.5,
+          ),
         ),
       ],
     );
@@ -227,18 +203,20 @@ class UsedProductDetailsScreen extends StatelessWidget {
           Expanded(
             child: CustomButton(
               text: 'call_seller',
-              onPressed: () =>DataHelper().makeCall(product.sellerPhone),
+              onPressed: () => DataHelper().makeCall(product.sellerPhone),
               type: ButtonType.outlined,
               borderColor: AppColors.primaryColor,
               textColor: AppColors.primaryColor,
+              icon: Icons.call,
             ),
           ),
           Expanded(
             child: CustomButton(
               text: 'whatsapp',
-              onPressed: () =>DataHelper().openWhatsApp(product.sellerPhone),
-              backgroundColor:Colors.green,
+              onPressed: () => DataHelper().openWhatsApp(product.sellerPhone),
+              backgroundColor: AppColors.green,
               textColor: Colors.white,
+              icon: Icons.chat,
             ),
           ),
         ],

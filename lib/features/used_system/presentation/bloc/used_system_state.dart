@@ -65,7 +65,13 @@ class AddUsedProductFailure extends UsedSystemState {
   List<Object?> get props => [message];
 }
 
-class UpdateProductStatusLoading extends UsedSystemState {}
+class UpdateProductStatusLoading extends UsedSystemState {
+  final int? productId;
+  const UpdateProductStatusLoading({this.productId});
+
+  @override
+  List<Object?> get props => [productId];
+}
 
 class UpdateProductStatusSuccess extends UsedSystemState {
   final String message;
@@ -83,7 +89,13 @@ class UpdateProductStatusFailure extends UsedSystemState {
   List<Object?> get props => [message];
 }
 
-class DeleteProductLoading extends UsedSystemState {}
+class DeleteProductLoading extends UsedSystemState {
+  final int? productId;
+  const DeleteProductLoading({this.productId});
+
+  @override
+  List<Object?> get props => [productId];
+}
 
 class DeleteProductSuccess extends UsedSystemState {
   final String message;

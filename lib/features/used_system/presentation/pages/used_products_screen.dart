@@ -12,6 +12,7 @@ import 'package:untitled1/widgets/image_widget.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../widgets/header_section.dart';
 import '../../../../widgets/primary_button.dart';
+import '../widgets/badge_product_status.dart';
 import '../widgets/category_chip.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,8 +69,8 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
   bool _buildWhen(UsedSystemState previous, UsedSystemState current) =>
     current is UsedProductsLoading ||
         current is UsedProductsSuccess ||
+        current is AddUsedProductSuccess ||
         current is UsedProductsFailure;
-
 
   Widget _builder(BuildContext context, UsedSystemState state) {
      if (state is UsedProductsFailure) {
@@ -263,7 +264,7 @@ class _ProductCard extends StatelessWidget {
                   Positioned(
                     top: 8,
                     left: 8,
-                    child: _StatusBadge(status: product.status),
+                    child: StatusBadge(status: product.status),
                   ),
 
                 ],
@@ -341,48 +342,6 @@ class _Tag extends StatelessWidget {
   }
 }
 
-class _StatusBadge extends StatelessWidget {
-  final String status;
-
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    Color bgColor;
-    Color textColor = Colors.white;
-
-    switch (status) {
-      case 'active':
-        bgColor = AppColors.secondaryColor;
-        textColor = AppColors.brown;
-        break;
-      case 'sold':
-        bgColor = Colors.grey;
-        break;
-      case 'removed':
-        bgColor = AppColors.red;
-        break;
-      default:
-        bgColor = AppColors.primaryColor;
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Text(
-        status.tr(),
-        style: TextStyle(
-          fontSize: 10.sp,
-          fontWeight: FontWeight.bold,
-          color: textColor,
-        ),
-      ),
-    );
-  }
-}
 
 class _SellSystemButton extends StatelessWidget {
   const _SellSystemButton();

@@ -105,6 +105,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 Navigator.pop(context);
               },
             ),
+            const SizedBox(height: 24,)
           ],
       ),
     );

@@ -115,6 +115,6 @@ class CustomButton extends StatelessWidget {
         ),
       ),
     ).animate()
-        .fadeIn(duration: 500.ms, delay: 600.ms);
+        .fadeIn(duration: 500.ms, delay: 300.ms);
   }
 }
