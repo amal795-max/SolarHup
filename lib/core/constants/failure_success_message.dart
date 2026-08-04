@@ -9,4 +9,6 @@ const String sendOtpSuccessMessage = 'send_otp_success';
 const String resetPasswordSuccessMessage = 'reset_password_message';
 const String changePasswordSuccessMessage = 'change_password_message';
 const String productAddedSuccessfully = 'product_added_success';
+const String productUpdatedStatusSuccessfully = 'status_updated_success';
+const String productDeletedSuccessfully = 'product_deleted_success';
 

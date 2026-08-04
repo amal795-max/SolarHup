@@ -10,11 +10,13 @@ import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'core/constants/app_url.dart';
 import 'core/constants/debendency_injection.dart' as di;
+import 'core/helper/app_bloc_observer.dart';
 import 'core/helper/local_storage.dart';
 import 'core/routing/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = AppBlocObserver();
   await di.init();
   await LocalStorage().init();
   await EasyLocalization.ensureInitialized();

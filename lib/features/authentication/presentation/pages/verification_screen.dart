@@ -33,16 +33,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   final String securityCode = LocalStorage().getData(key: ApiKeys.securityCode) ?? '';
   bool _isCodeSent = false;
 
-  Future<void> openTelegram(String username) async {
-    final telegramApp = Uri.parse('tg://resolve?domain=$username');
-    final telegramWeb = Uri.parse('https://t.me/$username');
 
-    if (await canLaunchUrl(telegramApp)) {
-      await launchUrl(telegramApp, mode: LaunchMode.externalApplication);
-    } else {
-      await launchUrl(telegramWeb, mode: LaunchMode.externalApplication);
-    }
-  }
 
   void _copySecurityCode() {
     Clipboard.setData(ClipboardData(text: securityCode));
@@ -118,8 +109,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       CustomButton(
                         text: 'go_to_telegram',
                         type: ButtonType.outlined,
-                        onPressed: () => openTelegram('green_energy_system_bot'),
-                      ),
+                        onPressed: () => DataHelper().openTelegram(('green_energy_system_bot'),
+                        )),
                       SizedBox(height: 24.h),
                       _buildStepDivider('step_3_enter_otp'.tr()),
                       SizedBox(height: 24.h),

@@ -9,6 +9,7 @@ import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/failure_success_message.dart';
 import 'package:untitled1/core/constants/user-parameters.dart';
 import 'package:untitled1/core/enums/product_status_enum.dart';
+import 'package:untitled1/core/enums/region_enum.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/data/repositories/used_system_repository.dart';
 
@@ -22,17 +23,19 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
-  final regionController = TextEditingController();
   final GlobalKey<FormState> addProductKey = GlobalKey<FormState>();
 
-  String selectedCategory = 'solar_panel';
-  String selectedCondition = 'new';
-  
+  String selectedCategory = ProductCategoryEnum.solar_panel.category;
+  String selectedCondition = ProductStatusEnum.newS.status;
+  String selectedRegion = RegionEnum.damascus.region;
+
   String? filterCategory;
   String? filterCondition;
   String? filterRegion;
   
   List<String> images = [];
+  List<UsedProductModel> products = [];
+  List<UsedProductModel> myProducts = [];
 
   UsedSystemCubit(this.repository) : super(UsedSystemInitial());
 
@@ -49,6 +52,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
       emit(UploadImage());
     }
   }
+  
   void removeImage(int index) {
     images.removeAt(index);
     emit(UploadImage());
@@ -83,7 +87,10 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     final result = await repository.getUsedProducts(query);
     result.fold(
       (failure) => emit(UsedProductsFailure(mapFailureToMessage(failure))),
-      (success) => emit(UsedProductsSuccess(success)),
+      (success) {
+        products = success;
+        emit(UsedProductsSuccess(products));
+      },
     );
   }
 
@@ -92,7 +99,10 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     final result = await repository.getMyUsedProducts();
     result.fold(
       (failure) => emit(MyUsedProductsFailure(mapFailureToMessage(failure))),
-      (success) => emit(MyUsedProductsSuccess(success)),
+      (success) {
+        myProducts = success;
+        emit(MyUsedProductsSuccess(myProducts));
+      },
     );
   }
 
@@ -105,7 +115,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
         category: selectedCategory,
         condition: selectedCondition,
         price: double.tryParse(priceController.text.trim()) ?? 0,
-        region: regionController.text.trim(),
+        region: selectedRegion,
         images: images,
       );
       final result = await repository.addUsedProduct(params);
@@ -119,14 +129,109 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     }
   }
 
+  Future<void> updateProduct(int id) async {
+    if (addProductKey.currentState?.validate() ?? false) {
+      final oldMyProducts = List<UsedProductModel>.from(myProducts);
+      final params = AddUsedProductParams(
+        name: nameController.text.trim(),
+        description: descriptionController.text.trim(),
+        category: selectedCategory,
+        condition: selectedCondition,
+        price: double.tryParse(priceController.text.trim()) ?? 0,
+        region: selectedRegion,
+        images: images,
+      );
+
+      final index = myProducts.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        myProducts[index] = myProducts[index].copyWith(
+          name: params.name,
+          description: params.description,
+          category: params.category,
+          condition: params.condition,
+          price: params.price.toString(),
+          region: params.region,
+          images: images.any((img) => !img.startsWith('http')) ? images : myProducts[index].images,
+        );
+        emit(MyUsedProductsSuccess(List.from(myProducts)));
+      }
+
+      emit(UpdateProductLoading());
+      final result = await repository.updateProduct(id, params);
+      result.fold(
+        (failure) {
+          myProducts = oldMyProducts;
+          emit(MyUsedProductsSuccess(List.from(myProducts)));
+          emit(UpdateProductFailure(mapFailureToMessage(failure)));
+        },
+        (success) {
+          emit(const UpdateProductSuccess(productUpdatedStatusSuccessfully));
+          clearForm();
+        },
+      );
+    }
+  }
+
+  Future<void> updateProductStatus(int id, String status) async {
+
+    final oldMyProducts = List<UsedProductModel>.from(myProducts);
+    final index = myProducts.indexWhere((p) => p.id == id);
+    if (index != -1) {
+      myProducts[index] = myProducts[index].copyWith(status: status);
+      emit(MyUsedProductsSuccess(List.from(myProducts)));
+    }
+
+    final result = await repository.updateProductStatus(id, status);
+    result.fold(
+      (failure) {
+        myProducts = oldMyProducts;
+        emit(MyUsedProductsSuccess(List.from(myProducts)));
+        emit(UpdateProductStatusFailure(mapFailureToMessage(failure)));
+      },
+      (success) {
+        emit(const UpdateProductStatusSuccess(productUpdatedStatusSuccessfully));
+      },
+    );
+  }
+
+  Future<void> deleteProduct(int id) async {
+    final oldMyProducts = List<UsedProductModel>.from(myProducts);
+    myProducts.removeWhere((p) => p.id == id);
+    emit(MyUsedProductsSuccess(List.from(myProducts)));
+
+    final result = await repository.deleteProduct(id);
+    result.fold(
+      (failure) {
+        myProducts = oldMyProducts;
+        emit(MyUsedProductsSuccess(List.from(myProducts)));
+        emit(DeleteProductFailure(mapFailureToMessage(failure)));
+      },
+      (success) {
+        emit(const DeleteProductSuccess(productDeletedSuccessfully));
+      },
+    );
+  }
+
+  void initForm(UsedProductModel? product) {
+    if (product != null) {
+      nameController.text = product.name;
+      descriptionController.text = product.description;
+      priceController.text = product.price;
+      selectedRegion = product.region;
+      selectedCategory = product.category;
+      selectedCondition = product.condition;
+      images = List.from(product.images);
+    } else {
+      clearForm();
+    }
+  }
+
   void clearForm() {
     nameController.clear();
     descriptionController.clear();
     priceController.clear();
-    regionController.clear();
     images.clear();
-    selectedCategory = ProductCategoryEnum.solar_panel.category;
-    selectedCondition = ProductStatusEnum.newS.status;
+
   }
 
   @override
@@ -134,7 +239,6 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     nameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-    regionController.dispose();
-    return super.close();
+   return super.close();
   }
 }

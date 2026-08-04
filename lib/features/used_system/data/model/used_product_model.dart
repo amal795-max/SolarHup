@@ -46,4 +46,36 @@ class UsedProductModel {
       updatedAt: DateTime.parse(json['updated_at']),
     );
   }
+
+  UsedProductModel copyWith({
+    int? id,
+    int? sellerId,
+    String? sellerPhone,
+    String? name,
+    String? description,
+    String? category,
+    String? condition,
+    String? price,
+    String? region,
+    String? status,
+    List<String>? images,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UsedProductModel(
+      id: id ?? this.id,
+      sellerId: sellerId ?? this.sellerId,
+      sellerPhone: sellerPhone ?? this.sellerPhone,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      condition: condition ?? this.condition,
+      price: price ?? this.price,
+      region: region ?? this.region,
+      status: status ?? this.status,
+      images: images ?? this.images,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }

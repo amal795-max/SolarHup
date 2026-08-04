@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/widgets/image_widget.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
@@ -12,24 +12,6 @@ class UsedProductDetailsScreen extends StatelessWidget {
   final UsedProductModel product;
 
   const UsedProductDetailsScreen({super.key, required this.product});
-
-  Future<void> _makeCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    if (await canLaunchUrl(launchUri)) {
-      await launchUrl(launchUri);
-    }
-  }
-
-  Future<void> _openWhatsApp(String phoneNumber) async {
-    final String url = "https://wa.me/$phoneNumber";
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,10 +59,15 @@ class UsedProductDetailsScreen extends StatelessWidget {
               PageView.builder(
                 itemCount: product.images.length,
                 itemBuilder: (context, index) {
-                  return
-                    ImageWidget(
-                      image: product.images[index],
-                    );
+                  final imageWidget = ImageWidget(
+                    image: product.images[index],
+                  );
+                  return index == 0
+                      ? Hero(
+                          tag: 'product_${product.id}',
+                          child: imageWidget,
+                        )
+                      : imageWidget;
                 },
               )
             else
@@ -140,6 +127,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
   Widget _buildBadges() {
     return Wrap(
       spacing: 8.w,
+      runSpacing: 8.h,
       children: [
         _Badge(
           label: product.category.tr(),
@@ -153,7 +141,40 @@ class UsedProductDetailsScreen extends StatelessWidget {
           color: AppColors.lightOrange,
           textColor: AppColors.tertiaryColor,
         ),
+        _buildStatusBadge(),
       ],
+    );
+  }
+
+  Widget _buildStatusBadge() {
+    Color bgColor;
+    Color textColor = Colors.white;
+    IconData icon;
+
+    switch (product.status) {
+      case 'active':
+        bgColor = AppColors.secondaryColor;
+        textColor = Colors.black87;
+        icon = Icons.check_circle_outline;
+        break;
+      case 'sold':
+        bgColor = Colors.grey;
+        icon = Icons.sell_outlined;
+        break;
+      case 'removed':
+        bgColor = AppColors.red;
+        icon = Icons.remove_circle_outline;
+        break;
+      default:
+        bgColor = AppColors.primaryColor;
+        icon = Icons.info_outline;
+    }
+
+    return _Badge(
+      label: product.status.tr(),
+      icon: icon,
+      color: bgColor,
+      textColor: textColor,
     );
   }
 
@@ -206,9 +227,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
           Expanded(
             child: CustomButton(
               text: 'call_seller',
-              icon: Icons.phone_outlined,
-              iconLeft: true,
-              onPressed: () => _makeCall(product.sellerPhone),
+              onPressed: () =>DataHelper().makeCall(product.sellerPhone),
               type: ButtonType.outlined,
               borderColor: AppColors.primaryColor,
               textColor: AppColors.primaryColor,
@@ -217,9 +236,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
           Expanded(
             child: CustomButton(
               text: 'whatsapp',
-              icon: Icons.chat_bubble_outline,
-              iconLeft: true,
-              onPressed: () => _openWhatsApp(product.sellerPhone),
+              onPressed: () =>DataHelper().openWhatsApp(product.sellerPhone),
               backgroundColor:Colors.green,
               textColor: Colors.white,
             ),

@@ -124,6 +124,10 @@
   "draft": "مسودة",
   "edit": "تعديل",
   "mark_as_sold": "تحديد كمباع",
+  "delete_listing": "حذف الإعلان",
+  "delete_listing_confirm": "هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.",
+  "delete": "حذف",
+  "product_deleted_success": "تم حذف المنتج بنجاح",
   "view_history": "عرض السجل",
 
   "home_search_hint": "ابحث عن ألواح، محولات، خدمات...",
@@ -481,6 +485,7 @@
   "error_otp": "رمز التحقق الذي أدخلته غير صحيح. يرجى المحاولة مرة أخرى.",
 
 "register_success_message": "تم التسجيل بنجاح!",
+  "status_updated_success": "تم تحديث حالة المنتج بنجاح",
   "change_password_message": "تم تغييير كلمة المرور بنجاح",
   "reset_password_message": "تم إعادة تعيين كلمة المرور بنجاح",
 
@@ -539,8 +544,11 @@
   "quneitra": "القنيطرة",
   "rural_damascus": "ريف دمشق",
   "call_seller": "تواصل مع البائع",
-  "whatsapp": "واتس أب"
-
+  "region": "المنطقة",
+  "whatsapp": "واتس أب",
+  "edit_product": "تعديل المنتج",
+  "update_listing": "تحديث الإعلان",
+  "not_used_systems_found": "لم يتم العثور على منتجات مستعملة"
 
 
 }

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -39,7 +40,7 @@ class CategoryFilterSection extends StatelessWidget {
                 icon: cat['icon'] as IconData,
                 isSelected: isSelected,
                 onTap: () => cubit.setFilterCategory(cat['value'] as String),
-              );
+              ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.2, end: 0);
             },
           );
         },
@@ -65,14 +66,17 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: 250.ms,
         margin: EdgeInsets.only(right: 10.w),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.tertiaryColor : AppColors.lightGrey,
           borderRadius: BorderRadius.circular(25.r),
           border: Border.all(
-            color: isSelected ? AppColors.primaryColor : context.colorScheme.outline.withOpacity(0.3),
+            color: isSelected
+                ? AppColors.primaryColor
+                : context.colorScheme.outline.withOpacity(0.3),
           ),
         ),
         child: Row(
@@ -92,7 +96,7 @@ class _CategoryChip extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      ).animate(target: isSelected ? 1 : 0).scaleXY(end: 1.05, duration: 200.ms),
     );
   }
 }

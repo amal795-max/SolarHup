@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/app_url.dart';
 import 'local_storage.dart';
@@ -42,4 +43,33 @@ class DataHelper {
     return DateFormat(newPattern).format(date);
 
   }
+
+  Future<void> makeCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    }
+  }
+
+  Future<void> openWhatsApp(String phoneNumber) async {
+    final String url = 'https://wa.me/$phoneNumber';
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+  }
+  Future<void> openTelegram(String username) async {
+    final telegramApp = Uri.parse('tg://resolve?domain=$username');
+    final telegramWeb = Uri.parse('https://t.me/$username');
+
+    if (await canLaunchUrl(telegramApp)) {
+      await launchUrl(telegramApp, mode: LaunchMode.externalApplication);
+    } else {
+      await launchUrl(telegramWeb, mode: LaunchMode.externalApplication);
+    }
+  }
+
 }

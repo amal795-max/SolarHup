@@ -8,6 +8,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/features/used_system/presentation/widgets/drop_menu_widget.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 class FiltersScreen extends StatefulWidget {
   const FiltersScreen({super.key});
@@ -20,8 +21,10 @@ class _FiltersScreenState extends State<FiltersScreen> {
   String? selectedCondition;
   String? selectedRegion;
 
-  final List<String> conditions = ProductStatusEnum.values.map((e)=>e.status).toList();
-  final List<String> regions =  RegionEnum.values.map((e)=>e.region).toList();
+  final List<String> conditions = ProductStatusEnum.values
+      .map((e) => e.status)
+      .toList();
+  final List<String> regions = RegionEnum.values.map((e) => e.region).toList();
 
   @override
   void initState() {
@@ -34,77 +37,66 @@ class _FiltersScreenState extends State<FiltersScreen> {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<UsedSystemCubit>();
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text('filters'.tr(), style: AppStyle.bodyMedium),
-        actions: [
-          TextButton(
-            onPressed: () {
-              setState(() {
-                selectedCondition = null;
-                selectedRegion = null;
-              });
-              cubit.clearFilters();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Text(
-                'reset_all'.tr(),
-                style: AppStyle.labelSmall.copyWith(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          spacing: 24.h,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
                 ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10.w),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  DropdownField(
-                    title: 'condition'.tr(),
-                    value: selectedCondition,
-                    items: conditions,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCondition = value;
-                      });
-                    },
+                Text('filters'.tr(), style: AppStyle.bodyMedium),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedCondition = null;
+                      selectedRegion = null;
+                    });
+                    cubit.clearFilters();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Text(
+                      'reset_all'.tr(),
+                      style: AppStyle.labelSmall.copyWith(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 20.h),
-                  DropdownField(
-                    title: 'region'.tr(),
-                    value: selectedRegion,
-                    items: regions,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedRegion = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
+                ),   ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 30.h),
-            child: ElevatedButton(
+            DropdownField(
+              title: 'condition'.tr(),
+              value: selectedCondition,
+              items: conditions,
+              onChanged: (value) {
+                setState(() {
+                  selectedCondition = value;
+                });
+              },
+            ),
+            DropdownField(
+              title: 'region'.tr(),
+              value: selectedRegion,
+              items: regions,
+              onChanged: (value) {
+                setState(() {
+                  selectedRegion = value;
+                });
+              },
+            ),
+            CustomButton(
+              text: 'apply_filters',
               onPressed: () {
                 cubit.setFilters(
                   condition: selectedCondition,
@@ -112,23 +104,8 @@ class _FiltersScreenState extends State<FiltersScreen> {
                 );
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                minimumSize: Size(double.infinity, 55.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              child: Text(
-                'apply_filters'.tr(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
-          ),
-        ],
+          ],
       ),
     );
   }

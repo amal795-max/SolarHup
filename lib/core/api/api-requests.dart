@@ -36,4 +36,7 @@ class ApiRequest {
 
   Future<Response> put(String path, {dynamic body}) =>
       dio.put(path, data: body);
+
+  Future<Response> patch(String path, {dynamic body}) =>
+      dio.patch(path, data: body);
 }

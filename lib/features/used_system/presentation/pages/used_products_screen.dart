@@ -1,13 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 
+import '../../../../core/helper/extensions.dart';
 import '../../../../widgets/header_section.dart';
+import '../../../../widgets/primary_button.dart';
 import '../widgets/category_chip.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +19,8 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+
+import 'filters_screen.dart';
 
 class UsedProductsScreen extends StatefulWidget {
   const UsedProductsScreen({super.key});
@@ -32,9 +38,7 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
+    return Scaffold(
         body: RefreshIndicator(
           onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
           child: Column(
@@ -48,56 +52,9 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
               const CategoryFilterSection(),
               Expanded(
                 child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
-                  buildWhen: (previous, current) =>
-                      current is UsedProductsLoading ||
-                      current is UsedProductsSuccess ||
-                      current is UsedProductsFailure,
-                  builder: (context, state) {
-                    if (state is UsedProductsFailure) {
-                      return Center(child: Text(state.message));
-                    }
+                  buildWhen: _buildWhen,
+                  builder: _builder,
 
-                    final isLoading = state is UsedProductsLoading;
-                    final products = state is UsedProductsSuccess
-                        ? state.products
-                        : List.generate(
-                            6,
-                            (index) => UsedProductModel(
-                              id: 0,
-                              sellerId: 0,
-                              sellerPhone: '',
-                              name: 'Loading product...',
-                              description: '',
-                              category: '',
-                              condition: 'new',
-                              price: '0.00',
-                              region: 'Loading...',
-                              status: 'active',
-                              images: [],
-                              createdAt: DateTime.now(),
-                              updatedAt: DateTime.now(),
-                            ),
-                          );
-
-                    if (state is UsedProductsSuccess && products.isEmpty) {
-                      return const EmptyWidget(subtitle: '');
-                    }
-
-                    return Skeletonizer(
-                      enabled: isLoading,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(horizontal: 20.w),
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 16.h),
-                            _ProductGrid(products: products),
-                            SizedBox(height: 100.h),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ),
             ],
@@ -105,10 +62,72 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: const _SellSystemButton(),
-      ),
-    );
+      );
   }
+
+  bool _buildWhen(UsedSystemState previous, UsedSystemState current) =>
+    current is UsedProductsLoading ||
+        current is UsedProductsSuccess ||
+        current is UsedProductsFailure;
+
+
+  Widget _builder(BuildContext context, UsedSystemState state) {
+     if (state is UsedProductsFailure) {
+        return EmptyWidget(
+          icon: Icons.error_outline,
+          iconSize: 56,
+          iconColor: AppColors.grey,
+          title: 'stores_error_title',
+          subtitle: state.message,
+          action: CustomButton(
+            text: 'stores_retry'.tr(),
+            icon: Icons.refresh_rounded,
+            iconLeft: true,
+            onPressed: () =>
+                context.read<UsedSystemCubit>().getUsedProducts(),
+          ),
+        );                    }
+
+      final isLoading = state is UsedProductsLoading;
+      final products = state is UsedProductsSuccess
+          ? state.products
+          : List.generate( 4, (index) => UsedProductModel(
+          id: 0,
+          sellerId: 0,
+          sellerPhone: '',
+          name: 'Loading product...',
+          description: '',
+          category: '',
+          condition: 'new',
+          price: '0.00',
+          region: 'Loading...',
+          status: 'active',
+          images: [],
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      );
+
+      if (state is UsedProductsSuccess && products.isEmpty) {
+        return const EmptyWidget(subtitle: '',title: 'not_used_systems_found',);
+      }
+
+      return Skeletonizer(
+        enabled: isLoading,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+            children: [
+              SizedBox(height: 16.h),
+              _ProductGrid(products: products),
+              SizedBox(height: 100.h),
+            ],
+          ),
+        ),
+      );  }
 }
+
 
 class _SearchAndFilterRow extends StatelessWidget {
   const _SearchAndFilterRow();
@@ -127,6 +146,7 @@ class _SearchAndFilterRow extends StatelessWidget {
               hint: 'search_hint'.tr(),
               prefixIcon: const Icon(Icons.search, color: AppColors.grey),
               onChanged: (value) {
+                cubit.nameController.text = value;
                 cubit.getUsedProducts();
               },
             ),
@@ -134,7 +154,15 @@ class _SearchAndFilterRow extends StatelessWidget {
           SizedBox(width: 12.w),
           InkWell(
             onTap: () {
-              context.push(AppRoutes.filterProductScreen);
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                builder: (context) {
+                  return const FiltersScreen();
+                },
+              );
             },
             child: Container(
               padding: EdgeInsets.all(12.w),
@@ -169,7 +197,10 @@ class _ProductGrid extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
-        return _ProductCard(product: products[index]);
+        return _ProductCard(product: products[index])
+            .animate()
+            .fadeIn(duration: 400.ms, delay: (index * 100).ms)
+            .slideY(begin: 0.2, end: 0);
       },
     );
   }
@@ -182,19 +213,18 @@ class _ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () =>
           context.push(AppRoutes.usedProductDetailScreen, extra: product),
       child: Container(
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(16.r),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black12,
+              color: AppColors.shadowColor,
               blurRadius: 10,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -217,11 +247,9 @@ class _ProductCard extends StatelessWidget {
                             borderRadius: BorderRadius.vertical(
                               top: Radius.circular(16.r),
                             ),
-                            child: Image.network(
-                              product.images.first,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.image_not_supported, size: 40.sp),
+                            child: Hero(
+                              tag: 'product_${product.id}',
+                              child: ImageWidget(image: product.images.first),
                             ),
                           )
                         : Center(
@@ -234,31 +262,17 @@ class _ProductCard extends StatelessWidget {
                   ),
                   Positioned(
                     top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.w,
-                        vertical: 6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Text(
-                        product.condition.tr(),
-                        style: AppStyle.labelSmall.copyWith(
-                          color: AppColors.brown,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                    left: 8,
+                    child: _StatusBadge(status: product.status),
                   ),
+
                 ],
               ),
             ),
             Padding(
               padding: EdgeInsets.all(12.w),
               child: Column(
+                spacing: 4.h,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -267,15 +281,14 @@ class _ProductCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  SizedBox(height: 4.h),
                   Row(
+                    spacing: 4.w,
                     children: [
                       Icon(
                         Icons.location_on,
                         size: 12.sp,
                         color: AppColors.grey,
                       ),
-                      SizedBox(width: 4.w),
                       Expanded(
                         child: Text(
                           product.region,
@@ -286,7 +299,6 @@ class _ProductCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.h),
                   Text(
                     '\$${product.price}',
                     style: AppStyle.bodyMedium.copyWith(
@@ -294,7 +306,6 @@ class _ProductCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 8.h),
                   Row(children: [_Tag(label: product.category.tr())]),
                 ],
               ),
@@ -324,6 +335,49 @@ class _Tag extends StatelessWidget {
         style: AppStyle.bodySmall.copyWith(
           fontSize: 8.sp,
           color: AppColors.grey,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  final String status;
+
+  const _StatusBadge({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    Color bgColor;
+    Color textColor = Colors.white;
+
+    switch (status) {
+      case 'active':
+        bgColor = AppColors.secondaryColor;
+        textColor = AppColors.brown;
+        break;
+      case 'sold':
+        bgColor = Colors.grey;
+        break;
+      case 'removed':
+        bgColor = AppColors.red;
+        break;
+      default:
+        bgColor = AppColors.primaryColor;
+    }
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Text(
+        status.tr(),
+        style: TextStyle(
+          fontSize: 10.sp,
+          fontWeight: FontWeight.bold,
+          color: textColor,
         ),
       ),
     );

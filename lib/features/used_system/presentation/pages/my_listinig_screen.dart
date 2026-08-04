@@ -12,6 +12,7 @@ import 'package:untitled1/widgets/header_section.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/empty_widget.dart';
+import 'add_used_system/add_used_product_screen.dart';
 
 class MyListingScreen extends StatelessWidget {
   const MyListingScreen({super.key});
@@ -24,7 +25,10 @@ class MyListingScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            headerSection(title: 'my_listings', subTitle: 'manage_listings_subtitle'),
+            headerSection(
+              title: 'my_listings',
+              subTitle: 'manage_listings_subtitle',
+            ),
             Expanded(
               child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
                 builder: (context, state) {
@@ -33,8 +37,8 @@ class MyListingScreen extends StatelessWidget {
                       icon: Icons.error_outline,
                       iconSize: 56,
                       iconColor: AppColors.grey,
-                      title: 'stores_error_title'.tr(),
-                      subtitle: 'stores_error_subtitle'.tr(),
+                      title: 'stores_error_title',
+                      subtitle: state.message,
                       action: CustomButton(
                         text: 'stores_retry'.tr(),
                         icon: Icons.refresh_rounded,
@@ -46,26 +50,24 @@ class MyListingScreen extends StatelessWidget {
                   }
                   final isLoading = state is MyUsedProductsLoading;
                   final List<UsedProductModel> products =
-                      (state is MyUsedProductsSuccess)
-                      ? state.products
-                      : List.generate(
-                          4,
-                          (index) => UsedProductModel(
-                            id: 0,
-                            sellerId: 0,
-                            sellerPhone: '',
-                            name: 'Loading product name...',
-                            description: 'Loading description...',
-                            category: 'solar_panel',
-                            condition: 'new',
-                            price: '0.00',
-                            region: 'Loading...',
-                            status: 'active',
-                            images: [],
-                            createdAt: DateTime.now(),
-                            updatedAt: DateTime.now(),
-                          ),
-                        );
+                  isLoading
+                      ? List.generate(4, (index) => UsedProductModel(
+                      id: 0,
+                      sellerId: 0,
+                      sellerPhone: '',
+                      name: 'Loading...',
+                      description: 'Loading...',
+                      category: '',
+                      condition: '',
+                      price: '',
+                      region: '',
+                      status: 'active',
+                      images: [],
+                      createdAt: DateTime.now(),
+                      updatedAt: DateTime.now(),
+                    ),
+                  )
+                      : context.read<UsedSystemCubit>().myProducts;
 
                   if (!isLoading && products.isEmpty) {
                     return EmptyWidget(
@@ -104,7 +106,6 @@ class MyListingScreen extends StatelessWidget {
   }
 }
 
-
 class _ListingCard extends StatelessWidget {
   final UsedProductModel product;
 
@@ -118,7 +119,7 @@ class _ListingCard extends StatelessWidget {
         color: AppColors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppColors.shadowColor,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -188,7 +189,7 @@ class _ListingCard extends StatelessWidget {
               ],
             ),
           ),
-          _ActionButtons(status: product.status),
+          _ActionButtons(product: product),
         ],
       ),
     );
@@ -221,7 +222,7 @@ class _StatusBadge extends StatelessWidget {
         label = 'draft'.tr();
         break;
       default:
-        bgColor = Colors.blue;
+        bgColor = AppColors.red;
     }
 
     return Container(
@@ -243,31 +244,24 @@ class _StatusBadge extends StatelessWidget {
 }
 
 class _ActionButtons extends StatelessWidget {
-  final String status;
+  final UsedProductModel product;
 
-  const _ActionButtons({required this.status});
+  const _ActionButtons({required this.product});
 
   @override
   Widget build(BuildContext context) {
-    if (status == 'sold') {
+    if (product.status == 'sold') {
       return Padding(
         padding: EdgeInsets.all(12.w),
-        child: Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                type: ButtonType.outlined,
-                text: 'view_history'.tr(),
+        child:CustomButton(
+          type: ButtonType.outlined,
+                textColor: AppColors.red,
+                borderColor:AppColors.red,
+                text: 'delete'.tr(),
                 height: 40,
-                onPressed: () {},
-                icon: Icons.history,
-                borderColor: AppColors.grey,
-                textColor: AppColors.grey,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            _DeleteButton(onPressed: () {}),
-          ],
+                onPressed: () {_showDeleteConfirmation(context, product.id);},
+                icon: Icons.delete_outline,
+
         ),
       );
     }
@@ -281,7 +275,15 @@ class _ActionButtons extends StatelessWidget {
             child: CustomButton(
               text: 'edit'.tr(),
               height: 40,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddUsedProductScreen(product: product),
+                  ),
+                );
+              },
               icon: Icons.mode_edit_outline_outlined,
             ),
           ),
@@ -291,13 +293,46 @@ class _ActionButtons extends StatelessWidget {
             child: CustomButton(
               text: 'mark_as_sold'.tr(),
               height: 40,
-              onPressed: () {},
+              onPressed: () {
+                context.read<UsedSystemCubit>().updateProductStatus(
+                  product.id,
+                  'sold',
+                );
+              },
               icon: Icons.check_circle_outline,
               type: ButtonType.outlined,
             ),
           ),
           SizedBox(width: 8.w),
-          _DeleteButton(onPressed: () {}),
+          _DeleteButton(
+            onPressed: () {
+              _showDeleteConfirmation(context, product.id);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, int id) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('delete_listing'.tr()),
+        content: Text('delete_listing_confirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<UsedSystemCubit>().deleteProduct(id);
+              Navigator.pop(dialogContext);
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.red),
+            child: Text('delete'.tr()),
+          ),
         ],
       ),
     );

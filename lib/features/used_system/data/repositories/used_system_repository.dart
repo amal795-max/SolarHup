@@ -10,6 +10,9 @@ abstract class UsedSystemRepository {
   Future<Either<Failure, UsedProductModel>> addUsedProduct(AddUsedProductParams params);
   Future<Either<Failure, List<UsedProductModel>>> getUsedProducts(Map<String,dynamic> query);
   Future<Either<Failure, List<UsedProductModel>>> getMyUsedProducts();
+  Future<Either<Failure, Unit>> updateProductStatus(int id, String status);
+  Future<Either<Failure, Unit>> updateProduct(int id, AddUsedProductParams params);
+  Future<Either<Failure, Unit>> deleteProduct(int id);
 }
 
 class UsedSystemRepositoryImpl implements UsedSystemRepository {
@@ -55,6 +58,48 @@ class UsedSystemRepositoryImpl implements UsedSystemRepository {
       try {
         final result = await remoteDataSource.getMyUsedProducts();
         return Right(result);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateProductStatus(int id, String status) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.updateProductStatus(id, status);
+        return const Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> updateProduct(int id, AddUsedProductParams params) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.updateProduct(id, params);
+        return const Right(unit);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> deleteProduct(int id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        await remoteDataSource.deleteProduct(id);
+        return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }

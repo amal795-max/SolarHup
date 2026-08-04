@@ -28,6 +28,9 @@ class EndPoints {
 
   static const String usedProducts = '${baseUrl}used-products';
   static const String myUsedProducts = '${baseUrl}used-products/me';
+  static String updateProductStatus(int id) => '${baseUrl}used-products/me/$id/status';
+  static String deleteProduct(int id) => '${baseUrl}used-products/me/$id';
+  static String updateProduct(int id) => '${baseUrl}used-products/me/$id';
 }
 
 class ApiKeys {
