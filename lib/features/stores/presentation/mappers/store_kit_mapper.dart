@@ -11,7 +11,8 @@ StoreKitProductData _toKitProduct(StoreProductModel product) {
   return StoreKitProductData(
     id: product.id,
     businessId: product.businessId,
-    categoryKey: _categoryKey(product.category, product.categoryId),
+    categoryId: product.categoryId,
+    categoryKey: product.category,
     name: product.name,
     price: product.price,
     rating: 0,
@@ -19,16 +20,4 @@ StoreKitProductData _toKitProduct(StoreProductModel product) {
     imageColorValue: product.imagePlaceholderColorValue,
     imageUrl: product.imageUrl,
   );
-}
-
-String _categoryKey(String category, int categoryId) {
-  final normalized = category.toLowerCase();
-  if (normalized.contains('panel')) return 'panels';
-  if (normalized.contains('batter')) return 'batteries';
-  if (normalized.contains('invert')) return 'inverters';
-  return switch (categoryId % 3) {
-    1 => 'panels',
-    2 => 'batteries',
-    _ => 'panels',
-  };
 }

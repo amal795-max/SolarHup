@@ -6,6 +6,7 @@ import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store_kit_bloc.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_cubit.dart';
+import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
 import 'package:untitled1/features/stores/presentation/mappers/store_kit_mapper.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_header_section.dart';
@@ -19,6 +20,7 @@ import 'package:untitled1/widgets/primary_button.dart';
 class StoreKitProductData {
   final String id;
   final String businessId;
+  final int categoryId;
   final String categoryKey;
   final String name;
   final double price;
@@ -30,6 +32,7 @@ class StoreKitProductData {
   const StoreKitProductData({
     required this.id,
     required this.businessId,
+    required this.categoryId,
     required this.categoryKey,
     required this.name,
     required this.price,
@@ -88,7 +91,8 @@ class _StoreKitView extends StatelessWidget {
                     width: 160.w,
                   ),
                 ),
-              StoreKitCubitLoaded(:final products) => SingleChildScrollView(
+              StoreKitCubitLoaded(:final categories, :final products) =>
+                  SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
@@ -97,10 +101,13 @@ class _StoreKitView extends StatelessWidget {
                       children: [
                         StoreKitHeaderSection(storeName: args.storeName),
                         SizedBox(height: 16.h),
-                        const StoreKitSearchSection(),
+                        StoreKitSearchSection(
+                          categories: apiCategoriesToItems(categories),
+                        ),
                         SizedBox(height: 14.h),
                         StoreKitProductsSection(
                           businessId: args.storeId,
+                          categories: apiCategoriesToItems(categories),
                           products: storeProductsToKitData(products),
                         ),
                         SizedBox(height: 16.h),

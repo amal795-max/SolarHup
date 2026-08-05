@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 
 StoreInfoData storeDetailToInfoData(
   StoreDetailModel model, {
+  List<StoreCategoryModel> categories = const [],
   List<StoreProductModel> products = const [],
 }) {
-  final categories = buildCategoriesFromProducts(products);
+  final categoryItems = categories.isNotEmpty
+      ? apiCategoriesToItems(categories)
+      : buildCategoriesFromProducts(products);
+  final categoryNames = {
+    for (final category in categories) category.id: category.name,
+  };
 
   return StoreInfoData(
     id: model.id,
@@ -21,9 +28,30 @@ StoreInfoData storeDetailToInfoData(
     imagePlaceholderColorValue: model.imagePlaceholderColorValue,
     iconData: _iconForType(model.iconType),
     iconColorValue: model.imagePlaceholderColorValue,
-    categories: categories,
-    featuredProducts: products.map(storeProductToItem).toList(),
+    categories: categoryItems,
+    featuredProducts: products
+        .map(
+          (product) => storeProductToItem(
+            product,
+            categoryName: categoryNames[product.categoryId],
+          ),
+        )
+        .toList(),
   );
+}
+
+List<StoreCategoryItem> apiCategoriesToItems(
+  List<StoreCategoryModel> categories,
+) {
+  return categories
+      .map(
+        (category) => StoreCategoryItem(
+          label: category.name,
+          icon: _iconForCategoryName(category.name),
+          categoryId: category.id,
+        ),
+      )
+      .toList();
 }
 
 List<StoreCategoryItem> buildCategoriesFromProducts(
@@ -62,25 +90,29 @@ List<StoreProductItem> filterProductsByCategory(
 
   final selected = categories[selectedIndex];
   return products.where((product) {
-    if (selected.category != null && selected.category!.isNotEmpty) {
-      return product.categoryKey == selected.category;
-    }
     if (selected.categoryId != null) {
       return product.categoryId == selected.categoryId;
+    }
+    if (selected.category != null && selected.category!.isNotEmpty) {
+      return product.categoryKey == selected.category;
     }
     return true;
   }).toList();
 }
 
-StoreProductItem storeProductToItem(StoreProductModel product) {
+StoreProductItem storeProductToItem(
+  StoreProductModel product, {
+  String? categoryName,
+}) {
   return StoreProductItem(
     id: product.id,
     name: product.name,
-    categoryLabel: product.category.isNotEmpty
-        ? product.category.replaceAll('_', ' ').toUpperCase()
-        : (product.categoryId > 0
-            ? 'Category ${product.categoryId}'
-            : 'PRODUCT'),
+    categoryLabel: categoryName ??
+        (product.category.isNotEmpty
+            ? product.category.replaceAll('_', ' ').toUpperCase()
+            : (product.categoryId > 0
+                ? 'Category ${product.categoryId}'
+                : 'PRODUCT')),
     categoryKey: product.category,
     categoryId: product.categoryId,
     price: product.price,
@@ -99,6 +131,27 @@ String _labelForCategory(String category, int categoryId) {
       .where((part) => part.isNotEmpty)
       .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
       .join(' ');
+}
+
+IconData _iconForCategoryName(String name) {
+  final normalized = name.toLowerCase();
+  if (normalized.contains('panel')) return Icons.solar_power_rounded;
+  if (normalized.contains('batter')) {
+    return Icons.battery_charging_full_rounded;
+  }
+  if (normalized.contains('invert')) {
+    return Icons.electrical_services_rounded;
+  }
+  if (normalized.contains('charge controller')) {
+    return Icons.tune_rounded;
+  }
+  if (normalized.contains('wind')) return Icons.air_rounded;
+  if (normalized.contains('meter')) return Icons.speed_rounded;
+  if (normalized.contains('cable') || normalized.contains('accessor')) {
+    return Icons.cable_rounded;
+  }
+  if (normalized.contains('other')) return Icons.inventory_2_outlined;
+  return Icons.category_outlined;
 }
 
 IconData _iconForCategory(String category) {

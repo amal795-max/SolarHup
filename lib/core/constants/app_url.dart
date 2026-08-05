@@ -26,6 +26,8 @@ class EndPoints {
   static String storeProduct(String businessId, String productId) =>
       '${baseUrl}stores/$businessId/products/$productId';
 
+  static const String storeCategories = '${baseUrl}categories';
+
   static const String usedProducts = '${baseUrl}used-products';
   static const String myUsedProducts = '${baseUrl}used-products/me';
   static String updateProductStatus(int id) => '${baseUrl}used-products/me/$id/status';

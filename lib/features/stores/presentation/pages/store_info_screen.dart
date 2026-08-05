@@ -222,8 +222,13 @@ class _StoreInfoView extends StatelessWidget {
                   ),
                 ),
               ),
-            StoreDetailLoaded(:final store, :final products) => _StoreInfoContent(
-                data: storeDetailToInfoData(store, products: products),
+            StoreDetailLoaded(:final store, :final categories, :final products) =>
+                _StoreInfoContent(
+                data: storeDetailToInfoData(
+                  store,
+                  categories: categories,
+                  products: products,
+                ),
               ),
             _ => const SizedBox.shrink(),
           };
