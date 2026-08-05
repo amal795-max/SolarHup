@@ -47,103 +47,94 @@ class MyListingScreen extends StatelessWidget {
 
   void _listener(BuildContext context, UsedSystemState state) {
     if (state is DeleteProductSuccess) {
-        DataHelper.showSnackBar(
-          message: state.message,
-          context: context,
-        );
-      }
-      if (state is DeleteProductFailure ) {
-        DataHelper.showSnackBar(
-          message: state.message,
-          context: context,
-          color: AppColors.red,
-        );
-      }
-      if (state is UpdateProductStatusSuccess) {
-        DataHelper.showSnackBar(
-          message: state.message,
-          context: context,
-        );
-      }
-      if (state is UpdateProductStatusFailure ) {
-        DataHelper.showSnackBar(
-          message: state.message,
-          context: context,
-          color: AppColors.red,
-        );
-      }}
+      DataHelper.showSnackBar(message: state.message, context: context);
+    }
+    if (state is DeleteProductFailure) {
+      DataHelper.showSnackBar(
+        message: state.message,
+        context: context,
+        color: AppColors.red,
+      );
+    }
+    if (state is UpdateProductStatusSuccess) {
+      DataHelper.showSnackBar(message: state.message, context: context);
+    }
+    if (state is UpdateProductStatusFailure) {
+      DataHelper.showSnackBar(
+        message: state.message,
+        context: context,
+        color: AppColors.red,
+      );
+    }
+  }
 
   bool _listenWhen(UsedSystemState previous, UsedSystemState current) =>
-    (current is UpdateProductStatusFailure)||
-        (current is UpdateProductStatusSuccess)||
-        (current is DeleteProductFailure)||
-        (current is DeleteProductSuccess);
+      (current is UpdateProductStatusFailure) ||
+      (current is UpdateProductStatusSuccess) ||
+      (current is DeleteProductFailure) ||
+      (current is DeleteProductSuccess);
 
   Widget _builder(BuildContext context, UsedSystemState state) {
-
-      if (state is DeleteProductLoading || state is UpdateProductStatusLoading) {
-        return const LoadingIndicator();
-      }
-      if (state is MyUsedProductsFailure) {
-        return EmptyWidget(
-          icon: Icons.error_outline,
-          iconSize: 56,
-          iconColor: AppColors.grey,
-          title: 'stores_error_title',
-          subtitle: state.message,
-          action: CustomButton(
-            text: 'stores_retry'.tr(),
-            icon: Icons.refresh_rounded,
-            iconLeft: true,
-            onPressed: () =>
-                context.read<UsedSystemCubit>().getMyUsedProducts(),
-          ),
-        );
-      }
-      final isLoading = state is MyUsedProductsLoading;
-      final List<UsedProductModel> products = isLoading
-          ? List.generate(4,
-            (index) => UsedProductModel(
-          id: 0,
-          sellerId: 0,
-          sellerPhone: '',
-          name: 'Loading...',
-          description: 'Loading...',
-          category: '',
-          condition: '',
-          price: '',
-          region: '',
-          status: 'active',
-          images: [],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
-      )
-          : context.read<UsedSystemCubit>().myProducts;
-
-      if (!isLoading && products.isEmpty) {
-        return const EmptyWidget();
-      }
-
-      return Skeletonizer(
-        enabled: isLoading,
-        child: ListView.separated(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 10.h,
-          ),
-          itemCount: products.length,
-          separatorBuilder: (context, index) =>
-              SizedBox(height: 16.h),
-          itemBuilder: (context, index) {
-            return _ListingCard(product: products[index])
-                .animate()
-                .fadeIn(duration: 400.ms, delay: (index * 100).ms)
-                .slideX(begin: 0.2, end: 0);
-          },
+    if (state is DeleteProductLoading || state is UpdateProductStatusLoading) {
+      return const LoadingIndicator();
+    }
+    if (state is MyUsedProductsFailure) {
+      return EmptyWidget(
+        icon: Icons.error_outline,
+        iconSize: 56,
+        iconColor: AppColors.grey,
+        title: 'stores_error_title',
+        subtitle: state.message,
+        action: CustomButton(
+          text: 'stores_retry'.tr(),
+          icon: Icons.refresh_rounded,
+          iconLeft: true,
+          onPressed: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
         ),
       );
-    }}
+    }
+    final isLoading = state is MyUsedProductsLoading;
+    final List<UsedProductModel> products = isLoading
+        ? List.generate(
+            4,
+            (index) => UsedProductModel(
+              id: 0,
+              sellerId: 0,
+              sellerPhone: '',
+              name: 'Loading...',
+              description: 'Loading...',
+              category: '',
+              condition: '',
+              price: '',
+              region: '',
+              status: 'active',
+              images: [],
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          )
+        : context.read<UsedSystemCubit>().myProducts;
+
+    if (!isLoading && products.isEmpty) {
+      return const EmptyWidget();
+    }
+
+    return Skeletonizer(
+      enabled: isLoading,
+      child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        itemCount: products.length,
+        separatorBuilder: (context, index) => SizedBox(height: 16.h),
+        itemBuilder: (context, index) {
+          return _ListingCard(product: products[index])
+              .animate()
+              .fadeIn(duration: 400.ms, delay: (index * 100).ms)
+              .slideX(begin: 0.2, end: 0);
+        },
+      ),
+    );
+  }
+}
 
 class _ListingCard extends StatelessWidget {
   final UsedProductModel product;
@@ -252,7 +243,15 @@ class _ActionButtons extends StatelessWidget {
           text: 'delete'.tr(),
           height: 40,
           onPressed: () {
-            _showDeleteConfirmation(context, product.id);
+            DataHelper().showDeleteConfirmation(
+              context,
+              'delete_listing',
+              'delete_listing_confirm',
+              () {
+                context.read<UsedSystemCubit>().deleteProduct(product.id);
+                Navigator.pop(context);
+              },
+            );
           },
           icon: Icons.delete_outline,
         ),
@@ -299,32 +298,16 @@ class _ActionButtons extends StatelessWidget {
           SizedBox(width: 8.w),
           _DeleteButton(
             onPressed: () {
-              _showDeleteConfirmation(context, product.id);
+              DataHelper().showDeleteConfirmation(
+                context,
+                'delete_listing',
+                'delete_listing_confirm',
+                () {
+                  context.read<UsedSystemCubit>().deleteProduct(product.id);
+                  Navigator.pop(context);
+                },
+              );
             },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showDeleteConfirmation(BuildContext context, int id) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('delete_listing'.tr()),
-        content: Text('delete_listing_confirm'.tr()),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text('cancel'.tr()),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<UsedSystemCubit>().deleteProduct(id);
-              Navigator.pop(dialogContext);
-            },
-            style: TextButton.styleFrom(foregroundColor: AppColors.red),
-            child: Text('delete'.tr()),
           ),
         ],
       ),

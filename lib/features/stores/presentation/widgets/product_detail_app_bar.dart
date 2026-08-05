@@ -1,6 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
+import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 
 class ProductDetailAppBar extends StatelessWidget {
   const ProductDetailAppBar({super.key});
@@ -41,6 +45,26 @@ class ProductDetailAppBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
+          BlocBuilder<ProductDetailBloc, ProductDetailState>(
+            builder: (context, detailState) {
+              if (detailState is ProductDetailLoaded) {
+                return BlocBuilder<FavoritesCubit, FavoritesState>(
+                  builder: (context, state) {
+                    final isFav = context.read<FavoritesCubit>().isFavorite('product', int.parse(detailState.product.id));
+                    return IconButton(
+                      onPressed: () => context.read<FavoritesCubit>().toggleFavorite('product', int.parse(detailState.product.id)),
+                      icon: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        color: isFav ? Colors.red : theme.colorScheme.onSurface,
+                        size: 22.sp,
+                      ),
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           IconButton(
             onPressed: () {},
             icon: Icon(

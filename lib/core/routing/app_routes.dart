@@ -49,5 +49,5 @@ abstract class AppRoutes {
 
   static String rateService(String serviceId) => '$rateServiceBase/$serviceId';
   static const packageComparisonScreen = '/packageComparisonScreen';
-
+  static const favoritesScreen = '/favoritesScreen';
 }

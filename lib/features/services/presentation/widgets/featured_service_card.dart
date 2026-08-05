@@ -119,7 +119,7 @@ class FeaturedServiceCard extends StatelessWidget {
                         textColor: AppColors.primaryColor,
                         onPressed: onQuoteTap ??
                             () => context.push(
-                                  AppRoutes.scheduleService(service.id),
+                                  AppRoutes.scheduleService(service.id.toString()),
                                 ),
                       ),
                     ),

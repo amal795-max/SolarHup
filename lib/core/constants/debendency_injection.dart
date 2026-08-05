@@ -31,6 +31,10 @@ import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/used_system/data/data-source/used_system_remote_data_source.dart';
 import 'package:untitled1/features/used_system/data/repositories/used_system_repository.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/features/favorite/data/data_sources/favorite_remote_data_source.dart';
+import 'package:untitled1/features/favorite/data/repositories/favorite_repository_impl.dart';
+import 'package:untitled1/features/favorite/domain/repositories/favorite_repository.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -53,6 +57,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<BlogRemoteDataSource>(() => BlogRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<BlogDetailRemoteDataSource>(() => BlogDetailRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<UsedSystemRemoteDataSource>(() => UsedSystemRemoteDataSourceImpl(getIt()),);
+  getIt.registerLazySingleton<FavoriteRemoteDataSource>(() => FavoriteRemoteDataSourceImpl(getIt()));
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
@@ -60,6 +65,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<BlogRepository>(() => BlogRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
   getIt.registerLazySingleton<BlogDetailRepository>(() => BlogDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
   getIt.registerLazySingleton<UsedSystemRepository>(() => UsedSystemRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()),);
+  getIt.registerLazySingleton<FavoriteRepository>(() => FavoriteRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
@@ -69,6 +75,7 @@ Future<void> init() async {
   getIt.registerFactory(() => BlogCubit(getIt()));
   getIt.registerFactory(() => StoresCubit(getIt()));
   getIt.registerFactory(() => UsedSystemCubit(getIt()));
+  getIt.registerFactory(() => FavoritesCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),

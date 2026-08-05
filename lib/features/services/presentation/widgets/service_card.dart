@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
 import 'package:untitled1/features/services/data/models/expert_service_model.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
@@ -130,6 +133,21 @@ class ServiceCard extends StatelessWidget {
                   SizedBox(height: 40.h),
                   Row(
                     children: [
+                      BlocBuilder<FavoritesCubit, FavoritesState>(
+                        builder: (context, state) {
+                          final isFav = context.read<FavoritesCubit>().isFavorite('service', service.id);
+                          return IconButton(
+                            onPressed: () => context.read<FavoritesCubit>().toggleFavorite('service',  service.id),
+                            icon: Icon(
+                              isFav ? Icons.favorite : Icons.favorite_border,
+                              color: isFav ? Colors.red : AppColors.grey,
+                              size: 24.sp,
+                            ),
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          );
+                        },
+                      ),
                       const Spacer(),
                       SizedBox(
                         width: 96.w,
@@ -142,7 +160,7 @@ class ServiceCard extends StatelessWidget {
                           onPressed:
                               onBookTap ??
                               () => context.push(
-                                AppRoutes.scheduleService(service.id),
+                                 AppRoutes.scheduleService(service.id.toString()),
                               ),
                         ),
                       ),

@@ -31,6 +31,9 @@ class EndPoints {
   static String updateProductStatus(int id) => '${baseUrl}used-products/me/$id/status';
   static String deleteProduct(int id) => '${baseUrl}used-products/me/$id';
   static String updateProduct(int id) => '${baseUrl}used-products/me/$id';
+
+  static const String favorites = '${baseUrl}favorites';
+  static String favoriteItem(String itemType, int itemId) => '${baseUrl}favorites/$itemType/$itemId';
 }
 
 class ApiKeys {

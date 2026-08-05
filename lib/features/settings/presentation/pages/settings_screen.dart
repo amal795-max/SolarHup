@@ -56,6 +56,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.favorite_border,
                 title: 'my_favorites'.tr(),
+                onTap: () => context.push(AppRoutes.favoritesScreen),
               ),
               _buildListTile(
                 context,

@@ -8,6 +8,7 @@ import 'package:untitled1/features/authentication/presentation/bloc/reset_passwo
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'core/constants/app_url.dart';
 import 'core/constants/debendency_injection.dart' as di;
 import 'core/helper/app_bloc_observer.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<ResetPasswordCubit>()),
         BlocProvider(create: (_) => di.getIt<ChatBotCubit>()),
         BlocProvider(create: (_) => di.getIt<UsedSystemCubit>()),
+        BlocProvider(create: (_) => di.getIt<FavoritesCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

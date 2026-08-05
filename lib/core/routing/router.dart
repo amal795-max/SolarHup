@@ -40,6 +40,7 @@ import '../../features/authentication/presentation/pages/onboarding_screen.dart'
 import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_product_details_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
+import '../../features/favorite/presentation/pages/favorites_screen.dart';
 
 final GoRouter router = GoRouter(
   routes: <RouteBase>[
@@ -280,6 +281,12 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as UsedProductModel;
         return  UsedProductDetailsScreen( product: args,);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.favoritesScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FavoritesScreen();
       },
     ),
   ],

@@ -125,6 +125,8 @@
   "mark_as_sold": "تحديد كمباع",
   "delete_listing": "حذف الإعلان",
   "delete_listing_confirm": "هل أنت متأكد من حذف هذا الإعلان؟ لا يمكن التراجع عن هذا الإجراء.",
+  "delete_product": "حذف المنتج",
+  "delete_product_confirm": "هل أنت متأكد من حذف هذا المنتج؟ لا يمكن التراجع عن هذا الإجراء",
   "delete": "حذف",
   "product_deleted_success": "تم حذف المنتج بنجاح",
   "view_history": "عرض السجل",
@@ -547,7 +549,16 @@
   "whatsapp": "واتس أب",
   "edit_product": "تعديل المنتج",
   "update_listing": "تحديث الإعلان",
-  "not_used_systems_found": "لم يتم العثور على منتجات مستعملة"
-
-
+  "not_used_systems_found": "لم يتم العثور على منتجات مستعملة",
+  "manage_your_favorites": "إدارة مفضلاتك هنا",
+  "no_favorites_yet": "لا توجد مفضلات بعد",
+  "start_adding_favorites": "ابدأ بإضافة المنتجات أو الخدمات إلى مفضلاتك لرؤيتها هنا",
+  "product": "المنتجات",
+  "removed_from_favorites": "تم حذف المنتج من المفضلة بنجاح",
+  "added_to_favorites": "تمت إضافة المنتج إلى السلة بنجاح",
+  "service": "الخدمات",
+  "store": "المتاجر",
+  "workshop": "ورش العمل",
+  "available": "متاح",
+  "unavailable": "غير متاح"
 }

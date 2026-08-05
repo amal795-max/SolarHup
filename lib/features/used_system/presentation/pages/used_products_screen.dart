@@ -7,14 +7,12 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
-
 import '../../../../core/helper/extensions.dart';
 import '../../../../widgets/header_section.dart';
-import '../../../../widgets/primary_button.dart';
 import '../widgets/badge_product_status.dart';
 import '../widgets/category_chip.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
@@ -40,95 +38,88 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: RefreshIndicator(
-          onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
-          child: Column(
-            children: [
-              headerSection(
-                title: 'home_used_systems',
-                subTitle: 'home_used_system_desc',
+      body: RefreshIndicator(
+        onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
+        child: Column(
+          children: [
+            headerSection(
+              title: 'home_used_systems',
+              subTitle: 'home_used_system_desc',
+            ),
+            SizedBox(height: 16.h),
+            const _SearchAndFilterRow(),
+            const CategoryFilterSection(),
+            Expanded(
+              child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
+                buildWhen: _buildWhen,
+                builder: _builder,
               ),
-              SizedBox(height: 16.h),
-              const _SearchAndFilterRow(),
-              const CategoryFilterSection(),
-              Expanded(
-                child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
-                  buildWhen: _buildWhen,
-                  builder: _builder,
-
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        floatingActionButton: const _SellSystemButton(),
-      );
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      floatingActionButton: const _SellSystemButton(),
+    );
   }
 
   bool _buildWhen(UsedSystemState previous, UsedSystemState current) =>
-    current is UsedProductsLoading ||
-        current is UsedProductsSuccess ||
-        current is AddUsedProductSuccess ||
-        current is UsedProductsFailure;
+      current is UsedProductsLoading ||
+      current is UsedProductsSuccess ||
+      current is AddUsedProductSuccess ||
+      current is UsedProductsFailure;
 
   Widget _builder(BuildContext context, UsedSystemState state) {
-     if (state is UsedProductsFailure) {
-        return EmptyWidget(
-          icon: Icons.error_outline,
-          iconSize: 56,
-          iconColor: AppColors.grey,
-          title: 'stores_error_title',
-          subtitle: state.message,
-          action: CustomButton(
-            text: 'stores_retry'.tr(),
-            icon: Icons.refresh_rounded,
-            iconLeft: true,
-            onPressed: () =>
-                context.read<UsedSystemCubit>().getUsedProducts(),
-          ),
-        );                    }
-
-      final isLoading = state is UsedProductsLoading;
-      final products = state is UsedProductsSuccess
-          ? state.products
-          : List.generate( 4, (index) => UsedProductModel(
-          id: 0,
-          sellerId: 0,
-          sellerPhone: '',
-          name: 'Loading product...',
-          description: '',
-          category: '',
-          condition: 'new',
-          price: '0.00',
-          region: 'Loading...',
-          status: 'active',
-          images: [],
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        ),
+    if (state is UsedProductsFailure) {
+      return errorWidget(
+        message: state.message,
+        onPressed: () => context.read<UsedSystemCubit>().getUsedProducts(),
+        hasButton: true,
       );
+    }
 
-      if (state is UsedProductsSuccess && products.isEmpty) {
-        return const EmptyWidget(subtitle: '',title: 'not_used_systems_found',);
-      }
+    final isLoading = state is UsedProductsLoading;
+    final products = state is UsedProductsSuccess
+        ? state.products
+        : List.generate(
+            4,
+            (index) => UsedProductModel(
+              id: 0,
+              sellerId: 0,
+              sellerPhone: '',
+              name: 'Loading product...',
+              description: '',
+              category: '',
+              condition: 'new',
+              price: '0.00',
+              region: 'Loading...',
+              status: 'active',
+              images: [],
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
 
-      return Skeletonizer(
-        enabled: isLoading,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              SizedBox(height: 16.h),
-              _ProductGrid(products: products),
-              SizedBox(height: 100.h),
-            ],
-          ),
+    if (state is UsedProductsSuccess && products.isEmpty) {
+      return const EmptyWidget(subtitle: '', title: 'not_used_systems_found');
+    }
+
+    return Skeletonizer(
+      enabled: isLoading,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            SizedBox(height: 16.h),
+            _ProductGrid(products: products),
+            SizedBox(height: 100.h),
+          ],
         ),
-      );  }
+      ),
+    );
+  }
 }
-
 
 class _SearchAndFilterRow extends StatelessWidget {
   const _SearchAndFilterRow();
@@ -266,7 +257,6 @@ class _ProductCard extends StatelessWidget {
                     left: 8,
                     child: StatusBadge(status: product.status),
                   ),
-
                 ],
               ),
             ),
@@ -341,7 +331,6 @@ class _Tag extends StatelessWidget {
     );
   }
 }
-
 
 class _SellSystemButton extends StatelessWidget {
   const _SellSystemButton();

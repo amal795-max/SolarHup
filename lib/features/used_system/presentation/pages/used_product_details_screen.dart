@@ -86,7 +86,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     product.images.length,
-                    (index) => Container(
+                        (index) => Container(
                       width: 8.w,
                       height: 8.h,
                       margin: EdgeInsets.symmetric(horizontal: 4.w),
@@ -98,10 +98,10 @@ class UsedProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                top: 48.h, right: 16,
-                child: StatusBadge(status: product.status),
-              ),
+            Positioned(
+              top: 48.h, right: 16,
+              child: StatusBadge(status: product.status),
+            ),
           ],
         ),
       ),
@@ -150,7 +150,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
       ],
     );
   }
-  
+
   Widget _buildLocation() {
     return Row(
       children: [

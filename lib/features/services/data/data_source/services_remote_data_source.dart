@@ -9,7 +9,7 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
 
   static const _services = [
     ExpertServiceModel(
-      id: 'svc-1',
+      id: 1,
       title: 'Annual System Health Audit',
       rating: 4.8,
       badges: ['NABCEP', 'ELECTRICAL SAFETY'],
@@ -20,7 +20,7 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
       iconType: 'audit',
     ),
     ExpertServiceModel(
-      id: 'svc-2',
+      id: 2,
       title: 'Emergency Inverter Repair',
       rating: 4.7,
       badges: ['MASTER ELECTRICIAN'],
@@ -33,7 +33,7 @@ class ServicesRemoteDataSourceImpl implements ServicesRemoteDataSource {
   ];
 
   static const _featured = ExpertServiceModel(
-    id: 'svc-featured-1',
+    id: 3,
     title: 'Premium Installation Kit',
     rating: 0,
     badges: [],

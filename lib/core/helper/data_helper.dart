@@ -5,6 +5,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/app_url.dart';
+import '../theme/app_colors.dart';
 import 'local_storage.dart';
 
 class DataHelper {
@@ -22,6 +23,26 @@ class DataHelper {
         behavior: SnackBarBehavior.floating,
         backgroundColor:color,
         content: Text(message.tr(),style:AppStyle.bodySmall),
+      ),
+    );
+  }
+  void showDeleteConfirmation(BuildContext context,String title,String subtitle,VoidCallback? onPressed) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(title.tr()),
+        content: Text(subtitle.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: onPressed,
+            style: TextButton.styleFrom(foregroundColor: AppColors.red),
+            child: Text('delete'.tr()),
+          ),
+        ],
       ),
     );
   }
