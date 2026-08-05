@@ -6,7 +6,7 @@ import 'package:untitled1/features/stores/data/models/product_detail_model.dart'
 import 'package:untitled1/features/stores/presentation/widgets/product_spec_card.dart';
 
 class ProductDetailCoreSpecsSection extends StatelessWidget {
-  final ProductCoreSpecs specs;
+  final List<ProductSpecHighlight> specs;
 
   const ProductDetailCoreSpecsSection({super.key, required this.specs});
 
@@ -14,8 +14,7 @@ class ProductDetailCoreSpecsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final surfaceColor =
-        isDark ? AppColors.darkContainer : AppColors.white;
+    final surfaceColor = isDark ? AppColors.darkContainer : AppColors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,60 +26,92 @@ class ProductDetailCoreSpecsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        ProductSpecCard(
-          label: 'product_detail_max_power_output'.tr(),
-          value: specs.maxPowerOutput,
-          isFullWidth: true,
-          leadingIcon: Icons.bolt_rounded,
-          backgroundColor: surfaceColor,
-          iconBackgroundColor: AppColors.secondaryColor,
-          iconColor: AppColors.tertiaryColor,
-        ),
-        SizedBox(height: 8.h),
-        Row(
-          children: [
-            Expanded(
-              child: ProductSpecCard(
-                label: 'product_detail_efficiency'.tr(),
-                value: specs.efficiency,
-                backgroundColor: surfaceColor,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: ProductSpecCard(
-                label: 'product_detail_warranty'.tr(),
-                value: specs.warranty,
-                backgroundColor: surfaceColor,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 8.h),
-        Row(
-          children: [
-            Expanded(
-              child: ProductSpecCard(
-                label: 'brand'.tr(),
-                value: specs.brand,
-                backgroundColor: AppColors.secondaryColor,
-                labelColor: AppColors.tertiaryColor,
-                valueColor: AppColors.tertiaryColor,
-              ),
-            ),
-            SizedBox(width: 8.w),
-            Expanded(
-              child: ProductSpecCard(
-                label: 'product_detail_cell_technology'.tr(),
-                value: specs.cellTechnology,
-                backgroundColor: AppColors.primaryColor,
-                labelColor: AppColors.white.withValues(alpha: 0.75),
-                valueColor: AppColors.white,
-              ),
-            ),
-          ],
-        ),
+        ..._buildSpecWidgets(context, surfaceColor),
       ],
+    );
+  }
+
+  List<Widget> _buildSpecWidgets(BuildContext context, Color surfaceColor) {
+    final widgets = <Widget>[];
+    final regular = <ProductSpecHighlight>[];
+
+    for (final spec in specs) {
+      if (spec.fullWidth) {
+        if (regular.isNotEmpty) {
+          widgets.add(_buildRow(context, regular, surfaceColor));
+          widgets.add(SizedBox(height: 8.h));
+          regular.clear();
+        }
+        widgets.add(_buildCard(context, spec, surfaceColor, fullWidth: true));
+        widgets.add(SizedBox(height: 8.h));
+      } else {
+        regular.add(spec);
+        if (regular.length == 2) {
+          widgets.add(_buildRow(context, regular, surfaceColor));
+          widgets.add(SizedBox(height: 8.h));
+          regular.clear();
+        }
+      }
+    }
+
+    if (regular.isNotEmpty) {
+      widgets.add(_buildRow(context, regular, surfaceColor));
+    }
+
+    if (widgets.isNotEmpty && widgets.last is SizedBox) {
+      widgets.removeLast();
+    }
+
+    return widgets;
+  }
+
+  Widget _buildRow(
+    BuildContext context,
+    List<ProductSpecHighlight> rowSpecs,
+    Color surfaceColor,
+  ) {
+    return Row(
+      children: [
+        for (var i = 0; i < rowSpecs.length; i++) ...[
+          if (i > 0) SizedBox(width: 8.w),
+          Expanded(child: _buildCard(context, rowSpecs[i], surfaceColor)),
+        ],
+        if (rowSpecs.length == 1) const Expanded(child: SizedBox.shrink()),
+      ],
+    );
+  }
+
+  Widget _buildCard(
+    BuildContext context,
+    ProductSpecHighlight spec,
+    Color surfaceColor, {
+    bool fullWidth = false,
+  }) {
+    final isBrand = spec.labelKey == 'brand';
+    final isCellTech = spec.labelKey == 'product_detail_cell_technology';
+
+    return ProductSpecCard(
+      label: spec.labelKey.tr(),
+      value: spec.value,
+      isFullWidth: fullWidth,
+      leadingIcon: spec.icon,
+      backgroundColor: isBrand
+          ? AppColors.secondaryColor
+          : isCellTech
+              ? AppColors.primaryColor
+              : surfaceColor,
+      iconBackgroundColor: AppColors.secondaryColor,
+      iconColor: AppColors.tertiaryColor,
+      labelColor: isBrand || isCellTech
+          ? (isCellTech
+              ? AppColors.white.withValues(alpha: 0.75)
+              : AppColors.tertiaryColor)
+          : null,
+      valueColor: isBrand
+          ? AppColors.tertiaryColor
+          : isCellTech
+              ? AppColors.white
+              : null,
     );
   }
 }

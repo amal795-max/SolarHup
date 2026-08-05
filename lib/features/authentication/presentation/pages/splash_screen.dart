@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:untitled1/core/helper/auth_session.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import '../../../../core/constants/app_images.dart';
@@ -22,27 +23,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 3000), () {
-      bool onboardingCompleted = LocalStorage().getData(
-          key: StorageKeys.onboardingCompleted,
-          defaultValue: false
-      );
-
-      bool isLoggedIn = LocalStorage().getData(
-          key: ApiKeys.userIsLogin,
-          defaultValue: false
+    Future.delayed(const Duration(milliseconds: 3000), () async {
+      final onboardingCompleted = LocalStorage().getData(
+        key: StorageKeys.onboardingCompleted,
+        defaultValue: false,
       );
 
       if (!onboardingCompleted) {
         context.go(AppRoutes.onboardingScreen);
+      } else if (AuthSession.isLoggedIn) {
+        context.go(AppRoutes.bottomNavBar);
       } else {
-        if (isLoggedIn) {
-          context.go(AppRoutes.bottomNavBar);
-
-        } else {
-          context.go(AppRoutes.authenticationScreen);
-
-        }
+        await AuthSession.clear();
+        context.go(AppRoutes.authenticationScreen);
       }
     });
   }

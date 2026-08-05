@@ -51,14 +51,23 @@ class StoreInfoData {
 class StoreCategoryItem {
   final String label;
   final IconData icon;
+  final int? categoryId;
+  final String? category;
 
-  const StoreCategoryItem({required this.label, required this.icon});
+  const StoreCategoryItem({
+    required this.label,
+    required this.icon,
+    this.categoryId,
+    this.category,
+  });
 }
 
 class StoreProductItem {
   final String id;
   final String name;
   final String categoryLabel;
+  final String categoryKey;
+  final int categoryId;
   final double price;
   final double? originalPrice;
   final int? discountPercent;
@@ -72,6 +81,8 @@ class StoreProductItem {
     this.id = 'helios-450w',
     required this.name,
     required this.categoryLabel,
+    this.categoryKey = '',
+    this.categoryId = 0,
     required this.price,
     this.originalPrice,
     this.discountPercent,
@@ -99,21 +110,32 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
   iconData: Icons.wb_sunny_rounded,
   iconColorValue: 0xFF0A2A43,
   categories: [
-    StoreCategoryItem(label: 'Solar Panels', icon: Icons.solar_power_rounded),
+    StoreCategoryItem(
+      label: 'Solar Panels',
+      icon: Icons.solar_power_rounded,
+      category: 'solar_panel',
+    ),
     StoreCategoryItem(
       label: 'Batteries',
       icon: Icons.battery_charging_full_rounded,
+      category: 'battery',
     ),
     StoreCategoryItem(
       label: 'Inverters',
       icon: Icons.electrical_services_rounded,
+      category: 'inverter',
     ),
-    StoreCategoryItem(label: 'EV Chargers', icon: Icons.ev_station_rounded),
+    StoreCategoryItem(
+      label: 'EV Chargers',
+      icon: Icons.ev_station_rounded,
+      category: 'ev_charger',
+    ),
   ],
   featuredProducts: [
     StoreProductItem(
       name: 'SunPeak Ultra 450W Monocrystalline',
       categoryLabel: 'SOLAR PANELS',
+      categoryKey: 'solar_panel',
       price: 389.00,
       badgeText: 'New',
       imagePlaceholderColorValue: 0xFF1A3A5C,
@@ -122,6 +144,7 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
     StoreProductItem(
       name: 'LumeWall 10kWh Smart Storage',
       categoryLabel: 'BATTERIES',
+      categoryKey: 'battery',
       price: 4250.00,
       originalPrice: 4900.00,
       discountPercent: 15,
@@ -131,6 +154,7 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
     StoreProductItem(
       name: 'Full Residential 5kW Solar System',
       categoryLabel: 'PREMIUM KIT',
+      categoryKey: 'kit',
       price: 7899.00,
       description:
           'Complete package includes 12× 450W panels, 5kW Hybrid Inverter, and all mounting hardware.',
@@ -271,14 +295,24 @@ class _StoreInfoContent extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 112.h),
-                if (data.categories.isNotEmpty) ...[
-                  StoreInfoCategoriesSection(categories: data.categories),
-                  SizedBox(height: 8.h),
-                ],
+                StoreInfoCategoriesSection(categories: data.categories),
                 SizedBox(height: 8.h),
-                StoreInfoFeaturedProductsSection(
-                  storeId: data.id,
-                  products: data.featuredProducts,
+                BlocBuilder<StoreInfoBloc, StoreInfoState>(
+                  buildWhen: (prev, curr) =>
+                      prev.selectedCategoryIndex != curr.selectedCategoryIndex,
+                  builder: (context, infoState) {
+                    final filteredProducts = filterProductsByCategory(
+                      data.featuredProducts,
+                      data.categories,
+                      infoState.selectedCategoryIndex,
+                    );
+
+                    return StoreInfoFeaturedProductsSection(
+                      storeId: data.id,
+                      storeName: data.name,
+                      products: filteredProducts,
+                    );
+                  },
                 ),
                 SizedBox(height: 16.h),
                 const StoreInfoExpertSection(),

@@ -21,18 +21,19 @@ class StoreInfoCategoriesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Section title ─────────────────────────────────────────────────
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Text('categories'.tr(), style: theme.textTheme.titleMedium),
-        ),
-
-
-        // ── Horizontally scrollable chips ─────────────────────────────────
-        BlocBuilder<StoreInfoBloc, StoreInfoState>(
+        if (categories.isNotEmpty) ...[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Text('categories'.tr(), style: theme.textTheme.titleMedium),
+          ),
+          BlocBuilder<StoreInfoBloc, StoreInfoState>(
           buildWhen: (prev, curr) =>
-          prev.selectedCategoryIndex != curr.selectedCategoryIndex,
+              prev.selectedCategoryIndex != curr.selectedCategoryIndex,
           builder: (context, state) {
+            if (categories.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
             return SizedBox(
               height: 120.h,
               child: ListView.separated(
@@ -52,19 +53,18 @@ class StoreInfoCategoriesSection extends StatelessWidget {
             );
           },
         ),
-
-        SizedBox(height: 8.h),
-
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Divider(
-            color: Theme.of(context)
-                .colorScheme
-                .outline
-                .withValues(alpha: 0.5),
-            height: 1,
+          SizedBox(height: 8.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Divider(
+              color: Theme.of(context)
+                  .colorScheme
+                  .outline
+                  .withValues(alpha: 0.5),
+              height: 1,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -117,8 +117,13 @@ class _CategoryChip extends StatelessWidget {
                 width: 55.w,
                 height: 55.w,
                 decoration: BoxDecoration(
-                  color: unselectedIconBg,
+                  color: isSelected
+                      ? AppColors.secondaryColor.withValues(alpha: 0.25)
+                      : unselectedIconBg,
                   shape: BoxShape.circle,
+                  border: isSelected
+                      ? Border.all(color: AppColors.secondaryColor, width: 2)
+                      : null,
                 ),
                 child: Icon(
                   item.icon,

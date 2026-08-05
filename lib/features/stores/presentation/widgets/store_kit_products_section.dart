@@ -11,9 +11,14 @@ import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.da
 import 'package:untitled1/widgets/empty_widget.dart';
 
 class StoreKitProductsSection extends StatelessWidget {
+  final String businessId;
   final List<StoreKitProductData> products;
 
-  const StoreKitProductsSection({super.key, required this.products});
+  const StoreKitProductsSection({
+    super.key,
+    required this.businessId,
+    required this.products,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +52,7 @@ class StoreKitProductsSection extends StatelessWidget {
             childAspectRatio: 0.62,
           ),
           itemBuilder: (context, index) => _KitProductCard(
+            businessId: businessId,
             product: filteredProducts[index],
             isFavorite: state.isFavorite(filteredProducts[index].id),
           ),
@@ -80,10 +86,12 @@ class StoreKitProductsSection extends StatelessWidget {
 }
 
 class _KitProductCard extends StatelessWidget {
+  final String businessId;
   final StoreKitProductData product;
   final bool isFavorite;
 
   const _KitProductCard({
+    required this.businessId,
     required this.product,
     required this.isFavorite,
   });
@@ -101,7 +109,7 @@ class _KitProductCard extends StatelessWidget {
             context.push(
               AppRoutes.productDetailScreen,
               extra: ProductDetailRouteArgs(
-                businessId: '0',
+                businessId: businessId,
                 productId: product.id,
               ),
             );

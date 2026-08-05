@@ -27,6 +27,7 @@ import 'package:untitled1/features/stores/data/data_source/product_detail_remote
 import 'package:untitled1/features/stores/data/repositories/product_detail_repository.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
+import 'package:untitled1/features/stores/presentation/bloc/store_kit_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/used_system/data/data-source/used_system_remote_data_source.dart';
 import 'package:untitled1/features/used_system/data/repositories/used_system_repository.dart';
@@ -89,6 +90,7 @@ Future<void> init() async {
 
 
   getIt.registerFactory(() => StoreDetailCubit(getIt()));
+  getIt.registerFactory(() => StoreKitCubit(getIt()));
   getIt.registerLazySingleton<ProductDetailRemoteDataSource>(() => ProductDetailRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<ProductDetailRepository>(() => ProductDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
 

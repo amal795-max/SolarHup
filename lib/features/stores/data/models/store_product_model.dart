@@ -6,6 +6,8 @@ class StoreProductModel {
   final String description;
   final double price;
   final int quantity;
+  final String category;
+  final String brand;
   final String? imageUrl;
   final bool isAvailable;
   final int imagePlaceholderColorValue;
@@ -18,6 +20,8 @@ class StoreProductModel {
     required this.description,
     required this.price,
     required this.quantity,
+    this.category = '',
+    this.brand = '',
     required this.imageUrl,
     required this.isAvailable,
     required this.imagePlaceholderColorValue,
