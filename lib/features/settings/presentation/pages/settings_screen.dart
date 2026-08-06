@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/auth_session.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -140,6 +141,12 @@ class SettingsScreen extends StatelessWidget {
                 type: ButtonType.outlined,
                 borderColor: AppColors.red,
                 textColor: AppColors.red,
+                onPressed: () async {
+                  await AuthSession.clear();
+                  if (context.mounted) {
+                    context.go(AppRoutes.authenticationScreen);
+                  }
+                },
               ),
             ),
             SizedBox(height: 20.h),

@@ -25,6 +25,7 @@ import 'package:untitled1/features/services/presentation/pages/service_address_s
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
@@ -42,7 +43,10 @@ import '../../features/used_system/presentation/pages/used_product_details_scree
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 import '../../features/favorite/presentation/pages/favorites_screen.dart';
 
+import 'package:untitled1/core/routing/router_keys.dart';
+
 final GoRouter router = GoRouter(
+  navigatorKey: rootNavigatorKey,
   routes: <RouteBase>[
     GoRoute(
       path: '/',
@@ -137,7 +141,11 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.storeKitScreen,
       builder: (BuildContext context, GoRouterState state) {
-        return const StoreKitScreen();
+        final args = state.extra as StoreKitRouteArgs?;
+        return StoreKitScreen(
+          args: args ??
+              const StoreKitRouteArgs(storeId: '', storeName: ''),
+        );
       },
     ),
     GoRoute(

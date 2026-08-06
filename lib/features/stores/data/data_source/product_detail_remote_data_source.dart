@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:untitled1/core/api/api-requests.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/api/api_response_utils.dart';
 import 'package:untitled1/features/stores/data/model/store_products_response_model.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 
@@ -32,7 +33,7 @@ class ProductDetailRemoteDataSourceImpl implements ProductDetailRemoteDataSource
         );
       } else {
         return StoreProductApiModel.fromJson(
-          response.data as Map<String, dynamic>,
+          unwrapProductPayload(response.data as Map<String, dynamic>),
         ).toProductDetailModel();
       }
     } on DioException catch (e) {

@@ -11,7 +11,6 @@ import 'package:untitled1/features/stores/presentation/widgets/product_detail_bo
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_core_specs_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_gallery_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_info_section.dart';
-import 'package:untitled1/features/stores/presentation/widgets/product_detail_reviews_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_technical_sheet_section.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
@@ -92,18 +91,16 @@ class _ProductDetailView extends StatelessWidget {
                             ),
                             SizedBox(height: 20.h),
                             ProductDetailInfoSection(product: product),
-                            SizedBox(height: 24.h),
-                            ProductDetailCoreSpecsSection(
-                              specs: product.coreSpecs,
-                            ),
-                            SizedBox(height: 24.h),
-                            ProductDetailTechnicalSheetSection(
-                              data: product.technicalData,
-                            ),
-                            if (product.reviews.isNotEmpty) ...[
+                            if (product.highlightSpecs.isNotEmpty) ...[
                               SizedBox(height: 24.h),
-                              ProductDetailReviewsSection(
-                                reviews: product.reviews,
+                              ProductDetailCoreSpecsSection(
+                                specs: product.highlightSpecs,
+                              ),
+                            ],
+                            if (product.technicalRows.isNotEmpty) ...[
+                              SizedBox(height: 24.h),
+                              ProductDetailTechnicalSheetSection(
+                                rows: product.technicalRows,
                               ),
                             ],
                             SizedBox(height: 16.h),

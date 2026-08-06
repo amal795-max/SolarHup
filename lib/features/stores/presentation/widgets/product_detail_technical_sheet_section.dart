@@ -6,9 +6,9 @@ import 'package:untitled1/features/stores/data/models/product_detail_model.dart'
 import 'package:untitled1/features/stores/presentation/widgets/product_data_row_item.dart';
 
 class ProductDetailTechnicalSheetSection extends StatelessWidget {
-  final ProductTechnicalData data;
+  final List<ProductDetailDataRow> rows;
 
-  const ProductDetailTechnicalSheetSection({super.key, required this.data});
+  const ProductDetailTechnicalSheetSection({super.key, required this.rows});
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +17,6 @@ class ProductDetailTechnicalSheetSection extends StatelessWidget {
     final rowBg = isDark
         ? AppColors.darkGray.withValues(alpha: 0.45)
         : AppColors.lightGrey;
-
-    final rows = <({String label, String value})>[
-      (label: 'product_detail_weight'.tr(), value: data.weight),
-      (label: 'product_detail_dimensions'.tr(), value: data.dimensions),
-      (label: 'product_detail_connectors'.tr(), value: data.connectors),
-      (
-        label: 'product_detail_max_system_voltage'.tr(),
-        value: data.maxSystemVoltage,
-      ),
-      (label: 'product_detail_operating_temp'.tr(), value: data.operatingTemp),
-      (label: 'product_detail_material'.tr(), value: data.material),
-      (label: 'product_detail_output_type'.tr(), value: data.outputType),
-    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +34,7 @@ class ProductDetailTechnicalSheetSection extends StatelessWidget {
             children: List.generate(rows.length, (index) {
               final row = rows[index];
               return ProductDataRowItem(
-                label: row.label,
+                label: row.labelKey.tr(),
                 value: row.value,
                 backgroundColor: rowBg,
                 showDivider: index < rows.length - 1,

@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
@@ -22,6 +23,12 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
         emit(StoreDetailError(message: mapFailureToMessage(failure)));
       },
       (store) async {
+        final categoriesResult = await repository.getStoreCategories();
+        final categories = categoriesResult.fold(
+          (_) => <StoreCategoryModel>[],
+          (items) => items,
+        );
+
         final productsResult = await repository.getStoreProducts(
           businessId,
           categoryId: categoryId,
@@ -30,7 +37,13 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
           (_) => <StoreProductModel>[],
           (items) => items,
         );
-        emit(StoreDetailLoaded(store: store, products: products));
+        emit(
+          StoreDetailLoaded(
+            store: store,
+            categories: categories,
+            products: products,
+          ),
+        );
       },
     );
   }
