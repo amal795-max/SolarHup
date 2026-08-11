@@ -24,10 +24,6 @@ class OrderTrackingScreen extends StatelessWidget {
           spacing: 16.h,
           children: [
             const _OrderHeaderCard(),
-            CustomButton(text: 'text',
-            onPressed: (){
-              context.push(AppRoutes.activityScreen);
-            },),
             const _EstimatedDeliveryBanner(),
             const _OrderTrackingTimeline(),
             const _ShippingAddressSection(),

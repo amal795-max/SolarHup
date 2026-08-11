@@ -32,7 +32,7 @@ class ProductDetailDataRow extends Equatable {
 }
 
 class ProductDetailModel extends Equatable {
-  final String id;
+  final int id;
   final String title;
   final String description;
   final double currentPrice;

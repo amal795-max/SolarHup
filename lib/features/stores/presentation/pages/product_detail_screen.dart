@@ -46,7 +46,6 @@ class _ProductDetailView extends StatelessWidget {
     return BlocBuilder<ProductDetailBloc, ProductDetailState>(
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: switch (state) {
             ProductDetailLoading() => const LoadingIndicator(),
             ProductDetailError(:final message) => SafeArea(

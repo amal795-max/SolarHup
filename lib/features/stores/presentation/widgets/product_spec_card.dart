@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
 
 class ProductSpecCard extends StatelessWidget {
   final String label;
@@ -34,8 +35,9 @@ class ProductSpecCard extends StatelessWidget {
 
     return Container(
       width: isFullWidth ? double.infinity : null,
-      padding: EdgeInsets.all(14.w),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
+        border: Border.all(color: AppColors.lightGrey),
         color: bg,
         borderRadius: BorderRadius.circular(14.r),
         boxShadow: theme.brightness == Brightness.dark

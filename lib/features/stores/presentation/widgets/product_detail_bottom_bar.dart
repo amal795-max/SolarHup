@@ -1,9 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+
+import '../../../orders/presentation/bloc/cart_cubit.dart';
+import '../../../orders/presentation/bloc/cart_state.dart';
 
 class ProductDetailBottomBar extends StatelessWidget {
   final ProductDetailModel product;
@@ -15,8 +22,7 @@ class ProductDetailBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark =context.brightness;
     final barColor = isDark ? AppColors.darkContainer : AppColors.white;
 
     return Container(
@@ -42,11 +48,11 @@ class ProductDetailBottomBar extends StatelessWidget {
                 children: [
                   Text(
                     'total_price_label'.tr(),
-                    style: theme.textTheme.bodySmall,
+                    style: AppStyle.bodySmall,
                   ),
                   Text(
                     '\$${product.currentPrice.toStringAsFixed(2)}',
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: AppStyle.h6.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -56,15 +62,26 @@ class ProductDetailBottomBar extends StatelessWidget {
             SizedBox(width: 12.w),
             Expanded(
               flex: 2,
-              child: CustomButton(
-                text: 'product_detail_add_to_cart'.tr(),
-                icon: Icons.shopping_bag_outlined,
-                iconLeft: true,
-                backgroundColor: AppColors.secondaryColor,
-                textColor: AppColors.tertiaryColor,
-                fontWeight: FontWeight.w700,
-                height: 48.h,
-                onPressed: () {},
+              child: BlocConsumer<CartCubit, CartState>(
+                listener: (BuildContext context, CartState state) {
+                  if (state is CartActionSuccess) {
+                   DataHelper.showSnackBar(message: state.message, context: context);
+                  }
+                },
+                builder: (BuildContext context, CartState state) {
+                  return CustomButton(
+                  text: 'product_detail_add_to_cart'.tr(),
+                  icon: Icons.shopping_bag_outlined,
+                  iconLeft: true,
+                  backgroundColor: AppColors.secondaryColor,
+                  textColor: AppColors.tertiaryColor,
+                  fontWeight: FontWeight.w700,
+                  height: 48.h,
+                  isLoading:  state is CartActionLoading,
+                  onPressed: () {
+                    context.read<CartCubit>().addToCart(product.id,1);
+                  },
+                );},
               ),
             ),
           ],

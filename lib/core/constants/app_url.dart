@@ -35,6 +35,9 @@ class EndPoints {
   static String updateProduct(int id) => '${baseUrl}used-products/me/$id';
 
   static const String favorites = '${baseUrl}favorites';
+  static const String cart = '${baseUrl}orders/cart';
+  static const String cartItems = '${baseUrl}orders/cart/items';
+  static const String submitCart = '${baseUrl}orders/cart/submit';
   static String favoriteItem(String itemType, int itemId) => '${baseUrl}favorites/$itemType/$itemId';
 }
 

@@ -26,9 +26,7 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   String selectedCategory = FavoriteCategoryEnum.product.name;
-  final List<String> categories = FavoriteCategoryEnum.values
-      .map((e) => e.name)
-      .toList();
+  final List<String> categories = FavoriteCategoryEnum.values.map((e) => e.name).toList();
 
   @override
   void initState() {
@@ -225,15 +223,14 @@ class _FavoriteItem extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                if (item.isAvailable != null)
-                  Text(
-                    item.isAvailable == true
-                        ? 'available'.tr()
-                        : 'unavailable'.tr(),
-                    style: AppStyle.bodySmall.copyWith(
-                      color: AppColors.primaryColor,
-                    ),
+                Text(
+                  item.isAvailable == true
+                      ? 'available'.tr()
+                      : 'unavailable'.tr(),
+                  style: AppStyle.bodySmall.copyWith(
+                    color: AppColors.primaryColor,
                   ),
+                ),
 
               ],
             ),

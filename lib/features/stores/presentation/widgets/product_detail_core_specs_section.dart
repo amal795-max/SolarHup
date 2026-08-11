@@ -88,6 +88,7 @@ class ProductDetailCoreSpecsSection extends StatelessWidget {
     bool fullWidth = false,
   }) {
     final isBrand = spec.labelKey == 'brand';
+    final isWarranty = spec.labelKey == 'product_detail_warranty';
     final isCellTech = spec.labelKey == 'product_detail_cell_technology';
 
     return ProductSpecCard(
@@ -95,23 +96,28 @@ class ProductDetailCoreSpecsSection extends StatelessWidget {
       value: spec.value,
       isFullWidth: fullWidth,
       leadingIcon: spec.icon,
-      backgroundColor: isBrand
+      backgroundColor: isWarranty
+          ? AppColors.primaryColor
+          : isBrand
           ? AppColors.secondaryColor
           : isCellTech
-              ? AppColors.primaryColor
-              : surfaceColor,
+          ? AppColors.primaryColor
+          : surfaceColor,
       iconBackgroundColor: AppColors.secondaryColor,
       iconColor: AppColors.tertiaryColor,
-      labelColor: isBrand || isCellTech
+      labelColor: isWarranty
+          ? AppColors.blue :isBrand || isCellTech
           ? (isCellTech
-              ? AppColors.white.withValues(alpha: 0.75)
-              : AppColors.tertiaryColor)
+                ? AppColors.white.withValues(alpha: 0.75)
+                : AppColors.brown)
           : null,
-      valueColor: isBrand
+      valueColor: isWarranty
+          ? AppColors.lightGrey
+          : isBrand
           ? AppColors.tertiaryColor
           : isCellTech
-              ? AppColors.white
-              : null,
+          ? AppColors.white
+          : null,
     );
   }
 }

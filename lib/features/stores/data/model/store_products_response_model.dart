@@ -94,7 +94,7 @@ class StoreProductApiModel {
 
   ProductDetailModel toProductDetailModel() {
     return ProductDetailModel(
-      id: id.toString(),
+      id: id,
       title: name,
       description: description,
       currentPrice: _parsePrice(price),

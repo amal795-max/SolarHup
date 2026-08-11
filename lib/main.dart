@@ -7,6 +7,7 @@ import 'package:untitled1/features/authentication/presentation/bloc/authenticati
 import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
+import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'core/constants/app_url.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<ChatBotCubit>()),
         BlocProvider(create: (_) => di.getIt<UsedSystemCubit>()),
         BlocProvider(create: (_) => di.getIt<FavoritesCubit>()),
+        BlocProvider(create: (_) => di.getIt<CartCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

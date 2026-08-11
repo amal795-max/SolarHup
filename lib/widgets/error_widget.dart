@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../core/theme/app_colors.dart';
@@ -11,8 +12,9 @@ Widget errorWidget({required String message, void Function()? onPressed,  requir
     iconSize: 56,
     iconColor: AppColors.red,
     title: 'stores_error_title',
-    subtitle: message,
+    subtitle: message.tr(),
     action: hasButton? CustomButton(
+      width: 0.6.sw,
       text: 'stores_retry'.tr(),
       icon: Icons.refresh_rounded,
       iconLeft: true,

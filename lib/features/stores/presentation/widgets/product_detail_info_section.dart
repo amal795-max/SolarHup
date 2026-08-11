@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 
 class ProductDetailInfoSection extends StatelessWidget {
@@ -11,8 +13,6 @@ class ProductDetailInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final categoryLabel = product.category
         .replaceAll('_', ' ')
         .split(' ')
@@ -36,7 +36,7 @@ class ProductDetailInfoSection extends StatelessWidget {
                 ),
                 child: Text(
                   categoryLabel.toUpperCase(),
-                  style: theme.textTheme.labelSmall?.copyWith(
+                  style: AppStyle.labelSmall.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.6,
@@ -55,7 +55,7 @@ class ProductDetailInfoSection extends StatelessWidget {
                 product.isAvailable
                     ? 'product_detail_in_stock'.tr()
                     : 'product_detail_out_of_stock'.tr(),
-                style: theme.textTheme.labelSmall?.copyWith(
+                style: AppStyle.labelSmall.copyWith(
                   color: product.isAvailable
                       ? AppColors.tertiaryColor
                       : AppColors.red,
@@ -68,23 +68,22 @@ class ProductDetailInfoSection extends StatelessWidget {
         SizedBox(height: 12.h),
         Text(
           product.title,
-          style: theme.textTheme.titleLarge?.copyWith(
+          style: AppStyle.h5.copyWith(
             fontWeight: FontWeight.w700,
           ),
         ),
         SizedBox(height: 6.h),
         Text(
           product.description,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.textTheme.bodySmall?.color,
+          style: AppStyle.bodyMedium.copyWith(
+            color: AppStyle.bodySmall.color,
           ),
         ),
         SizedBox(height: 12.h),
         Text(
           '\$${product.currentPrice.toStringAsFixed(2)}',
-          style: theme.textTheme.titleLarge?.copyWith(
+          style: AppStyle.h4.copyWith(
             fontWeight: FontWeight.w700,
-            color: isDark ? theme.colorScheme.onSurface : AppColors.black,
           ),
         ),
       ],

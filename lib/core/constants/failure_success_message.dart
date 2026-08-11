@@ -13,4 +13,7 @@ const String productUpdatedStatusSuccessfully = 'status_updated_success';
 const String productDeletedSuccessfully = 'product_deleted_success';
 const String addedToFavoriteSuccessfully = 'added_to_favorites';
 const String deleteFavoriteSuccessfully = 'removed_from_favorites';
+const String addToCartSuccessfully = 'item_added_to_cart';
+const String cartClearedSuccessfully = 'cart_cleared_successfully';
+const String cartSubmittedSuccessfully = 'cart_submitted_successfully';
 

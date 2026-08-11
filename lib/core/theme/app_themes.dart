@@ -22,7 +22,6 @@ class AppThemes {
         shadow: AppColors.grey
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.white, size: 24.sp),
       centerTitle: true,
@@ -82,7 +81,6 @@ class AppThemes {
       shadow: AppColors.lightGrey
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.transparent,
       elevation: 0,
       iconTheme: IconThemeData(color: AppColors.black, size: 24.sp),
       centerTitle: true,

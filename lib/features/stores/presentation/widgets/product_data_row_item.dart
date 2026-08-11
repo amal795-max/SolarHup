@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 class ProductDataRowItem extends StatelessWidget {
   final String label;
@@ -17,7 +19,6 @@ class ProductDataRowItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return Container(
       color: backgroundColor,
@@ -31,7 +32,7 @@ class ProductDataRowItem extends StatelessWidget {
                 flex: 4,
                 child: Text(
                   label,
-                  style: theme.textTheme.bodySmall,
+                  style: AppStyle.bodySmall,
                 ),
               ),
               SizedBox(width: 8.w),
@@ -40,7 +41,7 @@ class ProductDataRowItem extends StatelessWidget {
                 child: Text(
                   value,
                   textAlign: TextAlign.end,
-                  style: theme.textTheme.bodyMedium?.copyWith(
+                  style: AppStyle.bodyMedium.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -52,7 +53,8 @@ class ProductDataRowItem extends StatelessWidget {
               padding: EdgeInsets.only(top: 12.h),
               child: Divider(
                 height: 1,
-                color: theme.colorScheme.outline.withValues(alpha: 0.35),
+                color: AppColors.borderColor
+                ,
               ),
             ),
         ],

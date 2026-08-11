@@ -145,3 +145,21 @@ class AddUsedProductParams {
     'images': images,
   };
 }
+
+class AddProductToCartParams {
+  final int id;
+  final int quantity;
+
+
+  AddProductToCartParams({
+    required this.id,
+    required this.quantity,
+
+  });
+
+  Map<String, dynamic> toJson() => {
+    'product_id': id,
+    'quantity': quantity,
+
+  };
+}
