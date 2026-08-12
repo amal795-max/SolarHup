@@ -162,4 +162,23 @@ class AddProductToCartParams {
     'quantity': quantity,
 
   };
+}class ShippingInformationParams {
+  final String fullName;
+  final String city;
+  final String street;
+  final String building;
+  final String floor;
+
+  ShippingInformationParams({
+
+   required this.fullName, required this.city, required this.street, required this.building, required this.floor});
+
+  Map<String, dynamic> toJson() => {
+      'full_name': fullName,
+      'city': city,
+      'street': street,
+      'building': building,
+      'floor': floor
+
+  };
 }

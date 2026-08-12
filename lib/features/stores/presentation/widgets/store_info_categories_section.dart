@@ -35,7 +35,7 @@ class StoreInfoCategoriesSection extends StatelessWidget {
             }
 
             return SizedBox(
-              height: 120.h,
+              height: 110.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),

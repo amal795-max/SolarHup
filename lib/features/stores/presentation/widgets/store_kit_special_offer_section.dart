@@ -76,7 +76,7 @@ class StoreKitSpecialOfferSection extends StatelessWidget {
                   backgroundColor: AppColors.white,
                   textColor: AppColors.primaryColor,
                   height: 34.h,
-                  width: 112.w,
+                  width: 0.5.sw,
                   fontWeight: FontWeight.w600,
                   onPressed: () {
                     context.push(

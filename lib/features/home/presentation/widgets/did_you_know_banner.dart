@@ -59,7 +59,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
     return Column(
         children: [
           SizedBox(
-            height: 130.h,
+            height: 140.h,
             child: PageView.builder(
               controller: _controller,
               itemCount: tips.length,

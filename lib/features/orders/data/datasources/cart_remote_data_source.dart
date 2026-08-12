@@ -3,7 +3,7 @@ import 'package:untitled1/core/api/api-requests.dart';
 import '../../../../core/api/errors/exceptions.dart';
 import '../../../../core/constants/app_url.dart';
 import '../../../../core/constants/user-parameters.dart';
-import '../models/cart_item_model.dart';
+import '../models/order_model.dart';
 
 abstract class CartRemoteDataSource {
   Future<OrderModel> getCart();
@@ -15,7 +15,7 @@ abstract class CartRemoteDataSource {
   Future<void> updateCartItem(AddProductToCartParams params);
 
   Future<void> deleteCartItem(int productId);
-  Future<void> submitCart();
+  Future<void> submitCart(ShippingInformationParams params);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -48,7 +48,7 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
       );
       if (response.statusCode != 201) {
         throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0),
+          message: getErrorMessage(response.statusCode ?? 0,message: response.data['detail']),
         );
       } else {
         return response.data['exists'];
@@ -110,9 +110,12 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> submitCart() async{
+  Future<void> submitCart(ShippingInformationParams params) async{
     try {
-      final response = await apiRequest.post(EndPoints.submitCart);
+      final response = await apiRequest.post(
+         EndPoints.submitCart,
+        body: params.toJson()
+      );
       if (response.statusCode != 200) {
         throw ServerException(
           message: getErrorMessage(response.statusCode ?? 0),

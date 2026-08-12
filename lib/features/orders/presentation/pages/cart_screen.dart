@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
-import 'package:untitled1/features/orders/data/models/cart_item_model.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_state.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/cart_item.dart';
@@ -36,16 +37,16 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         title: Text('your_cart'.tr()),
         actions: [
-
           BlocBuilder<CartCubit, CartState>(
-            builder: (context, state) {
-              final cart =cubit.order;
+            builder: (context, stateOrdersState){
+              final cart = cubit.order;
               if (cart != null && cart.items.isNotEmpty) {
                 return IconButton(
                   onPressed: () {
-                    DataHelper().showDeleteConfirmation(
+                    DataHelper().showConfirmationDialog(
                         context,
-                        'delete_cart', 'confirm_delete_cart', () {
+                        'delete_cart',
+                        'confirm_delete_cart', () {
                       cubit.clearCart();
                       Navigator.pop(context);
                     });
@@ -61,7 +62,7 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: BlocConsumer<CartCubit, CartState>(
         listenWhen: _listenWhen,
-        listener: _listener,
+          listener: _listener,
         buildWhen: buildWhen,
         builder: _builder,
       ),
@@ -69,7 +70,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   bool _listenWhen(CartState previous, CartState current) {
-    return current is CartActionSuccess ;
+    return current is CartActionSuccess  ;
   }
 
   void _listener(BuildContext context, CartState state) {
@@ -79,42 +80,65 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   bool buildWhen(CartState previous, CartState current) {
-    return current is CartLoading ||
-        current is CartActionLoading ||
+        return current is CartActionLoading ||
         current is CartError ||
         current is CartSuccess;
   }
 
   Widget _builder(BuildContext context, CartState state) {
-    if (state is CartLoading || state is CartActionLoading) {
-      return const LoadingIndicator();
-    }
-    else if (state is CartError) {
+    if (state is CartError) {
       return errorWidget(
-          message: state.message,
-          hasButton: true,
-          onPressed: () => context.read<CartCubit>().getCart()
-
+        message: state.message,
+        hasButton: false,
       );
-    } else if (state is CartSuccess) {
-      if (state.cart.items.isEmpty) {
-        return const EmptyWidget();
-      }
-      return SingleChildScrollView(
+    }
+
+    final isLoading = state is CartLoading || state is CartActionLoading;
+
+    final fakeCart = OrderModel(
+      id: 0,
+      orderCode: 'ORD-XXXXXXXX',
+      businessId: 0,
+      customerId: 0,
+      status: 'pending',
+      totalAmount: '0.00',
+      items: List.generate(
+        3,
+        (index) => OrderItemModel(
+          id: index,
+          itemId: index,
+          name: 'Loading Item Name...',
+          quantity: 1,
+          unitPrice: '0.00',
+          subtotal: '0.00', itemType: '',
+        ),
+      ),
+      statusEnum: OrderStatusEnum.pending,
+    );
+
+    final cartToShow = (state is CartSuccess) ? state.cart : fakeCart;
+
+    if (state is CartSuccess && cartToShow.items.isEmpty && !isLoading) {
+      return const EmptyWidget();
+    }
+
+    return Skeletonizer(
+      ignoreContainers: true,
+      enabled: isLoading,
+      child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         child: Column(
           children: [
-            _CartList(items: state.cart.items),
-            OrderSummary(cart: state.cart),
+            _CartList(items: cartToShow.items),
+            OrderSummary(cart: cartToShow),
             SizedBox(height: 16.h),
             const _PromoCodeField(),
             SizedBox(height: 24.h),
           ],
         ),
-      );
-    }
-    return const SizedBox();
+      ),
+    );
   }
 }
 

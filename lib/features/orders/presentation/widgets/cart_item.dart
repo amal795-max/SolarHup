@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
-import '../../data/models/cart_item_model.dart';
+import '../../data/models/order_model.dart';
 import '../bloc/cart_cubit.dart';
 
 class CartItem extends StatelessWidget {
@@ -75,7 +75,7 @@ class CartItem extends StatelessWidget {
                       ),
                     ),
                     TextButton.icon(
-                      onPressed: () => DataHelper().showDeleteConfirmation(
+                      onPressed: () => DataHelper().showConfirmationDialog(
                         context,
                         'delete_product',
                         'delete_product_confirm',

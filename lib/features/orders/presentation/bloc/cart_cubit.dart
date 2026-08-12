@@ -1,13 +1,20 @@
 import 'dart:async';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/core/constants/user-parameters.dart';
-import 'package:untitled1/features/orders/data/models/cart_item_model.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
 import '../../../../core/constants/failure_success_message.dart';
 import '../../data/repositories/cart_repository.dart';
 import 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController floorController = TextEditingController();
+  TextEditingController buildingController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController streetController = TextEditingController();
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
+
   final CartRepository repository;
   OrderModel? order;
   Timer? _debounce;
@@ -76,8 +83,9 @@ class CartCubit extends Cubit<CartState> {
     final result = await repository.deleteCartItem(productId);
     result.fold((failure) => emit(CartError(failure.message)), (success) {
       order?.items.removeWhere((e) => productId == e.id);
-      emit(CartSuccess(order!));
-      // emit(const CartActionSuccess(productDeletedSuccessfully));
+      if (order != null) {
+        emit(CartSuccess(order!));
+      }
     });
   }
 
@@ -91,11 +99,30 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> submitCart() async {
-    emit(CartActionLoading());
-    final result = await repository.submitCart();
-    result.fold((failure) => emit(CartError(failure.message)), (_) {
-      order?.items.clear();
-      emit(const CartActionSuccess(cartSubmittedSuccessfully));
-    });
+    ShippingInformationParams params = ShippingInformationParams(
+      fullName: fullNameController.text.trim(),
+      city: cityController.text.trim(),
+      street: streetController.text.trim(),
+      building: buildingController.text.trim(),
+      floor: floorController.text.trim(),
+    );
+      emit(CartActionLoading());
+      final result = await repository.submitCart(params);
+      result.fold(
+              (failure) => emit(CartActionError(failure.message)),
+              (_) {
+        clearForm();
+        // order?.items.clear();
+        emit(const CartActionSuccess(cartSubmittedSuccessfully));
+      });
+
+  }
+
+  void clearForm() {
+    fullNameController.clear();
+    floorController.clear();
+    streetController.clear();
+    buildingController.clear();
+    cityController.clear();
   }
 }

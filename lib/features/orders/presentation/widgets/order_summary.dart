@@ -8,7 +8,7 @@ import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/primary_button.dart';
-import '../../data/models/cart_item_model.dart';
+import '../../data/models/order_model.dart';
 
 class OrderSummary extends StatelessWidget {
   final OrderModel cart;
@@ -63,7 +63,7 @@ class OrderSummary extends StatelessWidget {
             textColor: AppColors.primaryColor,
             icon: Icons.arrow_forward,
             onPressed: () {
-              context.push(AppRoutes.shippingInformationScreen);
+              context.pushReplacement(AppRoutes.shippingInformationScreen);
             },
           ),
           SizedBox(height: 12.h),
@@ -87,7 +87,8 @@ class _SummaryRow extends StatelessWidget {
 
   const _SummaryRow({
     required this.label,
-    required this.value, this.valueColor,
+    required this.value,
+    this.valueColor,
   });
 
   @override

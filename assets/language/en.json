@@ -132,7 +132,7 @@
   "delete_cart": "Delete Cart",
   "product_deleted_success": "Product deleted successfully",
   "cart_cleared_successfully": "Cart cleared successfully",
-  "cart_submitted_successfully": "Cart Submitted successfully",
+  "cart_submitted_successfully": "Order Submitted successfully",
   "view_history": "View History",
   "settings": "Settings",
   "settings_subTitle": "Customize your preferences, manage privacy, and control your app experience with ease.",
@@ -251,7 +251,6 @@
   "order_id_label": "Order ID",
   "date_label": "DATE",
   "items_label": "ITEMS",
-  "estimated_delivery": "Estimated Delivery",
   "order_tracking_title": "Order Tracking",
   "tracking_created": "Created",
   "tracking_processing": "Processing",
@@ -263,6 +262,7 @@
   "order_summary_label": "ORDER SUMMARY",
   "need_help_order": "Need help with this order?",
   "units_count": "{} Units",
+  "status_label": "Order status",
   "rate_your_order": "Rate Your Order",
   "driver_label": "Driver",
   "completed": "COMPLETED",
@@ -587,7 +587,27 @@
   "store": "Stores",
   "workshop": "Workshops",
   "available": "Available",
-  "unavailable": "Un available"
+  "unavailable": "Un available",
+    "pending": "Pending Approval",
+    "accepted": "Accepted",
+    "in_transit": "In Transit",
+    "rejected": "Rejected",
+    "delivered": "Delivered",
+    "order_placed_successfully": "Order placed successfully",
+    "tracking_accepted": "Accepted",
+    "order_accepted_desc": "Your order has been accepted and is being prepared.",
+    "tracking_in_transit": "In Transit",
+    "order_in_transit_desc": "Your order is on its way to your location.",
+    "order_delivered_desc": "Order has been successfully delivered.",
+    "order_rejected": "Order Rejected",
+    "order_rejected_desc": "We apologize, your order could not be processed at this time.",
+    "order_confirmed_subtitle": "Your order has been placed successfully and will be processed shortly.",
+    "back_home": "Back to Home",
+  "confirm_submit_title": "Ready to place your order?",
+  "confirm_submit_message": "Please confirm that all details are correct before submitting.",
+  "confirm_submit_yes": "Confirm & Submit"
 }
+
+
 
 

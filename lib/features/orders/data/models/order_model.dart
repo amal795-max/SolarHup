@@ -1,12 +1,22 @@
+import '../../../../core/enums/order_status_enum.dart';
+
 class OrderModel {
   final int id;
   final String orderCode;
   final int businessId;
   final int customerId;
   final String? customerName;
+  final String? shippingFullName;
+  final String? shippingCity;
+  final String? shippingStreet;
+  final String? shippingBuilding;
+  final String? shippingFloor;
   final String status;
   final String totalAmount;
   final List<OrderItemModel> items;
+  final String? createdAt;
+  final String? updatedAt;
+  final OrderStatusEnum statusEnum;
 
   OrderModel({
     required this.id,
@@ -14,9 +24,16 @@ class OrderModel {
     required this.businessId,
     required this.customerId,
     this.customerName,
+    this.shippingFullName,
+    this.shippingCity,
+    this.shippingStreet,
+    this.shippingBuilding,
+    this.shippingFloor,
     required this.status,
     required this.totalAmount,
     required this.items,
+    this.createdAt,
+    this.updatedAt, required this.statusEnum,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -26,12 +43,20 @@ class OrderModel {
       businessId: json['business_id'],
       customerId: json['customer_id'],
       customerName: json['customer_name'],
+      shippingFullName: json['shipping_full_name'],
+      shippingCity: json['shipping_city'],
+      shippingStreet: json['shipping_street'],
+      shippingBuilding: json['shipping_building'],
+      shippingFloor: json['shipping_floor'],
       status: json['status'],
       totalAmount: json['total_amount'],
       items: (json['items'] as List?)
           ?.map((e) => OrderItemModel.fromJson(e))
           .toList() ??
           [],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      statusEnum: OrderStatusEnum.fromString(json['status'])
     );
   }
 
@@ -41,9 +66,17 @@ class OrderModel {
     int? businessId,
     int? customerId,
     String? customerName,
+    String? shippingFullName,
+    String? shippingCity,
+    String? shippingStreet,
+    String? shippingBuilding,
+    String? shippingFloor,
     String? status,
     String? totalAmount,
     List<OrderItemModel>? items,
+    String? createdAt,
+    String? updatedAt,
+    OrderStatusEnum? statusEnum,
   }) {
     return OrderModel(
       id: id ?? this.id,
@@ -51,12 +84,21 @@ class OrderModel {
       businessId: businessId ?? this.businessId,
       customerId: customerId ?? this.customerId,
       customerName: customerName ?? this.customerName,
+      shippingFullName: shippingFullName ?? this.shippingFullName,
+      shippingCity: shippingCity ?? this.shippingCity,
+      shippingStreet: shippingStreet ?? this.shippingStreet,
+      shippingBuilding: shippingBuilding ?? this.shippingBuilding,
+      shippingFloor: shippingFloor ?? this.shippingFloor,
       status: status ?? this.status,
       totalAmount: totalAmount ?? this.totalAmount,
       items: items ?? this.items,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      statusEnum: statusEnum ?? this.statusEnum,
     );
   }
 }
+
 class OrderItemModel {
   final int id;
   final String itemType;

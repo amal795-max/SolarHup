@@ -21,27 +21,26 @@ class StoreInfoDetailsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
     return Padding(
-      padding: EdgeInsets.fromLTRB(14.w, 18.h, 14.w, 18.h),
+      padding: EdgeInsets.symmetric(horizontal: 20.r, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Row 1: follow button aligned to the right ────────────────────
-          const _FollowStoreButton(),
+        children: <Widget>[
+          const Align(
+            alignment: Alignment.topRight,
+            child: _FollowStoreButton(),
+          ),
 
+          SizedBox(height: 14.h),
 
-          SizedBox(height: 12.h),
-
-          // ── Row 2: store name + star rating ─────────────────────────────
+          // ─────────────── Store Name + Rating ───────────────
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
                   data.name,
-                  style: theme.textTheme.titleLarge,
+                  style: AppStyle.h5.copyWith(fontWeight: FontWeight.w700),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -51,43 +50,45 @@ class StoreInfoDetailsSection extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 6.h),
+          SizedBox(height: 10.h),
 
-          // ── Row 3: description ───────────────────────────────────────────
+          // ─────────────── Description ───────────────
           Text(
             data.description,
-            style: theme.textTheme.bodySmall,
-            maxLines: 3,
+            style: AppStyle.bodySmall.copyWith(
+              color: AppColors.grey,
+              height: 1.4,
+            ),
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
 
-          SizedBox(height: 10.h),
-
-          // ── Row 4: location + certified vendor ───────────────────────────
+          SizedBox(height: 8.h),
+          const Divider(),
+          SizedBox(height: 8.h),
+          // ─────────────── Location + Verified Badge ───────────────
           Row(
+            spacing: 4.w,
             children: [
               Icon(
                 Icons.location_on_outlined,
-                size: 14.sp,
+                size: 16.sp,
                 color: AppColors.grey,
               ),
-              SizedBox(width: 3.w),
-              Flexible(
+              Expanded(
                 child: Text(
                   data.location,
-                  style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
+                  style: AppStyle.labelSmall.copyWith(
+                    color: AppColors.grey,
+                    fontSize: 13.sp,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (data.isVerified) ...[
-                SizedBox(width: 14.w),
-                _VerifiedBadge(),
-              ],
+              if (data.isVerified) ...[SizedBox(width: 12.w), _VerifiedBadge()],
             ],
           ),
-
-          SizedBox(height: 8.h),
         ],
       ),
     );
@@ -113,9 +114,9 @@ class _FollowStoreButton extends StatelessWidget {
           elevation: isFollowing ? 0 : 2,
           shadowColor: AppColors.primaryColor.withValues(alpha: 0.28),
           child: InkWell(
-            onTap: () => context
-                .read<StoreInfoBloc>()
-                .add(const ToggleFollowStoreEvent()),
+            onTap: () => context.read<StoreInfoBloc>().add(
+              const ToggleFollowStoreEvent(),
+            ),
             borderRadius: BorderRadius.circular(20.r),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 9.h),
@@ -161,18 +162,18 @@ class _RatingBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(20.r),
+        color: AppColors.lightOrange,
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
+        spacing: 4,
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             Icons.star_rounded,
-            color: AppColors.secondaryColor,
-            size: 14.sp,
+            color: AppColors.brown,
+            size: 16.sp,
           ),
-          SizedBox(width: 3.w),
           Text(
             rating.toStringAsFixed(1),
             style: AppStyle.labelSmall.copyWith(

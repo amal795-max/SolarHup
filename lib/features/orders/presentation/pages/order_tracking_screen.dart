@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:go_router/go_router.dart';
-import 'package:untitled1/core/routing/app_routes.dart';
-import 'package:untitled1/widgets/primary_button.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/enums/order_status_enum.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
+import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
+import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
+import '../widgets/tracking_time_line.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
   const OrderTrackingScreen({super.key});
@@ -18,41 +23,77 @@ class OrderTrackingScreen extends StatelessWidget {
         title: Text('order_tracking'.tr()),
         backgroundColor: Colors.transparent,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          spacing: 16.h,
-          children: [
-            const _OrderHeaderCard(),
-            const _EstimatedDeliveryBanner(),
-            const _OrderTrackingTimeline(),
-            const _ShippingAddressSection(),
-            const _OrderSummarySection(),
-            SizedBox(height: 24.h),
-
-          ],
-        ),
+      body: BlocBuilder<OrdersCubit, OrdersState>(
+        builder: (context, state) {
+          if (state is OrdersError) {
+            return errorWidget(message: state.message, hasButton: false);
+          }
+          final order = state is OrderDetailsLoaded
+              ? state.order
+              : (state is OrdersLoading
+                    ? OrderModel(
+                        id: 0,
+                        orderCode: 'ORD-XXXXXXXX',
+                        businessId: 0,
+                        customerId: 0,
+                        status: 'pending',
+                        totalAmount: '0.00',
+                        items: [],
+                        statusEnum: OrderStatusEnum.pending,
+                      )
+                    : OrderModel(
+                        id: 0,
+                        orderCode: 'ORD-XXXXXXXX',
+                        businessId: 0,
+                        customerId: 0,
+                        status: 'pending',
+                        totalAmount: '0.00',
+                        items: [],
+                        statusEnum: OrderStatusEnum.pending,
+                      ));
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Skeletonizer(ignoreContainers: true,
+              enabled: state is OrdersLoading,
+              child: Column(
+                spacing: 16.h,
+                children: [
+                  _OrderHeaderCard(order: order),
+                  if (order.statusEnum == OrderStatusEnum.rejected)
+                    _EstimatedDeliveryBanner(order: order),
+                  OrderTrackingTimeline(order: order),
+                  _ShippingAddressSection(order: order),
+                  _OrderSummarySection(order: order),
+                  SizedBox(height: 24.h),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 }
 
 class _OrderHeaderCard extends StatelessWidget {
-  const _OrderHeaderCard();
+  final OrderModel order;
+
+  const _OrderHeaderCard({required this.order});
 
   @override
   Widget build(BuildContext context) {
+    final statusEnum = order.statusEnum;
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-      borderRadius: BorderRadius.circular(16.r),
+        color: context.colorScheme.secondary,
+        borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           if (!context.brightness)
-           const BoxShadow(
+            const BoxShadow(
               color: Colors.black12,
               blurRadius: 10,
-              offset:Offset(0, 4),
+              offset: Offset(0, 4),
             ),
         ],
       ),
@@ -61,23 +102,30 @@ class _OrderHeaderCard extends StatelessWidget {
         children: [
           Text(
             'order_id_label'.tr(),
-            style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
+            style: AppStyle.labelSmall.copyWith(color: AppColors.brown),
           ),
           Text(
-            '#SH-98234-LX',
-            style:AppStyle.labelLarge.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryColor,
-                ),
+            order.orderCode,
+            style: AppStyle.labelLarge.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.tertiaryColor,
+            ),
           ),
           SizedBox(height: 16.h),
           Row(
             spacing: 40.w,
             children: [
-              _HeaderItem(label: 'date_label'.tr(), value: 'Oct 24, 2023'),
-              _HeaderItem(label: 'items_label'.tr(), value: 'units_count'.tr(args: ['3'])),
+              _HeaderItem(
+                label: 'status_label'.tr(),
+                value: statusEnum.status.tr(),
+                valueColor: statusEnum.borderAndLabelColor,
+              ),
+              _HeaderItem(
+                label: 'items_label'.tr(),
+                value: 'units_count'.tr(args: [order.items.length.toString()]),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -87,7 +135,13 @@ class _OrderHeaderCard extends StatelessWidget {
 class _HeaderItem extends StatelessWidget {
   final String label;
   final String value;
-  const _HeaderItem({required this.label, required this.value});
+  final Color? valueColor;
+
+  const _HeaderItem({
+    required this.label,
+    required this.value,
+    this.valueColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -96,11 +150,17 @@ class _HeaderItem extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppStyle.labelSmall.copyWith(color: AppColors.grey, letterSpacing: 1.2),
+          style: AppStyle.labelSmall.copyWith(
+            color: AppColors.brown,
+            letterSpacing: 1.2,
+          ),
         ),
         Text(
           value,
-          style:AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+          style: AppStyle.bodyMedium.copyWith(
+            fontWeight: FontWeight.bold,
+            color: valueColor,
+          ),
         ),
       ],
     );
@@ -108,7 +168,9 @@ class _HeaderItem extends StatelessWidget {
 }
 
 class _EstimatedDeliveryBanner extends StatelessWidget {
-  const _EstimatedDeliveryBanner();
+  final OrderModel order;
+
+  const _EstimatedDeliveryBanner({required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -116,170 +178,20 @@ class _EstimatedDeliveryBanner extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: AppColors.rejectedBg,
         borderRadius: BorderRadius.circular(16.r),
       ),
-      child: Column(
-        spacing: 4.h,
-        children: [
-          Row(
-            spacing: 8.w,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.local_shipping, color: AppColors.primaryColor, size: 20),
-              Text(
-                'estimated_delivery'.tr(),
-                style: AppStyle.labelSmall.copyWith(color: AppColors.primaryColor, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          Text(
-            'Oct 28',
-            style: AppStyle.h3.copyWith(color: AppColors.primaryColor),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OrderTrackingTimeline extends StatelessWidget {
-  const _OrderTrackingTimeline();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-      color: context.colorScheme.surface,
-      borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'order_tracking_title'.tr(),
-            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 24.h),
-          _TimelineItem(
-            title: 'tracking_created'.tr(),
-            subtitle: 'Order placed successfully on Oct 24, 09:12 AM',
-            isCompleted: true,
-          ),
-          _TimelineItem(
-            title: 'tracking_processing'.tr(),
-            subtitle: 'Payment confirmed and order verified.',
-            isCompleted: true,
-          ),
-          _TimelineItem(
-            title: 'tracking_packed'.tr(),
-            subtitle: 'Items have been securely packed and ready for dispatch.',
-            isCompleted: true,
-          ),
-          _TimelineItem(
-            title: 'tracking_shipped'.tr(),
-            subtitle: 'Package left the distribution center in Portland.',
-            isCurrent: true,
-            isCompleted: true,
-            trackingId: '9400111899562410',
-          ),
-          _TimelineItem(
-            title: 'tracking_out_delivery'.tr(),
-            subtitle: 'Courier is on the way to your location.',
-            isLast: false,
-          ),
-          _TimelineItem(
-            title: 'tracking_delivered'.tr(),
-            subtitle: 'Order reached the destination.',
-            isLast: true,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TimelineItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final bool isCompleted;
-  final bool isCurrent;
-  final bool isLast;
-  final String? trackingId;
-
-  const _TimelineItem({
-    required this.title,
-    required this.subtitle,
-    this.isCompleted = false,
-    this.isCurrent = false,
-    this.isLast = false,
-    this.trackingId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
       child: Row(
+        spacing: 12.w,
         children: [
-          Column(
-            children: [
-              Container(
-                width: 24.w,
-                height: 24.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isCurrent
-                      ? AppColors.secondaryColor
-                      : isCompleted
-                          ? AppColors.darkMode
-                          : AppColors.lightGrey,
-                ),
-                child: isCurrent
-                    ? Center(child: Container(width: 8.w, height: 8.w, decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.primaryColor)))
-                    : isCompleted
-                        ? Icon(Icons.check, color: Colors.white, size: 12.sp)
-                        : null,
-              ),
-              if (!isLast)
-                Expanded(
-                  child: Container(
-                    width: 2.w,
-                    color: isCompleted ? AppColors.darkMode : AppColors.lightGrey,
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(width: 16.w),
+          const Icon(Icons.error_outline, color: AppColors.rejectedBorder),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppStyle.bodyMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isCompleted ? null : AppColors.grey,
-                      ),
-                ),
-                Text(
-                  subtitle,
-                  style: AppStyle.bodySmall.copyWith(color: AppColors.grey, fontSize: 12.sp),
-                ),
-                if (trackingId != null) ...[
-                  SizedBox(height: 8.h),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGrey,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text('ID: $trackingId', style: AppStyle.labelSmall),
-
-                  ),
-                ],
-                SizedBox(height: 24.h),
-              ],
+            child: Text(
+              'order_rejected_desc'.tr(),
+              style: AppStyle.labelSmall.copyWith(
+                color: AppColors.rejectedBorder,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -289,7 +201,9 @@ class _TimelineItem extends StatelessWidget {
 }
 
 class _ShippingAddressSection extends StatelessWidget {
-  const _ShippingAddressSection();
+  final OrderModel order;
+
+  const _ShippingAddressSection({required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -297,8 +211,8 @@ class _ShippingAddressSection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color:context.colorScheme.surface,
-      borderRadius: BorderRadius.circular(16.r),
+        color: context.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         spacing: 16.h,
@@ -312,21 +226,29 @@ class _ShippingAddressSection extends StatelessWidget {
             spacing: 12.w,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.location_on_outlined, color: AppColors.primaryColor),
+              const Icon(
+                Icons.location_on_outlined,
+                color: AppColors.primaryColor,
+              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Robert J. Henderson', style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold)),
                     Text(
-                      '4522 Oakridge Lane, Portland, OR 97201\n+1 (503) 555-0128',
+                      order.shippingFullName ?? 'N/A',
+                      style: AppStyle.bodyLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${order.shippingStreet ?? ''}, ${order.shippingCity ?? ''}\n${order.shippingFloor ?? ''}',
                       style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
                     ),
                   ],
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -334,7 +256,9 @@ class _ShippingAddressSection extends StatelessWidget {
 }
 
 class _OrderSummarySection extends StatelessWidget {
-  const _OrderSummarySection();
+  final OrderModel order;
+
+  const _OrderSummarySection({required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -345,7 +269,10 @@ class _OrderSummarySection extends StatelessWidget {
           padding: EdgeInsets.only(left: 4.w, bottom: 8.h),
           child: Text(
             'order_summary_label'.tr(),
-            style: AppStyle.labelSmall.copyWith(color: AppColors.grey, letterSpacing: 1.2),
+            style: AppStyle.labelSmall.copyWith(
+              color: AppColors.grey,
+              letterSpacing: 1.2,
+            ),
           ),
         ),
         Container(
@@ -354,20 +281,41 @@ class _OrderSummarySection extends StatelessWidget {
             color: context.colorScheme.surface,
             borderRadius: BorderRadius.circular(16.r),
           ),
-          child: const Column(
+          child: Column(
             children: [
-              _SummaryItem(
-                name: 'SolarMax 400W Panel',
-                desc: 'Qty: 2 • Black Frame',
-                price: r'$899.00',
-                imageIcon: Icons.solar_power_outlined,
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: order.items.length,
+                separatorBuilder: (context, index) => const Divider(),
+                itemBuilder: (context, index) {
+                  final item = order.items[index];
+                  return _SummaryItem(
+                    name: item.name,
+                    desc: 'Qty: ${item.quantity}',
+                    price: '\$${item.subtotal}',
+                    imageIcon: Icons.shopping_bag_outlined,
+                  );
+                },
               ),
-              Divider(),
-              _SummaryItem(
-                name: 'SmartSync Inverter',
-                desc: 'Qty: 1 • 5kW Cloud-Link',
-                price: r'$1,245.00',
-                imageIcon: Icons.settings_input_component_outlined,
+              Divider(height: 24.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'total_amount'.tr(),
+                    style: AppStyle.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    '\$${order.totalAmount}',
+                    style: AppStyle.bodyLarge.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -396,29 +344,32 @@ class _SummaryItem extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         children: [
-          Container(
-            width: 60.w,
-            height: 60.w,
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Icon(imageIcon, color: AppColors.grey),
-          ),
-          SizedBox(width: 12.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
-                Text(desc, style: AppStyle.bodySmall.copyWith(color: AppColors.grey, fontSize: 10.sp)),
+                Text(
+                  name,
+                  style: AppStyle.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  desc,
+                  style: AppStyle.bodySmall.copyWith(
+                    color: AppColors.grey,
+                    fontSize: 10.sp,
+                  ),
+                ),
               ],
             ),
           ),
-          Text(price, style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold)),
+          Text(
+            price,
+            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
   }
 }
-

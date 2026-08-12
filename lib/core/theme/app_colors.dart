@@ -27,4 +27,29 @@ class AppColors {
 
   static const Color red = Color(0xFFBA1A1A);
   static const Color green = Color(0xFF2E7D32);
+
+
+  // -------------------------------
+  // Delivery Status Colors (New)
+  // -------------------------------
+
+  // Pending
+  static const Color pendingBg = lightGrey;
+  static const Color pendingBorder = deepGrey;
+
+  // Accepted
+  static const Color acceptedBg = lightYellow;
+  static const Color acceptedBorder = brown;
+
+  // In Transit
+  static const Color inTransitBg = Color(0xFFE3F2FD);
+  static const Color inTransitBorder = blue;
+
+  // Rejected
+  static const Color rejectedBg = Color(0xFFFFEBEE);
+  static const Color rejectedBorder = red;
+
+  // Delivered
+  static const Color deliveredBg = Color(0xFFE8F5E9);
+  static const Color deliveredBorder = green;
 }

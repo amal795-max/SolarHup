@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store_kit_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
@@ -120,7 +122,7 @@ class _KitProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.brightness;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.r),
@@ -157,27 +159,21 @@ class _KitProductCard extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Container(
-                        color: Color(product.imageColorValue),
-                      ),
+                      Container(color: Color(product.imageColorValue)),
                       Positioned(
-                        top: 4.h,
-                        right: 4.w,
+                        top: 6.h,
+                        right: 6.w,
                         child: Material(
                           color: Theme.of(context).colorScheme.surface,
                           shape: const CircleBorder(),
                           clipBehavior: Clip.antiAlias,
                           child: IconButton(
                             padding: EdgeInsets.zero,
-                            constraints: BoxConstraints(
-                              minWidth: 28.w,
-                              minHeight: 28.w,
-                            ),
-                            iconSize: 14.sp,
+
                             onPressed: () {
                               context.read<StoreKitBloc>().add(
-                                    ToggleStoreKitFavoriteEvent(product.id),
-                                  );
+                                ToggleStoreKitFavoriteEvent(product.id),
+                              );
                             },
                             icon: Icon(
                               isFavorite
@@ -185,10 +181,7 @@ class _KitProductCard extends StatelessWidget {
                                   : Icons.favorite_border_rounded,
                               color: isFavorite
                                   ? AppColors.red
-                                  : Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.color,
+                                  : AppStyle.bodySmall.color,
                             ),
                           ),
                         ),
@@ -204,8 +197,8 @@ class _KitProductCard extends StatelessWidget {
                       children: [
                         Text(
                           '${product.rating.toStringAsFixed(1)} (${product.reviews})',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          style: AppStyle.bodySmall.copyWith(
+                            color: AppStyle.bodySmall.color,
                           ),
                         ),
                         SizedBox(height: 3.h),
@@ -213,44 +206,16 @@ class _KitProductCard extends StatelessWidget {
                           product.name,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          style: AppStyle.labelMedium.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                '\$${product.price.toStringAsFixed(2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                              ),
-                            ),
-                            Material(
-                              color: AppColors.secondaryColor,
-                              borderRadius: BorderRadius.circular(8.r),
-                              clipBehavior: Clip.antiAlias,
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(
-                                  minWidth: 34.w,
-                                  minHeight: 34.w,
-                                ),
-                                iconSize: 18.sp,
-                                onPressed: () =>
-                                    context.push(AppRoutes.cartScreen),
-                                icon: const Icon(
-                                  Icons.shopping_cart_checkout_rounded,
-                                  color: AppColors.tertiaryColor,
-                                ),
-                              ),
-                            ),
-                          ],
+                        SizedBox(height: 8.h),
+                        Text(
+                          '\$${product.price.toStringAsFixed(2)}',
+                          style: AppStyle.bodyMedium.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ],
                     ),

@@ -37,8 +37,11 @@ import 'package:untitled1/features/favorite/data/repositories/favorite_repositor
 import 'package:untitled1/features/favorite/domain/repositories/favorite_repository.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'package:untitled1/features/orders/data/datasources/cart_remote_data_source.dart';
+import 'package:untitled1/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:untitled1/features/orders/data/repositories/cart_repository.dart';
+import 'package:untitled1/features/orders/data/repositories/orders_repository.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
+import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -63,6 +66,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<UsedSystemRemoteDataSource>(() => UsedSystemRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<FavoriteRemoteDataSource>(() => FavoriteRemoteDataSourceImpl(getIt()));
   getIt.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(apiRequest: getIt()));
+  getIt.registerLazySingleton<OrdersRemoteDataSource>(() => OrdersRemoteDataSourceImpl(apiRequest: getIt()));
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
@@ -72,6 +76,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<UsedSystemRepository>(() => UsedSystemRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()),);
   getIt.registerLazySingleton<FavoriteRepository>(() => FavoriteRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
+  getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
@@ -83,6 +88,7 @@ Future<void> init() async {
   getIt.registerFactory(() => UsedSystemCubit(getIt()));
   getIt.registerFactory(() => FavoritesCubit(getIt()));
   getIt.registerFactory(() => CartCubit(getIt()));
+  getIt.registerFactory(() => OrdersCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),

@@ -35,6 +35,9 @@ class EndPoints {
   static String updateProduct(int id) => '${baseUrl}used-products/me/$id';
 
   static const String favorites = '${baseUrl}favorites';
+  static const String _orders = '${baseUrl}orders';
+  static const String myOrders = '${baseUrl}orders/me';
+  static String orderDetails(int id) => '${baseUrl}orders/$id';
   static const String cart = '${baseUrl}orders/cart';
   static const String cartItems = '${baseUrl}orders/cart/items';
   static const String submitCart = '${baseUrl}orders/cart/submit';
@@ -50,6 +53,8 @@ class ApiKeys {
   static const String securityCode = 'security_code';
   static const String isVerified = 'is_verified';
   static const String phoneNumber = 'phoneNumber';
+
+  static const String orderId = 'orderId';
 
 }
 class StorageKeys {

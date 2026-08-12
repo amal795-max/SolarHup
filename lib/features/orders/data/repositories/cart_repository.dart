@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
+import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/features/orders/data/datasources/cart_remote_data_source.dart';
-import 'package:untitled1/features/orders/data/models/cart_item_model.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
 
 import '../../../../core/constants/user-parameters.dart';
 import '../../../../core/network/check_internet.dart';
@@ -17,7 +19,7 @@ abstract class CartRepository {
   Future<Either<Failure, Unit>> updateCartItem(AddProductToCartParams params);
 
   Future<Either<Failure, Unit>> deleteCartItem(int productId);
-  Future<Either<Failure, Unit>> submitCart();
+  Future<Either<Failure, Unit>> submitCart(ShippingInformationParams params);
 }
 
 class CartRepositoryImpl implements CartRepository {
@@ -34,6 +36,7 @@ class CartRepositoryImpl implements CartRepository {
     if (await networkInfo.isConnected) {
       try {
         final cart = await remoteDataSource.getCart();
+        LocalStorage().saveData(key: ApiKeys.orderId, value: cart.id);
         return Right(cart);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
@@ -101,10 +104,10 @@ class CartRepositoryImpl implements CartRepository {
 
 
   @override
-  Future<Either<Failure, Unit>> submitCart() async {
+  Future<Either<Failure, Unit>> submitCart(ShippingInformationParams params) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.submitCart();
+        await remoteDataSource.submitCart(params);
         return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

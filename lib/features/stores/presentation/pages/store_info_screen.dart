@@ -1,8 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
@@ -12,9 +12,8 @@ import 'package:untitled1/features/stores/presentation/widgets/store_info_detail
 import 'package:untitled1/features/stores/presentation/widgets/store_info_expert_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 // ---------------------------------------------------------------------------
 // UI data_source models — kept in this file so the page and its widgets stay in sync
@@ -202,26 +201,16 @@ class _StoreInfoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocBuilder<StoreDetailCubit, StoreDetailState>(
         builder: (context, state) {
           return switch (state) {
             StoreDetailLoading() => const LoadingIndicator(),
-            StoreDetailError(:final message) => SafeArea(
-                child: EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message.tr(),
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () =>
-                        context.read<StoreDetailCubit>().loadStore(storeId),
-                    width: 160.w,
-                  ),
-                ),
-              ),
+            StoreDetailError(:final message) => errorWidget(
+              message: state.message ,
+              hasButton: true,
+                onPressed: ()=>
+                context.read<StoreDetailCubit>().loadStore(storeId),
+            ),
             StoreDetailLoaded(:final store, :final categories, :final products) =>
                 _StoreInfoContent(
                 data: storeDetailToInfoData(
@@ -246,7 +235,7 @@ class _StoreInfoContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cardColor = Theme.of(context).scaffoldBackgroundColor;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.brightness;
      MediaQuery.of(context).padding.top;
 
     return Scaffold(
@@ -264,14 +253,14 @@ class _StoreInfoContent extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     SizedBox(
-                      height: 240.h,
+                      height: 0.3.sh,
                       width: double.infinity,
                       child: StoreInfoHeaderSection(data: data),
                     ),
                     Positioned(
                       left: 16.w,
                       right: 16.w,
-                      bottom: -98.h,
+                      bottom: -120.h,
                       child: Container(
                         padding: EdgeInsets.only(top: 8.h),
                         decoration: BoxDecoration(
@@ -293,13 +282,13 @@ class _StoreInfoContent extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      left: 30.w,
-                      bottom: 80.h,
+                      left: 35,
+                      bottom: 90.h,
                       child: _FloatingStoreLogoBadge(data: data),
                     ),
                   ],
                 ),
-                SizedBox(height: 112.h),
+                SizedBox(height: 0.17.sh),
                 StoreInfoCategoriesSection(categories: data.categories),
                 SizedBox(height: 8.h),
                 BlocBuilder<StoreInfoBloc, StoreInfoState>(
@@ -342,14 +331,14 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      width: 56.w,
-      height: 56.w,
+      width: 65.w,
+      height: 65.w,
       decoration: BoxDecoration(
         color: Color(data.iconColorValue),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
           color: AppColors.white.withValues(alpha: 0.9),
-          width: 1.6,
+          width: 4,
         ),
         boxShadow: [
           BoxShadow(

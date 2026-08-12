@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
+import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
+import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
@@ -20,24 +30,42 @@ class _ActivityScreenState extends State<ActivityScreen> {
   int _selectedTab = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  void _fetchData() {
+    if (_selectedTab == 0) {
+      context.read<OrdersCubit>().getMyOrders();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
         body: Column(
           children: [
-            headerSection(title:'activity_title',subTitle:'activity_subtitle'),
-            SizedBox(height:  16.h),
+            headerSection(
+              title: 'activity_title',
+              subTitle: 'activity_subtitle',
+            ),
+            SizedBox(height: 16.h),
             _TabSwitcher(
               selectedIndex: _selectedTab,
               onTabChanged: (index) {
                 setState(() {
                   _selectedTab = index;
                 });
+                _fetchData();
               },
             ),
             Expanded(
-              child: _selectedTab == 0 ? _buildOrdersTab() : _buildServicesTab(),
+              child: _selectedTab == 0
+                  ? _buildOrdersTab()
+                  : _buildServicesTab(),
             ),
           ],
         ),
@@ -46,30 +74,63 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Widget _buildOrdersTab() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: Column(
-        spacing: 16.h,
-        children: const [
-          _OrderCard(
-            orderId: '#SH-9821-XP',
-            productName: 'Smart Inverter Pro',
-            price: r'$1,249.00',
-            statusKey: 'status_processing',
-            statusColor: AppColors.brown,
-            icon: Icons.computer,
-          ),
-          _OrderCard(
-            orderId: '#SH-7742-LO',
-            productName: 'Solar Panel Mounts (x8)',
-            price: r'$450.00',
-            statusKey: 'status_shipped',
-            statusColor: Colors.blue,
-            icon: Icons.local_shipping,
-          ),
-          _TrackDeliveryBanner(),
-        ],
-      ),
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state is OrdersError) {
+          return errorWidget(
+            message: state.message, hasButton: false,
+          );
+        }
+        final orders = state is OrdersLoaded
+            ? state.orders
+            : (state is OrdersLoading
+            ? List.generate(
+                      4,
+                      (index) => OrderModel(
+                        id: 0,
+                        orderCode: 'ORD-XXXXXXXX',
+                        businessId: 0,
+                        customerId: 0,
+                        status: 'pending',
+                        totalAmount: '0.00',
+                        items: [],
+                        statusEnum: OrderStatusEnum.pending
+                      ),
+                    )
+                  :  context.read<OrdersCubit>().cachedOrders);
+
+        if (state is OrdersLoaded && orders.isEmpty) {
+          return const EmptyWidget();
+        }
+
+        return RefreshIndicator(
+            onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
+            child :Skeletonizer(
+          enabled: state is OrdersLoading,
+          child:  ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              itemCount: orders.length,
+              separatorBuilder: (context, index) => SizedBox(height: 16.h),
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                return GestureDetector(
+                  onTap: () {
+                    context.read<OrdersCubit>().getOrderDetails(order.id);
+                    context.push( AppRoutes.orderTrackingScreen);
+                  },
+                  child: _OrderCard(
+                    orderCode: order.orderCode,
+                    date: order.items.isNotEmpty
+                        ? 'Item Count: ${order.items.length}'
+                        : 'No items',
+                    price: order.totalAmount,
+                    status: order.statusEnum,
+                  ),
+                );
+              },
+            ),
+          ));
+        },
     );
   }
 
@@ -169,21 +230,19 @@ class _TabItem extends StatelessWidget {
 }
 
 class _OrderCard extends StatelessWidget {
-  final String orderId;
-  final String productName;
+  final String orderCode;
+  final String date;
   final String price;
-  final String statusKey;
-  final Color statusColor;
-  final IconData icon;
+  final OrderStatusEnum status;
 
   const _OrderCard({
-    required this.orderId,
-    required this.productName,
+    required this.orderCode,
+    required this.date,
     required this.price,
-    required this.statusKey,
-    required this.statusColor,
-    required this.icon,
+    required this.status,
   });
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,18 +260,22 @@ class _OrderCard extends StatelessWidget {
                   color: AppColors.primaryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Icon(icon, color: AppColors.primaryColor, size: 20.sp),
+                child: Icon(
+                  Icons.shopping_bag_outlined,
+                  color: AppColors.primaryColor,
+                  size: 20.sp,
+                ),
               ),
-              _StatusBadge(text: statusKey.tr(), color: statusColor),
+              _StatusBadge(text: status.status.tr(), color: status),
             ],
           ),
           SizedBox(height: 12.h),
           Text(
-            'Order $orderId',
+            orderCode,
             style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
           ),
           Text(
-            productName,
+            date,
             style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
           ),
           Divider(color: AppColors.borderColor),
@@ -224,7 +287,7 @@ class _OrderCard extends StatelessWidget {
                 style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
               ),
               Text(
-                price,
+                '$price \$',
                 style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
@@ -237,83 +300,26 @@ class _OrderCard extends StatelessWidget {
 
 class _StatusBadge extends StatelessWidget {
   final String text;
-  final Color color;
+  final OrderStatusEnum color;
 
   const _StatusBadge({required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      label: Text(
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: color.backgroundColor ,
+        borderRadius: BorderRadius.circular(24.r),
+        border: Border.all(color: color.borderAndLabelColor),
+      ),
+      child: Text(
         text,
         style: TextStyle(
-          color: color,
+          color: color.borderAndLabelColor,
           fontSize: 10.sp,
+          fontWeight: FontWeight.bold,
         ),
-        textAlign: TextAlign.center,
-      ),
-      backgroundColor: color.withOpacity(0.1),
-
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24.r),
-        side: BorderSide(color: color)
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-    );
-
-  }
-}
-
-class _TrackDeliveryBanner extends StatelessWidget {
-  const _TrackDeliveryBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF536A7D),
-        borderRadius: BorderRadius.circular(16.r),
-        image: DecorationImage(
-          image: const NetworkImage(
-            'https://images.unsplash.com/photo-1558449028-b53a39d100fc?w=500&q=80',
-          ),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.4),
-            BlendMode.darken,
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'track_delivery_title'.tr(),
-            style: AppStyle.h4.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            'track_delivery_desc'.tr(),
-            style: AppStyle.labelSmall.copyWith(
-              color: Colors.white.withOpacity(0.8),
-            ),
-          ),
-          SizedBox(height: 16.h),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.map_outlined, size: 18),
-            label: Text('open_map_btn'.tr()),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryColor,
-              foregroundColor: AppColors.primaryColor,
-              minimumSize: Size(120.w, 40.h),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -384,9 +390,19 @@ class _ServiceCard extends StatelessWidget {
                         size: 16,
                       )
                     else
-                      _StatusBadge(
-                        text: 'status_past'.tr(),
-                        color: Colors.grey,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 2.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Text(
+                          'status_past'.tr(),
+                          style: TextStyle(color: Colors.grey, fontSize: 10.sp),
+                        ),
                       ),
                   ],
                 ),
@@ -401,7 +417,6 @@ class _ServiceCard extends StatelessWidget {
                   icon: Icons.access_time,
                   color: AppColors.grey,
                 ),
-
                 SizedBox(height: 12.h),
                 if (isUpcoming)
                   Row(
