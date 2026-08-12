@@ -101,6 +101,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.quiz_outlined,
                 title: 'q_a'.tr(),
+                onTap: ()=>context.push(AppRoutes.allQuestionsScreen)
               ),
             ]),
 

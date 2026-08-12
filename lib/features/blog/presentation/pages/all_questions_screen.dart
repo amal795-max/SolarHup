@@ -2,146 +2,187 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:untitled1/core/network/check_internet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/blog/data/data_source/faq_hub_remote_data_source.dart';
-import 'package:untitled1/features/blog/data/repositories/faq_hub_repository.dart';
-import 'package:untitled1/features/blog/presentation/bloc/faq_hub_bloc/faq_hub_bloc.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_category_section.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_frequent_questions_section.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_glossary_banner.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_popular_topics_section.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_search_section.dart';
-import 'package:untitled1/features/blog/presentation/widgets/faq_support_section.dart';
+import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/blog/data/models/faq_model.dart';
+import 'package:untitled1/features/blog/presentation/bloc/faq_cubit.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
+import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
-class AllQuestionsScreen extends StatelessWidget {
+class AllQuestionsScreen extends StatefulWidget {
   const AllQuestionsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => FaqHubBloc(
-        FaqHubRepositoryImpl(
-          remote: const FaqHubRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(const LoadFaqHubEvent()),
-      child: const _AllQuestionsView(),
-    );
-  }
+  State<AllQuestionsScreen> createState() => _AllQuestionsScreenState();
 }
 
-class _AllQuestionsView extends StatelessWidget {
-  const _AllQuestionsView();
+class _AllQuestionsScreenState extends State<AllQuestionsScreen> {
+  @override
+  void initState() {
+    context.read<FaqCubit>().getFaqs();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.brightness;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(title: Text('faq_all_questions_title'.tr())),
       body: SafeArea(
-        child: BlocBuilder<FaqHubBloc, FaqHubState>(
-          builder: (context, state) {
-            return switch (state) {
-              FaqHubLoading() => const LoadingIndicator(),
-              FaqHubError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () =>
-                        context.read<FaqHubBloc>().add(const LoadFaqHubEvent()),
-                    width: 160.w,
-                  ),
-                ),
-              FaqHubLoaded() => _AllQuestionsBody(state: state),
-              _ => const SizedBox.shrink(),
-            };
-          },
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: _FaqSearchField(),
+            ),
+            Expanded(
+              child: BlocBuilder<FaqCubit, FaqState>(
+                builder: (context, state) {
+                  if (state is FaqError) {
+                    return EmptyWidget(
+                      icon: Icons.error_outline_rounded,
+                      iconSize: 48,
+                      iconColor: AppColors.red,
+                      title: 'stores_error_title'.tr(),
+                      subtitle: state.message,
+                    );
+                  }
+
+                  final isLoading = state is FaqLoading;
+                  final List<FaqModel> fakeFaqs = List.generate(
+                    6,
+                    (index) => FaqModel(
+                      id: index,
+                      question: '',
+                      answer: '',
+                      displayOrder: index,
+                      isActive: true,
+                    ),
+                  );
+
+                  final faqs = state is FaqSuccess
+                      ? state.filteredFaqs
+                      : fakeFaqs;
+
+                  if (state is FaqSuccess && faqs.isEmpty) {
+                    return EmptyWidget(
+                      icon: Icons.search_off_rounded,
+                      title: 'faq_no_results'.tr(),
+                      subtitle: 'blog_no_results_hint'.tr(),
+                    );
+                  }
+
+                  return Skeletonizer(
+                    enabled: isLoading,
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      itemCount: faqs.length,
+                      itemBuilder: (context, index) {
+                        final faq = faqs[index];
+                        final isExpanded = state is FaqSuccess;
+                        return _FaqTile(
+                          faq: faq,
+                          isExpanded: isExpanded,
+                          isDark: isDark,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _AllQuestionsBody extends StatelessWidget {
-  final FaqHubLoaded state;
+class _FaqSearchField extends StatefulWidget {
+  const _FaqSearchField();
 
-  const _AllQuestionsBody({required this.state});
+  @override
+  State<_FaqSearchField> createState() => _FaqSearchFieldState();
+}
+
+class _FaqSearchFieldState extends State<_FaqSearchField> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final headingColor = isDark ? AppColors.blue : AppColors.primaryColor;
-    final popular = state.popularTopics;
-    final frequent = state.frequentQuestions;
-    final hasResults = popular.isNotEmpty || frequent.isNotEmpty;
+    return CustomTextField(
+      controller: _controller,
+      hasTitle: false,
+      title: '',
+      hint: 'faq_search_hint'.tr(),
+      prefixIcon: const Icon(Icons.search),
+      onChanged: (val) => context.read<FaqCubit>().updateSearch(val),
+      suffixIcon: IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          _controller.clear();
+          context.read<FaqCubit>().updateSearch('');
+        },
+      ),
+    );
+  }
+}
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(8.w, 4.h, 16.w, 0),
-          child: Row(
+class _FaqTile extends StatelessWidget {
+  final FaqModel faq;
+  final bool isExpanded;
+  final bool isDark;
+
+  const _FaqTile({
+    required this.faq,
+    required this.isExpanded,
+    required this.isDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: isExpanded ? AppColors.primaryColor : AppColors.borderColor,
+        ),
+      ),
+      child: Column(
+        children: [
+          ExpansionTile(
+            title: Text(
+              faq.question,
+              style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.w600),
+            ),
             children: [
-              const BackButtonWidget(),
-              Expanded(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'faq_all_questions_title'.tr(),
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: headingColor,
+                  faq.answer,
+                  style: AppStyle.bodySmall.copyWith(
+                    color: isDark ? Colors.grey[400] : Colors.grey[700],
                   ),
                 ),
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const FaqSearchSection(),
-                SizedBox(height: 12.h),
-                FaqCategorySection(categories: state.hub.categories),
-                SizedBox(height: 16.h),
-                FaqGlossaryBanner(
-                  onTap: () => context.pop(),
-                ),
-                SizedBox(height: 20.h),
-                if (!hasResults)
-                  EmptyWidget(
-                    icon: Icons.search_off_rounded,
-                    iconSize: 48,
-                    iconColor: AppColors.grey,
-                    title: 'faq_no_results'.tr(),
-                    subtitle: 'blog_no_results_hint'.tr(),
-                    padding: EdgeInsets.symmetric(vertical: 24.h),
-                  )
-                else ...[
-                  FaqPopularTopicsSection(topics: popular),
-                  SizedBox(height: 20.h),
-                  FaqFrequentQuestionsSection(questions: frequent),
-                ],
-                SizedBox(height: 20.h),
-                FaqSupportSection(onContactTap: () {}),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

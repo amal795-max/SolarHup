@@ -4,9 +4,11 @@ import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/features/blog/data/model/blog_list_response_model.dart';
 import 'package:untitled1/features/blog/data/models/blog_article_model.dart';
+import 'package:untitled1/features/blog/data/models/faq_model.dart';
 
 abstract class BlogRemoteDataSource {
   Future<BlogFeedModel> getBlogFeed();
+  Future<List<FaqModel>> getFaqs();
 }
 
 class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
@@ -24,6 +26,22 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
         );
       } else {
         return BlogListResponseModel.fromJson(response.data).toFeedModel();
+      }
+    } on DioException catch (e) {
+      throw ServerException(message: mapDioError(e));
+    }
+  }
+
+  @override
+  Future<List<FaqModel>> getFaqs() async {
+    try {
+      final response = await apiRequest.get(EndPoints.faqs);
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: getErrorMessage(response.statusCode ?? 0),
+        );
+      } else {
+        return FaqResponseModel.fromJson(response.data).faqs;
       }
     } on DioException catch (e) {
       throw ServerException(message: mapDioError(e));

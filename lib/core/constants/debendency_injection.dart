@@ -42,6 +42,7 @@ import 'package:untitled1/features/orders/data/repositories/cart_repository.dart
 import 'package:untitled1/features/orders/data/repositories/orders_repository.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
+import '../../features/blog/presentation/bloc/faq_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -89,6 +90,7 @@ Future<void> init() async {
   getIt.registerFactory(() => FavoritesCubit(getIt()));
   getIt.registerFactory(() => CartCubit(getIt()));
   getIt.registerFactory(() => OrdersCubit(getIt()));
+  getIt.registerFactory(() => FaqCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),

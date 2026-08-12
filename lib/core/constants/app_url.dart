@@ -13,6 +13,7 @@ class EndPoints {
   static const String changePassword = '${_auth}change-password';
   static const String blogArticles = '${baseUrl}blog';
   static String blogArticle(String articleId) => '${baseUrl}blog/$articleId';
+  static const String faqs = '${baseUrl}faqs';
 
   static const String _assistant = '${baseUrl}assistant/';
   static const String recommend = '${_assistant}recommend';
