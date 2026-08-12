@@ -19,6 +19,7 @@ abstract class AppRoutes {
   static const productDetailScreen = '/productDetailScreen';
   static const cartScreen = '/cartScreen';
   static const shippingInformationScreen = '/shippingInformationScreen';
+  static const orderConfirmedScreen = '/orderConfirmedScreen';
   static const orderTrackingScreen = '/orderTrackingScreen';
   static const rateOrderScreen = '/rateOrderScreen';
   static const activityScreen = '/activityScreen';

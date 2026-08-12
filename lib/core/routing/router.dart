@@ -30,6 +30,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.da
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
+import 'package:untitled1/features/orders/presentation/pages/order_confirmed_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/order_tracking_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
@@ -245,6 +246,12 @@ final GoRouter router = GoRouter(
       path: AppRoutes.shippingInformationScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ShippingInformationScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.orderConfirmedScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OrderConfirmedScreen();
       },
     ),
     GoRoute(

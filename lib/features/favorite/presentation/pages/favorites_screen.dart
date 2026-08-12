@@ -238,7 +238,7 @@ class _FavoriteItem extends StatelessWidget {
           IconButton(
               icon: const Icon(Icons.favorite, color: Colors.red),
               onPressed: () =>
-                  DataHelper().showDeleteConfirmation(
+                  DataHelper().showConfirmationDialog(
                     context,
                     'delete_product',
                     'delete_product_confirm',

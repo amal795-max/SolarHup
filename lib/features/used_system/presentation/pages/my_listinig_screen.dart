@@ -243,7 +243,7 @@ class _ActionButtons extends StatelessWidget {
           text: 'delete'.tr(),
           height: 40,
           onPressed: () {
-            DataHelper().showDeleteConfirmation(
+            DataHelper().showConfirmationDialog(
               context,
               'delete_listing',
               'delete_listing_confirm',
@@ -298,7 +298,7 @@ class _ActionButtons extends StatelessWidget {
           SizedBox(width: 8.w),
           _DeleteButton(
             onPressed: () {
-              DataHelper().showDeleteConfirmation(
+              DataHelper().showConfirmationDialog(
                 context,
                 'delete_listing',
                 'delete_listing_confirm',

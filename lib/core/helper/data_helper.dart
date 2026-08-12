@@ -26,7 +26,7 @@ class DataHelper {
       ),
     );
   }
-  void showDeleteConfirmation(BuildContext context,String title,String subtitle,VoidCallback? onPressed) {
+  void showConfirmationDialog(BuildContext context,String title,String subtitle,VoidCallback? onPressed,{String? confirm}) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -40,7 +40,7 @@ class DataHelper {
           TextButton(
             onPressed: onPressed,
             style: TextButton.styleFrom(foregroundColor: AppColors.red),
-            child: Text('delete'.tr()),
+            child: Text(confirm?.tr()??'delete'.tr()),
           ),
         ],
       ),
