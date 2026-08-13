@@ -10,9 +10,9 @@ import '../../../../widgets/custom_text_field.dart';
 import '../widget/chat_bubble.dart';
 
 class ComplaintConversationScreen extends StatefulWidget {
-  final ComplaintModel complaint;
+  final ComplaintModel? complaint;
 
-  const ComplaintConversationScreen({super.key, required this.complaint});
+  const ComplaintConversationScreen({super.key, this.complaint});
 
   @override
   State<ComplaintConversationScreen> createState() =>
@@ -29,6 +29,10 @@ class _ComplaintConversationScreenState
     super.initState();
     _messageController = TextEditingController();
     _scrollController = ScrollController();
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom(animated: false);
+    });
   }
 
   @override
@@ -38,37 +42,61 @@ class _ComplaintConversationScreenState
     super.dispose();
   }
 
-  void _onSendPressed() {
+  void _scrollToBottom({bool animated = true}) {
+    if (_scrollController.hasClients) {
+      final position = _scrollController.position.maxScrollExtent;
+      if (animated) {
+        _scrollController.animateTo(
+          position,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      } else {
+        _scrollController.jumpTo(position);
+      }
+    }
+  }
+
+  void _onSendPressed(int complaintId) {
     final text = _messageController.text.trim();
     if (text.isEmpty) return;
 
     context.read<ComplaintCubit>().sendMessage(
-      complaintId: widget.complaint.id,
+      complaintId: complaintId,
       message: text,
     );
     _messageController.clear();
-
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+    Future.delayed(const Duration(milliseconds: 100), () => _scrollToBottom());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ComplaintCubit, ComplaintState>(
-      buildWhen: (prev, curr) =>
-      curr is ComplaintDetailsSuccess || curr is ComplaintDetailsLoading,
+    return BlocConsumer<ComplaintCubit, ComplaintState>(
+      listenWhen: (previous, current) {
+        return current is ComplaintDetailsSuccess ||
+            current is ComplaintActionSuccess;
+      },
+      listener: (context, state) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+      },
       builder: (context, state) {
         final isLoading = state is ComplaintDetailsLoading;
+
+        final isSending = state is ComplaintDetailsSuccess
+            ? state.isSendingMessage
+            : false;
+
         final currentComplaint = state is ComplaintDetailsSuccess
             ? state.complaint
             : widget.complaint;
+
+        if (currentComplaint == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
         final messages = currentComplaint.messages;
 
@@ -79,41 +107,54 @@ class _ComplaintConversationScreenState
                 enabled: isLoading,
                 child: ListView.builder(
                   controller: _scrollController,
-                  reverse: false, // المحادثة تبدأ من الأعلى
                   padding: EdgeInsets.symmetric(
-                      horizontal: 16.w, vertical: 20.h),
+                    horizontal: 16.w,
+                    vertical: 20.h,
+                  ),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
+
                     final isMe = message.senderRole == 'customer';
 
                     return ChatBubbleAnimation(
                       key: ValueKey(message.id),
-                      child: ChatBubble(message: message, isMe: isMe),
+                      child: ChatBubble(
+                        message: message,
+                        isMe: isMe,
+                      ),
                     );
                   },
                 ),
               ),
             ),
-            _buildInputArea(isLoading),
+
+            _buildInputArea(
+              isLoading || isSending,
+              currentComplaint.id,
+            ),
           ],
         );
       },
     );
   }
 
-  Widget _buildInputArea(bool isLoading) {
+  Widget _buildInputArea(bool isLoading, int complaintId) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h + MediaQuery
-          .of(context)
-          .padding
-          .bottom),
+      padding: EdgeInsets.fromLTRB(
+        16.w,
+        8.h,
+        16.w,
+        16.h + MediaQuery.of(context).padding.bottom,
+      ),
       decoration: BoxDecoration(
-        color: Theme
-            .of(context)
-            .cardColor,
+        color: Theme.of(context).cardColor,
         boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2))
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, -2),
+          ),
         ],
       ),
       child: Row(
@@ -124,28 +165,39 @@ class _ComplaintConversationScreenState
               title: '',
               hasTitle: false,
               hint: 'type_message'.tr(),
-              onFieldSubmitted: (_) => _onSendPressed(),
+              onFieldSubmitted: isLoading
+                  ? null
+                  : (_) => _onSendPressed(complaintId),
             ),
           ),
           SizedBox(width: 12.w),
-          _buildSendButton(isLoading),
+          IconButton.filled(
+            onPressed: isLoading
+                ? null
+                : () => _onSendPressed(complaintId),
+            icon: isLoading
+                ? SizedBox(
+              width: 20.w,
+              height: 20.w,
+              child: const CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            )
+                : Icon(
+              Icons.send_rounded,
+              size: 20.sp,
+            ),
+            style: IconButton.styleFrom(
+              backgroundColor: AppColors.secondaryColor,
+              foregroundColor: AppColors.brown,
+              disabledBackgroundColor:
+              AppColors.grey.withOpacity(0.3),
+            ),
+          ),
         ],
       ),
     );
-  }
-
-  Widget _buildSendButton(bool isLoading) {
-    return IconButton.filled(
-      onPressed: isLoading ? null : _onSendPressed,
-      icon: Icon(Icons.send_rounded, size: 20.sp),
-      style: IconButton.styleFrom(
-        backgroundColor: AppColors.secondaryColor,
-        foregroundColor: AppColors.brown,
-        disabledBackgroundColor: AppColors.grey.withOpacity(0.3),
-      ),
-    );
-  }
-}
+  }}
 
 class ChatBubbleAnimation extends StatelessWidget {
   final Widget child;

@@ -2,17 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:untitled1/core/api/api-requests.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/constants/user-parameters.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
 
 abstract class ComplaintRemoteDataSource {
   Future<List<ComplaintModel>> getMyComplaints();
   Future<ComplaintModel> getComplaintDetails(int id);
-  Future<ComplaintModel> createComplaint({
-    required int businessId,
-    required String subject,
-    required String message,
-  });
-  Future<ComplaintMessageModel> sendMessage({
+  Future<ComplaintModel> createComplaint(AddComplaintParams params);
+  Future<ComplaintModel> sendMessage({
     required int complaintId,
     required String message,
   });
@@ -50,19 +47,11 @@ class ComplaintRemoteDataSourceImpl implements ComplaintRemoteDataSource {
   }
 
   @override
-  Future<ComplaintModel> createComplaint({
-    required int businessId,
-    required String subject,
-    required String message,
-  }) async {
+  Future<ComplaintModel> createComplaint(AddComplaintParams params) async {
     try {
       final response = await apiRequest.post(
         EndPoints.complaints,
-        body: {
-          'business_id': businessId,
-          'subject': subject,
-          'message': message,
-        },
+        body:params.toJson()
       );
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw ServerException(message: getErrorMessage(response.statusCode ?? 0));
@@ -74,7 +63,7 @@ class ComplaintRemoteDataSourceImpl implements ComplaintRemoteDataSource {
   }
 
   @override
-  Future<ComplaintMessageModel> sendMessage({
+  Future<ComplaintModel> sendMessage({
     required int complaintId,
     required String message,
   }) async {
@@ -86,7 +75,7 @@ class ComplaintRemoteDataSourceImpl implements ComplaintRemoteDataSource {
       if (response.statusCode != 200 && response.statusCode != 201) {
         throw ServerException(message: getErrorMessage(response.statusCode ?? 0));
       }
-      return ComplaintMessageModel.fromJson(response.data);
+      return ComplaintModel.fromJson(response.data);
     } on DioException catch (e) {
       throw ServerException(message: mapDioError(e));
     }

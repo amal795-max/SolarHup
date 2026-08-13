@@ -27,10 +27,9 @@ class ComplaintCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.borderColor.withOpacity(0.3)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.shadowColor.withOpacity(0.05),
+              color: AppColors.shadowColor,
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -42,7 +41,7 @@ class ComplaintCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: AppColors.secondaryColor.withOpacity(0.2),
+                  backgroundColor: AppColors.lightYellow,
                   child: Icon(Icons.business_rounded, color: AppColors.brown,
                       size: 20.sp),
                 ),
@@ -71,7 +70,7 @@ class ComplaintCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 12.h),
               child: Divider(
-                  color: AppColors.borderColor.withOpacity(0.2), height: 1),
+                  color: AppColors.borderColor, height: 1),
             ),
             Text(
               complaint.subject,

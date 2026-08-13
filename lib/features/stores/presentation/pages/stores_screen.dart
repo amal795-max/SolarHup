@@ -67,7 +67,7 @@ class _StoresViewState extends State<_StoresView> {
   static final List<StoreCardData> _skeletonStores = List.generate(
     3,
     (_) => const StoreCardData(
-      id: '',
+      id: 0,
       name: 'Loading Store Name Here',
       location: 'Loading city and state location',
       rating: 4.5,

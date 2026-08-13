@@ -1,5 +1,5 @@
 class StoreKitRouteArgs {
-  final String storeId;
+  final int storeId;
   final String storeName;
 
   const StoreKitRouteArgs({

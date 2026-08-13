@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 
 enum ButtonType { filled, outlined, text }
 
@@ -57,64 +57,65 @@ class CustomButton extends StatelessWidget {
     final Color resolvedBorder = borderColor ??
         (type == ButtonType.outlined ? AppColors.primaryColor : Colors.transparent);
 
-    return SizedBox(
-      height: height ?? 48.h,
-      width: width ?? double.infinity,
-      child: TextButton(
-        onPressed: isLoading ? null : onPressed,
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(resolvedBg),
-          overlayColor: WidgetStateProperty.all(
-            resolvedText.withOpacity(0.1),
-          ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(borderRadius.r),
-              side: BorderSide(
-                color: resolvedBorder,
-                width: borderWidth,
+    return AnimationWidget(
+      child: SizedBox(
+        height: height ?? 48.h,
+        width: width ?? double.infinity,
+        child: TextButton(
+          onPressed: isLoading ? null : onPressed,
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all(resolvedBg),
+            overlayColor: WidgetStateProperty.all(
+              resolvedText.withOpacity(0.1),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(borderRadius.r),
+                side: BorderSide(
+                  color: resolvedBorder,
+                  width: borderWidth,
+                ),
               ),
             ),
-          ),
-          padding: WidgetStateProperty.all(
-            EdgeInsets.symmetric(horizontal: 12.w),
-          ),
-        ),
-        child: isLoading
-            ? SizedBox(
-          height: 22.h,
-          width: 22.h,
-          child: CircularProgressIndicator(
-            color: resolvedText,
-            strokeWidth: 2,
-          ),
-        )
-            : Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null && iconLeft)
-              Icon(icon, color: resolvedText, size: fontSize ?? 18.sp),
-
-            if (icon != null && iconLeft) SizedBox(width: 8.w),
-
-            Text(
-              text.tr(),
-              style: AppStyle.labelMedium.copyWith(
-                color: resolvedText,
-                fontSize: fontSize,
-                fontWeight: fontWeight,
-              ),
+            padding: WidgetStateProperty.all(
+              EdgeInsets.symmetric(horizontal: 12.w),
             ),
-
-            if (icon != null && !iconLeft) SizedBox(width: 8.w),
-
-            if (icon != null && !iconLeft)
-              Icon(icon, color: resolvedText, size: fontSize ?? 18.sp),
-          ],
+          ),
+          child: isLoading
+              ? SizedBox(
+            height: 22.h,
+            width: 22.h,
+            child: CircularProgressIndicator(
+              color: resolvedText,
+              strokeWidth: 2,
+            ),
+          )
+              : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null && iconLeft)
+                Icon(icon, color: resolvedText, size: fontSize ?? 18.sp),
+      
+              if (icon != null && iconLeft) SizedBox(width: 8.w),
+      
+              Text(
+                text.tr(),
+                style: AppStyle.labelMedium.copyWith(
+                  color: resolvedText,
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
+                ),
+              ),
+      
+              if (icon != null && !iconLeft) SizedBox(width: 8.w),
+      
+              if (icon != null && !iconLeft)
+                Icon(icon, color: resolvedText, size: fontSize ?? 18.sp),
+            ],
+          ),
         ),
       ),
-    ).animate()
-        .fadeIn(duration: 500.ms, delay: 300.ms);
+    );
   }
 }

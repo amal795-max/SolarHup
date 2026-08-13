@@ -43,7 +43,7 @@ class StoreApiModel {
     if (phone.isNotEmpty) tags.add(phone);
 
     return StoreModel(
-      id: id.toString(),
+      id: id,
       name: name,
       location: address.isNotEmpty ? address : region,
       rating: 0,

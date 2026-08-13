@@ -1,18 +1,24 @@
-class ComplaintResponseModel {
+import 'package:equatable/equatable.dart';
+
+class ComplaintResponseModel extends Equatable {
   final List<ComplaintModel> complaints;
 
-  ComplaintResponseModel({required this.complaints});
+  const ComplaintResponseModel({
+    required this.complaints,
+  });
 
   factory ComplaintResponseModel.fromJson(Map<String, dynamic> json) {
-    return ComplaintResponseModel(
-      complaints: (json['complaints'] as List)
-          .map((i) => ComplaintModel.fromJson(i))
-          .toList(),
-    );
+    final complaintsJson = json['complaints'] as List? ?? [];
+
+    return ComplaintResponseModel(complaints: complaintsJson.whereType<Map<String, dynamic>>().
+    map(ComplaintModel.fromJson).toList(),);
   }
+
+  @override
+  List<Object?> get props => [complaints];
 }
 
-class ComplaintModel {
+class ComplaintModel extends Equatable {
   final int id;
   final int customerId;
   final String customerPhone;
@@ -24,7 +30,7 @@ class ComplaintModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  ComplaintModel({
+  const ComplaintModel({
     required this.id,
     required this.customerId,
     required this.customerPhone,
@@ -38,6 +44,8 @@ class ComplaintModel {
   });
 
   factory ComplaintModel.fromJson(Map<String, dynamic> json) {
+    final messagesJson = json['messages'] as List? ?? [];
+
     return ComplaintModel(
       id: json['id'] ?? 0,
       customerId: json['customer_id'] ?? 0,
@@ -46,12 +54,19 @@ class ComplaintModel {
       businessName: json['business_name'] ?? '',
       subject: json['subject'] ?? '',
       status: json['status'] ?? 'pending',
-      messages: (json['messages'] as List?)
-              ?.map((i) => ComplaintMessageModel.fromJson(i))
-              .toList() ??
-          [],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      messages: messagesJson
+          .whereType<Map<String, dynamic>>()
+          .map(ComplaintMessageModel.fromJson)
+          .where((message) => message.message.trim().isNotEmpty)
+          .toList(),
+      createdAt: DateTime.tryParse(
+        json['created_at']?.toString() ?? '',
+      ) ??
+          DateTime.now(),
+      updatedAt: DateTime.tryParse(
+        json['updated_at']?.toString() ?? '',
+      ) ??
+          DateTime.now(),
     );
   }
 
@@ -64,11 +79,12 @@ class ComplaintModel {
       'business_name': businessName,
       'subject': subject,
       'status': status,
-      'messages': messages.map((m) => m.toJson()).toList(),
+      'messages': messages.map((message) => message.toJson()).toList(),
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };
   }
+
   ComplaintModel copyWith({
     int? id,
     int? customerId,
@@ -89,21 +105,37 @@ class ComplaintModel {
       businessName: businessName ?? this.businessName,
       subject: subject ?? this.subject,
       status: status ?? this.status,
-      messages: messages ?? this.messages,
+      messages: messages != null
+          ? List<ComplaintMessageModel>.unmodifiable(messages)
+          : this.messages,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    customerId,
+    customerPhone,
+    businessId,
+    businessName,
+    subject,
+    status,
+    messages,
+    createdAt,
+    updatedAt,
+  ];
 }
 
-class ComplaintMessageModel {
+class ComplaintMessageModel extends Equatable {
   final int id;
   final int senderId;
   final String senderRole;
   final String message;
   final DateTime createdAt;
 
-  ComplaintMessageModel({
+  const ComplaintMessageModel({
     required this.id,
     required this.senderId,
     required this.senderRole,
@@ -115,9 +147,12 @@ class ComplaintMessageModel {
     return ComplaintMessageModel(
       id: json['id'] ?? 0,
       senderId: json['sender_id'] ?? 0,
-      senderRole: json['sender_role'] ?? '',
-      message: json['message'] ?? '',
-      createdAt: DateTime.parse(json['created_at']),
+      senderRole: json['sender_role']?.toString() ?? '',
+      message: json['message']?.toString() ?? '',
+      createdAt: DateTime.tryParse(
+        json['created_at']?.toString() ?? '',
+      ) ??
+          DateTime.now(),
     );
   }
 
@@ -130,6 +165,7 @@ class ComplaintMessageModel {
       'created_at': createdAt.toIso8601String(),
     };
   }
+
   ComplaintMessageModel copyWith({
     int? id,
     int? senderId,
@@ -145,4 +181,13 @@ class ComplaintMessageModel {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    senderId,
+    senderRole,
+    message,
+    createdAt,
+  ];
 }

@@ -14,7 +14,7 @@ import '../../../../core/routing/app_routes.dart';
 // ---------------------------------------------------------------------------
 
 class StoreCardData {
-  final String id;
+  final int id;
   final String name;
   final String location;
   final double rating;
@@ -171,13 +171,8 @@ class _ComplaintButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.push(
-          AppRoutes.addComplaintScreen,
-          extra: {
-            'businessId': int.tryParse(data.id) ?? 0,
-            'businessName': data.name,
-          },
-        );
+        context.push('${AppRoutes.addComplaintScreen}/${data.id}');
+
       },
       child: Container(
         padding: EdgeInsets.all(6.r),

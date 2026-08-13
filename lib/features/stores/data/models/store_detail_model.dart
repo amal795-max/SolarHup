@@ -1,7 +1,7 @@
 import '../model/store_list_response_model.dart';
 
 class StoreDetailModel {
-  final String id;
+  final int id;
   final String name;
   final String description;
   final String location;
@@ -27,7 +27,7 @@ class StoreDetailModel {
 
   factory StoreDetailModel.fromApi(StoreApiModel api) {
     return StoreDetailModel(
-      id: api.id.toString(),
+      id: api.id,
       name: api.name,
       description: api.description,
       location: api.address.isNotEmpty ? api.address : api.region,

@@ -14,7 +14,7 @@ import 'package:untitled1/widgets/label_title_widget.dart';
 /// Shows the "Featured Products" header (with "View All" action) followed by
 /// a vertical list of [StoreInfoProductCard] widgets.
 class StoreInfoFeaturedProductsSection extends StatelessWidget {
-  final String storeId;
+  final int storeId;
   final String storeName;
   final List<StoreProductItem> products;
 

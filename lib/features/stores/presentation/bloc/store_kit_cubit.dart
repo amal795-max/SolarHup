@@ -13,7 +13,7 @@ class StoreKitCubit extends Cubit<StoreKitCubitState> {
 
   StoreKitCubit(this.repository) : super(StoreKitCubitInitial());
 
-  Future<void> loadProducts(String businessId, {int? categoryId}) async {
+  Future<void> loadProducts(int businessId, {int? categoryId}) async {
     emit(StoreKitCubitLoading());
 
     final categoriesResult = await repository.getStoreCategories();

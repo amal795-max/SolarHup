@@ -24,10 +24,10 @@ class EndPoints {
   static String conversationDetails(int id) => '${_assistant}conversations/$id';
 
   static const String stores = '${baseUrl}stores';
-  static String store(String businessId) => '${baseUrl}stores/$businessId';
-  static String storeProducts(String businessId) =>
+  static String store(int businessId) => '${baseUrl}stores/$businessId';
+  static String storeProducts(int businessId) =>
       '${baseUrl}stores/$businessId/products';
-  static String storeProduct(String businessId, String productId) =>
+  static String storeProduct(int businessId, String productId) =>
       '${baseUrl}stores/$businessId/products/$productId';
 
   static const String storeCategories = '${baseUrl}categories';

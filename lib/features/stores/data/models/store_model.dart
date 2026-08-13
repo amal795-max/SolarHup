@@ -1,5 +1,5 @@
 class StoreModel {
-  final String id;
+  final int id;
   final String name;
   final String location;
   final double rating;
@@ -22,7 +22,7 @@ class StoreModel {
   });
 
   factory StoreModel.fromJson(Map<String, dynamic> json) => StoreModel(
-        id: json['id'] as String,
+        id: json['id'] ,
         name: json['name'] as String,
         location: json['location'] as String,
         rating: (json['rating'] as num).toDouble(),

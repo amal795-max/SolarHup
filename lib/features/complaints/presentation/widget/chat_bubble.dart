@@ -11,32 +11,57 @@ class ChatBubble extends StatelessWidget {
   final ComplaintMessageModel message;
   final bool isMe;
 
-  const ChatBubble({super.key, required this.message, required this.isMe});
+  const ChatBubble({
+    super.key,
+    required this.message,
+    required this.isMe,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final text = message.message.trim();
+
+    // Safety guard.
+    if (text.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: isMe
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(
           bottom: 12.h,
           left: isMe ? 50.w : 0,
           right: isMe ? 0 : 50.w,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 12.h,
+        ),
         decoration: BoxDecoration(
-          color: isMe ? AppColors.primaryColor : context.colorScheme.tertiaryContainer,
+          color: isMe
+              ? AppColors.primaryColor
+              : context.colorScheme.tertiaryContainer,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(16.r),
             topRight: Radius.circular(16.r),
-            bottomLeft: isMe ? Radius.circular(16.r) : Radius.zero,
-            bottomRight: isMe ? Radius.zero : Radius.circular(16.r),
+            bottomLeft: isMe
+                ? Radius.circular(16.r)
+                : Radius.zero,
+            bottomRight: isMe
+                ? Radius.zero
+                : Radius.circular(16.r),
           ),
           boxShadow: [
             BoxShadow(
               color: AppColors.shadowColor,
               blurRadius: 5,
-              offset: const Offset(0, 2),
+              offset: const Offset(
+                0,
+                2,
+              ),
             ),
           ],
         ),
@@ -44,20 +69,27 @@ class ChatBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              message.message,
+              text,
               style: AppStyle.bodyMedium.copyWith(
-                color: isMe ? Colors.white : null,
+                color: isMe
+                    ? Colors.white
+                    : null,
                 height: 1.4,
               ),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(
+              height: 4.h,
+            ),
             Align(
               alignment: Alignment.bottomRight,
               child: Text(
-                DateFormat('hh:mm a').format(message.createdAt),
+                DateFormat('hh:mm a').format(
+                  message.createdAt,
+                ),
                 style: AppStyle.bodyXSmall.copyWith(
-                  color: isMe ? Colors.white70 : AppColors.grey,
-
+                  color: isMe
+                      ? Colors.white70
+                      : AppColors.grey,
                 ),
               ),
             ),

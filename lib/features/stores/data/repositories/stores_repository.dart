@@ -10,10 +10,10 @@ import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 
 abstract class StoresRepository {
   Future<Either<Failure, List<StoreModel>>> getStores({String? region});
-  Future<Either<Failure, StoreDetailModel>> getStore(String businessId);
+  Future<Either<Failure, StoreDetailModel>> getStore(int businessId);
   Future<Either<Failure, List<StoreCategoryModel>>> getStoreCategories();
   Future<Either<Failure, List<StoreProductModel>>> getStoreProducts(
-    String businessId, {
+    int businessId, {
     int? categoryId,
   });
 }
@@ -42,7 +42,7 @@ class StoresRepositoryImpl implements StoresRepository {
   }
 
   @override
-  Future<Either<Failure, StoreDetailModel>> getStore(String businessId) async {
+  Future<Either<Failure, StoreDetailModel>> getStore(int businessId) async {
     if (await networkInfo.isConnected) {
       try {
         final store = await remote.getStore(businessId);
@@ -71,7 +71,7 @@ class StoresRepositoryImpl implements StoresRepository {
 
   @override
   Future<Either<Failure, List<StoreProductModel>>> getStoreProducts(
-    String businessId, {
+    int businessId, {
     int? categoryId,
   }) async {
     if (await networkInfo.isConnected) {

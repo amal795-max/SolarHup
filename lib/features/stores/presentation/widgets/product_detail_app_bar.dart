@@ -11,7 +11,7 @@ import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/
 import '../../../../widgets/back_button_widget.dart';
 
 class ProductDetailAppBar extends StatelessWidget {
-  final String businessId;
+  final int businessId;
 
   const ProductDetailAppBar({super.key, required this.businessId});
 
@@ -24,13 +24,8 @@ class ProductDetailAppBar extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
-              context.push(
-                AppRoutes.addComplaintScreen,
-                extra: {
-                  'businessId': int.tryParse(businessId) ?? 0,
-                  'businessName': 'Store #$businessId',
-                },
-              );
+              context.push('${AppRoutes.addComplaintScreen}/$businessId');
+
             },
             icon: Icon(
               Icons.report_problem_outlined,

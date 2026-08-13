@@ -11,42 +11,65 @@ class ComplaintInitial extends ComplaintState {}
 
 class ComplaintLoading extends ComplaintState {}
 
-class ComplaintActionLoading extends ComplaintState {}
-
-class ComplaintDetailsLoading extends ComplaintState {}
-
 class ComplaintSuccess extends ComplaintState {
   final List<ComplaintModel> complaints;
 
-  const ComplaintSuccess({required this.complaints});
+  const ComplaintSuccess({required this.complaints,});
 
   @override
   List<Object?> get props => [complaints];
 }
 
-class ComplaintDetailsSuccess extends ComplaintState {
-  final ComplaintModel complaint;
-
-  const ComplaintDetailsSuccess({required this.complaint});
-
-  @override
-  List<Object?> get props => [complaint];
-}
-
+class ComplaintDetailsLoading extends ComplaintState {}
 class ComplaintActionSuccess extends ComplaintState {
   final String message;
-  final ComplaintModel complaint;
 
-  const ComplaintActionSuccess({required this.message, required this.complaint});
+  const ComplaintActionSuccess({required this.message});
+
+
+@override
+List<Object?> get props => [message];
+}
+
+class ComplaintDetailsSuccess extends ComplaintState {
+  final ComplaintModel complaint;
+  final bool isSendingMessage;
+  final String? messageError;
+
+  const ComplaintDetailsSuccess({
+    required this.complaint,
+    this.isSendingMessage = false,
+    this.messageError,
+  });
+
+  ComplaintDetailsSuccess copyWith({
+    ComplaintModel? complaint,
+    bool? isSendingMessage,
+    String? messageError,
+    bool clearMessageError = false,
+  }) {
+    return ComplaintDetailsSuccess(
+      complaint: complaint ?? this.complaint,
+      isSendingMessage: isSendingMessage ?? this.isSendingMessage,
+      messageError:
+      clearMessageError ? null : messageError ?? this.messageError,
+    );
+  }
 
   @override
-  List<Object?> get props => [message, complaint];
+  List<Object?> get props => [
+    complaint,
+    isSendingMessage,
+    messageError,
+  ];
 }
 
 class ComplaintError extends ComplaintState {
   final String message;
 
-  const ComplaintError({required this.message});
+  const ComplaintError({
+    required this.message,
+  });
 
   @override
   List<Object?> get props => [message];

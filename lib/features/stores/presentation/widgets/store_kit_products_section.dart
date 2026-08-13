@@ -14,7 +14,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.da
 import 'package:untitled1/widgets/empty_widget.dart';
 
 class StoreKitProductsSection extends StatelessWidget {
-  final String businessId;
+  final int businessId;
   final List<StoreCategoryItem> categories;
   final List<StoreKitProductData> products;
 
@@ -110,7 +110,7 @@ class StoreKitProductsSection extends StatelessWidget {
 }
 
 class _KitProductCard extends StatelessWidget {
-  final String businessId;
+  final int businessId;
   final StoreKitProductData product;
   final bool isFavorite;
 

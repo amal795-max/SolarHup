@@ -82,7 +82,7 @@ class StoreKitSpecialOfferSection extends StatelessWidget {
                     context.push(
                       AppRoutes.productDetailScreen,
                       extra: const ProductDetailRouteArgs(
-                        businessId: '0',
+                        businessId: 0,
                         productId: 'helios-450w',
                       ),
                     );

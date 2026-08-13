@@ -182,3 +182,19 @@ class AddProductToCartParams {
 
   };
 }
+class AddComplaintParams {
+  final int businessId;
+  final String subject;
+  final String message;
+
+  AddComplaintParams({
+
+   required this.businessId, required this.subject, required this.message});
+
+  Map<String, dynamic> toJson() => {
+      'business_id': businessId,
+      'subject': subject,
+      'message': message,
+
+  };
+}

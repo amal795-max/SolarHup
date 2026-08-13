@@ -16,4 +16,5 @@ const String deleteFavoriteSuccessfully = 'removed_from_favorites';
 const String addToCartSuccessfully = 'item_added_to_cart';
 const String cartClearedSuccessfully = 'cart_cleared_successfully';
 const String cartSubmittedSuccessfully = 'cart_submitted_successfully';
+const String complaintSubmittedSuccessfully = 'complaint_submitted_successfully';
 

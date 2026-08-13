@@ -1,5 +1,5 @@
 class ProductDetailRouteArgs {
-  final String businessId;
+  final int businessId;
   final String productId;
 
   const ProductDetailRouteArgs({

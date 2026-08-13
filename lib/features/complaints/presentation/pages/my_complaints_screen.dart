@@ -2,15 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
 import 'package:untitled1/features/complaints/presentation/bloc/complaint_cubit.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
-import '../../../../core/routing/app_routes.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import '../widget/complaint_card.dart';
 
 class MyComplaintsScreen extends StatefulWidget {
@@ -33,14 +32,8 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('my_complaints'.tr()),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(AppRoutes.addComplaintScreen),
-        backgroundColor: AppColors.primaryColor,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+      appBar: AppBar(title: Text('my_complaints'.tr())),
+
       body: Column(
         children: [
           Padding(
@@ -60,24 +53,21 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
             child: BlocBuilder<ComplaintCubit, ComplaintState>(
               builder: (context, state) {
                 if (state is ComplaintError) {
-                  return EmptyWidget(
-                    icon: Icons.error_outline_rounded,
-                    title: 'error'.tr(),
-                    subtitle: state.message,
-                    action: CustomButton(
-                      text: 'retry'.tr(),
-                      onPressed: () => context.read<ComplaintCubit>().getMyComplaints(),
-                    ),
+                  return errorWidget(
+                    message: state.message,
+                    hasButton: true,
+                    onPressed: () =>
+                        context.read<ComplaintCubit>().getMyComplaints(),
                   );
                 }
-                List<ComplaintModel> complaints = [];
-
+                final cubit = context.read<ComplaintCubit>();
                 final isLoading = state is ComplaintLoading;
 
+                List<ComplaintModel> sourceList;
                 if (isLoading) {
-                  complaints = List.generate(
+                  sourceList = List.generate(
                     4,
-                        (index) => ComplaintModel(
+                    (index) => ComplaintModel(
                       id: index,
                       customerId: 0,
                       customerPhone: '',
@@ -85,44 +75,47 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                       businessName: 'Business Name',
                       subject: 'Loading complaint subject...',
                       status: 'pending',
-                      messages: [],
+                      messages: const [],
                       createdAt: DateTime.now(),
                       updatedAt: DateTime.now(),
                     ),
                   );
+                } else {
+                  sourceList = cubit.complaints;
                 }
-                else if (state is ComplaintSuccess) {
-                  complaints = state.complaints.where((c) {
-                    final matchesFilter =
-                        _selectedFilter == 'all' ||
-                            c.status.toLowerCase() == _selectedFilter;
 
-                    final matchesSearch =
-                        c.id.toString().contains(_searchQuery) ||
-                            c.subject.toLowerCase().contains(_searchQuery.toLowerCase());
+                final complaints = sourceList.where((c) {
+                  final matchesFilter =
+                      _selectedFilter == 'all' ||
+                      c.status.toLowerCase() == _selectedFilter;
 
-                    return matchesFilter && matchesSearch;
-                  }).toList();
-                }
-                else {
-                  complaints = context.read<ComplaintCubit>().complaints;
-                }
+                  final matchesSearch =
+                      c.id.toString().contains(_searchQuery) ||
+                      c.subject.toLowerCase().contains(
+                        _searchQuery.toLowerCase(),
+                      );
+
+                  return matchesFilter && matchesSearch;
+                }).toList();
 
                 if (state is ComplaintSuccess && complaints.isEmpty) {
-                  return EmptyWidget(
+                  return const EmptyWidget(
                     icon: Icons.assignment_late_outlined,
-                    title: 'no_complaints_found'.tr(),
-                    subtitle: 'no_complaints_desc'.tr(),
+                    title: 'no_complaints_found',
+                    subtitle: '',
                   );
                 }
 
                 return Skeletonizer(
                   enabled: isLoading,
                   child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
                     itemCount: complaints.length,
                     itemBuilder: (context, index) {
-                      return ComplaintCard(complaint: complaints[index]);
+                      return AnimationWidget(child: ComplaintCard(complaint: complaints[index]));
                     },
                   ),
                 );
@@ -142,7 +135,7 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         scrollDirection: Axis.horizontal,
         itemCount: filters.length,
-        separatorBuilder: (_, __) => SizedBox(width: 8.w),
+        separatorBuilder: (_, _) => SizedBox(width: 8.w),
         itemBuilder: (context, index) {
           final filter = filters[index];
           final isSelected = _selectedFilter == filter;
@@ -164,5 +157,3 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
     );
   }
 }
-
-

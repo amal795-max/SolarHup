@@ -138,7 +138,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.storeInfoScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final storeId = state.extra as String? ?? '';
+        final storeId = state.extra as int ;
         return StoreInfoScreen(storeId: storeId);
       },
     ),
@@ -148,7 +148,7 @@ final GoRouter router = GoRouter(
         final args = state.extra as StoreKitRouteArgs?;
         return StoreKitScreen(
           args: args ??
-              const StoreKitRouteArgs(storeId: '', storeName: ''),
+              const StoreKitRouteArgs(storeId: 0, storeName: ''),
         );
       },
     ),
@@ -159,7 +159,7 @@ final GoRouter router = GoRouter(
         return ProductDetailScreen(
           args: args ??
               const ProductDetailRouteArgs(
-                businessId: '0',
+                businessId: 0,
                 productId: '0',
               ),
         );
@@ -314,11 +314,14 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRoutes.addComplaintScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const AddComplaintScreen();
+      path: '${AppRoutes.addComplaintScreen}/:id',
+      builder: (context, state) {
+        final id = int.parse(state.pathParameters['id']!);
+        return AddComplaintScreen(businessId: id);
       },
     ),
+
+
     GoRoute(
       path: '${AppRoutes.complaintDetailsScreenBase}/:id',
       builder: (BuildContext context, GoRouterState state) {

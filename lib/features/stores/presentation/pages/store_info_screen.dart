@@ -20,7 +20,7 @@ import 'package:untitled1/widgets/loader.dart';
 // ---------------------------------------------------------------------------
 
 class StoreInfoData {
-  final String id;
+  final int id;
   final String name;
   final String description;
   final double rating;
@@ -98,7 +98,7 @@ class StoreProductItem {
 // ---------------------------------------------------------------------------
 
 final StoreInfoData sampleStoreInfo = const StoreInfoData(
-  id: 'sunpeak-001',
+  id: 0,
   name: 'SunPeak Energy Systems',
   description:
       'Premium solar hardware solutions for sustainable living. Authorized distributor for top-tier brands.',
@@ -171,7 +171,7 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
 /// Entry point — loads store details from the API and provides [StoreInfoBloc]
 /// for local UI state (follow, category selection).
 class StoreInfoScreen extends StatelessWidget {
-  final String storeId;
+  final int storeId;
 
   const StoreInfoScreen({super.key, required this.storeId});
 
@@ -194,7 +194,7 @@ class StoreInfoScreen extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _StoreInfoView extends StatelessWidget {
-  final String storeId;
+  final int storeId;
 
   const _StoreInfoView({required this.storeId});
 

@@ -9,7 +9,7 @@ sealed class ProductDetailEvent extends Equatable {
 }
 
 final class LoadProductDetailEvent extends ProductDetailEvent {
-  final String businessId;
+  final int businessId;
   final String productId;
 
   const LoadProductDetailEvent({

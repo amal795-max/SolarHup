@@ -8,7 +8,7 @@ import 'package:untitled1/features/stores/data/models/product_detail_model.dart'
 
 abstract class ProductDetailRemoteDataSource {
   Future<ProductDetailModel> getProductDetail({
-    required String businessId,
+    required int businessId,
     required String productId,
   });
 }
@@ -20,7 +20,7 @@ class ProductDetailRemoteDataSourceImpl implements ProductDetailRemoteDataSource
 
   @override
   Future<ProductDetailModel> getProductDetail({
-    required String businessId,
+    required int businessId,
     required String productId,
   }) async {
     try {

@@ -12,10 +12,10 @@ import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 
 abstract class StoresRemoteDataSource {
   Future<List<StoreModel>> getStores({String? region});
-  Future<StoreDetailModel> getStore(String businessId);
+  Future<StoreDetailModel> getStore(int businessId);
   Future<List<StoreCategoryModel>> getStoreCategories();
   Future<List<StoreProductModel>> getStoreProducts(
-    String businessId, {
+    int businessId, {
     int? categoryId,
   });
 }
@@ -45,7 +45,7 @@ class StoresRemoteDataSourceImpl implements StoresRemoteDataSource {
   }
 
   @override
-  Future<StoreDetailModel> getStore(String businessId) async {
+  Future<StoreDetailModel> getStore(int businessId) async {
     try {
       final response = await apiRequest.get(EndPoints.store(businessId));
       if (response.statusCode != 200) {
@@ -85,7 +85,7 @@ class StoresRemoteDataSourceImpl implements StoresRemoteDataSource {
 
   @override
   Future<List<StoreProductModel>> getStoreProducts(
-    String businessId, {
+    int businessId, {
     int? categoryId,
   }) async {
     try {
