@@ -14,7 +14,7 @@ abstract class CatalogRepository {
     String? businessType,
   });
   Future<Either<Failure, List<DiscountedProductModel>>> getStoreDiscountedProducts(
-    String businessId, {
+    int businessId, {
     int? limit,
   });
 }
@@ -50,7 +50,7 @@ class CatalogRepositoryImpl implements CatalogRepository {
   @override
   Future<Either<Failure, List<DiscountedProductModel>>>
       getStoreDiscountedProducts(
-    String businessId, {
+    int businessId, {
     int? limit,
   }) async {
     if (!await networkInfo.isConnected) {

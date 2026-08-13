@@ -106,9 +106,9 @@ void main() {
 
     final discounted = applyDiscountToProductDetail(
       product: product,
-      candidate: DiscountProductCandidate(
+      candidate: const DiscountProductCandidate(
         productId: '7',
-        businessId: '42',
+        businessId: 42,
         name: 'SunPeak Ultra 450W',
         category: 'solar_panel',
         businessName: 'SunPeak',

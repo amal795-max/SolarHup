@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
@@ -46,7 +47,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color resolvedBg = switch (type) {
-      ButtonType.filled => backgroundColor ?? AppColors.primaryColor,
+      ButtonType.filled => backgroundColor ?? context.colorScheme.primary,
       ButtonType.outlined => Colors.transparent,
       ButtonType.text => Colors.transparent,
     };

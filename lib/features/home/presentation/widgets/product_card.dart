@@ -6,7 +6,7 @@ import 'package:untitled1/widgets/image_widget.dart';
 
 class ProductCardData {
   final String? id;
-  final String? businessId;
+  final int? businessId;
   final String name;
   final String? category;
   final double price;
@@ -61,7 +61,8 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 175.w,
+        width: MediaQuery.of(context).size.width * 0.45,
+        constraints: const BoxConstraints(maxWidth: 200),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkContainer : AppColors.white,
           borderRadius: BorderRadius.circular(14.r),
@@ -226,7 +227,11 @@ class _PriceRow extends StatelessWidget {
               color: AppColors.grey,
               decoration: TextDecoration.lineThrough,
               decorationColor: AppColors.grey,
+              decorationThickness: 16,
+              decorationStyle: TextDecorationStyle.solid,
             ),
+
+
           ),
           SizedBox(width: 5.w),
           Text(

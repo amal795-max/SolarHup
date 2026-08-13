@@ -655,6 +655,7 @@
   "field_required": "This field is required",
   "retry": "Retry",
   "error": "Error",
+  "privacy_policy_updated_at": "Last updated: {}",
   "all": "All",
   "in_progress": "In Progress",
   "chat": "Chat",

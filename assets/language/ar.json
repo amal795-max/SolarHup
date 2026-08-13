@@ -662,6 +662,7 @@
   "field_required": "هذا الحقل مطلوب",
   "retry": "إعادة المحاولة",
   "error": "خطأ",
+  "privacy_policy_updated_at": "آخر تحديث: {}",
   "all": "الكل",
   "in_progress": "قيد المعالجة",
   "chat": "المحادثة",

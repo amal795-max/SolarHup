@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -13,9 +14,9 @@ import 'package:untitled1/features/services/presentation/pages/workshop_picker_r
 import 'package:untitled1/features/services/presentation/widgets/service_category_grid.dart';
 import 'package:untitled1/features/services/presentation/widgets/services_header_section.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
-import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
+
+import '../../../../widgets/error_widget.dart';
 
 class ExpertServicesScreen extends StatelessWidget {
   const ExpertServicesScreen({super.key});
@@ -40,52 +41,46 @@ class _ExpertServicesView extends StatelessWidget {
       backgroundColor:
           isDark ? Theme.of(context).scaffoldBackgroundColor : AppColors.backGroundGrey,
       body: SafeArea(
-        child: BlocBuilder<ServiceCategoriesCubit, ServiceCategoriesState>(
-          builder: (context, state) {
-            return switch (state) {
-              ServiceCategoriesLoading() => AppSkeletonizer(
-                  child: _ServicesContent(
-                    categories: List.generate(
-                      5,
-                      (index) => StoreCategoryModel(
-                        id: index,
-                        name: 'Loading category name',
-                        type: 'workshop',
-                      ),
+         child:  BlocBuilder<ServiceCategoriesCubit, ServiceCategoriesState>(
+            builder: (context, state) {
+              if (state is ServiceCategoriesError) {
+                return errorWidget(
+                  message: state.message,
+                  onPressed: () => context.read<ServiceCategoriesCubit>().loadCategories(),
+                  hasButton: true,
+                );
+              }
+
+              final isLoading = state is ServiceCategoriesLoading;
+              final fakeCategories = List.generate(
+                6,
+                    (index) => StoreCategoryModel(
+                  id: index,
+                  name: 'Loading...',
+                  type: 'workshop',
+                ),
+              );
+
+              final categories = isLoading
+                  ? fakeCategories
+                  : (state is ServiceCategoriesLoaded ? state.categories : <StoreCategoryModel>[]);
+
+              return _ServicesContent(
+                categories: categories,
+                onCategoryTap: isLoading ? (_) {}
+                    : (category) {
+                  context.push(
+                    AppRoutes.workshopPickerScreen,
+                    extra: WorkshopPickerRouteArgs(
+                      categoryId: category.id,
+                      categoryName: category.name,
                     ),
-                    onCategoryTap: (_) {},
-                  ),
-                ),
-              ServiceCategoriesError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context
-                        .read<ServiceCategoriesCubit>()
-                        .loadCategories(),
-                    width: 160.w,
-                  ),
-                ),
-              ServiceCategoriesLoaded(:final categories) => _ServicesContent(
-                  categories: categories,
-                  onCategoryTap: (category) {
-                    context.push(
-                      AppRoutes.workshopPickerScreen,
-                      extra: WorkshopPickerRouteArgs(
-                        categoryId: category.id,
-                        categoryName: category.name,
-                      ),
-                    );
-                  },
-                ),
-              _ => const SizedBox.shrink(),
-            };
-          },
-        ),
+                  );
+                },
+                isLoading: isLoading,
+              );
+            },
+          )
       ),
     );
   }
@@ -94,10 +89,12 @@ class _ExpertServicesView extends StatelessWidget {
 class _ServicesContent extends StatelessWidget {
   final List<StoreCategoryModel> categories;
   final ValueChanged<StoreCategoryModel> onCategoryTap;
+  final bool isLoading;
 
   const _ServicesContent({
     required this.categories,
     required this.onCategoryTap,
+    required this.isLoading,
   });
 
   @override
@@ -107,32 +104,65 @@ class _ServicesContent extends StatelessWidget {
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 0),
+            padding: EdgeInsets.fromLTRB(
+              16.w,
+              16.h,
+              16.w,
+              0,
+            ),
             child: const ServicesHeaderSection(),
           ),
         ),
-        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+
+        SliverToBoxAdapter(
+          child: SizedBox(height: 28.h),
+        ),
+
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  'services_pick_category'.tr(),
-                  style: AppStyle.h6.copyWith(fontWeight: FontWeight.w800),
+                Container(
+                  width: 4.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor,
+                    borderRadius: BorderRadius.circular(4.r),
+                  ),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  'services_category_list_hint'.tr(),
-                  style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'services_pick_category'.tr(),
+                        style: AppStyle.h6.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      SizedBox(height: 3.h),
+                      Text(
+                        'services_category_list_hint'.tr(),
+                        style: AppStyle.bodyXSmall.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-        if (categories.isEmpty)
+
+        SliverToBoxAdapter(
+          child: SizedBox(height: 16.h),
+        ),
+
+        if (!isLoading && categories.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
             child: EmptyWidget(
@@ -146,11 +176,19 @@ class _ServicesContent extends StatelessWidget {
           )
         else
           SliverPadding(
-            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
+            padding: EdgeInsets.fromLTRB(
+              16.w,
+              0,
+              16.w,
+              28.h,
+            ),
             sliver: SliverToBoxAdapter(
-              child: ServiceCategoryGrid(
-                categories: categories,
-                onCategoryTap: onCategoryTap,
+              child: Skeletonizer(
+                enabled: isLoading,
+                child: ServiceCategoryGrid(
+                  categories: categories,
+                  onCategoryTap: onCategoryTap,
+                ),
               ),
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:untitled1/features/authentication/presentation/bloc/authenticati
 import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
 import 'package:untitled1/features/complaints/presentation/bloc/complaint_cubit.dart';
+import 'package:untitled1/features/settings/presentation/bloc/settings_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<OrdersCubit>()),
         BlocProvider(create: (_) => di.getIt<FaqCubit>()),
         BlocProvider(create: (_) => di.getIt<ComplaintCubit>()),
+        BlocProvider(create: (_) => di.getIt<SettingsCubit>()),
         BlocProvider(create: (_) => di.getIt<ServiceRequestsCubit>()),
       ],
       child: ScreenUtilInit(

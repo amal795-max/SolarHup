@@ -135,7 +135,7 @@ class _ProductDetailView extends StatelessWidget {
 }
 
 class _ProductDetailBody extends StatelessWidget {
-  final String businessId;
+  final int businessId;
   final ProductDetailModel product;
   final int selectedImageIndex;
 

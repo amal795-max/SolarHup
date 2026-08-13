@@ -76,6 +76,9 @@ class ProductDetailBottomBar extends StatelessWidget {
                   if (state is CartActionSuccess) {
                    DataHelper.showSnackBar(message: state.message, context: context);
                   }
+                  if (state is CartError) {
+                   DataHelper.showSnackBar(message: state.message, context: context);
+                  }
                 },
                 builder: (BuildContext context, CartState state) {
                   return CustomButton(

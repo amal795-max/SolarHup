@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -145,8 +146,12 @@ class _StoresViewState extends State<_StoresView> {
 
   Widget _buildBody(BuildContext context, StoresState state) {
     if (state is StoresLoading || state is StoresInitial) {
-      return _buildScrollable(isLoading: true, stores: _skeletonStores);
+      return _buildScrollable(
+        isLoading: true,
+        stores: _skeletonStores,
+      );
     }
+
     if (state is StoresLoaded) {
       return _buildScrollable(stores: state.stores.map(_mapStore).toList());
     }
@@ -166,11 +171,10 @@ class _StoresViewState extends State<_StoresView> {
     final filtered = isSearching ? _filter(stores) : stores;
     final hasNoResults = isSearching && filtered.isEmpty;
 
-    final content = CustomScrollView(
+    return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
-        // Fixed header + search bar
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,15 +190,13 @@ class _StoresViewState extends State<_StoresView> {
                   _searchController.clear();
                   setState(() => _searchQuery = '');
                 },
-                onFilterTap: () {
-                  // TODO: Push to filter screen
-                },
+                onFilterTap: () {},
               ),
               SizedBox(height: 8.h),
             ],
           ),
         ),
-        // Empty-state or list of store cards
+
         if (hasNoResults)
           SliverFillRemaining(
             hasScrollBody: false,
@@ -203,22 +205,24 @@ class _StoresViewState extends State<_StoresView> {
         else
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, i) => StoreCard(
-                data: filtered[i],
-                onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
-              ),
+                  (context, i) {
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: StoreCard(
+                    data: filtered[i],
+                    onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+                  ),
+                );
+              },
               childCount: filtered.length,
             ),
           ),
+
         SliverToBoxAdapter(child: SizedBox(height: 24.h)),
       ],
     );
-
-    if (isLoading) {
-      return AppSkeletonizer(child: content);
-    }
-    return content;
   }
+
 
   // ── Empty / error bodies ──────────────────────────────────────────────────
 

@@ -118,10 +118,14 @@ class ProductDetailInfoSection extends StatelessWidget {
             children: [
               Text(
                 '\$${product.originalPrice!.toStringAsFixed(2)}',
-                style: AppStyle.bodyMedium.copyWith(
+                style: AppStyle.labelMedium.copyWith(
                   color: AppColors.grey,
                   decoration: TextDecoration.lineThrough,
+                  decorationColor: AppColors.grey,
+                  decorationThickness: 16,
+                  decorationStyle: TextDecorationStyle.solid,
                 ),
+
               ),
               SizedBox(width: 8.w),
               Text(

@@ -48,6 +48,7 @@ import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_product_details_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 import '../../features/favorite/presentation/pages/favorites_screen.dart';
+import '../../features/settings/presentation/pages/privacy_policy_screen.dart';
 import '../../features/complaints/presentation/pages/my_complaints_screen.dart';
 import '../../features/complaints/presentation/pages/complaint_details_screen.dart';
 import '../../features/complaints/presentation/pages/add_complaint_screen.dart';
@@ -339,6 +340,12 @@ final GoRouter router = GoRouter(
       path: AppRoutes.favoritesScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const FavoritesScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.privacyPolicyScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const PrivacyPolicyScreen();
       },
     ),
     GoRoute(

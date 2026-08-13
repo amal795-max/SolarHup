@@ -1,6 +1,6 @@
 class DiscountedProductModel {
   final String productId;
-  final String businessId;
+  final int businessId;
   final String name;
   final String category;
   final String businessName;

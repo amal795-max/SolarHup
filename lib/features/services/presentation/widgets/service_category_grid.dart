@@ -17,157 +17,152 @@ class ServiceCategoryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var i = 0; i < categories.length; i++)
-          _ServiceCategoryTile(
-            category: categories[i],
-            index: i,
-            onTap: () => onCategoryTap(categories[i]),
-          ),
-      ],
+    return GridView.builder(
+      itemCount: categories.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 12.w,
+        mainAxisSpacing: 12.h,
+        childAspectRatio: 0.98,
+      ),
+      itemBuilder: (context, index) {
+        final category = categories[index];
+
+        return _ServiceCategoryCard(
+          category: category,
+          onTap: () => onCategoryTap(category),
+        );
+      },
     );
   }
 }
 
-class _ServiceCategoryTile extends StatelessWidget {
+class _ServiceCategoryCard extends StatelessWidget {
   final StoreCategoryModel category;
-  final int index;
   final VoidCallback onTap;
 
-  const _ServiceCategoryTile({
+  const _ServiceCategoryCard({
     required this.category,
-    required this.index,
     required this.onTap,
   });
 
   IconData _iconForName(String name) {
     final normalized = name.toLowerCase();
-    if (normalized.contains('install')) return Icons.solar_power_rounded;
-    if (normalized.contains('maint')) return Icons.build_circle_outlined;
-    if (normalized.contains('batter')) {
-      return Icons.battery_charging_full_rounded;
-    }
-    if (normalized.contains('invert') || normalized.contains('repair')) {
-      return Icons.electrical_services_rounded;
-    }
-    if (normalized.contains('audit') || normalized.contains('energy')) {
-      return Icons.insights_outlined;
-    }
-    if (normalized.contains('clean')) return Icons.cleaning_services_outlined;
-    if (normalized.contains('wiring') || normalized.contains('electrical')) {
-      return Icons.cable_rounded;
-    }
-    return Icons.handyman_outlined;
-  }
 
-  Color _accentColor(int index) {
-    const palette = [
-      AppColors.primaryColor,
-      AppColors.tertiaryColor,
-      AppColors.green,
-      AppColors.brown,
-      AppColors.blue,
-    ];
-    return palette[index % palette.length];
+    if (normalized.contains('install')) {
+      return Icons.solar_power_outlined;
+    }
+
+    if (normalized.contains('maint')) {
+      return Icons.handyman_outlined;
+    }
+
+    if (normalized.contains('batter')) {
+      return Icons.battery_charging_full_outlined;
+    }
+
+    if (normalized.contains('invert') ||
+        normalized.contains('repair')) {
+      return Icons.electrical_services_outlined;
+    }
+
+    if (normalized.contains('audit') ||
+        normalized.contains('energy')) {
+      return Icons.analytics_outlined;
+    }
+
+    if (normalized.contains('clean')) {
+      return Icons.cleaning_services_outlined;
+    }
+
+    if (normalized.contains('wiring') ||
+        normalized.contains('electrical')) {
+      return Icons.cable_outlined;
+    }
+
+    return Icons.build_outlined;
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = _accentColor(index);
+    final isDark =
+        Theme.of(context).brightness == Brightness.dark;
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16.r),
-          child: Ink(
-            decoration: BoxDecoration(
-              color: isDark ? AppColors.darkContainer : AppColors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              boxShadow: isDark
-                  ? null
-                  : [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(18.r),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18.r),
+        splashColor: AppColors.primaryColor.withValues(alpha: 0.06),
+        highlightColor: AppColors.primaryColor.withValues(alpha: 0.03),
+        child: Ink(
+          padding: EdgeInsets.all(16.r),
+          decoration: BoxDecoration(
+            color: isDark
+                ? AppColors.darkContainer
+                : AppColors.white,
+            borderRadius: BorderRadius.circular(18.r),
+            border: Border.all(
+              color: isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.black.withValues(alpha: 0.055),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 5.w,
-                  height: 72.h,
-                  decoration: BoxDecoration(
-                    color: accent,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(16.r),
-                      bottomLeft: Radius.circular(16.r),
-                    ),
-                  ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 46.w,
+                height: 46.w,
+                decoration: BoxDecoration(
+                  color: AppColors.lightYellow,
+                  borderRadius: BorderRadius.circular(14.r),
                 ),
-                SizedBox(width: 14.w),
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryColor.withValues(alpha: 0.22),
-                    borderRadius: BorderRadius.circular(14.r),
-                  ),
-                  child: Icon(
-                    _iconForName(category.name),
-                    color: AppColors.tertiaryColor,
-                    size: 24.sp,
-                  ),
+                child: Icon(
+                  _iconForName(category.name),
+                  color: AppColors.primaryColor,
+                  size: 23.sp,
                 ),
-                SizedBox(width: 14.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        category.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppStyle.labelLarge.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
+              ),
+
+              const Spacer(),
+
+              Text(
+                category.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyle.labelLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.2,
+                ),
+              ),
+
+              SizedBox(height: 6.h),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'services_browse_workshops'.tr(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyle.bodyXSmall.copyWith(
+                        color: AppColors.grey,
                       ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'services_browse_workshops'.tr(),
-                        style: AppStyle.bodySmall.copyWith(
-                          color: AppColors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 14.w),
-                  child: Container(
-                    width: 32.w,
-                    height: 32.w,
-                    decoration: BoxDecoration(
-                      color: isDark
-                          ? AppColors.darkGray
-                          : AppColors.backGroundGrey,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_rounded,
-                      size: 18.sp,
-                      color: AppColors.primaryColor,
                     ),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(width: 6.w),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 15.sp,
+                    color: AppColors.grey,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

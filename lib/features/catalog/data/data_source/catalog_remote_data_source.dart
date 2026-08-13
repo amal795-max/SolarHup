@@ -7,7 +7,7 @@ import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 
 abstract class CatalogRemoteDataSource {
   Future<List<DiscountModel>> getDiscounts({String? businessType});
-  Future<List<DiscountModel>> getStoreDiscounts(String businessId);
+  Future<List<DiscountModel>> getStoreDiscounts(int businessId);
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -38,7 +38,7 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
   }
 
   @override
-  Future<List<DiscountModel>> getStoreDiscounts(String businessId) async {
+  Future<List<DiscountModel>> getStoreDiscounts(int businessId) async {
     try {
       final response = await apiRequest.get(EndPoints.storeDiscounts(businessId));
       if (response.statusCode != 200) {

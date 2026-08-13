@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,56 +57,59 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
   Widget build(BuildContext context) {
     return Column(
         children: [
-          SizedBox(
-            height: 140.h,
-            child: PageView.builder(
-              controller: _controller,
-              itemCount: tips.length,
-              onPageChanged: (index) {
-                setState(() => _currentIndex = index);
-              },
-              itemBuilder: (context, index) {
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  padding: EdgeInsets.all(14.w),
-                  decoration: BoxDecoration(
-                    color:AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(18.r),
-                    boxShadow: const [
+          LayoutBuilder(
+      builder:(context,constraints)=>
+             AspectRatio(
+              aspectRatio: constraints.maxWidth>600?4:2.5,
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: tips.length,
+                onPageChanged: (index) {
+                  setState(() => _currentIndex = index);
+                },
+                itemBuilder: (context, index) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: EdgeInsets.symmetric(horizontal: 10.w),
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color:AppColors.primaryColor,
+                      borderRadius: BorderRadius.circular(18.r),
+                      boxShadow: const [
 
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        spacing: 8,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            tips[index]['title']!.tr(),
-                            style: AppStyle.bodySmall.copyWith(
-                              color: AppColors.lightGrey,
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          spacing: 8,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              tips[index]['title']!.tr(),
+                              style: AppStyle.bodySmall.copyWith(
+                                color: AppColors.lightGrey,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const Icon(Icons.tips_and_updates,color: AppColors.secondaryColor,),
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Text(
-                        tips[index]['body']!.tr(),
-                        style: AppStyle.bodyXSmall.copyWith(
-                          color: AppColors.blue,
-                          height: 1.4,
+                            const Icon(Icons.tips_and_updates,color: AppColors.secondaryColor,),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        SizedBox(height: 10.h),
+                        Text(
+                          tips[index]['body']!.tr(),
+                          style: AppStyle.bodyXSmall.copyWith(
+                            color: AppColors.blue,
+                            height: 1.4,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
           ),
 

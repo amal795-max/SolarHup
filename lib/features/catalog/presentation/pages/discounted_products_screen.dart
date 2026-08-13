@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -16,6 +17,7 @@ import 'package:untitled1/features/stores/presentation/pages/product_detail_rout
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class DiscountedProductsScreen extends StatelessWidget {
@@ -54,8 +56,9 @@ class _DiscountedProductsView extends StatelessWidget {
     final isDark = context.brightness;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? Theme.of(context).scaffoldBackgroundColor : AppColors.backGroundGrey,
+      backgroundColor: isDark
+          ? Theme.of(context).scaffoldBackgroundColor
+          : AppColors.backGroundGrey,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +67,6 @@ class _DiscountedProductsView extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(8.w, 8.h, 16.w, 0),
               child: Row(
                 children: [
-                  const BackButtonWidget(),
                   Expanded(
                     child: Text(
                       'discounted_products_title'.tr(),
@@ -83,81 +85,84 @@ class _DiscountedProductsView extends StatelessWidget {
             ),
             SizedBox(height: 12.h),
             Expanded(
-              child: BlocBuilder<DiscountedProductsCubit, DiscountedProductsState>(
-                builder: (context, state) {
-                  return switch (state) {
-                    DiscountedProductsLoading() => AppSkeletonizer(
+              child:
+                  BlocBuilder<DiscountedProductsCubit, DiscountedProductsState>(
+                    builder: (context, state) {
+                      final fakeProducts = List.generate(
+                        6,
+                        (index) => const DiscountedProductModel(
+                          productId: '',
+                          businessId: 0,
+                          name: 'Loading...',
+                          category: '',
+                          price: 0,
+                          originalPrice: 0,
+                          discountPercent: 0,
+                          businessName: '',
+                          imageUrl: '',
+                          imagePlaceholderColorValue: 0xFFE0E0E0,
+                          discountLabel: '',
+                        ),
+                      );
+                      if (state is DiscountedProductsError) {
+                        return errorWidget(
+                          onPressed: () => context.read<DiscountedProductsCubit>().loadDiscountedProducts(),
+                          message: state.message,
+                          hasButton: false,
+                        );
+                      }
+
+                      final isLoading = state is DiscountedProductsLoading;
+
+                      final products = state is DiscountedProductsLoaded
+                          ? state.products
+                          : fakeProducts;
+
+                      if (state is DiscountedProductsLoaded &&
+                          products.isEmpty) {
+                        return EmptyWidget(
+                          icon: Icons.local_offer_outlined,
+                          iconSize: 48,
+                          iconColor: AppColors.grey,
+                          title: 'discounted_products_empty'.tr(),
+                          subtitle: 'discounted_products_empty_hint'.tr(),
+                          padding: EdgeInsets.symmetric(vertical: 32.h),
+                        );
+                      }
+
+                      return Skeletonizer(
+                        enabled: isLoading,
                         child: GridView.builder(
                           padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 12.h,
-                            crossAxisSpacing: 12.w,
-                            childAspectRatio: 0.72,
-                          ),
-                          itemCount: 6,
-                          itemBuilder: (_, __) => ProductCard(
-                            data: ProductCardData(
-                              name: 'Loading product',
-                              price: 99,
-                              imagePlaceholderColorValue: 0xFF0A2A43,
-                            ),
-                          ),
-                        ),
-                      ),
-                    DiscountedProductsError(:final message) => EmptyWidget(
-                        icon: Icons.error_outline_rounded,
-                        iconSize: 48,
-                        iconColor: AppColors.red,
-                        title: 'stores_error_title'.tr(),
-                        subtitle: message,
-                        action: CustomButton(
-                          text: 'stores_retry'.tr(),
-                          onPressed: () => context
-                              .read<DiscountedProductsCubit>()
-                              .loadDiscountedProducts(),
-                          width: 160.w,
-                        ),
-                      ),
-                    DiscountedProductsLoaded(:final products) =>
-                      products.isEmpty
-                          ? EmptyWidget(
-                              icon: Icons.local_offer_outlined,
-                              iconSize: 48,
-                              iconColor: AppColors.grey,
-                              title: 'discounted_products_empty'.tr(),
-                              subtitle: 'discounted_products_empty_hint'.tr(),
-                              padding: EdgeInsets.symmetric(vertical: 32.h),
-                            )
-                          : GridView.builder(
-                              padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 12.h,
                                 crossAxisSpacing: 12.w,
-                                childAspectRatio: 0.72,
+                                childAspectRatio: 0.72.r,
                               ),
-                              itemCount: products.length,
-                              itemBuilder: (context, index) {
-                                final product = products[index];
-                                final card = _mapProduct(product);
-                                return ProductCard(
-                                  data: card,
-                                  onTap: () => context.push(
-                                    AppRoutes.productDetailScreen,
-                                    extra: ProductDetailRouteArgs(
-                                      businessId: product.businessId,
-                                      productId: product.productId,
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            final product = products[index];
+                            final card = _mapProduct(product);
+
+                            return ProductCard(
+                              data: card,
+                              onTap: isLoading
+                                  ? null
+                                  : () => context.push(
+                                      AppRoutes.productDetailScreen,
+                                      extra: ProductDetailRouteArgs(
+                                        businessId: product.businessId,
+                                        productId: product.productId,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                            ),
-                    _ => const SizedBox.shrink(),
-                  };
-                },
-              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
             ),
           ],
         ),

@@ -6,7 +6,7 @@ import 'package:untitled1/features/stores/data/models/product_detail_model.dart'
 
 class DiscountProductCandidate {
   final String productId;
-  final String businessId;
+  final int businessId;
   final String name;
   final String category;
   final String businessName;
@@ -36,7 +36,7 @@ List<DiscountProductCandidate> flattenDiscountProducts(
       final key = '${discount.businessId}-${product.id}';
       final candidate = DiscountProductCandidate(
         productId: product.id.toString(),
-        businessId: discount.businessId.toString(),
+        businessId: discount.businessId,
         name: product.name,
         category: product.category,
         businessName: discount.businessName,
@@ -138,7 +138,7 @@ ProductDetailModel applyDiscountToProductDetail({
 
 DiscountProductCandidate? findBestDiscountForProduct({
   required List<DiscountModel> discounts,
-  required String businessId,
+  required int businessId,
   required String productId,
 }) {
   final candidates = flattenDiscountProducts(discounts)

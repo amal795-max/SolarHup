@@ -331,6 +331,7 @@ class _HomeViewState extends State<_HomeView> {
     );
 
     if (isLoading) {
+
       return Skeletonizer(
         enabled: true,
         effect: const ShimmerEffect(

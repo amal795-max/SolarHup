@@ -9,7 +9,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_info_screen.d
 import 'package:untitled1/widgets/label_title_widget.dart';
 
 class StoreInfoDiscountsSection extends StatelessWidget {
-  final String storeId;
+  final int storeId;
   final List<StoreProductItem> products;
 
   const StoreInfoDiscountsSection({

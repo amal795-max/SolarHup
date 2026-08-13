@@ -37,7 +37,7 @@ class CartCubit extends Cubit<CartState> {
     if (cart.businessId <= 0 || cart.items.isEmpty) return cart;
 
     final result = await catalogRepository.getStoreDiscountedProducts(
-      cart.businessId.toString(),
+      cart.businessId,
     );
 
     return result.fold(
