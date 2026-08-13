@@ -33,7 +33,7 @@ class EndPoints {
   static const String storeCategories = '${baseUrl}categories';
 
   static const String discounts = '${baseUrl}discounts';
-  static String storeDiscounts(String businessId) =>
+  static String storeDiscounts(int businessId) =>
       '${baseUrl}stores/$businessId/discounts';
 
   static const String workshops = '${baseUrl}workshops';
@@ -60,6 +60,7 @@ class EndPoints {
   static const String cartItems = '${baseUrl}orders/cart/items';
   static const String submitCart = '${baseUrl}orders/cart/submit';
   static String favoriteItem(String itemType, int itemId) => '${baseUrl}favorites/$itemType/$itemId';
+  static const String privacyPolicy = '${baseUrl}privacy-policy';
 }
 
 class ApiKeys {

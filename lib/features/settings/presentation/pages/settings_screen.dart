@@ -127,6 +127,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.info_outline,
                 title: 'privacy_policy'.tr(),
+                onTap: () => context.push(AppRoutes.privacyPolicyScreen),
               ),
               _buildListTile(
                 context,

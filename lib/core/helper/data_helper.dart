@@ -60,8 +60,8 @@ class DataHelper {
     return  '+963$raw';
   }
 
-  static String dateFormat(String newPattern,DateTime date) {
-    return DateFormat(newPattern).format(date);
+  static String dateFormat(String newPattern,DateTime date,{Locale? locale} ){
+    return DateFormat(newPattern,locale?.languageCode ).format(date);
 
   }
 
