@@ -24,3 +24,10 @@ Map<String, dynamic> unwrapWorkshopPayload(Map<String, dynamic> json) {
   if (workshop is Map<String, dynamic>) return workshop;
   return payload;
 }
+
+Map<String, dynamic> unwrapOrderPayload(Map<String, dynamic> json) {
+  final payload = unwrapApiPayload(json);
+  final order = payload['order'];
+  if (order is Map<String, dynamic>) return order;
+  return payload;
+}

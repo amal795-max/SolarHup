@@ -2,17 +2,21 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/features/catalog/data/models/discounted_product_model.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
+import 'package:untitled1/features/catalog/data/repositories/catalog_repository.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 
 part 'store_detail_state.dart';
 
 class StoreDetailCubit extends Cubit<StoreDetailState> {
   final StoresRepository repository;
+  final CatalogRepository catalogRepository;
 
-  StoreDetailCubit(this.repository) : super(StoreDetailInitial());
+  StoreDetailCubit(this.repository, this.catalogRepository)
+      : super(StoreDetailInitial());
 
   Future<void> loadStore(String businessId, {int? categoryId}) async {
     emit(StoreDetailLoading());
@@ -37,11 +41,20 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
           (_) => <StoreProductModel>[],
           (items) => items,
         );
+
+        final discountedResult =
+            await catalogRepository.getStoreDiscountedProducts(businessId);
+        final discountedProducts = discountedResult.fold(
+          (_) => <DiscountedProductModel>[],
+          (items) => items,
+        );
+
         emit(
           StoreDetailLoaded(
             store: store,
             categories: categories,
             products: products,
+            discountedProducts: discountedProducts,
           ),
         );
       },

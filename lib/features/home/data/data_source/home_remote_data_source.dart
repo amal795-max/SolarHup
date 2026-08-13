@@ -4,7 +4,6 @@ import '../models/product_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<ProductModel>> getUsedProducts();
-  Future<List<ProductModel>> getNewOffers();
 }
 
 /// Mock implementation — replace bodies with real API calls when backend is ready.
@@ -40,42 +39,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         badgeText: 'Refurbished',
         badgeColorValue: AppColors.secondaryColor,
         metaText: 'Used • Grade A',
-        image: AppImages.batteryTest3,
-        iconType: 'solar',
-      ),
-    ];
-  }
-
-  @override
-  Future<List<ProductModel>> getNewOffers() async {
-    return const [
-      ProductModel(
-        id: 'n1',
-        name: 'SunPeak Ultra 450W Monocrystalline',
-        category: 'SOLAR PANELS',
-        price: 133.00,
-        originalPrice: 149.00,
-        discountPercent: 15,
-        image: AppImages.batteryTest1,
-        iconType: 'solar',
-      ),
-      ProductModel(
-        id: 'n2',
-        name: 'Hybrid Inverter',
-        category: 'Hybrid inverter that combines solar and battery ',
-        price: 500.00,
-        originalPrice: 545.00,
-        badgeText: 'Certified',
-        badgeColorValue: AppColors.lightGrey,
-        image: AppImages.batteryTest2,
-        iconType: 'inverter',
-      ),
-      ProductModel(
-        id: 'n3',
-        name: 'EcoGen 300W Panel',
-        price: 120.00,
-        originalPrice: 149.00,
-        discountPercent: 20,
         image: AppImages.batteryTest3,
         iconType: 'solar',
       ),

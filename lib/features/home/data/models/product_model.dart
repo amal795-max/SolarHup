@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 class ProductModel extends Equatable {
   final String id;
+  final String? businessId;
   final String name;
   final String? category;
   final double price;
@@ -12,13 +13,16 @@ class ProductModel extends Equatable {
   final Color? badgeColorValue;
   final String? metaText;
   final String image;
+  final String? imageUrl;
+  final int? imagePlaceholderColorValue;
   final int? discountPercent;
 
-  /// 'solar' | 'inverter'
+  /// 'solar' | 'inverter' | 'battery'
   final String iconType;
 
   const ProductModel({
     required this.id,
+    this.businessId,
     required this.name,
     this.category,
     required this.price,
@@ -26,7 +30,9 @@ class ProductModel extends Equatable {
     this.badgeText,
     this.badgeColorValue,
     this.metaText,
-    required this.image,
+    this.image = '',
+    this.imageUrl,
+    this.imagePlaceholderColorValue,
     this.discountPercent,
     this.iconType = 'solar',
   });
@@ -34,6 +40,7 @@ class ProductModel extends Equatable {
   @override
   List<Object?> get props => [
         id,
+        businessId,
         name,
         category,
         price,
@@ -42,6 +49,8 @@ class ProductModel extends Equatable {
         badgeColorValue,
         metaText,
         image,
+        imageUrl,
+        imagePlaceholderColorValue,
         discountPercent,
         iconType,
       ];

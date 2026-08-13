@@ -32,6 +32,10 @@ class EndPoints {
 
   static const String storeCategories = '${baseUrl}categories';
 
+  static const String discounts = '${baseUrl}discounts';
+  static String storeDiscounts(String businessId) =>
+      '${baseUrl}stores/$businessId/discounts';
+
   static const String workshops = '${baseUrl}workshops';
   static String workshop(String businessId) => '${baseUrl}workshops/$businessId';
   static String workshopServices(String businessId) =>

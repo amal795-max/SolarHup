@@ -54,8 +54,17 @@ class ProductDetailBottomBar extends StatelessWidget {
                     '\$${product.currentPrice.toStringAsFixed(2)}',
                     style: AppStyle.h6.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: product.hasDiscount ? AppColors.primaryColor : null,
                     ),
                   ),
+                  if (product.hasDiscount)
+                    Text(
+                      '\$${product.originalPrice!.toStringAsFixed(2)}',
+                      style: AppStyle.labelXSmall.copyWith(
+                        color: AppColors.grey,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
                 ],
               ),
             ),

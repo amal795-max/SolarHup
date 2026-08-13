@@ -79,12 +79,64 @@ class ProductDetailInfoSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        Text(
-          '\$${product.currentPrice.toStringAsFixed(2)}',
-          style: AppStyle.h4.copyWith(
-            fontWeight: FontWeight.w700,
+        if (product.hasDiscount) ...[
+          Row(
+            children: [
+              if (product.discountPercent != null)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.blue,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Text(
+                    '-${product.discountPercent}%',
+                    style: AppStyle.labelXSmall.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              if (product.discountLabel != null) ...[
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    product.discountLabel!,
+                    style: AppStyle.labelSmall.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
-        ),
+          SizedBox(height: 8.h),
+        ],
+        if (product.hasDiscount)
+          Row(
+            children: [
+              Text(
+                '\$${product.originalPrice!.toStringAsFixed(2)}',
+                style: AppStyle.bodyMedium.copyWith(
+                  color: AppColors.grey,
+                  decoration: TextDecoration.lineThrough,
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                '\$${product.currentPrice.toStringAsFixed(2)}',
+                style: AppStyle.h4.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ],
+          )
+        else
+          Text(
+            '\$${product.currentPrice.toStringAsFixed(2)}',
+            style: AppStyle.h4.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
+          ),
       ],
     );
   }

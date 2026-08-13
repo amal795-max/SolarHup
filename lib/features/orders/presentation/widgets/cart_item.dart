@@ -30,7 +30,30 @@ class CartItem extends StatelessWidget {
                     Expanded(
                       child: Text(item.name, style: AppStyle.bodyMedium),
                     ),
-                    Text('\$${item.unitPrice}', style: AppStyle.bodyMedium),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        if (item.hasDiscount)
+                          Text(
+                            '\$${item.unitPrice}',
+                            style: AppStyle.labelXSmall.copyWith(
+                              color: AppColors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        Text(
+                          '\$${item.effectiveUnitPrice}',
+                          style: AppStyle.bodyMedium.copyWith(
+                            fontWeight: item.hasDiscount
+                                ? FontWeight.w700
+                                : FontWeight.normal,
+                            color: item.hasDiscount
+                                ? AppColors.primaryColor
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 SizedBox(height: 8.h),

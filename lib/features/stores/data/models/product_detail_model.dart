@@ -36,6 +36,9 @@ class ProductDetailModel extends Equatable {
   final String title;
   final String description;
   final double currentPrice;
+  final double? originalPrice;
+  final int? discountPercent;
+  final String? discountLabel;
   final List<String> imageUrls;
   final int imagePlaceholderColorValue;
   final bool isAvailable;
@@ -49,6 +52,9 @@ class ProductDetailModel extends Equatable {
     required this.title,
     required this.description,
     required this.currentPrice,
+    this.originalPrice,
+    this.discountPercent,
+    this.discountLabel,
     required this.imageUrls,
     required this.imagePlaceholderColorValue,
     required this.isAvailable,
@@ -58,6 +64,9 @@ class ProductDetailModel extends Equatable {
     this.technicalRows = const [],
   });
 
+  bool get hasDiscount =>
+      originalPrice != null && originalPrice! > currentPrice;
+
   int get galleryItemCount => imageUrls.isNotEmpty ? imageUrls.length : 1;
 
   @override
@@ -66,6 +75,9 @@ class ProductDetailModel extends Equatable {
         title,
         description,
         currentPrice,
+        originalPrice,
+        discountPercent,
+        discountLabel,
         imageUrls,
         imagePlaceholderColorValue,
         isAvailable,

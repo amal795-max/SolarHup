@@ -9,6 +9,7 @@ import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/stor
 import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_categories_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_details_section.dart';
+import 'package:untitled1/features/stores/presentation/widgets/store_info_discounts_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_expert_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
@@ -34,6 +35,7 @@ class StoreInfoData {
   final String? coverImageUrl;
   final List<StoreCategoryItem> categories;
   final List<StoreProductItem> featuredProducts;
+  final List<StoreProductItem> discountedProducts;
 
   const StoreInfoData({
     required this.id,
@@ -49,6 +51,7 @@ class StoreInfoData {
     this.coverImageUrl,
     required this.categories,
     required this.featuredProducts,
+    this.discountedProducts = const [],
   });
 }
 
@@ -220,12 +223,13 @@ class _StoreInfoView extends StatelessWidget {
                 onPressed: ()=>
                 context.read<StoreDetailCubit>().loadStore(storeId),
             ),
-            StoreDetailLoaded(:final store, :final categories, :final products) =>
+            StoreDetailLoaded(:final store, :final categories, :final products, :final discountedProducts) =>
                 _StoreInfoContent(
                 data: storeDetailToInfoData(
                   store,
                   categories: categories,
                   products: products,
+                  discountedProducts: discountedProducts,
                 ),
               ),
             _ => const SizedBox.shrink(),
@@ -299,6 +303,10 @@ class _StoreInfoContent extends StatelessWidget {
                 ),
                 SizedBox(height: 0.17.sh),
                 StoreInfoCategoriesSection(categories: data.categories),
+                StoreInfoDiscountsSection(
+                  storeId: data.id,
+                  products: data.discountedProducts,
+                ),
                 SizedBox(height: 8.h),
                 BlocBuilder<StoreInfoBloc, StoreInfoState>(
                   buildWhen: (prev, curr) =>
