@@ -12,6 +12,7 @@ import 'package:untitled1/features/stores/presentation/pages/product_detail_rout
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 
 class StoreKitProductsSection extends StatelessWidget {
   final int businessId;
@@ -123,6 +124,7 @@ class _KitProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.brightness;
+    final hasImage = _isValidImageUrl(product.imageUrl);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.r),
@@ -159,7 +161,18 @@ class _KitProductCard extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      Container(color: Color(product.imageColorValue)),
+                      if (hasImage)
+                        ImageWidget(
+                          image: product.imageUrl,
+                          fit: BoxFit.cover,
+                          borderRadius: 0,
+                        )
+                      else
+                        Container(color: Color(product.imageColorValue)),
+                      if (hasImage)
+                        Container(
+                          color: Colors.black.withValues(alpha: 0.08),
+                        ),
                       Positioned(
                         top: 6.h,
                         right: 6.w,
@@ -228,4 +241,10 @@ class _KitProductCard extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _isValidImageUrl(String? url) {
+  if (url == null || url.isEmpty) return false;
+  final uri = Uri.tryParse(url);
+  return uri != null && uri.isAbsolute;
 }

@@ -7,7 +7,8 @@ class StoreModel {
   final String iconType;
   final int iconColorValue;
   final int imagePlaceholderColorValue;
-  final String? imageUrl;
+  final String? logoUrl;
+  final String? coverImageUrl;
 
   const StoreModel({
     required this.id,
@@ -18,7 +19,8 @@ class StoreModel {
     required this.iconType,
     required this.iconColorValue,
     required this.imagePlaceholderColorValue,
-    this.imageUrl,
+    this.logoUrl,
+    this.coverImageUrl,
   });
 
   factory StoreModel.fromJson(Map<String, dynamic> json) => StoreModel(
@@ -31,7 +33,9 @@ class StoreModel {
         iconColorValue: json['icon_color_value'] as int? ?? 0xFF0A2A43,
         imagePlaceholderColorValue:
             json['image_placeholder_color_value'] as int? ?? 0xFF1A3A5C,
-        imageUrl: json['image_url'] as String?,
+        logoUrl: json['logo_url'] as String? ?? json['logo'] as String?,
+        coverImageUrl:
+            json['cover_image_url'] as String? ?? json['cover_image'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +47,7 @@ class StoreModel {
         'icon_type': iconType,
         'icon_color_value': iconColorValue,
         'image_placeholder_color_value': imagePlaceholderColorValue,
-        'image_url': imageUrl,
+        'logo_url': logoUrl,
+        'cover_image_url': coverImageUrl,
       };
 }

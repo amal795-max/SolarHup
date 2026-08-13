@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/core/constants/user-parameters.dart';
+import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
+import 'package:untitled1/features/catalog/data/repositories/catalog_repository.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import '../../../../core/constants/failure_success_message.dart';
 import '../../data/repositories/cart_repository.dart';
@@ -16,18 +18,35 @@ class CartCubit extends Cubit<CartState> {
   final GlobalKey<FormState> key = GlobalKey<FormState>();
 
   final CartRepository repository;
+  final CatalogRepository catalogRepository;
   OrderModel? order;
   Timer? _debounce;
 
-  CartCubit(this.repository) : super(CartInitial());
+  CartCubit(this.repository, this.catalogRepository) : super(CartInitial());
 
   Future<void> getCart() async {
     emit(CartLoading());
     final result = await repository.getCart();
-    result.fold((failure) => emit(CartError(failure.message)), (cart) {
-      order = cart;
-      emit(CartSuccess(cart));
+    result.fold((failure) => emit(CartError(failure.message)), (cart) async {
+      order = await _applyDiscountPricing(cart);
+      emit(CartSuccess(order!));
     });
+  }
+
+  Future<OrderModel> _applyDiscountPricing(OrderModel cart) async {
+    if (cart.businessId <= 0 || cart.items.isEmpty) return cart;
+
+    final result = await catalogRepository.getStoreDiscountedProducts(
+      cart.businessId.toString(),
+    );
+
+    return result.fold(
+      (_) => cart,
+      (products) => applyDiscountPricingToCart(
+        cart,
+        buildDiscountedPriceMap(products),
+      ),
+    );
   }
 
   Future<void> addToCart(int productId, int quantity) async {
@@ -37,9 +56,9 @@ class CartCubit extends Cubit<CartState> {
     );
     emit(CartActionLoading());
     final result = await repository.addToCart(params);
-    result.fold((failure) => emit(CartError(failure.message)), (_) {
+    result.fold((failure) => emit(CartError(failure.message)), (_) async {
       emit(const CartActionSuccess(addToCartSuccessfully));
-      getCart();
+      await getCart();
     });
   }
 

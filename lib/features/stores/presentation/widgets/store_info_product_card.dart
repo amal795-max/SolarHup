@@ -6,6 +6,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 /// Full-width product card used inside the Featured Products section.
@@ -83,6 +84,7 @@ class _ProductImageSection extends StatelessWidget {
       (base.g * 0.50).round(),
       (base.b * 0.50).round(),
     );
+    final hasImage = _isValidImageUrl(product.imageUrl);
 
     return SizedBox(
       height: 160.h,
@@ -90,41 +92,51 @@ class _ProductImageSection extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Gradient placeholder
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [darker, base],
-              ),
-            ),
-          ),
-
-          // Subtle radial highlight
-          Opacity(
-            opacity: 0.10,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(0.5, -0.5),
-                  radius: 1.1,
-                  colors: [Colors.white, Colors.transparent],
+          if (hasImage)
+            ImageWidget(
+              image: product.imageUrl,
+              fit: BoxFit.cover,
+              borderRadius: 0,
+            )
+          else
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [darker, base],
                 ),
               ),
             ),
-          ),
 
-          // Watermark icon
-          Positioned(
-            right: -12.w,
-            bottom: -12.h,
-            child: Icon(
-              product.imageIcon,
-              size: 110.sp,
-              color: Colors.white.withValues(alpha: 0.08),
+          if (hasImage)
+            Container(
+              color: Colors.black.withValues(alpha: 0.15),
+            )
+          else
+            Opacity(
+              opacity: 0.10,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0.5, -0.5),
+                    radius: 1.1,
+                    colors: [Colors.white, Colors.transparent],
+                  ),
+                ),
+              ),
             ),
-          ),
+
+          if (!hasImage)
+            Positioned(
+              right: -12.w,
+              bottom: -12.h,
+              child: Icon(
+                product.imageIcon,
+                size: 110.sp,
+                color: Colors.white.withValues(alpha: 0.08),
+              ),
+            ),
 
           // Category label — bottom left
           Positioned(
@@ -150,6 +162,12 @@ class _ProductImageSection extends StatelessWidget {
       ),
     );
   }
+}
+
+bool _isValidImageUrl(String? url) {
+  if (url == null || url.isEmpty) return false;
+  final uri = Uri.tryParse(url);
+  return uri != null && uri.isAbsolute;
 }
 
 // ---------------------------------------------------------------------------

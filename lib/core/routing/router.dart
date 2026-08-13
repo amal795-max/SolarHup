@@ -9,6 +9,7 @@ import 'package:untitled1/features/authentication/presentation/pages/splash_scre
 import 'package:untitled1/features/authentication/presentation/pages/verification_screen.dart';
 import 'package:untitled1/features/chatbot/presentation/pages/chatbot_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
+import 'package:untitled1/features/catalog/presentation/pages/discounted_products_screen.dart';
 import 'package:untitled1/features/settings/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/settings/presentation/pages/settings_screen.dart';
@@ -23,6 +24,10 @@ import 'package:untitled1/features/services/presentation/pages/rate_service_scre
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_info_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_picker_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
@@ -166,6 +171,29 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
+      path: AppRoutes.workshopPickerScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as WorkshopPickerRouteArgs?;
+        return WorkshopPickerScreen(
+          args: args ??
+              const WorkshopPickerRouteArgs(
+                categoryId: 0,
+                categoryName: '',
+              ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.workshopInfoScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as WorkshopInfoRouteArgs?;
+        return WorkshopInfoScreen(
+          args: args ??
+              const WorkshopInfoRouteArgs(workshopId: '0'),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRoutes.bookConsultationScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const BookConsultationScreen();
@@ -281,6 +309,12 @@ final GoRouter router = GoRouter(
         return const MyDiscountsScreen(
 
         );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.discountedProductsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const DiscountedProductsScreen();
       },
     ),
     GoRoute(

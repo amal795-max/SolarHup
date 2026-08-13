@@ -2,18 +2,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:untitled1/core/network/check_internet.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
+import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/services/data/data_source/services_remote_data_source.dart';
-import 'package:untitled1/features/services/data/repositories/services_repository.dart';
-import 'package:untitled1/features/services/presentation/bloc/services_bloc/services_bloc.dart';
-import 'package:untitled1/features/services/presentation/widgets/featured_service_card.dart';
-import 'package:untitled1/features/services/presentation/widgets/service_card.dart';
-import 'package:untitled1/features/services/presentation/widgets/services_category_section.dart';
+import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_categories_cubit/service_categories_cubit.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
+import 'package:untitled1/features/services/presentation/widgets/service_category_grid.dart';
 import 'package:untitled1/features/services/presentation/widgets/services_header_section.dart';
-import 'package:untitled1/features/services/presentation/widgets/services_search_section.dart';
+import 'package:untitled1/features/stores/data/models/store_category_model.dart';
+import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class ExpertServicesScreen extends StatelessWidget {
@@ -22,13 +23,7 @@ class ExpertServicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ServicesBloc(
-        ServicesRepositoryImpl(
-          remote: const ServicesRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(const LoadServicesEvent()),
+      create: (_) => getIt<ServiceCategoriesCubit>()..loadCategories(),
       child: const _ExpertServicesView(),
     );
   }
@@ -39,14 +34,29 @@ class _ExpertServicesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.brightness;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor:
+          isDark ? Theme.of(context).scaffoldBackgroundColor : AppColors.backGroundGrey,
       body: SafeArea(
-        child: BlocBuilder<ServicesBloc, ServicesState>(
+        child: BlocBuilder<ServiceCategoriesCubit, ServiceCategoriesState>(
           builder: (context, state) {
             return switch (state) {
-              ServicesLoading() => const LoadingIndicator(),
-              ServicesError(:final message) => EmptyWidget(
+              ServiceCategoriesLoading() => AppSkeletonizer(
+                  child: _ServicesContent(
+                    categories: List.generate(
+                      5,
+                      (index) => StoreCategoryModel(
+                        id: index,
+                        name: 'Loading category name',
+                        type: 'workshop',
+                      ),
+                    ),
+                    onCategoryTap: (_) {},
+                  ),
+                ),
+              ServiceCategoriesError(:final message) => EmptyWidget(
                   icon: Icons.error_outline_rounded,
                   iconSize: 48,
                   iconColor: AppColors.red,
@@ -55,12 +65,23 @@ class _ExpertServicesView extends StatelessWidget {
                   action: CustomButton(
                     text: 'stores_retry'.tr(),
                     onPressed: () => context
-                        .read<ServicesBloc>()
-                        .add(const LoadServicesEvent()),
+                        .read<ServiceCategoriesCubit>()
+                        .loadCategories(),
                     width: 160.w,
                   ),
                 ),
-              ServicesLoaded() => _ExpertServicesBody(state: state),
+              ServiceCategoriesLoaded(:final categories) => _ServicesContent(
+                  categories: categories,
+                  onCategoryTap: (category) {
+                    context.push(
+                      AppRoutes.workshopPickerScreen,
+                      extra: WorkshopPickerRouteArgs(
+                        categoryId: category.id,
+                        categoryName: category.name,
+                      ),
+                    );
+                  },
+                ),
               _ => const SizedBox.shrink(),
             };
           },
@@ -70,57 +91,70 @@ class _ExpertServicesView extends StatelessWidget {
   }
 }
 
-class _ExpertServicesBody extends StatelessWidget {
-  final ServicesLoaded state;
+class _ServicesContent extends StatelessWidget {
+  final List<StoreCategoryModel> categories;
+  final ValueChanged<StoreCategoryModel> onCategoryTap;
 
-  const _ExpertServicesBody({required this.state});
+  const _ServicesContent({
+    required this.categories,
+    required this.onCategoryTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final services = state.filteredServices;
-    final featured = state.featured;
-    final showFeatured = featured != null &&
-        (state.selectedCategoryIndex == 0 ||
-            (state.selectedCategoryIndex == 1 &&
-                featured.categoryKey == 'maintenance') ||
-            (state.selectedCategoryIndex == 2 &&
-                featured.categoryKey == 'installation'));
-
-    return SingleChildScrollView(
+    return CustomScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const ServicesHeaderSection(),
-          SizedBox(height: 16.h),
-          const ServicesSearchSection(),
-          SizedBox(height: 4.h),
-          const ServicesCategorySection(),
-          SizedBox(height: 24.h),
-          if (services.isEmpty && !showFeatured)
-            EmptyWidget(
-              icon: Icons.search_off_rounded,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 0),
+            child: const ServicesHeaderSection(),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'services_pick_category'.tr(),
+                  style: AppStyle.h6.copyWith(fontWeight: FontWeight.w800),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  'services_category_list_hint'.tr(),
+                  style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        if (categories.isEmpty)
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: EmptyWidget(
+              icon: Icons.handyman_outlined,
               iconSize: 48,
               iconColor: AppColors.grey,
               title: 'services_no_results'.tr(),
-              subtitle: 'blog_no_results_hint'.tr(),
+              subtitle: 'services_no_workshops_hint'.tr(),
               padding: EdgeInsets.symmetric(vertical: 32.h),
-            )
-          else ...[
-            ...services.map(
-              (service) => Padding(
-                padding: EdgeInsets.only(bottom: 14.h),
-                child: ServiceCard(service: service),
+            ),
+          )
+        else
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
+            sliver: SliverToBoxAdapter(
+              child: ServiceCategoryGrid(
+                categories: categories,
+                onCategoryTap: onCategoryTap,
               ),
             ),
-            if (showFeatured) ...[
-              SizedBox(height: 8.h),
-              FeaturedServiceCard(service: featured),
-            ],
-          ],
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/features/catalog/data/models/discounted_product_model.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
@@ -8,6 +9,7 @@ StoreInfoData storeDetailToInfoData(
   StoreDetailModel model, {
   List<StoreCategoryModel> categories = const [],
   List<StoreProductModel> products = const [],
+  List<DiscountedProductModel> discountedProducts = const [],
 }) {
   final categoryItems = categories.isNotEmpty
       ? apiCategoriesToItems(categories)
@@ -15,6 +17,40 @@ StoreInfoData storeDetailToInfoData(
   final categoryNames = {
     for (final category in categories) category.id: category.name,
   };
+
+  final discountItems = discountedProducts.map(discountedProductToStoreItem).toList();
+  final discountByProductId = {
+    for (final item in discountItems) item.id: item,
+  };
+
+  final featuredProducts = products
+      .map(
+        (product) {
+          final base = storeProductToItem(
+            product,
+            categoryName: categoryNames[product.categoryId],
+          );
+          final discounted = discountByProductId[product.id];
+          if (discounted == null) return base;
+
+          return StoreProductItem(
+            id: base.id,
+            name: discounted.name.isNotEmpty ? discounted.name : base.name,
+            categoryLabel: base.categoryLabel,
+            categoryKey: base.categoryKey,
+            categoryId: base.categoryId,
+            price: discounted.price,
+            originalPrice: discounted.originalPrice,
+            discountPercent: discounted.discountPercent,
+            description: base.description,
+            imagePlaceholderColorValue: discounted.imagePlaceholderColorValue,
+            imageIcon: base.imageIcon,
+            imageUrl: discounted.imageUrl ?? base.imageUrl,
+            isKitProduct: base.isKitProduct,
+          );
+        },
+      )
+      .toList();
 
   return StoreInfoData(
     id: model.id,
@@ -28,15 +64,49 @@ StoreInfoData storeDetailToInfoData(
     imagePlaceholderColorValue: model.imagePlaceholderColorValue,
     iconData: _iconForType(model.iconType),
     iconColorValue: model.imagePlaceholderColorValue,
-    categories: categoryItems,
-    featuredProducts: products
-        .map(
-          (product) => storeProductToItem(
-            product,
-            categoryName: categoryNames[product.categoryId],
-          ),
-        )
-        .toList(),
+    logoUrl: model.logoUrl,
+    coverImageUrl: model.coverImageUrl,
+    categories: categoriesForStore(products, categoryNames),
+    discountedProducts: discountItems,
+    featuredProducts: featuredProducts,
+  );
+}
+
+List<StoreCategoryItem> categoriesForStore(
+  List<StoreProductModel> products,
+  Map<int, String> categoryNames,
+) {
+  final fromProducts = buildCategoriesFromProducts(products);
+  return fromProducts
+      .map(
+        (item) => StoreCategoryItem(
+          label: item.categoryId != null &&
+                  categoryNames.containsKey(item.categoryId)
+              ? categoryNames[item.categoryId]!
+              : item.label,
+          icon: item.icon,
+          categoryId: item.categoryId,
+          category: item.category,
+        ),
+      )
+      .toList();
+}
+
+StoreProductItem discountedProductToStoreItem(DiscountedProductModel product) {
+  return StoreProductItem(
+    id: product.productId,
+    name: product.name,
+    categoryLabel: product.category,
+    categoryKey: product.category.toLowerCase().replaceAll(' ', '_'),
+    categoryId: 0,
+    price: product.price,
+    originalPrice: product.originalPrice,
+    discountPercent: product.discountPercent,
+    description: product.discountLabel,
+    imagePlaceholderColorValue: product.imagePlaceholderColorValue,
+    imageIcon: _iconForCategory(product.category),
+    imageUrl: product.imageUrl,
+    isKitProduct: false,
   );
 }
 
@@ -120,6 +190,7 @@ StoreProductItem storeProductToItem(
     badgeText: product.isAvailable ? null : 'Unavailable',
     imagePlaceholderColorValue: product.imagePlaceholderColorValue,
     imageIcon: _iconForCategory(product.category),
+    imageUrl: product.imageUrl,
     isKitProduct: false,
   );
 }

@@ -17,6 +17,7 @@ class OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final total = cart.effectiveTotalAmount.toStringAsFixed(2);
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -40,7 +41,7 @@ class OrderSummary extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          _SummaryRow(label: 'subtotal'.tr(), value: '\$${cart.totalAmount}'),
+          _SummaryRow(label: 'subtotal'.tr(), value: '\$$total'),
           _SummaryRow(label: 'shipping'.tr(), value: 'free'.tr()),
           Divider(color: AppColors.white.withOpacity(0.2), height: 32.h),
           Row(
@@ -51,7 +52,7 @@ class OrderSummary extends StatelessWidget {
                 style: AppStyle.h6.copyWith(color: AppColors.white),
               ),
               Text(
-                '\$${cart.totalAmount}',
+                '\$$total',
                 style: AppStyle.h3.copyWith(color: AppColors.white),
               ),
             ],

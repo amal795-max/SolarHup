@@ -1,4 +1,5 @@
 import '../../../../core/enums/order_status_enum.dart';
+import '../../../../core/api/api_response_utils.dart';
 
 class OrderModel {
   final int id;
@@ -37,28 +38,39 @@ class OrderModel {
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
+    final payload = unwrapOrderPayload(json);
     return OrderModel(
-      id: json['id'],
-      orderCode: json['order_code'],
-      businessId: json['business_id'],
-      customerId: json['customer_id'],
-      customerName: json['customer_name'],
-      shippingFullName: json['shipping_full_name'],
-      shippingCity: json['shipping_city'],
-      shippingStreet: json['shipping_street'],
-      shippingBuilding: json['shipping_building'],
-      shippingFloor: json['shipping_floor'],
-      status: json['status'],
-      totalAmount: json['total_amount'],
-      items: (json['items'] as List?)
-          ?.map((e) => OrderItemModel.fromJson(e))
-          .toList() ??
+      id: payload['id'],
+      orderCode: payload['order_code'],
+      businessId: payload['business_id'],
+      customerId: payload['customer_id'],
+      customerName: payload['customer_name'],
+      shippingFullName: payload['shipping_full_name'],
+      shippingCity: payload['shipping_city'],
+      shippingStreet: payload['shipping_street'],
+      shippingBuilding: payload['shipping_building'],
+      shippingFloor: payload['shipping_floor'],
+      status: payload['status'],
+      totalAmount: payload['total_amount'],
+      items: (payload['items'] as List?)
+              ?.map((e) => OrderItemModel.fromJson(e))
+              .toList() ??
           [],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      statusEnum: OrderStatusEnum.fromString(json['status'])
+      createdAt: payload['created_at'],
+      updatedAt: payload['updated_at'],
+      statusEnum: OrderStatusEnum.fromString(payload['status']),
     );
   }
+
+  double get effectiveTotalAmount {
+    if (items.isEmpty) return double.tryParse(totalAmount) ?? 0;
+    if (items.every((item) => !item.hasDiscount)) {
+      return double.tryParse(totalAmount) ?? 0;
+    }
+    return items.fold<double>(0, (sum, item) => sum + item.effectiveSubtotal);
+  }
+
+  bool get hasDiscountedItems => items.any((item) => item.hasDiscount);
 
   OrderModel copyWith({
     int? id,
@@ -109,6 +121,7 @@ class OrderItemModel {
   final String subtotal;
   final String? sku;
   final String? thumbnailUrl;
+  final String? discountedUnitPrice;
 
   OrderItemModel({
     required this.id,
@@ -120,7 +133,16 @@ class OrderItemModel {
     required this.subtotal,
     this.sku,
     this.thumbnailUrl,
+    this.discountedUnitPrice,
   });
+
+  String get effectiveUnitPrice => discountedUnitPrice ?? unitPrice;
+
+  double get effectiveSubtotal =>
+      (double.tryParse(effectiveUnitPrice) ?? 0) * quantity;
+
+  bool get hasDiscount =>
+      discountedUnitPrice != null && discountedUnitPrice != unitPrice;
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
@@ -154,6 +176,7 @@ class OrderItemModel {
     String? subtotal,
     String? sku,
     String? thumbnailUrl,
+    String? discountedUnitPrice,
   }) {
     return OrderItemModel(
       id: id ?? this.id,
@@ -165,6 +188,7 @@ class OrderItemModel {
       subtotal: subtotal ?? this.subtotal,
       sku: sku ?? this.sku,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+      discountedUnitPrice: discountedUnitPrice ?? this.discountedUnitPrice,
     );
   }
 }

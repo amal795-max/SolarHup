@@ -42,5 +42,6 @@ void main() {
     expect(ui.price, 389);
     expect(ui.categoryLabel, 'Category 3');
     expect(ui.description, 'High efficiency monocrystalline panel.');
+    expect(ui.imageUrl, 'https://example.com/panel.png');
   });
 }

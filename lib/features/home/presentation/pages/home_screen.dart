@@ -27,6 +27,8 @@ import 'package:untitled1/features/home/presentation/widgets/verification_banner
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
+import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
+
 import '../widgets/home_search_bar.dart';
 
 /// Entry point — provides the HomeBloc and immediately fires LoadHomeDataEvent.
@@ -101,7 +103,7 @@ class _HomeViewState extends State<_HomeView> {
     (i) => const ProductCardData(
       name: 'Loading Product Name',
       price: 149.00,
-      imagePlaceholderColorValue: AppImages.batteryTest1,
+      imagePlaceholderColorValue: 0xFF0A2A43,
     ),
   );
 
@@ -119,6 +121,8 @@ class _HomeViewState extends State<_HomeView> {
   // ── Model → UI data mappers ───────────────────────────────────────────────
 
   ProductCardData _mapProduct(ProductModel m) => ProductCardData(
+    id: m.id,
+    businessId: m.businessId,
     name: m.name,
     category: m.category,
     price: m.price,
@@ -126,11 +130,11 @@ class _HomeViewState extends State<_HomeView> {
     badgeText: m.badgeText,
     badgeColor: m.badgeColorValue,
     metaText: m.metaText,
-    imagePlaceholderColorValue: m.image,
+    imageAssetPath: m.image.isNotEmpty ? m.image : null,
+    imageUrl: m.imageUrl,
+    imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     discountPercent: m.discountPercent,
-    imageIcon: m.iconType == 'inverter'
-        ? Icons.electrical_services
-        : Icons.solar_power,
+    iconType: m.iconType,
   );
 
   BlogCardData _mapBlog(BlogModel m) => BlogCardData(
@@ -144,6 +148,22 @@ class _HomeViewState extends State<_HomeView> {
   );
 
   void _navigateToUsedProducts() => context.push(AppRoutes.usedProductScreen);
+
+  void _navigateToDiscountedProducts() =>
+      context.push(AppRoutes.discountedProductsScreen);
+
+  void _navigateToProductDetail(ProductCardData product) {
+    final businessId = product.businessId;
+    final productId = product.id;
+    if (businessId == null || productId == null) return;
+    context.push(
+      AppRoutes.productDetailScreen,
+      extra: ProductDetailRouteArgs(
+        businessId: businessId,
+        productId: productId,
+      ),
+    );
+  }
 
 
 
@@ -291,8 +311,10 @@ class _HomeViewState extends State<_HomeView> {
             ProductsSection(
               titleKey: 'home_new_offer',
               products: filteredNew,
-              onViewAll: isLoading ? null : _navigateToUsedProducts,
-              onProductTap: isLoading ? null : (_) => _navigateToUsedProducts(),
+              onViewAll: isLoading ? null : _navigateToDiscountedProducts,
+              onProductTap: isLoading
+                  ? null
+                  : (index) => _navigateToProductDetail(filteredNew[index]),
             ),
             SizedBox(height: 24.h),
             BlogSection(

@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
-import 'package:untitled1/core/routing/app_routes.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
+import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
@@ -89,7 +89,8 @@ class _StoresViewState extends State<_StoresView> {
     iconData: _iconForType(m.iconType),
     iconColorValue: m.iconColorValue,
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
-    imageUrl: m.imageUrl,
+    logoUrl: m.logoUrl,
+    coverImageUrl: m.coverImageUrl,
   );
 
   IconData _iconForType(String type) => switch (type) {
@@ -143,10 +144,7 @@ class _StoresViewState extends State<_StoresView> {
   // ── Body dispatch ─────────────────────────────────────────────────────────
 
   Widget _buildBody(BuildContext context, StoresState state) {
-    // Skeleton is only shown for an explicit StoresLoading state,
-    // which is emitted only when showLoading: true — reserved for
-    // when a real backend is wired up.
-    if (state is StoresLoading) {
+    if (state is StoresLoading || state is StoresInitial) {
       return _buildScrollable(isLoading: true, stores: _skeletonStores);
     }
     if (state is StoresLoaded) {
@@ -155,8 +153,6 @@ class _StoresViewState extends State<_StoresView> {
     if (state is StoresError) {
       return _buildErrorBody(context);
     }
-    // StoresInitial: BLoC is already fetching — render empty scaffold
-    // so the transition to StoresLoaded is instant with no flicker.
     return const SizedBox.shrink();
   }
 
@@ -219,14 +215,7 @@ class _StoresViewState extends State<_StoresView> {
     );
 
     if (isLoading) {
-      return Skeletonizer(
-        enabled: true,
-        effect: const ShimmerEffect(
-          baseColor: Color(0xFFE0E0E0),
-          highlightColor: Color(0xFFF5F5F5),
-        ),
-        child: content,
-      );
+      return AppSkeletonizer(child: content);
     }
     return content;
   }
@@ -255,7 +244,8 @@ class _StoresViewState extends State<_StoresView> {
         text: 'stores_retry'.tr(),
         icon: Icons.refresh_rounded,
         iconLeft: true,
-        onPressed: () => context.read<StoresCubit>().loadStores(),
+        onPressed: () =>
+            context.read<StoresCubit>().loadStores(showLoading: true),
         width: 160.w,
       ),
     );

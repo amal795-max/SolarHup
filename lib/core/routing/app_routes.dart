@@ -17,6 +17,8 @@ abstract class AppRoutes {
   static const storeInfoScreen = '/storeInfoScreen';
   static const storeKitScreen = '/storeKitScreen';
   static const productDetailScreen = '/productDetailScreen';
+  static const workshopPickerScreen = '/workshopPickerScreen';
+  static const workshopInfoScreen = '/workshopInfoScreen';
   static const cartScreen = '/cartScreen';
   static const shippingInformationScreen = '/shippingInformationScreen';
   static const orderConfirmedScreen = '/orderConfirmedScreen';
@@ -24,6 +26,7 @@ abstract class AppRoutes {
   static const rateOrderScreen = '/rateOrderScreen';
   static const activityScreen = '/activityScreen';
   static const discountsScreen = '/discountsScreen';
+  static const discountedProductsScreen = '/discountedProductsScreen';
   static const bookConsultationScreen = '/bookConsultationScreen';
   static const chatBotScreen = '/chatBotScreen';
   static const settingsScreen = '/settingsScreen';

@@ -9,11 +9,13 @@ import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/stor
 import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_categories_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_details_section.dart';
+import 'package:untitled1/features/stores/presentation/widgets/store_info_discounts_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_expert_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
+import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/loader.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 
 // ---------------------------------------------------------------------------
 // UI data_source models — kept in this file so the page and its widgets stay in sync
@@ -29,8 +31,11 @@ class StoreInfoData {
   final int imagePlaceholderColorValue;
   final IconData iconData;
   final int iconColorValue;
+  final String? logoUrl;
+  final String? coverImageUrl;
   final List<StoreCategoryItem> categories;
   final List<StoreProductItem> featuredProducts;
+  final List<StoreProductItem> discountedProducts;
 
   const StoreInfoData({
     required this.id,
@@ -42,8 +47,11 @@ class StoreInfoData {
     required this.imagePlaceholderColorValue,
     required this.iconData,
     required this.iconColorValue,
+    this.logoUrl,
+    this.coverImageUrl,
     required this.categories,
     required this.featuredProducts,
+    this.discountedProducts = const [],
   });
 }
 
@@ -74,6 +82,7 @@ class StoreProductItem {
   final String? description;
   final int imagePlaceholderColorValue;
   final IconData imageIcon;
+  final String? imageUrl;
   final bool isKitProduct;
 
   const StoreProductItem({
@@ -89,6 +98,7 @@ class StoreProductItem {
     this.description,
     required this.imagePlaceholderColorValue,
     required this.imageIcon,
+    this.imageUrl,
     this.isKitProduct = false,
   });
 }
@@ -204,19 +214,22 @@ class _StoreInfoView extends StatelessWidget {
       body: BlocBuilder<StoreDetailCubit, StoreDetailState>(
         builder: (context, state) {
           return switch (state) {
-            StoreDetailLoading() => const LoadingIndicator(),
+            StoreDetailLoading() => AppSkeletonizer(
+                child: _StoreInfoContent(data: sampleStoreInfo),
+              ),
             StoreDetailError(:final message) => errorWidget(
-              message: state.message ,
+              message: message,
               hasButton: true,
                 onPressed: ()=>
                 context.read<StoreDetailCubit>().loadStore(storeId),
             ),
-            StoreDetailLoaded(:final store, :final categories, :final products) =>
+            StoreDetailLoaded(:final store, :final categories, :final products, :final discountedProducts) =>
                 _StoreInfoContent(
                 data: storeDetailToInfoData(
                   store,
                   categories: categories,
                   products: products,
+                  discountedProducts: discountedProducts,
                 ),
               ),
             _ => const SizedBox.shrink(),
@@ -290,6 +303,10 @@ class _StoreInfoContent extends StatelessWidget {
                 ),
                 SizedBox(height: 0.17.sh),
                 StoreInfoCategoriesSection(categories: data.categories),
+                StoreInfoDiscountsSection(
+                  storeId: data.id,
+                  products: data.discountedProducts,
+                ),
                 SizedBox(height: 8.h),
                 BlocBuilder<StoreInfoBloc, StoreInfoState>(
                   buildWhen: (prev, curr) =>
@@ -329,12 +346,13 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final hasLogo = _isValidImageUrl(data.logoUrl);
 
     return Container(
       width: 65.w,
       height: 65.w,
       decoration: BoxDecoration(
-        color: Color(data.iconColorValue),
+        color: hasLogo ? AppColors.white : Color(data.iconColorValue),
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(
           color: AppColors.white.withValues(alpha: 0.9),
@@ -348,9 +366,24 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(data.iconData, color: AppColors.secondaryColor, size: 28.sp),
+      clipBehavior: Clip.antiAlias,
+      child: hasLogo
+          ? ImageWidget(
+              image: data.logoUrl,
+              width: 65.w,
+              height: 65.w,
+              borderRadius: 14,
+              fit: BoxFit.cover,
+            )
+          : Icon(data.iconData, color: AppColors.secondaryColor, size: 28.sp),
     );
   }
+}
+
+bool _isValidImageUrl(String? url) {
+  if (url == null || url.isEmpty) return false;
+  final uri = Uri.tryParse(url);
+  return uri != null && uri.isAbsolute;
 }
 
 // ---------------------------------------------------------------------------

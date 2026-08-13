@@ -1,3 +1,4 @@
+import 'package:untitled1/core/api/api_response_utils.dart';
 import '../models/store_model.dart';
 
 class StoreApiModel {
@@ -51,7 +52,8 @@ class StoreApiModel {
       iconType: _iconType(id),
       iconColorValue: _placeholderColor(id),
       imagePlaceholderColorValue: _placeholderColor(id),
-      imageUrl: logo ?? coverImage,
+      logoUrl: logo,
+      coverImageUrl: coverImage,
     );
   }
 }
@@ -62,7 +64,10 @@ class StoreListResponseModel {
   StoreListResponseModel({required this.stores});
 
   factory StoreListResponseModel.fromJson(Map<String, dynamic> json) {
-    final items = json['stores'] as List<dynamic>? ?? [];
+    final payload = unwrapApiPayload(json);
+    final items = payload['stores'] as List<dynamic>? ??
+        json['stores'] as List<dynamic>? ??
+        [];
     return StoreListResponseModel(
       stores: items
           .map((item) => StoreApiModel.fromJson(item as Map<String, dynamic>))

@@ -8,10 +8,11 @@ import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
+import 'package:untitled1/features/services/data/models/service_request_model.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
@@ -38,6 +39,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
   void _fetchData() {
     if (_selectedTab == 0) {
       context.read<OrdersCubit>().getMyOrders();
+    } else {
+      context.read<ServiceRequestsCubit>().loadMyRequests();
     }
   }
 
@@ -134,29 +137,50 @@ class _ActivityScreenState extends State<ActivityScreen> {
   }
 
   Widget _buildServicesTab() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      child: Column(
-        spacing: 16.h,
-        children: const [
-          _ServiceCard(
-            month: 'OCT',
-            day: '12',
-            title: 'System Maintenance',
-            techName: 'Sarah Johnson',
-            time: '09:30 AM - 11:00 AM',
-            isUpcoming: true,
+    return BlocBuilder<ServiceRequestsCubit, ServiceRequestsState>(
+      builder: (context, state) {
+        if (state is ServiceRequestsError) {
+          return errorWidget(message: state.message, hasButton: false);
+        }
+
+        final requests = state is ServiceRequestsLoaded
+            ? state.requests
+            : (state is ServiceRequestsLoading
+                ? List.generate(
+                    3,
+                    (index) => ServiceRequestModel(
+                      id: index,
+                      orderCode: 'SR-000000',
+                      businessId: 0,
+                      status: 'pending_approval',
+                      totalAmount: '0.00',
+                      serviceName: 'Loading service name',
+                      createdAt: DateTime.now(),
+                    ),
+                  )
+                : context.read<ServiceRequestsCubit>().cachedRequests);
+
+        if (state is ServiceRequestsLoaded && requests.isEmpty) {
+          return const EmptyWidget();
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async =>
+              context.read<ServiceRequestsCubit>().loadMyRequests(),
+          child: Skeletonizer(
+            enabled: state is ServiceRequestsLoading,
+            child: ListView.separated(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              itemCount: requests.length,
+              separatorBuilder: (_, __) => SizedBox(height: 16.h),
+              itemBuilder: (context, index) {
+                final request = requests[index];
+                return _ServiceRequestCard(request: request);
+              },
+            ),
           ),
-          _ServiceCard(
-            month: 'SEP',
-            day: '28',
-            title: 'Battery Installation',
-            techName: 'Mike Rivera',
-            time: 'Completed Successfully',
-            isUpcoming: false,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -324,25 +348,24 @@ class _StatusBadge extends StatelessWidget {
   }
 }
 
-class _ServiceCard extends StatelessWidget {
-  final String month;
-  final String day;
-  final String title;
-  final String techName;
-  final String time;
-  final bool isUpcoming;
+class _ServiceRequestCard extends StatelessWidget {
+  final ServiceRequestModel request;
 
-  const _ServiceCard({
-    required this.month,
-    required this.day,
-    required this.title,
-    required this.techName,
-    required this.time,
-    required this.isUpcoming,
-  });
+  const _ServiceRequestCard({required this.request});
+
+  String _formatStatus(String status) {
+    return status.replaceAll('_', ' ').toUpperCase();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final createdAt = request.createdAt;
+    final month = DateFormat('MMM').format(createdAt).toUpperCase();
+    final day = DateFormat('d').format(createdAt);
+    final isActive = request.status != 'completed' &&
+        request.status != 'cancelled' &&
+        request.status != 'rejected';
+
     return container(
       context: context,
       child: Row(
@@ -372,74 +395,50 @@ class _ServiceCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: AppStyle.bodyMedium.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    if (isUpcoming)
-                      const Icon(
-                        Icons.check_circle,
-                        color: Colors.amber,
-                        size: 16,
-                      )
-                    else
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 2.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Text(
-                          'status_past'.tr(),
-                          style: TextStyle(color: Colors.grey, fontSize: 10.sp),
-                        ),
-                      ),
-                  ],
+                Text(
+                  request.serviceName.isNotEmpty
+                      ? request.serviceName
+                      : request.orderCode,
+                  style: AppStyle.bodyMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 TextWithIcon(
-                  title: '${'tech_label'.tr()} $techName',
-                  icon: Icons.person_outline,
+                  title: request.orderCode,
+                  icon: Icons.tag_outlined,
                   color: AppColors.grey,
                 ),
                 TextWithIcon(
-                  title: time,
-                  icon: Icons.access_time,
+                  title: _formatStatus(request.status),
+                  icon: Icons.info_outline,
                   color: AppColors.grey,
                 ),
                 SizedBox(height: 12.h),
-                if (isUpcoming)
-                  Row(
-                    spacing: 12.w,
-                    children: [
-                      Expanded(
-                        child: CustomButton(text: 'reschedule_btn'.tr()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'total_price_label'.tr(),
+                      style: AppStyle.labelSmall.copyWith(
+                        color: AppColors.grey,
                       ),
-                      Expanded(
-                        child: CustomButton(
-                          text: 'details_btn'.tr(),
-                          type: ButtonType.outlined,
-                        ),
-                      ),
-                    ],
-                  )
-                else
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: 'download_report_btn'.tr(),
-                      type: ButtonType.outlined,
                     ),
+                    Text(
+                      '\$${request.totalAmount}',
+                      style: AppStyle.bodyLarge.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                if (isActive) ...[
+                  SizedBox(height: 8.h),
+                  Text(
+                    'services_request_pending_hint'.tr(),
+                    style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
                   ),
+                ],
               ],
             ),
           ),

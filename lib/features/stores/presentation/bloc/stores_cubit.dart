@@ -13,7 +13,9 @@ class StoresCubit extends Cubit<StoresState> {
   StoresCubit(this.repository) : super(StoresInitial());
 
   Future<void> loadStores({bool showLoading = false}) async {
-    if (showLoading) emit(StoresLoading());
+    if (showLoading || state is StoresInitial) {
+      emit(StoresLoading());
+    }
     await _fetchStores();
   }
 

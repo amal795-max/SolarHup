@@ -32,6 +32,20 @@ class EndPoints {
 
   static const String storeCategories = '${baseUrl}categories';
 
+  static const String discounts = '${baseUrl}discounts';
+  static String storeDiscounts(String businessId) =>
+      '${baseUrl}stores/$businessId/discounts';
+
+  static const String workshops = '${baseUrl}workshops';
+  static String workshop(String businessId) => '${baseUrl}workshops/$businessId';
+  static String workshopServices(String businessId) =>
+      '${baseUrl}workshops/$businessId/services';
+
+  static const String serviceRequests = '${baseUrl}service-requests';
+  static const String myServiceRequests = '${baseUrl}service-requests/me';
+  static String serviceRequest(int requestId) =>
+      '${baseUrl}service-requests/$requestId';
+
   static const String usedProducts = '${baseUrl}used-products';
   static const String myUsedProducts = '${baseUrl}used-products/me';
   static String updateProductStatus(int id) => '${baseUrl}used-products/me/$id/status';

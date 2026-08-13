@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/api/api_response_utils.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/features/stores/data/model/store_categories_response_model.dart';
@@ -54,7 +55,9 @@ class StoresRemoteDataSourceImpl implements StoresRemoteDataSource {
         );
       } else {
         return StoreDetailModel.fromApi(
-          StoreApiModel.fromJson(response.data as Map<String, dynamic>),
+          StoreApiModel.fromJson(
+            unwrapStorePayload(response.data as Map<String, dynamic>),
+          ),
         );
       }
     } on DioException catch (e) {
