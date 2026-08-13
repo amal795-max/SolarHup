@@ -23,6 +23,10 @@ import 'package:untitled1/features/services/presentation/pages/rate_service_scre
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_info_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_picker_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
@@ -162,6 +166,29 @@ final GoRouter router = GoRouter(
                 businessId: '0',
                 productId: '0',
               ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.workshopPickerScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as WorkshopPickerRouteArgs?;
+        return WorkshopPickerScreen(
+          args: args ??
+              const WorkshopPickerRouteArgs(
+                categoryId: 0,
+                categoryName: '',
+              ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.workshopInfoScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as WorkshopInfoRouteArgs?;
+        return WorkshopInfoScreen(
+          args: args ??
+              const WorkshopInfoRouteArgs(workshopId: '0'),
         );
       },
     ),

@@ -28,6 +28,8 @@ StoreInfoData storeDetailToInfoData(
     imagePlaceholderColorValue: model.imagePlaceholderColorValue,
     iconData: _iconForType(model.iconType),
     iconColorValue: model.imagePlaceholderColorValue,
+    logoUrl: model.logoUrl,
+    coverImageUrl: model.coverImageUrl,
     categories: categoryItems,
     featuredProducts: products
         .map(
@@ -120,6 +122,7 @@ StoreProductItem storeProductToItem(
     badgeText: product.isAvailable ? null : 'Unavailable',
     imagePlaceholderColorValue: product.imagePlaceholderColorValue,
     imageIcon: _iconForCategory(product.category),
+    imageUrl: product.imageUrl,
     isKitProduct: false,
   );
 }

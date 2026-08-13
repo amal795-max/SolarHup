@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../core/routing/app_routes.dart';
@@ -22,7 +23,8 @@ class StoreCardData {
   final IconData iconData;
   final int iconColorValue;
   final int imagePlaceholderColorValue;
-  final String? imageUrl;
+  final String? logoUrl;
+  final String? coverImageUrl;
 
   const StoreCardData({
     required this.id,
@@ -33,7 +35,8 @@ class StoreCardData {
     required this.iconData,
     required this.iconColorValue,
     required this.imagePlaceholderColorValue,
-    this.imageUrl,
+    this.logoUrl,
+    this.coverImageUrl,
   });
 }
 
@@ -86,6 +89,7 @@ class StoreCard extends StatelessWidget {
               child: _StoreIconBadge(
                 iconData: data.iconData,
                 colorValue: data.iconColorValue,
+                logoUrl: data.logoUrl,
               ),
             ),
           ],
@@ -113,6 +117,7 @@ class _StoreImageSection extends StatelessWidget {
       (base.g * 0.55).round(),
       (base.b * 0.55).round(),
     );
+    final hasCover = _isValidImageUrl(data.coverImageUrl);
 
     return SizedBox(
       height: 140.h,
@@ -120,29 +125,39 @@ class _StoreImageSection extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          // Gradient background (replaces network image until real API is wired)
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [darker, base],
-              ),
-            ),
-          ),
-          // Subtle radial highlight overlay
-          Opacity(
-            opacity: 0.12,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(0.6, -0.4),
-                  radius: 1.1,
-                  colors: [Colors.white, Colors.transparent],
+          if (hasCover)
+            ImageWidget(
+              image: data.coverImageUrl,
+              fit: BoxFit.cover,
+              borderRadius: 0,
+            )
+          else
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [darker, base],
                 ),
               ),
             ),
-          ),
+          if (hasCover)
+            Container(
+              color: Colors.black.withValues(alpha: 0.12),
+            )
+          else
+            Opacity(
+              opacity: 0.12,
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0.6, -0.4),
+                    radius: 1.1,
+                    colors: [Colors.white, Colors.transparent],
+                  ),
+                ),
+              ),
+            ),
           // Rating badge — top-right
           Positioned(
             top: 10.h,
@@ -255,16 +270,23 @@ class _RatingBadge extends StatelessWidget {
 class _StoreIconBadge extends StatelessWidget {
   final IconData iconData;
   final int colorValue;
+  final String? logoUrl;
 
-  const _StoreIconBadge({required this.iconData, required this.colorValue});
+  const _StoreIconBadge({
+    required this.iconData,
+    required this.colorValue,
+    this.logoUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final hasLogo = _isValidImageUrl(logoUrl);
+
     return Container(
       width: 60.w,
       height: 60.w,
       decoration: BoxDecoration(
-        color: Color(colorValue),
+        color: hasLogo ? AppColors.white : Color(colorValue),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.85),
@@ -278,9 +300,24 @@ class _StoreIconBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(iconData, color: AppColors.secondaryColor, size: 24.sp),
+      clipBehavior: Clip.antiAlias,
+      child: hasLogo
+          ? ImageWidget(
+              image: logoUrl,
+              width: 60.w,
+              height: 60.w,
+              borderRadius: 12,
+              fit: BoxFit.cover,
+            )
+          : Icon(iconData, color: AppColors.secondaryColor, size: 24.sp),
     );
   }
+}
+
+bool _isValidImageUrl(String? url) {
+  if (url == null || url.isEmpty) return false;
+  final uri = Uri.tryParse(url);
+  return uri != null && uri.isAbsolute;
 }
 
 // ---------------------------------------------------------------------------

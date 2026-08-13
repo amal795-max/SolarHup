@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_app_bar.dart';
@@ -12,9 +13,52 @@ import 'package:untitled1/features/stores/presentation/widgets/product_detail_co
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_gallery_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_info_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_technical_sheet_section.dart';
+import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+
+const ProductDetailModel _skeletonProduct = ProductDetailModel(
+  id: 0,
+  title: 'Product name placeholder',
+  description:
+      'Product description placeholder text for loading skeleton layout.',
+  currentPrice: 1299.99,
+  imageUrls: [],
+  imagePlaceholderColorValue: 0xFFE0E0E0,
+  isAvailable: true,
+  stockQuantity: 12,
+  category: 'solar_panel',
+  highlightSpecs: [
+    ProductSpecHighlight(
+      labelKey: 'product_detail_max_power_output',
+      value: '000 W',
+      icon: Icons.bolt_rounded,
+      fullWidth: true,
+    ),
+    ProductSpecHighlight(
+      labelKey: 'product_detail_efficiency',
+      value: '00%',
+    ),
+    ProductSpecHighlight(
+      labelKey: 'product_detail_warranty',
+      value: '00 yrs',
+    ),
+  ],
+  technicalRows: [
+    ProductDetailDataRow(
+      labelKey: 'product_detail_weight',
+      value: '00.0 kg',
+    ),
+    ProductDetailDataRow(
+      labelKey: 'product_detail_dimensions',
+      value: '000 x 000 x 000',
+    ),
+    ProductDetailDataRow(
+      labelKey: 'product_detail_sku',
+      value: 'SKU-0000',
+    ),
+  ],
+);
 
 class ProductDetailScreen extends StatelessWidget {
   final ProductDetailRouteArgs args;
@@ -47,7 +91,13 @@ class _ProductDetailView extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           body: switch (state) {
-            ProductDetailLoading() => const LoadingIndicator(),
+            ProductDetailLoading() => AppSkeletonizer(
+                child: _ProductDetailBody(
+                  businessId: args.businessId,
+                  product: _skeletonProduct,
+                  selectedImageIndex: 0,
+                ),
+              ),
             ProductDetailError(:final message) => SafeArea(
                 child: EmptyWidget(
                   icon: Icons.error_outline_rounded,
@@ -71,50 +121,71 @@ class _ProductDetailView extends StatelessWidget {
               :final product,
               :final selectedImageIndex,
             ) =>
-              Column(
-                children: [
-                  Expanded(
-                    child: SafeArea(
-                      bottom: false,
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ProductDetailAppBar(businessId: args.businessId),
-                            SizedBox(height: 12.h),
-                            ProductDetailGallerySection(
-                              product: product,
-                              selectedIndex: selectedImageIndex,
-                            ),
-                            SizedBox(height: 20.h),
-                            ProductDetailInfoSection(product: product),
-                            if (product.highlightSpecs.isNotEmpty) ...[
-                              SizedBox(height: 24.h),
-                              ProductDetailCoreSpecsSection(
-                                specs: product.highlightSpecs,
-                              ),
-                            ],
-                            if (product.technicalRows.isNotEmpty) ...[
-                              SizedBox(height: 24.h),
-                              ProductDetailTechnicalSheetSection(
-                                rows: product.technicalRows,
-                              ),
-                            ],
-                            SizedBox(height: 16.h),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  ProductDetailBottomBar(product: product),
-                ],
+              _ProductDetailBody(
+                businessId: args.businessId,
+                product: product,
+                selectedImageIndex: selectedImageIndex,
               ),
             _ => const SizedBox.shrink(),
           },
         );
       },
+    );
+  }
+}
+
+class _ProductDetailBody extends StatelessWidget {
+  final String businessId;
+  final ProductDetailModel product;
+  final int selectedImageIndex;
+
+  const _ProductDetailBody({
+    required this.businessId,
+    required this.product,
+    required this.selectedImageIndex,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: SafeArea(
+            bottom: false,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ProductDetailAppBar(businessId: businessId),
+                  SizedBox(height: 12.h),
+                  ProductDetailGallerySection(
+                    product: product,
+                    selectedIndex: selectedImageIndex,
+                  ),
+                  SizedBox(height: 20.h),
+                  ProductDetailInfoSection(product: product),
+                  if (product.highlightSpecs.isNotEmpty) ...[
+                    SizedBox(height: 24.h),
+                    ProductDetailCoreSpecsSection(
+                      specs: product.highlightSpecs,
+                    ),
+                  ],
+                  if (product.technicalRows.isNotEmpty) ...[
+                    SizedBox(height: 24.h),
+                    ProductDetailTechnicalSheetSection(
+                      rows: product.technicalRows,
+                    ),
+                  ],
+                  SizedBox(height: 16.h),
+                ],
+              ),
+            ),
+          ),
+        ),
+        ProductDetailBottomBar(product: product),
+      ],
     );
   }
 }

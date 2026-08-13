@@ -10,3 +10,17 @@ Map<String, dynamic> unwrapProductPayload(Map<String, dynamic> json) {
   if (product is Map<String, dynamic>) return product;
   return payload;
 }
+
+Map<String, dynamic> unwrapStorePayload(Map<String, dynamic> json) {
+  final payload = unwrapApiPayload(json);
+  final store = payload['store'];
+  if (store is Map<String, dynamic>) return store;
+  return payload;
+}
+
+Map<String, dynamic> unwrapWorkshopPayload(Map<String, dynamic> json) {
+  final payload = unwrapApiPayload(json);
+  final workshop = payload['workshop'];
+  if (workshop is Map<String, dynamic>) return workshop;
+  return payload;
+}

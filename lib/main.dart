@@ -6,6 +6,7 @@ import 'package:untitled1/core/theme/app_themes.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/authentication_cubit.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
+import 'package:untitled1/features/complaints/presentation/bloc/complaint_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
@@ -17,7 +18,7 @@ import 'core/helper/app_bloc_observer.dart';
 import 'core/helper/local_storage.dart';
 import 'core/routing/router.dart';
 import 'features/blog/presentation/bloc/faq_cubit.dart';
-import 'features/complaints/presentation/bloc/complaint_cubit.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<OrdersCubit>()),
         BlocProvider(create: (_) => di.getIt<FaqCubit>()),
         BlocProvider(create: (_) => di.getIt<ComplaintCubit>()),
+        BlocProvider(create: (_) => di.getIt<ServiceRequestsCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

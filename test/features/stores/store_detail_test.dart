@@ -49,6 +49,8 @@ void main() {
     expect(ui.name, 'SunPeak Energy');
     expect(ui.description, 'Premium solar hardware solutions.');
     expect(ui.location, 'Damascus, Syria');
+    expect(ui.logoUrl, 'https://example.com/logo.png');
+    expect(ui.coverImageUrl, 'https://example.com/cover.png');
     expect(ui.rating, 0);
     expect(ui.isVerified, isTrue);
     expect(ui.iconData, isA<IconData>());

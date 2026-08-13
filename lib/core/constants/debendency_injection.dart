@@ -23,6 +23,14 @@ import 'package:untitled1/features/home/data/data_source/home_remote_data_source
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:untitled1/features/services/data/data_source/service_requests_remote_data_source.dart';
+import 'package:untitled1/features/services/data/data_source/workshops_remote_data_source.dart';
+import 'package:untitled1/features/services/data/repositories/service_requests_repository.dart';
+import 'package:untitled1/features/services/data/repositories/workshops_repository.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_categories_cubit/service_categories_cubit.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
+import 'package:untitled1/features/services/presentation/bloc/workshop_detail_cubit/workshop_detail_cubit.dart';
+import 'package:untitled1/features/services/presentation/bloc/workshop_picker_cubit/workshop_picker_cubit.dart';
 import 'package:untitled1/features/stores/data/data_source/stores_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 import 'package:untitled1/features/stores/data/data_source/product_detail_remote_data_source.dart';
@@ -112,6 +120,19 @@ Future<void> init() async {
 
 
   getIt.registerFactory(() => BlogDetailCubit(getIt()));
+  getIt.registerLazySingleton<WorkshopsRemoteDataSource>(
+    () => WorkshopsRemoteDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<ServiceRequestsRemoteDataSource>(
+    () => ServiceRequestsRemoteDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<WorkshopsRepository>(
+    () => WorkshopsRepositoryImpl(remote: getIt(), networkInfo: getIt()),
+  );
+  getIt.registerLazySingleton<ServiceRequestsRepository>(
+    () => ServiceRequestsRepositoryImpl(remote: getIt(), networkInfo: getIt()),
+  );
+
   getIt.registerLazySingleton<StoresRemoteDataSource>(() => StoresRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<StoresRepository>(() => StoresRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
 
@@ -120,6 +141,11 @@ Future<void> init() async {
   getIt.registerFactory(() => StoreKitCubit(getIt()));
   getIt.registerLazySingleton<ProductDetailRemoteDataSource>(() => ProductDetailRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<ProductDetailRepository>(() => ProductDetailRepositoryImpl(remote: getIt(), networkInfo: getIt()),);
+
+  getIt.registerFactory(() => ServiceCategoriesCubit(getIt()));
+  getIt.registerFactory(() => WorkshopPickerCubit(getIt()));
+  getIt.registerFactory(() => WorkshopDetailCubit(getIt()));
+  getIt.registerFactory(() => ServiceRequestsCubit(getIt()));
 
   getIt.registerFactory(() => ProductDetailBloc(getIt()));
 }
