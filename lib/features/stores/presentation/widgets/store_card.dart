@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+
+import '../../../../core/routing/app_routes.dart';
 
 // ---------------------------------------------------------------------------
 // UI model — keeps the widget layer decoupled from the data_source layer
@@ -144,9 +147,56 @@ class _StoreImageSection extends StatelessWidget {
           Positioned(
             top: 10.h,
             right: 10.w,
-            child: _RatingBadge(rating: data.rating),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _ComplaintButton(data: data),
+                SizedBox(width: 8.w),
+                _RatingBadge(rating: data.rating),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ComplaintButton extends StatelessWidget {
+  final StoreCardData data;
+
+  const _ComplaintButton({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.push(
+          AppRoutes.addComplaintScreen,
+          extra: {
+            'businessId': int.tryParse(data.id) ?? 0,
+            'businessName': data.name,
+          },
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.all(6.r),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.9),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(
+          Icons.report_problem_outlined,
+          color: AppColors.red,
+          size: 16.sp,
+        ),
       ),
     );
   }

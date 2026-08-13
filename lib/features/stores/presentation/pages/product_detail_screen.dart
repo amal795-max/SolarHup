@@ -82,7 +82,7 @@ class _ProductDetailView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const ProductDetailAppBar(),
+                            ProductDetailAppBar(businessId: args.businessId),
                             SizedBox(height: 12.h),
                             ProductDetailGallerySection(
                               product: product,

@@ -63,6 +63,7 @@ class SettingsScreen extends StatelessWidget {
                 context,
                 icon: Icons.chat_bubble_outline,
                 title: 'my_complaints'.tr(),
+                onTap: () => context.push(AppRoutes.myComplaintsScreen),
               ),
               _buildListTile(
                 context,

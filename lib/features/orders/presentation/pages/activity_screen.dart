@@ -83,8 +83,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         }
         final orders = state is OrdersLoaded
             ? state.orders
-            : (state is OrdersLoading
-            ? List.generate(
+            : (state is OrdersLoading ? List.generate(
                       4,
                       (index) => OrderModel(
                         id: 0,

@@ -17,6 +17,7 @@ import 'core/helper/app_bloc_observer.dart';
 import 'core/helper/local_storage.dart';
 import 'core/routing/router.dart';
 import 'features/blog/presentation/bloc/faq_cubit.dart';
+import 'features/complaints/presentation/bloc/complaint_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<CartCubit>()),
         BlocProvider(create: (_) => di.getIt<OrdersCubit>()),
         BlocProvider(create: (_) => di.getIt<FaqCubit>()),
+        BlocProvider(create: (_) => di.getIt<ComplaintCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

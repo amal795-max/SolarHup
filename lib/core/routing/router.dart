@@ -43,6 +43,9 @@ import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_product_details_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 import '../../features/favorite/presentation/pages/favorites_screen.dart';
+import '../../features/complaints/presentation/pages/my_complaints_screen.dart';
+import '../../features/complaints/presentation/pages/complaint_details_screen.dart';
+import '../../features/complaints/presentation/pages/add_complaint_screen.dart';
 
 import 'package:untitled1/core/routing/router_keys.dart';
 
@@ -302,6 +305,25 @@ final GoRouter router = GoRouter(
       path: AppRoutes.favoritesScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const FavoritesScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.myComplaintsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyComplaintsScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.addComplaintScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const AddComplaintScreen();
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.complaintDetailsScreenBase}/:id',
+      builder: (BuildContext context, GoRouterState state) {
+        final id = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
+        return ComplaintDetailsScreen(complaintId: id);
       },
     ),
   ],

@@ -8,8 +8,12 @@ import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.da
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 
+import '../../../../widgets/back_button_widget.dart';
+
 class ProductDetailAppBar extends StatelessWidget {
-  const ProductDetailAppBar({super.key});
+  final String businessId;
+
+  const ProductDetailAppBar({super.key, required this.businessId});
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +22,21 @@ class ProductDetailAppBar extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
       child: Row(
         children: [
-          BlocBuilder<ProductDetailBloc, ProductDetailState>(
-            builder: (context, detailState) {
-              if (detailState is ProductDetailLoaded) {
-                return BlocBuilder<FavoritesCubit, FavoritesState>(
-                  builder: (context, state) {
-                    final isFav = context.read<FavoritesCubit>().isFavorite('product',detailState.product.id);
-                    return IconButton(
-                      onPressed: () => context.read<FavoritesCubit>().toggleFavorite('product', detailState.product.id),
-                      icon: Icon(
-                        isFav ? Icons.favorite : Icons.favorite_border,
-                        color: isFav ? Colors.red : AppColors.grey,
-                        size: 22.sp,
-                      ),
-                    );
-                  },
-                );
-              }
-              return const SizedBox.shrink();
+          IconButton(
+            onPressed: () {
+              context.push(
+                AppRoutes.addComplaintScreen,
+                extra: {
+                  'businessId': int.tryParse(businessId) ?? 0,
+                  'businessName': 'Store #$businessId',
+                },
+              );
             },
+            icon: Icon(
+              Icons.report_problem_outlined,
+              color: AppColors.red,
+              size: 22.sp,
+            ),
           ),
           IconButton(
             onPressed: () {

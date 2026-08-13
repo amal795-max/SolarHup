@@ -17,6 +17,8 @@ import 'package:untitled1/features/blog/presentation/bloc/blog_detail_cubit.dart
 import 'package:untitled1/features/chatbot/data/data_source/chat_bot_remote_data_source.dart';
 import 'package:untitled1/features/chatbot/data/repositories/chat_bot-repo.dart';
 import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart';
+import 'package:untitled1/features/complaints/data/data_sources/complaint_remote_data_source.dart';
+import 'package:untitled1/features/complaints/data/repositories/complaint_repository.dart';
 import 'package:untitled1/features/home/data/data_source/home_remote_data_source.dart';
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
@@ -43,6 +45,7 @@ import 'package:untitled1/features/orders/data/repositories/orders_repository.da
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import '../../features/blog/presentation/bloc/faq_cubit.dart';
+import '../../features/complaints/presentation/bloc/complaint_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -68,6 +71,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<FavoriteRemoteDataSource>(() => FavoriteRemoteDataSourceImpl(getIt()));
   getIt.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(apiRequest: getIt()));
   getIt.registerLazySingleton<OrdersRemoteDataSource>(() => OrdersRemoteDataSourceImpl(apiRequest: getIt()));
+  getIt.registerLazySingleton<ComplaintRemoteDataSource>(() => ComplaintRemoteDataSourceImpl( getIt()));
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
@@ -78,6 +82,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<FavoriteRepository>(() => FavoriteRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
+  getIt.registerLazySingleton<ComplaintRepository>(() => ComplaintRepositoryImpl(remote: getIt(), networkInfo: getIt()));
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
@@ -91,6 +96,7 @@ Future<void> init() async {
   getIt.registerFactory(() => CartCubit(getIt()));
   getIt.registerFactory(() => OrdersCubit(getIt()));
   getIt.registerFactory(() => FaqCubit(getIt()));
+  getIt.registerFactory(() => ComplaintCubit(getIt()));
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => const HomeRemoteDataSourceImpl(),
