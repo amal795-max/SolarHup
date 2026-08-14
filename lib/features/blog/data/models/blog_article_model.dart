@@ -14,25 +14,6 @@ class BlogArticleModel {
     required this.imagePlaceholderColorValue,
     this.imageUrl,
   });
-
-  BlogArticleModel copyWith({
-    String? id,
-    String? title,
-    String? excerpt,
-    String? dateLabel,
-    int? imagePlaceholderColorValue,
-    String? imageUrl,
-  }) {
-    return BlogArticleModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      excerpt: excerpt ?? this.excerpt,
-      dateLabel: dateLabel ?? this.dateLabel,
-      imagePlaceholderColorValue:
-          imagePlaceholderColorValue ?? this.imagePlaceholderColorValue,
-      imageUrl: imageUrl ?? this.imageUrl,
-    );
-  }
 }
 
 class BlogFeedModel {

@@ -14,7 +14,6 @@ import 'package:untitled1/features/blog/presentation/widgets/blog_search_section
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
-import 'package:untitled1/widgets/text_with_icon.dart';
 
 class BlogScreen extends StatelessWidget {
   const BlogScreen({super.key});
@@ -78,16 +77,6 @@ class _BlogLoadedBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const BlogSearchSection(),
-          SizedBox(height: 10.h),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextWithIcon(
-              title: 'learning_hub_entry'.tr(),
-              icon: Icons.school_outlined,
-              color: AppColors.primaryColor,
-              onTap: () => context.push(AppRoutes.solarLearningHubScreen),
-            ),
-          ),
           SizedBox(height: 14.h),
           BlogFeaturedCard(article: state.featured),
           SizedBox(height: 16.h),
