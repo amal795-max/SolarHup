@@ -27,7 +27,6 @@ abstract class AppRoutes {
   static const activityScreen = '/activityScreen';
   static const discountsScreen = '/discountsScreen';
   static const discountedProductsScreen = '/discountedProductsScreen';
-  static const bookConsultationScreen = '/bookConsultationScreen';
   static const chatBotScreen = '/chatBotScreen';
   static const settingsScreen = '/settingsScreen';
   static const blogScreen = '/blogScreen';
@@ -64,4 +63,6 @@ abstract class AppRoutes {
   static const complaintDetailsScreenBase = '/complaintDetailsScreen';
   static String complaintDetails(String id) => '$complaintDetailsScreenBase/$id';
   static const reviewsScreen = '/reviewsScreen';
+  static const askExpertScreen = '/askExpertScreen';
+  static const myQuestionsScreen = '/myQuestionsScreen';
 }

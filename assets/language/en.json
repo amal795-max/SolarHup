@@ -219,7 +219,6 @@
   "store_info_configure_kit": "Configure Kit",
   "store_info_expert_title": "Need expert advice?",
   "store_info_expert_subtitle": "Our solar consultants are available for a free system sizing and ROI analysis.",
-  "store_info_schedule_call": "Schedule Call",
   "store_info_live_chat": "Live Chat",
   "your_cart": "Your Cart",
   "items_count": "{} Items",
@@ -701,11 +700,19 @@
   "minutes_ago": "a minute ago",
   "hours_ago": "an hour ago",
   "days_ago": "a day ago",
-  "yesterday": "yesterday"
-
-
-
-
+  "yesterday": "yesterday",
+  "consult_expert_title": "Consult an Expert",
+  "question_sent_success": "Your question has been sent successfully",
+  "ask_expert_hint": "Ask our certified solar experts anything about your system or installation.",
+  "type_your_question_here": "Type your question here...",
+  "send_question": "Send Question",
+  "my_questions_title": "My Questions",
+  "error_occurred": "An error occurred",
+  "no_questions_yet": "No questions yet",
+  "ask_your_first_question_now": "Ask your first question now",
+  "answered": "Answered",
+  "question_sent_error": "An error occurred while sending your question",
+  "my_questions_button": "My Questions"
 }
 
 

@@ -184,6 +184,7 @@
   "home_blog_rebates_title": "الإعانات الحكومية: ما تحتاج أن تعرفه",
   "home_blog_rebates_meta": "قراءة 8 دقائق • تمويل",
   "home_used_systems_desc": "اكتشف أفضل الأنظمة المستعملة المتاحة",
+  "nav_home": "الرئيسية",
   "nav_profile": "حسابي",
   "nav_store": "المتاجر",
   "nav_services": "الخدمات",
@@ -226,7 +227,6 @@
   "store_info_configure_kit": "تخصيص الحزمة",
   "store_info_expert_title": "هل تحتاج إلى مشورة خبير؟",
   "store_info_expert_subtitle": "مستشارونا الشمسيون متاحون لتحديد حجم النظام المجاني وتحليل العائد على الاستثمار.",
-  "store_info_schedule_call": "جدولة مكالمة",
   "store_info_live_chat": "الدردشة المباشرة",
   "your_cart": "عربتك",
   "items_count": "{} عناصر",
@@ -707,7 +707,19 @@
   "minutes_ago": "قبل دقيقة",
   "hours_ago": "قبل ساعة",
   "days_ago": "قبل يوم",
-  "yesterday": "أمس"
+  "yesterday": "أمس",
+  "consult_expert_title": "استشارة خبير",
+  "question_sent_success": "تم إرسال سؤالك بنجاح",
+  "ask_expert_hint": "اسأل خبراء الطاقة الشمسية المعتمدين لدينا عن أي شيء يتعلق بنظامك أو تركيبك.",
+  "type_your_question_here": "اكتب سؤالك هنا...",
+  "send_question": "إرسال السؤال",
+  "my_questions_title": "أسئلتي",
+  "error_occurred": "حدث خطأ ما",
+  "no_questions_yet": "لا يوجد أسئلة بعد",
+  "ask_your_first_question_now": "اطرح سؤالك الأول الآن",
+  "answered": "تم الرد",
+  "question_sent_error": "حدث خطأ أثناء إرسال السؤال",
+  "my_questions_button": "سجل الأسئلة"
 
 }
 

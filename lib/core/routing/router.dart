@@ -18,7 +18,6 @@ import 'package:untitled1/features/blog/presentation/pages/all_questions_screen.
 import 'package:untitled1/features/blog/presentation/pages/solar_learning_hub_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
-import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/product_compare/presentation/pages/product_compare_screen.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
@@ -56,6 +55,8 @@ import 'package:untitled1/features/settings/presentation/pages/privacy_policy_sc
 import '../../features/complaints/presentation/pages/my_complaints_screen.dart';
 import '../../features/complaints/presentation/pages/complaint_details_screen.dart';
 import '../../features/complaints/presentation/pages/add_complaint_screen.dart';
+import '../../features/consultation/presentation/pages/ask_expert_screen.dart';
+import '../../features/consultation/presentation/pages/my_questions_screen.dart';
 
 import 'package:untitled1/core/routing/router_keys.dart';
 
@@ -196,12 +197,6 @@ final GoRouter router = GoRouter(
           args: args ??
               const WorkshopInfoRouteArgs(workshopId: '0'),
         );
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.bookConsultationScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const BookConsultationScreen();
       },
     ),
     GoRoute(
@@ -404,6 +399,18 @@ final GoRouter router = GoRouter(
           itemId: extra['itemId'] as String,
           itemName: extra['itemName'] as String,
         );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.askExpertScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const AskExpertScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.myQuestionsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyQuestionsScreen();
       },
     ),
   ],
