@@ -2,6 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -96,7 +99,7 @@ WorkshopInfoData workshopDetailToInfoData(
   );
 }
 
-final WorkshopInfoData sampleWorkshopInfo = WorkshopInfoData(
+final WorkshopInfoData sampleWorkshopInfo = const WorkshopInfoData(
   id: 'workshop-001',
   name: 'Solar Fix Workshop',
   description: 'Professional solar maintenance and repair services.',
@@ -104,7 +107,7 @@ final WorkshopInfoData sampleWorkshopInfo = WorkshopInfoData(
   phone: '+963912345678',
   region: 'Damascus',
   imagePlaceholderColorValue: 0xFF0A2A43,
-  services: const [
+  services: [
     WorkshopServiceItem(
       id: '1',
       name: 'Inverter Repair Visit',
@@ -271,14 +274,9 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
     final request =
         await context.read<ServiceRequestsCubit>().requestService(serviceId);
     if (request != null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'services_request_success'.tr(
-              namedArgs: {'code': request.orderCode},
-            ),
-          ),
-        ),
+      DataHelper.showSnackBar(message:  'services_request_success'.tr(
+        namedArgs: {'code': request.orderCode},
+      ), context: context
       );
     }
   }
@@ -406,43 +404,76 @@ class _WorkshopProfileSection extends StatelessWidget {
                   ),
           ),
           SizedBox(width: 14.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.name,
-                  style: AppStyle.h5.copyWith(fontWeight: FontWeight.w800),
-                ),
-                SizedBox(height: 8.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightYellow,
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.verified_rounded,
-                        size: 14.sp,
-                        color: AppColors.tertiaryColor,
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        'store_info_certified_vendor'.tr(),
-                        style: AppStyle.labelXSmall.copyWith(
-                          color: AppColors.tertiaryColor,
-                          fontWeight: FontWeight.w700,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data.name,
+                      style: AppStyle.h5.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.w, vertical: 5.h),
+                          decoration: BoxDecoration(
+                            color: AppColors.lightYellow,
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.verified_rounded,
+                                size: 14.sp,
+                                color: AppColors.tertiaryColor,
+                              ),
+                              SizedBox(width: 4.w),
+                              Text(
+                                'store_info_certified_vendor'.tr(),
+                                style: AppStyle.labelXSmall.copyWith(
+                                  color: AppColors.tertiaryColor,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                        SizedBox(width: 12.w),
+                        GestureDetector(
+                          onTap: () {
+                            context.push(
+                              AppRoutes.reviewsScreen,
+                              extra: {
+                                'itemType': 'workshop',
+                                'itemId': data.id,
+                                'itemName': data.name,
+                              },
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.star_rounded,
+                                  color: Colors.orange, size: 16.sp),
+                              SizedBox(width: 4.w),
+                              Text(
+                                'see_all_reviews'.tr(),
+                                style: AppStyle.labelXSmall.copyWith(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w700,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
         ],
       ),
     );

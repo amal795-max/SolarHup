@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
@@ -46,7 +48,19 @@ class StoreInfoDetailsSection extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 10.w),
-              _RatingBadge(rating: data.rating),
+              _RatingBadge(
+                rating: data.rating,
+                onTap: () {
+                  context.push(
+                    AppRoutes.reviewsScreen,
+                    extra: {
+                      'itemType': 'store',
+                      'itemId': data.id.toString(),
+                      'itemName': data.name,
+                    },
+                  );
+                },
+              ),
             ],
           ),
 
@@ -154,34 +168,38 @@ class _FollowStoreButton extends StatelessWidget {
 
 class _RatingBadge extends StatelessWidget {
   final double rating;
+  final VoidCallback? onTap;
 
-  const _RatingBadge({required this.rating});
+  const _RatingBadge({required this.rating, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: AppColors.lightOrange,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        spacing: 4,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.star_rounded,
-            color: AppColors.brown,
-            size: 16.sp,
-          ),
-          Text(
-            rating.toStringAsFixed(1),
-            style: AppStyle.labelSmall.copyWith(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+        decoration: BoxDecoration(
+          color: AppColors.lightOrange,
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Row(
+          spacing: 4,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.star_rounded,
               color: AppColors.brown,
-              fontWeight: FontWeight.w700,
+              size: 16.sp,
             ),
-          ),
-        ],
+            Text(
+              rating.toStringAsFixed(1),
+              style: AppStyle.labelSmall.copyWith(
+                color: AppColors.brown,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

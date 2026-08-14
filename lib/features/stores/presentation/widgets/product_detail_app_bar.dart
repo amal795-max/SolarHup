@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
-import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
-import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 
-import '../../../../widgets/back_button_widget.dart';
 
 class ProductDetailAppBar extends StatelessWidget {
   final int businessId;

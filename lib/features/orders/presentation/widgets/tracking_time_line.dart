@@ -84,9 +84,7 @@ class _TimelineItem extends StatelessWidget {
     required this.subtitle,
     this.isCompleted = false,
     this.isCurrent = false,
-    this.isLast = false,
-    this.icon,
-    this.iconColor,
+    this.isLast = false, this.icon, this.iconColor,
   });
 
   @override
