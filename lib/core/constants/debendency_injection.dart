@@ -40,6 +40,8 @@ import 'package:untitled1/features/stores/data/data_source/product_detail_remote
 import 'package:untitled1/features/stores/data/repositories/product_detail_repository.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
+import 'package:untitled1/features/product_compare/data/repositories/product_compare_repository.dart';
+import 'package:untitled1/features/product_compare/presentation/cubit/compare_session_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/used_system/data/data-source/used_system_remote_data_source.dart';
@@ -167,6 +169,20 @@ Future<void> init() async {
   );
   getIt.registerLazySingleton<ServiceRequestsRepository>(
     () => ServiceRequestsRepositoryImpl(remote: getIt(), networkInfo: getIt()),
+  );
+
+  getIt.registerLazySingleton<ProductCompareRepository>(
+    () => ProductCompareRepositoryImpl(
+      storesRepository: getIt(),
+      networkInfo: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton<CompareSessionCubit>(
+    () => CompareSessionCubit(
+      productDetailRepository: getIt(),
+      storesRepository: getIt(),
+    ),
   );
 
   getIt.registerFactory(() => StoreDetailCubit(getIt(), getIt()));

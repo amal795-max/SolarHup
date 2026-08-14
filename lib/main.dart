@@ -19,6 +19,7 @@ import 'core/helper/app_bloc_observer.dart';
 import 'core/helper/local_storage.dart';
 import 'core/routing/router.dart';
 import 'features/blog/presentation/bloc/faq_cubit.dart';
+import 'package:untitled1/features/product_compare/presentation/cubit/compare_session_cubit.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 
 void main() async {
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.getIt<ComplaintCubit>()),
         BlocProvider(create: (_) => di.getIt<SettingsCubit>()),
         BlocProvider(create: (_) => di.getIt<ServiceRequestsCubit>()),
+        BlocProvider(create: (_) => di.getIt<CompareSessionCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(393, 852),

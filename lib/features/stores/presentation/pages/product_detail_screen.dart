@@ -96,6 +96,7 @@ class _ProductDetailView extends StatelessWidget {
                   businessId: args.businessId,
                   product: _skeletonProduct,
                   selectedImageIndex: 0,
+                  storeName: args.storeName,
                 ),
               ),
             ProductDetailError(:final message) => SafeArea(
@@ -125,6 +126,7 @@ class _ProductDetailView extends StatelessWidget {
                 businessId: args.businessId,
                 product: product,
                 selectedImageIndex: selectedImageIndex,
+                storeName: args.storeName,
               ),
             _ => const SizedBox.shrink(),
           },
@@ -138,11 +140,13 @@ class _ProductDetailBody extends StatelessWidget {
   final int businessId;
   final ProductDetailModel product;
   final int selectedImageIndex;
+  final String? storeName;
 
   const _ProductDetailBody({
     required this.businessId,
     required this.product,
     required this.selectedImageIndex,
+    this.storeName,
   });
 
   @override
@@ -158,7 +162,11 @@ class _ProductDetailBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ProductDetailAppBar(businessId: businessId),
+                  ProductDetailAppBar(
+                    businessId: businessId,
+                    product: product,
+                    storeName: storeName,
+                  ),
                   SizedBox(height: 12.h),
                   ProductDetailGallerySection(
                     product: product,

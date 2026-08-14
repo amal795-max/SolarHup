@@ -63,6 +63,7 @@ class StoreInfoFeaturedProductsSection extends StatelessWidget {
                     extra: ProductDetailRouteArgs(
                       businessId: storeId,
                       productId: product.id,
+                      storeName: storeName,
                     ),
                   );
                 },

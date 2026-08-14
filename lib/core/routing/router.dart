@@ -19,7 +19,7 @@ import 'package:untitled1/features/blog/presentation/pages/solar_learning_hub_sc
 import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
-import 'package:untitled1/features/package_comparison/presentation/pages/package_comparison_screen.dart';
+import 'package:untitled1/features/product_compare/presentation/pages/product_compare_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/rate_service_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
@@ -265,7 +265,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.packageComparisonScreen,
       builder: (BuildContext context, GoRouterState state) {
-        return const PackageComparisonScreen();
+        return const ProductCompareScreen();
       },
     ),
     GoRoute(
