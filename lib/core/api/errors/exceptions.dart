@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../constants/failure_success_message.dart';
 import 'failures.dart';
@@ -81,6 +82,6 @@ String mapFailureToMessage(Failure failure) {
     case const (CacheFailure):
       return EMPTY_CACHE_FAILURE_MESSAGE;
     default:
-      return 'error_unexpected';
+      return 'error_unexpected'.tr();
   }
 }

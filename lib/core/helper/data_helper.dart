@@ -92,5 +92,15 @@ class DataHelper {
       await launchUrl(telegramWeb, mode: LaunchMode.externalApplication);
     }
   }
+  String timeAgo(DateTime date, BuildContext context) {
+    final diff = DateTime.now().difference(date);
+
+    if (diff.inSeconds < 60) return 'just_now'.tr();
+    if (diff.inMinutes < 60) return '${diff.inMinutes} ${'minutes_ago'.tr()}';
+    if (diff.inHours < 24) return '${diff.inHours} ${'hours_ago'.tr()}';
+    if (diff.inDays < 7) return '${diff.inDays} ${'days_ago'.tr()}';
+
+    return dateFormat('dd MMM yyyy',date, locale:context.locale);
+  }
 
 }

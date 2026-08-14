@@ -14,11 +14,8 @@ import 'package:untitled1/features/catalog/data/models/discounted_product_model.
 import 'package:untitled1/features/catalog/presentation/bloc/discounted_products_cubit/discounted_products_cubit.dart';
 import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
-import 'package:untitled1/widgets/app_skeletonizer.dart';
-import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class DiscountedProductsScreen extends StatelessWidget {
   const DiscountedProductsScreen({super.key});

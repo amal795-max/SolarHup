@@ -62,6 +62,9 @@ import 'package:untitled1/features/settings/data/repositories/settings_repositor
 import 'package:untitled1/features/settings/presentation/bloc/settings_cubit.dart';
 import '../../features/blog/presentation/bloc/faq_cubit.dart';
 import '../../features/complaints/presentation/bloc/complaint_cubit.dart';
+import '../../features/reviews/data/data_sources/reviews_remote_data_source.dart';
+import '../../features/reviews/data/repositories/reviews_repository.dart';
+import '../../features/reviews/presentation/bloc/reviews_cubit.dart';
 import '../network/check_internet.dart';
 
 final getIt= GetIt.instance;
@@ -89,6 +92,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<OrdersRemoteDataSource>(() => OrdersRemoteDataSourceImpl(apiRequest: getIt()));
   getIt.registerLazySingleton<ComplaintRemoteDataSource>(() => ComplaintRemoteDataSourceImpl( getIt()));
   getIt.registerLazySingleton<SettingsRemoteDataSource>(() => SettingsRemoteDataSourceImpl(getIt()));
+  getIt.registerLazySingleton<ReviewsRemoteDataSource>(() => ReviewsRemoteDataSourceImpl(apiRequest: getIt()));
 
   getIt.registerLazySingleton<AuthenticationRepositories>(() => AuthenticationRepositoriesImpl(remoteAuth: getIt(), networkInfo: getIt(),),);
   getIt.registerLazySingleton<ResetPasswordRepository>(() => ResetPasswordRepositoryImpl(networkInfo: getIt(), remoteDataSource:getIt()),);
@@ -101,6 +105,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<ComplaintRepository>(() => ComplaintRepositoryImpl(remote: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
+  getIt.registerLazySingleton<ReviewsRepository>(() => ReviewsRepositoryImpl(remote: getIt(), networkInfo: getIt()));
 
   getIt.registerFactory(() => AuthenticationCubit(getIt()));
   getIt.registerFactory(() => ResetPasswordCubit(getIt()));
@@ -116,6 +121,7 @@ Future<void> init() async {
   getIt.registerFactory(() => FaqCubit(getIt()));
   getIt.registerFactory(() => ComplaintCubit(getIt()));
   getIt.registerFactory(() => SettingsCubit(getIt()));
+  getIt.registerFactory(() => ReviewsCubit(repository: getIt()));
 
   getIt.registerLazySingleton<StoresRemoteDataSource>(() => StoresRemoteDataSourceImpl(getIt()),);
   getIt.registerLazySingleton<StoresRepository>(() => StoresRepositoryImpl(remote: getIt(), networkInfo: getIt()),);

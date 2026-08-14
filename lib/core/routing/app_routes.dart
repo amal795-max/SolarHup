@@ -63,4 +63,5 @@ abstract class AppRoutes {
   static const addComplaintScreen = '/addComplaintScreen';
   static const complaintDetailsScreenBase = '/complaintDetailsScreen';
   static String complaintDetails(String id) => '$complaintDetailsScreenBase/$id';
+  static const reviewsScreen = '/reviewsScreen';
 }

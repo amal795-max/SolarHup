@@ -47,11 +47,12 @@ import 'package:untitled1/features/used_system/presentation/pages/add_used_syste
 import 'package:untitled1/features/used_system/presentation/pages/my_listinig_screen.dart';
 import '../../features/authentication/presentation/pages/authentication_screen.dart';
 import '../../features/authentication/presentation/pages/onboarding_screen.dart';
+import '../../features/reviews/presentation/pages/reviews_screen.dart';
 import '../../features/used_system/presentation/pages/filters_screen.dart';
 import '../../features/used_system/presentation/pages/used_product_details_screen.dart';
 import '../../features/used_system/presentation/pages/used_products_screen.dart';
 import '../../features/favorite/presentation/pages/favorites_screen.dart';
-import '../../features/settings/presentation/pages/privacy_policy_screen.dart';
+import 'package:untitled1/features/settings/presentation/pages/privacy_policy_screen.dart';
 import '../../features/complaints/presentation/pages/my_complaints_screen.dart';
 import '../../features/complaints/presentation/pages/complaint_details_screen.dart';
 import '../../features/complaints/presentation/pages/add_complaint_screen.dart';
@@ -315,7 +316,11 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.rateOrderScreen,
       builder: (BuildContext context, GoRouterState state) {
-        return const RateOrderScreen();
+        final extra = state.extra as Map<String, dynamic>?;
+        return RateOrderScreen(
+          storeId: extra?['storeId']?.toString(),
+          storeName: extra?['storeName'] as String?,
+        );
       },
     ),
     GoRoute(
@@ -388,6 +393,17 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final id = int.tryParse(state.pathParameters['id'] ?? '0') ?? 0;
         return ComplaintDetailsScreen(complaintId: id);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.reviewsScreen,
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        return ReviewsScreen(
+          itemType: extra['itemType'] as String,
+          itemId: extra['itemId'] as String,
+          itemName: extra['itemName'] as String,
+        );
       },
     ),
   ],

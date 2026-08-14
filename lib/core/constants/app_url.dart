@@ -64,6 +64,7 @@ class EndPoints {
   static String favoriteItem(String itemType, int itemId) => '${baseUrl}favorites/$itemType/$itemId';
   static const String privacyPolicy = '${baseUrl}privacy-policy';
   static const String randomTips = '${baseUrl}random';
+  static const String reviews = '${baseUrl}reviews';
 }
 
 class ApiKeys {

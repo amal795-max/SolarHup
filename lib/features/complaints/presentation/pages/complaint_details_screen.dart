@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
@@ -116,7 +117,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
           ),
 
           SizedBox(height: 16.h),
-          AnimationWidget(child: buildTimeline(complaint)),
+          AnimationWidget(child: buildTimeline(complaint,context)),
         ],
       ),
     );
@@ -138,7 +139,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
             children: [
               ComplaintStatus(status: complaint.status),
               Text(
-                DateFormat('MMM dd, yyyy').format(complaint.createdAt),
+                DataHelper.dateFormat('MMM dd, yyyy',complaint.createdAt,locale: context.locale),
                 style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
               ),
             ],
@@ -173,7 +174,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
       businessName: 'Loading Store...',
       subject: 'Loading subject...',
       status: 'pending',
-      messages: [],
+      messages: const [],
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );

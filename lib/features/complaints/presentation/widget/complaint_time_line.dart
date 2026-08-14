@@ -2,16 +2,17 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../core/helper/data_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../data/models/complaint_model.dart';
 
-Widget buildTimeline(ComplaintModel complaint) {
+Widget buildTimeline(ComplaintModel complaint,BuildContext context) {
   return Column(
     children: [
       _TimelineTile(
         title: 'complaint_submitted'.tr(),
-        date: DateFormat('MMM dd, hh:mm a').format(complaint.createdAt),
+        date: DataHelper.dateFormat('MMM dd, hh:mm a',complaint.createdAt,locale: context.locale),
         isFirst: true,
         isActive: true,
       ),

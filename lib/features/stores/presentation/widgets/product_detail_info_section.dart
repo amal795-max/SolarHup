@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
@@ -22,44 +24,76 @@ class ProductDetailInfoSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (categoryLabel.isNotEmpty)
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(6.r),
-                ),
-                child: Text(
-                  categoryLabel.toUpperCase(),
-                  style: AppStyle.labelSmall.copyWith(
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.6,
+            Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: [
+                if (categoryLabel.isNotEmpty)
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryColor.withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      categoryLabel.toUpperCase(),
+                      style: AppStyle.labelSmall.copyWith(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.6,
+                      ),
+                    ),
+                  ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: product.isAvailable
+                        ? AppColors.secondaryColor.withValues(alpha: 0.18)
+                        : AppColors.red.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Text(
+                    product.isAvailable
+                        ? 'product_detail_in_stock'.tr()
+                        : 'product_detail_out_of_stock'.tr(),
+                    style: AppStyle.labelSmall.copyWith(
+                      color: product.isAvailable
+                          ? AppColors.tertiaryColor
+                          : AppColors.red,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
-              ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: product.isAvailable
-                    ? AppColors.secondaryColor.withValues(alpha: 0.18)
-                    : AppColors.red.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Text(
-                product.isAvailable
-                    ? 'product_detail_in_stock'.tr()
-                    : 'product_detail_out_of_stock'.tr(),
-                style: AppStyle.labelSmall.copyWith(
-                  color: product.isAvailable
-                      ? AppColors.tertiaryColor
-                      : AppColors.red,
-                  fontWeight: FontWeight.w700,
-                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () {
+                context.push(
+                  AppRoutes.reviewsScreen,
+                  extra: {
+                    'itemType': 'product',
+                    'itemId': product.id.toString(),
+                    'itemName': product.title,
+                  },
+                );
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.star_rounded, color: Colors.orange, size: 20.sp),
+                  SizedBox(width: 4.w),
+                  Text(
+                    'see_all_reviews'.tr(),
+                    style: AppStyle.labelSmall.copyWith(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.w600,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

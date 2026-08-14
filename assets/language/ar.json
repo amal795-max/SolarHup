@@ -699,6 +699,20 @@
   "complaint_submitted": "تم تقديم الشكوى",
   "under_review": "قيد المراجعة",
   "resolved": "تم الحل",
-  "open": "مفتوحة"
+  "open": "مفتوحة",
+  "rate_your_experience": "قيّم تجربتك",
+  "comment": "التعليق",
+  "all_reviews": "جميع التقييمات",
+  "no_reviews_yet": "لا يوجد تقييمات بعد",
+  "submit_review": "إرسال التقييم",
+  "review_success": "تم إرسال تقييمك بنجاح",
+  "see_all_reviews": "عرض جميع التقييمات",
+  "just_now": "الآن",
+  "minutes_ago": "قبل دقيقة",
+  "hours_ago": "قبل ساعة",
+  "days_ago": "قبل يوم",
+  "yesterday": "أمس"
 
 }
+
+
