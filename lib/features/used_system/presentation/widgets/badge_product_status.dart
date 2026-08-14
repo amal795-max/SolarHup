@@ -5,10 +5,10 @@ import 'package:untitled1/core/theme/app_style.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
-class StatusBadge extends StatelessWidget {
+class StatusUsedBadge extends StatelessWidget {
   final String status;
 
-  const StatusBadge({super.key, required this.status});
+  const StatusUsedBadge({super.key, required this.status});
 
   @override
   Widget build(BuildContext context) {

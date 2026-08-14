@@ -6,6 +6,9 @@ import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
 import 'package:untitled1/features/home/data/models/tip_model.dart';
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
+
+import '../../../data/models/home_layout_model.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -36,16 +39,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _fetchAll(Emitter<HomeState> emit) async {
+    final layoutResult = await repository.getHomeLayout();
     final usedResult = await repository.getUsedProducts();
     final newResult = await repository.getNewOffers();
     final blogResult = await repository.getBlogPosts();
     final tipsResult = await repository.getRandomTips();
 
     String? error;
-    List<ProductModel> usedProducts = [];
+    List<HomeLayoutModel> homeLayout = [];
+    List<UsedProductModel> usedProducts = [];
     List<ProductModel> newOffers = [];
     List<BlogModel> blogPosts = [];
     List<TipModel> tips = [];
+
+    layoutResult.fold(
+      (f) => error = _mapFailureToMessage(f),
+      (data) => homeLayout = data,
+    );
+    if (error != null) {
+      emit(HomeError(message: error!));
+      return;
+    }
 
     usedResult.fold(
       (f) => error = _mapFailureToMessage(f),
@@ -80,6 +94,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       newOffers: newOffers,
       blogPosts: blogPosts,
       tips: tips,
+      homeLayout: homeLayout,
     ));
   }
 

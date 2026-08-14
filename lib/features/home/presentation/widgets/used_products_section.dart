@@ -2,17 +2,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/label_title_widget.dart';
 import 'product_card.dart';
 
-class ProductsSection extends StatelessWidget {
+class UsedProductsSection extends StatelessWidget {
   final String titleKey;
   final List<ProductCardData> products;
   final VoidCallback? onViewAll;
   final void Function(int index)? onProductTap;
 
-  const ProductsSection({
+  const UsedProductsSection({
     super.key,
     required this.titleKey,
     required this.products,
@@ -45,16 +46,18 @@ class ProductsSection extends StatelessWidget {
             alignment: MainAxisAlignment.start,
           )
         else
-          SizedBox(
-            height: 245.h,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              itemCount: products.length,
-              separatorBuilder: (context, index) => SizedBox(width: 12.w),
-              itemBuilder: (context, i) => ProductCard(
-                data: products[i],
-                onTap: onProductTap != null ? () => onProductTap!(i) : null,
+          AnimationWidget(
+            child: SizedBox(
+              height: 245.h,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                itemCount: products.length,
+                separatorBuilder: (context, index) => SizedBox(width: 12.w),
+                itemBuilder: (context, i) => ProductCard(
+                  data: products[i],
+                  onTap: onProductTap != null ? () => onProductTap!(i) : null,
+                ),
               ),
             ),
           ),

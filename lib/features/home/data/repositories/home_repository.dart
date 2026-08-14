@@ -6,16 +6,19 @@ import 'package:untitled1/features/blog/data/models/blog_article_model.dart';
 import 'package:untitled1/features/blog/data/repositories/blog_repository.dart';
 import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
 import 'package:untitled1/features/catalog/data/repositories/catalog_repository.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import '../data_source/home_remote_data_source.dart';
 import '../models/blog_model.dart';
+import '../models/home_layout_model.dart';
 import '../models/product_model.dart';
 import '../models/tip_model.dart';
 
 abstract class HomeRepository {
-  Future<Either<Failure, List<ProductModel>>> getUsedProducts();
+  Future<Either<Failure, List<UsedProductModel>>> getUsedProducts();
   Future<Either<Failure, List<ProductModel>>> getNewOffers();
   Future<Either<Failure, List<BlogModel>>> getBlogPosts();
   Future<Either<Failure, List<TipModel>>> getRandomTips();
+  Future<Either<Failure, List<HomeLayoutModel>>> getHomeLayout();
 }
 
 class HomeRepositoryImpl implements HomeRepository {
@@ -48,7 +51,17 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<Either<Failure, List<ProductModel>>> getUsedProducts() =>
+  Future<Either<Failure, List<HomeLayoutModel>>> getHomeLayout() async {
+    final result = await _handle(() => remote.getHomeLayout());
+    return result.map((list) {
+      final sortedList = List<HomeLayoutModel>.from(list);
+      sortedList.sort((a, b) => a.order.compareTo(b.order));
+      return sortedList;
+    });
+  }
+
+  @override
+  Future<Either<Failure, List<UsedProductModel>>> getUsedProducts() =>
       _handle(() => remote.getUsedProducts());
 
   @override

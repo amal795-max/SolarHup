@@ -95,7 +95,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  padding: EdgeInsets.all(14.w),
+                  padding: EdgeInsets.symmetric(vertical:8.w,horizontal: 10.w),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(18.r),

@@ -17,6 +17,7 @@ class EndPoints {
   static const String complaints = '${baseUrl}complaints';
   static const String myComplaints = '${baseUrl}complaints/me';
   static String complaintDetails(int id) => '${baseUrl}complaints/$id';
+  static const String homeLayout = '${baseUrl}homepage-layout';
 
   static const String _assistant = '${baseUrl}assistant/';
   static const String recommend = '${_assistant}recommend';

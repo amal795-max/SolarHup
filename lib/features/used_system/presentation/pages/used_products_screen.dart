@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/used_system/presentation/widgets/used_product_card.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
@@ -189,148 +191,13 @@ class _ProductGrid extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
-        return _ProductCard(product: products[index])
-            .animate()
-            .fadeIn(duration: 400.ms, delay: (index * 100).ms)
-            .slideY(begin: 0.2, end: 0);
+        return AnimationWidget(child: UsedProductCard(product: products[index]));
+
       },
     );
   }
 }
 
-class _ProductCard extends StatelessWidget {
-  final UsedProductModel product;
-
-  const _ProductCard({required this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () =>
-          context.push(AppRoutes.usedProductDetailScreen, extra: product),
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowColor,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.lightGrey.withOpacity(0.5),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16.r),
-                      ),
-                    ),
-                    child: product.images.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(16.r),
-                            ),
-                            child: Hero(
-                              tag: 'product_${product.id}',
-                              child: ImageWidget(image: product.images.first),
-                            ),
-                          )
-                        : Center(
-                            child: Icon(
-                              Icons.battery_std,
-                              size: 40.sp,
-                              color: AppColors.grey,
-                            ),
-                          ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: StatusBadge(status: product.status),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Column(
-                spacing: 4.h,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: AppStyle.bodyMedium.copyWith(fontSize: 12.sp),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Row(
-                    spacing: 4.w,
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        size: 12.sp,
-                        color: AppColors.grey,
-                      ),
-                      Expanded(
-                        child: Text(
-                          product.region,
-                          style: AppStyle.bodySmall.copyWith(fontSize: 10.sp),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '\$${product.price}',
-                    style: AppStyle.bodyMedium.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(children: [_Tag(label: product.category.tr())]),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  final String label;
-
-  const _Tag({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-      decoration: BoxDecoration(
-        color: AppColors.lightGrey,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      child: Text(
-        label,
-        style: AppStyle.bodySmall.copyWith(
-          fontSize: 8.sp,
-          color: AppColors.grey,
-        ),
-      ),
-    );
-  }
-}
 
 class _SellSystemButton extends StatelessWidget {
   const _SellSystemButton();
