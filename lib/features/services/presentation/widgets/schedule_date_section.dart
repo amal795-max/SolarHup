@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/models/schedule_service_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/schedule_service_bloc/schedule_service_bloc.dart';
 
@@ -132,7 +133,7 @@ class _CalendarDayCell extends StatelessWidget {
             ),
             child: Text(
               '${day.date.day}',
-              style: theme.textTheme.labelMedium?.copyWith(
+              style: AppStyle.labelMedium.copyWith(
                 color: isSelected
                     ? AppColors.white
                     : day.isCurrentMonth

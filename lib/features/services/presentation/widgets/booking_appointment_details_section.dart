@@ -133,39 +133,6 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                     color: valueColor,
                   ),
                 ),
-                SizedBox(
-                  height: 36.h,
-                  child: TextButton.icon(
-                    onPressed: isDownloadingReceipt ? null : onReceiptTap,
-                    style: TextButton.styleFrom(
-                      foregroundColor: valueColor,
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
-                        side: BorderSide(
-                          color: context.colorScheme.outline.withValues(alpha: 0.4),
-                        ),
-                      ),
-                    ),
-                    icon: isDownloadingReceipt
-                        ? SizedBox(
-                            width: 16.w,
-                            height: 16.w,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: valueColor,
-                            ),
-                          )
-                        : Icon(Icons.download_outlined, size: 18.sp),
-                    label: Text(
-                      'btn_receipt'.tr(),
-                      style: AppStyle.labelMedium.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: valueColor,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

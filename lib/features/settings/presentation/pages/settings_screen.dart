@@ -47,12 +47,7 @@ class SettingsScreen extends StatelessWidget {
                 onTap: () => _showLanguageDialog(context),
               ),
               _buildDarkModeTile(context),
-              _buildListTile(
-                  context,
-                  icon: Icons.sell_outlined,
-                  title: 'my_discounts'.tr(),
-                  onTap: (){context.push(AppRoutes.discountsScreen);}
-              ),
+
               _buildListTile(
                 context,
                 icon: Icons.favorite_border,
@@ -108,18 +103,6 @@ class SettingsScreen extends StatelessWidget {
 
             SizedBox(height: 20.h),
 
-            _buildSectionHeader(context, 'notifications_section'.tr()),
-            _buildSectionCard(context, [
-              _buildSwitchTile(
-                context,
-                icon: Icons.notifications_none,
-                title: 'push_notifications'.tr(),
-                value: true,
-                onChanged: (val) {},
-              ),
-            ]),
-
-            SizedBox(height: 20.h),
 
             _buildSectionHeader(context, 'legal_section'.tr()),
             _buildSectionCard(context, [
@@ -129,11 +112,7 @@ class SettingsScreen extends StatelessWidget {
                 title: 'privacy_policy'.tr(),
                 onTap: () => context.push(AppRoutes.privacyPolicyScreen),
               ),
-              _buildListTile(
-                context,
-                icon: Icons.description_outlined,
-                title: 'terms_of_use'.tr(),
-              ),
+
             ]),
 
             SizedBox(height: 20.h),

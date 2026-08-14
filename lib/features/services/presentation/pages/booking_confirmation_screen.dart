@@ -70,7 +70,6 @@ class BookingConfirmationScreen extends StatelessWidget {
                 showCancelButton: showCancelButton,
                 isCancelling: isCancelling,
                 onCancelTap: onCancelTap,
-                onViewBookingsTap: () => context.go(AppRoutes.activityScreen),
                 onBackHomeTap: () => context.go(AppRoutes.bottomNavBar),
               ),
             ),

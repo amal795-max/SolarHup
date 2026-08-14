@@ -10,7 +10,6 @@ import 'package:untitled1/features/authentication/presentation/pages/verificatio
 import 'package:untitled1/features/chatbot/presentation/pages/chatbot_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/catalog/presentation/pages/discounted_products_screen.dart';
-import 'package:untitled1/features/settings/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/settings/presentation/pages/settings_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
@@ -324,15 +323,7 @@ final GoRouter router = GoRouter(
         return const ActivityScreen();
       },
     ),
-    GoRoute(
-      path: AppRoutes.discountsScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const MyDiscountsScreen(
-
-        );
-      },
-    ),
-    GoRoute(
+       GoRoute(
       path: AppRoutes.discountedProductsScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const DiscountedProductsScreen();

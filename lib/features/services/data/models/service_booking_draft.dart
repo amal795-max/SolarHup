@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_request_create_payload.dart';
 
@@ -84,7 +87,7 @@ class ServiceBookingDraft {
       city: city!.trim(),
       street: street!.trim(),
       building: building!.trim(),
-      date: DateFormat('yyyy-MM-dd').format(selectedDate!),
+      date: DataHelper.dateFormat('yyyy-MM-dd',selectedDate!,locale:const Locale('en')),
       time: _formatApiTime(selectedTimeSlotId!),
       floor: floor?.trim(),
       note: note?.trim(),

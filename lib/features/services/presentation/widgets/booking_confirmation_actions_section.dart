@@ -25,23 +25,20 @@ class BookingConfirmationActionsSection extends StatelessWidget {
       children: [
         if (showCancelButton) ...[
           CustomButton(
+            text: 'btn_back_home'.tr(),
+            onPressed: onBackHomeTap,
+          ),
+          SizedBox(height: 10.h),
+
+          CustomButton(
             text: 'cancel_service_request_btn'.tr(),
             type: ButtonType.outlined,
             onPressed: isCancelling ? null : onCancelTap,
             isLoading: isCancelling,
           ),
-          SizedBox(height: 10.h),
         ],
-        CustomButton(
-          text: 'btn_view_bookings'.tr(),
-          onPressed: onViewBookingsTap,
-        ),
-        SizedBox(height: 10.h),
-        CustomButton(
-          text: 'btn_back_home'.tr(),
-          type: ButtonType.outlined,
-          onPressed: onBackHomeTap,
-        ),
+
+
       ],
     );
   }
