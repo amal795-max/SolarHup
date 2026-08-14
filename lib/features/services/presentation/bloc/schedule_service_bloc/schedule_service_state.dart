@@ -20,8 +20,6 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
   final String selectedTimeSlotId;
   final int viewYear;
   final int viewMonth;
-  final String priority;
-  final String panelsCount;
   final String notes;
 
   const ScheduleServiceLoaded({
@@ -30,8 +28,6 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
     required this.selectedTimeSlotId,
     required this.viewYear,
     required this.viewMonth,
-    this.priority = '',
-    this.panelsCount = '',
     this.notes = '',
   });
 
@@ -57,8 +53,6 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
     String? selectedTimeSlotId,
     int? viewYear,
     int? viewMonth,
-    String? priority,
-    String? panelsCount,
     String? notes,
   }) {
     return ScheduleServiceLoaded(
@@ -67,8 +61,6 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
       selectedTimeSlotId: selectedTimeSlotId ?? this.selectedTimeSlotId,
       viewYear: viewYear ?? this.viewYear,
       viewMonth: viewMonth ?? this.viewMonth,
-      priority: priority ?? this.priority,
-      panelsCount: panelsCount ?? this.panelsCount,
       notes: notes ?? this.notes,
     );
   }
@@ -80,8 +72,6 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
         selectedTimeSlotId,
         viewYear,
         viewMonth,
-        priority,
-        panelsCount,
         notes,
       ];
 }

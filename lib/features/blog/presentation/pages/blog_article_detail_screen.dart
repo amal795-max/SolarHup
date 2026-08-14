@@ -9,7 +9,6 @@ import 'package:untitled1/features/blog/presentation/bloc/blog_detail_cubit.dart
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_author_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_content_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_hero_section.dart';
-import 'package:untitled1/features/blog/presentation/widgets/blog_detail_related_section.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -102,9 +101,7 @@ class _BlogDetailBody extends StatelessWidget {
                 SizedBox(height: 16.h),
                 BlogDetailAuthorSection(author: article.author),
                 SizedBox(height: 20.h),
-                BlogDetailContentSection(blocks: article.contentBlocks),
-                SizedBox(height: 24.h),
-                BlogDetailRelatedSection(articles: article.relatedArticles),
+                BlogDetailContentSection(content: article.content),
               ],
             ),
           ),

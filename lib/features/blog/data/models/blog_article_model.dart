@@ -3,20 +3,16 @@ class BlogArticleModel {
   final String title;
   final String excerpt;
   final String dateLabel;
-  final String categoryKey;
-  final String categoryLabel;
   final int imagePlaceholderColorValue;
-  final String iconType;
+  final String? imageUrl;
 
   const BlogArticleModel({
     required this.id,
     required this.title,
     required this.excerpt,
     required this.dateLabel,
-    required this.categoryKey,
-    required this.categoryLabel,
     required this.imagePlaceholderColorValue,
-    this.iconType = 'document',
+    this.imageUrl,
   });
 
   BlogArticleModel copyWith({
@@ -24,21 +20,17 @@ class BlogArticleModel {
     String? title,
     String? excerpt,
     String? dateLabel,
-    String? categoryKey,
-    String? categoryLabel,
     int? imagePlaceholderColorValue,
-    String? iconType,
+    String? imageUrl,
   }) {
     return BlogArticleModel(
       id: id ?? this.id,
       title: title ?? this.title,
       excerpt: excerpt ?? this.excerpt,
       dateLabel: dateLabel ?? this.dateLabel,
-      categoryKey: categoryKey ?? this.categoryKey,
-      categoryLabel: categoryLabel ?? this.categoryLabel,
       imagePlaceholderColorValue:
           imagePlaceholderColorValue ?? this.imagePlaceholderColorValue,
-      iconType: iconType ?? this.iconType,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }

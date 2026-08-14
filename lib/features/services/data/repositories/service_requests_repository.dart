@@ -3,13 +3,18 @@ import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/features/services/data/data_source/service_requests_remote_data_source.dart';
+import 'package:untitled1/features/services/data/models/service_request_create_payload.dart';
 import 'package:untitled1/features/services/data/models/service_request_model.dart';
 
 abstract class ServiceRequestsRepository {
   Future<Either<Failure, ServiceRequestModel>> createServiceRequest(
-    int serviceId,
+    ServiceRequestCreatePayload payload,
   );
   Future<Either<Failure, List<ServiceRequestModel>>> getMyServiceRequests();
+  Future<Either<Failure, ServiceRequestModel>> getServiceRequest(int requestId);
+  Future<Either<Failure, ServiceRequestModel>> cancelServiceRequest(
+    int requestId,
+  );
 }
 
 class ServiceRequestsRepositoryImpl implements ServiceRequestsRepository {
@@ -21,32 +26,41 @@ class ServiceRequestsRepositoryImpl implements ServiceRequestsRepository {
     required this.networkInfo,
   });
 
+  Future<Either<Failure, T>> _guard<T>(Future<T> Function() call) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
+    }
+    try {
+      return Right(await call());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
   @override
   Future<Either<Failure, ServiceRequestModel>> createServiceRequest(
-    int serviceId,
-  ) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final request = await remote.createServiceRequest(serviceId);
-        return Right(request);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      }
-    }
-    return const Left(OfflineFailure());
+    ServiceRequestCreatePayload payload,
+  ) {
+    return _guard(() => remote.createServiceRequest(payload));
   }
 
   @override
   Future<Either<Failure, List<ServiceRequestModel>>>
-      getMyServiceRequests() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final requests = await remote.getMyServiceRequests();
-        return Right(requests);
-      } on ServerException catch (e) {
-        return Left(ServerFailure(e.message));
-      }
-    }
-    return const Left(OfflineFailure());
+      getMyServiceRequests() {
+    return _guard(remote.getMyServiceRequests);
+  }
+
+  @override
+  Future<Either<Failure, ServiceRequestModel>> getServiceRequest(
+    int requestId,
+  ) {
+    return _guard(() => remote.getServiceRequest(requestId));
+  }
+
+  @override
+  Future<Either<Failure, ServiceRequestModel>> cancelServiceRequest(
+    int requestId,
+  ) {
+    return _guard(() => remote.cancelServiceRequest(requestId));
   }
 }

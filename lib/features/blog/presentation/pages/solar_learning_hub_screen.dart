@@ -84,9 +84,6 @@ class _LearningHubBody extends StatelessWidget {
 
     return Column(
       children: [
-        const Align(
-          
-        ),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -103,14 +100,10 @@ class _LearningHubBody extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 14.h),
-                LearningHubSafetySection(
-                  tips: hub.safetyTips,
-                  onManualTap: () {},
-                ),
+                LearningHubSafetySection(tips: hub.safetyTips),
                 SizedBox(height: 14.h),
                 LearningHubTroubleshootingSection(
                   items: hub.troubleshootingItems,
-                  onItemTap: (_) {},
                 ),
                 SizedBox(height: 14.h),
                 LearningHubFaqsSection(

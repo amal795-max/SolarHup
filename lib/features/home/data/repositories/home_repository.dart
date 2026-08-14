@@ -97,7 +97,7 @@ class HomeRepositoryImpl implements HomeRepository {
       title: article.title,
       meta: article.dateLabel,
       imagePlaceholderColorValue: article.imagePlaceholderColorValue,
-      iconType: article.iconType == 'finance' ? 'finance' : 'sun',
+      imageUrl: article.imageUrl,
     );
   }
 }

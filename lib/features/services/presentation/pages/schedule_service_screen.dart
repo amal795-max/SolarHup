@@ -9,6 +9,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/data_source/schedule_service_remote_data_source.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/data/repositories/schedule_service_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/schedule_service_bloc/schedule_service_bloc.dart';
 import 'package:untitled1/features/services/presentation/widgets/schedule_appointment_summary.dart';
@@ -23,8 +24,13 @@ import 'package:untitled1/widgets/primary_button.dart';
 
 class ScheduleServiceScreen extends StatelessWidget {
   final String serviceId;
+  final ServiceBookingDraft? draft;
 
-  const ScheduleServiceScreen({super.key, required this.serviceId});
+  const ScheduleServiceScreen({
+    super.key,
+    required this.serviceId,
+    this.draft,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,15 +42,22 @@ class ScheduleServiceScreen extends StatelessWidget {
           useNetworkCheck: false,
         ),
       )..add(LoadScheduleServiceEvent(serviceId)),
-      child: _ScheduleServiceView(serviceId: serviceId),
+      child: _ScheduleServiceView(
+        serviceId: serviceId,
+        draft: draft,
+      ),
     );
   }
 }
 
 class _ScheduleServiceView extends StatelessWidget {
   final String serviceId;
+  final ServiceBookingDraft? draft;
 
-  const _ScheduleServiceView({required this.serviceId});
+  const _ScheduleServiceView({
+    required this.serviceId,
+    this.draft,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +82,10 @@ class _ScheduleServiceView extends StatelessWidget {
                     width: 160.w,
                   ),
                 ),
-              ScheduleServiceLoaded() =>
-                _ScheduleServiceBody(state: state, serviceId: serviceId),
+              ScheduleServiceLoaded() => _ScheduleServiceBody(
+                  state: state,
+                  draft: draft,
+                ),
               _ => const SizedBox.shrink(),
             };
           },
@@ -82,12 +97,40 @@ class _ScheduleServiceView extends StatelessWidget {
 
 class _ScheduleServiceBody extends StatelessWidget {
   final ScheduleServiceLoaded state;
-  final String serviceId;
+  final ServiceBookingDraft? draft;
 
   const _ScheduleServiceBody({
     required this.state,
-    required this.serviceId,
+    this.draft,
   });
+
+  void _continueToAddress(BuildContext context) {
+    if (state.selectedTimeSlot == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('schedule_select_time'.tr())),
+      );
+      return;
+    }
+
+    final baseDraft = draft ??
+        ServiceBookingDraft(
+          serviceId: int.tryParse(state.service.serviceId) ?? 0,
+          serviceName: state.service.title,
+          servicePrice: 0,
+        );
+
+    final nextDraft = baseDraft.copyWith(
+      selectedDate: state.selectedDate,
+      selectedTimeSlotId: state.selectedTimeSlotId,
+      selectedTimeLabel: state.selectedTimeSlot?.label,
+      note: state.notes.trim().isEmpty ? null : state.notes.trim(),
+    );
+
+    context.push(
+      AppRoutes.serviceAddress(state.service.serviceId),
+      extra: nextDraft,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +164,10 @@ class _ScheduleServiceBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ScheduleServiceHeroSection(service: state.service),
+                ScheduleServiceHeroSection(
+                  service: state.service,
+                  titleOverride: draft?.serviceName,
+                ),
                 SizedBox(height: 20.h),
                 ScheduleDateSection(state: state),
                 SizedBox(height: 20.h),
@@ -133,8 +179,7 @@ class _ScheduleServiceBody extends StatelessWidget {
                 SizedBox(height: 24.h),
                 CustomButton(
                   text: 'continue'.tr(),
-                  onPressed: () =>
-                      context.push(AppRoutes.serviceAddress(serviceId)),
+                  onPressed: () => _continueToAddress(context),
                 ),
               ],
             ),

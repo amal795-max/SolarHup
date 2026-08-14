@@ -12,55 +12,30 @@ class ScheduleFormSection extends StatefulWidget {
 }
 
 class _ScheduleFormSectionState extends State<ScheduleFormSection> {
-  late final TextEditingController _priorityController;
-  late final TextEditingController _panelsController;
   late final TextEditingController _notesController;
 
   @override
   void initState() {
     super.initState();
-    _priorityController = TextEditingController();
-    _panelsController = TextEditingController();
     _notesController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _priorityController.dispose();
-    _panelsController.dispose();
     _notesController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomTextField(
-          title: 'schedule_priority_label'.tr(),
-          controller: _priorityController,
-          onChanged: (value) => context
-              .read<ScheduleServiceBloc>()
-              .add(UpdateSchedulePriorityEvent(value)),
-        ),
-        CustomTextField(
-          title: 'schedule_panels_number_label'.tr(),
-          controller: _panelsController,
-          keyboardType: TextInputType.number,
-          onChanged: (value) => context
-              .read<ScheduleServiceBloc>()
-              .add(UpdateSchedulePanelsEvent(value)),
-        ),
-        CustomTextField(
-          title: 'schedule_notes_label'.tr(),
-          controller: _notesController,
-          isMultiline: true,
-          maxLines: 4,
-          onChanged: (value) => context
-              .read<ScheduleServiceBloc>()
-              .add(UpdateScheduleNotesEvent(value)),
-        ),
-      ],
+    return CustomTextField(
+      title: 'schedule_notes_label'.tr(),
+      controller: _notesController,
+      isMultiline: true,
+      maxLines: 4,
+      onChanged: (value) => context
+          .read<ScheduleServiceBloc>()
+          .add(UpdateScheduleNotesEvent(value)),
     );
   }
 }

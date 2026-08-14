@@ -9,6 +9,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
 import 'package:untitled1/features/services/data/models/expert_service_model.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 
@@ -160,8 +161,15 @@ class ServiceCard extends StatelessWidget {
                           onPressed:
                               onBookTap ??
                               () => context.push(
-                                 AppRoutes.scheduleService(service.id.toString()),
-                              ),
+                                    AppRoutes.scheduleService(
+                                      service.id.toString(),
+                                    ),
+                                    extra: ServiceBookingDraft(
+                                      serviceId: service.id,
+                                      serviceName: service.title,
+                                      servicePrice: service.price,
+                                    ),
+                                  ),
                         ),
                       ),
                     ],

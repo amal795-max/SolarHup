@@ -10,11 +10,12 @@ sealed class ServiceAddressEvent extends Equatable {
 
 final class LoadServiceAddressEvent extends ServiceAddressEvent {
   final String serviceId;
+  final double servicePrice;
 
-  const LoadServiceAddressEvent(this.serviceId);
+  const LoadServiceAddressEvent(this.serviceId, {this.servicePrice = 0});
 
   @override
-  List<Object?> get props => [serviceId];
+  List<Object?> get props => [serviceId, servicePrice];
 }
 
 final class UpdateServiceFullNameEvent extends ServiceAddressEvent {

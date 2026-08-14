@@ -20,7 +20,10 @@ import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_s
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/product_compare/presentation/pages/product_compare_screen.dart';
+import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/presentation/pages/rate_service_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/service_request_detail_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
@@ -238,21 +241,38 @@ final GoRouter router = GoRouter(
       path: '${AppRoutes.scheduleServiceBase}/:serviceId',
       builder: (BuildContext context, GoRouterState state) {
         final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
-        return ScheduleServiceScreen(serviceId: serviceId);
+        final draft = state.extra is ServiceBookingDraft
+            ? state.extra as ServiceBookingDraft
+            : null;
+        return ScheduleServiceScreen(
+          serviceId: serviceId,
+          draft: draft,
+        );
       },
     ),
     GoRoute(
       path: '${AppRoutes.serviceAddressBase}/:serviceId',
       builder: (BuildContext context, GoRouterState state) {
         final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
-        return ServiceAddressScreen(serviceId: serviceId);
+        final draft = state.extra! as ServiceBookingDraft;
+        return ServiceAddressScreen(
+          serviceId: serviceId,
+          draft: draft,
+        );
       },
     ),
     GoRoute(
       path: '${AppRoutes.bookingConfirmationBase}/:serviceId',
       builder: (BuildContext context, GoRouterState state) {
-        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
-        return BookingConfirmationScreen(serviceId: serviceId);
+        final booking = state.extra! as BookingConfirmationModel;
+        return BookingConfirmationScreen(booking: booking);
+      },
+    ),
+    GoRoute(
+      path: '${AppRoutes.serviceRequestDetailBase}/:requestId',
+      builder: (BuildContext context, GoRouterState state) {
+        final requestId = int.tryParse(state.pathParameters['requestId'] ?? '') ?? 0;
+        return ServiceRequestDetailScreen(requestId: requestId);
       },
     ),
     GoRoute(

@@ -5,6 +5,7 @@ class BlogModel extends Equatable {
   final String title;
   final String meta;
   final int imagePlaceholderColorValue;
+  final String? imageUrl;
 
   /// 'sun' | 'finance'
   final String iconType;
@@ -14,9 +15,11 @@ class BlogModel extends Equatable {
     required this.title,
     required this.meta,
     required this.imagePlaceholderColorValue,
+    this.imageUrl,
     this.iconType = 'sun',
   });
 
   @override
-  List<Object?> get props => [id, title, meta, imagePlaceholderColorValue, iconType];
+  List<Object?> get props =>
+      [id, title, meta, imagePlaceholderColorValue, imageUrl, iconType];
 }

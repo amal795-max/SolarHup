@@ -58,7 +58,6 @@ class LearningHubRemoteDataSourceImpl implements LearningHubRemoteDataSource {
       'How long do panels last?',
       'What is net metering?',
     ],
-    totalFaqCount: 50,
     glossaryTerms: [
       GlossaryTermModel(
         term: 'kWh',

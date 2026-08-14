@@ -5,8 +5,15 @@ import 'package:untitled1/features/services/data/models/schedule_service_model.d
 
 class ScheduleServiceHeroSection extends StatelessWidget {
   final ScheduleServiceModel service;
+  final String? titleOverride;
+  final String? subtitleOverride;
 
-  const ScheduleServiceHeroSection({super.key, required this.service});
+  const ScheduleServiceHeroSection({
+    super.key,
+    required this.service,
+    this.titleOverride,
+    this.subtitleOverride,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +69,7 @@ class ScheduleServiceHeroSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    service.title,
+                    titleOverride ?? service.title,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: AppColors.white,
                       fontWeight: FontWeight.w800,
@@ -71,7 +78,7 @@ class ScheduleServiceHeroSection extends StatelessWidget {
                   ),
                   SizedBox(height: 4.h),
                   Text(
-                    service.subtitle,
+                    subtitleOverride ?? service.subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: AppColors.white.withValues(alpha: 0.85),
                     ),

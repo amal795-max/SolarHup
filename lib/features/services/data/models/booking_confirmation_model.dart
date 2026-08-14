@@ -18,6 +18,7 @@ class BookingConfirmationModel {
   final BookingTechnicianModel technician;
   final String address;
   final String? receiptUrl;
+  final String? statusLabel;
 
   const BookingConfirmationModel({
     required this.bookingId,
@@ -27,5 +28,6 @@ class BookingConfirmationModel {
     required this.technician,
     required this.address,
     this.receiptUrl,
+    this.statusLabel,
   });
 }

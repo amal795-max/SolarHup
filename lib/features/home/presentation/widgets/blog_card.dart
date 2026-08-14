@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/blog/presentation/widgets/blog_article_image.dart';
 
 class BlogCardData {
   final String id;
   final String title;
   final String meta;
   final int imagePlaceholderColorValue;
+  final String? imageUrl;
   final IconData imageIcon;
 
   const BlogCardData({
@@ -15,6 +17,7 @@ class BlogCardData {
     required this.title,
     required this.meta,
     required this.imagePlaceholderColorValue,
+    this.imageUrl,
     this.imageIcon = Icons.article_outlined,
   });
 }
@@ -40,25 +43,18 @@ class BlogCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10.r),
-                child: Container(
-                  width: 76.w,
+                child: BlogArticleImage(
                   height: 76.w,
-                  color: Color(data.imagePlaceholderColorValue),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Positioned.fill(
-                        child: ColoredBox(
-                          color: Colors.black.withValues(alpha: 0.12),
-                        ),
+                  width: 76.w,
+                  imageUrl: data.imageUrl,
+                  placeholderColorValue: data.imagePlaceholderColorValue,
+                  placeholderIcon: data.imageIcon,
+                  overlays: [
+                    if (data.imageUrl == null || data.imageUrl!.isEmpty)
+                      ColoredBox(
+                        color: Colors.black.withValues(alpha: 0.12),
                       ),
-                      Icon(
-                        data.imageIcon,
-                        color: Colors.white.withValues(alpha: 0.5),
-                        size: 28.sp,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
               SizedBox(width: 12.w),

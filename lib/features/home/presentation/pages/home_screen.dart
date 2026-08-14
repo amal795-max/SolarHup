@@ -143,6 +143,7 @@ class _HomeViewState extends State<_HomeView> {
     title: m.title,
     meta: m.meta,
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
+    imageUrl: m.imageUrl,
     imageIcon: m.iconType == 'finance'
         ? Icons.account_balance_outlined
         : Icons.wb_sunny_outlined,

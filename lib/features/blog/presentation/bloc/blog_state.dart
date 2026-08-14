@@ -19,7 +19,6 @@ final class BlogLoaded extends BlogState {
   final List<BlogArticleModel> allArticles;
   final int apiTotalPages;
   final String searchQuery;
-  final int selectedCategoryIndex;
   final int currentPage;
 
   const BlogLoaded({
@@ -27,25 +26,19 @@ final class BlogLoaded extends BlogState {
     required this.allArticles,
     required this.apiTotalPages,
     this.searchQuery = '',
-    this.selectedCategoryIndex = 0,
     this.currentPage = 1,
   });
 
   List<BlogArticleModel> get filteredArticles {
     final query = searchQuery.trim().toLowerCase();
-    return allArticles.where((article) {
-      final matchesCategory = switch (selectedCategoryIndex) {
-        1 => article.categoryKey == 'panels',
-        2 => article.categoryKey == 'inverters',
-        3 => article.categoryKey == 'batteries',
-        _ => true,
-      };
-      if (!matchesCategory) return false;
-      if (query.isEmpty) return true;
-      return article.title.toLowerCase().contains(query) ||
-          article.excerpt.toLowerCase().contains(query) ||
-          article.categoryLabel.toLowerCase().contains(query);
-    }).toList();
+    if (query.isEmpty) return allArticles;
+    return allArticles
+        .where(
+          (article) =>
+              article.title.toLowerCase().contains(query) ||
+              article.excerpt.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   List<BlogArticleModel> get paginatedArticles {
@@ -71,7 +64,6 @@ final class BlogLoaded extends BlogState {
     List<BlogArticleModel>? allArticles,
     int? apiTotalPages,
     String? searchQuery,
-    int? selectedCategoryIndex,
     int? currentPage,
   }) {
     return BlogLoaded(
@@ -79,8 +71,6 @@ final class BlogLoaded extends BlogState {
       allArticles: allArticles ?? this.allArticles,
       apiTotalPages: apiTotalPages ?? this.apiTotalPages,
       searchQuery: searchQuery ?? this.searchQuery,
-      selectedCategoryIndex:
-          selectedCategoryIndex ?? this.selectedCategoryIndex,
       currentPage: currentPage ?? this.currentPage,
     );
   }
@@ -91,7 +81,6 @@ final class BlogLoaded extends BlogState {
         allArticles,
         apiTotalPages,
         searchQuery,
-        selectedCategoryIndex,
         currentPage,
       ];
 }

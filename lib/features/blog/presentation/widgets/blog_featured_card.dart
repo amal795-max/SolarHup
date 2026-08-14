@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/blog/data/models/blog_article_model.dart';
+import 'package:untitled1/features/blog/presentation/widgets/blog_article_image.dart';
 
 class BlogFeaturedCard extends StatelessWidget {
   final BlogArticleModel article;
@@ -21,37 +22,37 @@ class BlogFeaturedCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(article.imagePlaceholderColorValue),
-                    AppColors.primaryColor,
-                  ],
+            BlogArticleImage(
+              imageUrl: article.imageUrl,
+              placeholderColorValue: article.imagePlaceholderColorValue,
+              placeholderIcon: Icons.article_outlined,
+              overlays: [
+                if (article.imageUrl == null || article.imageUrl!.isEmpty)
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Color(article.imagePlaceholderColorValue),
+                          AppColors.primaryColor,
+                        ],
+                      ),
+                    ),
+                  ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.72),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              child: Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.battery_charging_full_rounded,
-                  size: 72.sp,
-                  color: AppColors.white.withValues(alpha: 0.25),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.72),
-                  ],
-                ),
-              ),
+              ],
             ),
             Padding(
               padding: EdgeInsets.all(16.w),

@@ -33,17 +33,6 @@ class BlogCubit extends Cubit<BlogState> {
     emit(current.copyWith(searchQuery: query, currentPage: 1));
   }
 
-  void selectCategory(int categoryIndex) {
-    final current = state;
-    if (current is! BlogLoaded) return;
-    emit(
-      current.copyWith(
-        selectedCategoryIndex: categoryIndex,
-        currentPage: 1,
-      ),
-    );
-  }
-
   void goToPreviousPage() {
     final current = state;
     if (current is! BlogLoaded || !current.canGoPrevious) return;

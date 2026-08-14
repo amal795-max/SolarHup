@@ -18,8 +18,6 @@ class ScheduleServiceBloc
     on<SelectScheduleDateEvent>(_onSelectDate);
     on<SelectScheduleTimeSlotEvent>(_onSelectTimeSlot);
     on<ChangeScheduleMonthEvent>(_onChangeMonth);
-    on<UpdateSchedulePriorityEvent>(_onUpdatePriority);
-    on<UpdateSchedulePanelsEvent>(_onUpdatePanels);
     on<UpdateScheduleNotesEvent>(_onUpdateNotes);
   }
 
@@ -93,24 +91,6 @@ class ScheduleServiceBloc
         viewMonth: anchor.month,
       ),
     );
-  }
-
-  void _onUpdatePriority(
-    UpdateSchedulePriorityEvent event,
-    Emitter<ScheduleServiceState> emit,
-  ) {
-    final current = state;
-    if (current is! ScheduleServiceLoaded) return;
-    emit(current.copyWith(priority: event.value));
-  }
-
-  void _onUpdatePanels(
-    UpdateSchedulePanelsEvent event,
-    Emitter<ScheduleServiceState> emit,
-  ) {
-    final current = state;
-    if (current is! ScheduleServiceLoaded) return;
-    emit(current.copyWith(panelsCount: event.value));
   }
 
   void _onUpdateNotes(

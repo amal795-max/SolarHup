@@ -37,7 +37,6 @@ class LearningHubModel {
   final List<String> safetyTips;
   final List<LearningTroubleshootingModel> troubleshootingItems;
   final List<String> faqQuestions;
-  final int totalFaqCount;
   final List<GlossaryTermModel> glossaryTerms;
 
   const LearningHubModel({
@@ -45,7 +44,6 @@ class LearningHubModel {
     required this.safetyTips,
     required this.troubleshootingItems,
     required this.faqQuestions,
-    required this.totalFaqCount,
     required this.glossaryTerms,
   });
 }

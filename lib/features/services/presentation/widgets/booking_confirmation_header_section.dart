@@ -7,7 +7,14 @@ import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_style.dart';
 
 class BookingConfirmationHeaderSection extends StatelessWidget {
-  const BookingConfirmationHeaderSection({super.key});
+  final String? titleKey;
+  final String? subtitleKey;
+
+  const BookingConfirmationHeaderSection({
+    super.key,
+    this.titleKey,
+    this.subtitleKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +55,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
         ),
         SizedBox(height: 20.h),
         Text(
-          'booking_confirmed_title'.tr(),
+          (titleKey ?? 'booking_confirmed_title').tr(),
           textAlign: TextAlign.center,
           style:AppStyle.labelSmall.copyWith(
             fontWeight: FontWeight.w800,
@@ -59,7 +66,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: Text(
-            'booking_confirmed_subtitle'.tr(),
+            (subtitleKey ?? 'booking_confirmed_subtitle').tr(),
             textAlign: TextAlign.center,
             style: AppStyle.bodyMedium.copyWith(
               color: AppColors.grey,

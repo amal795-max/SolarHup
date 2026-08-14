@@ -45,6 +45,8 @@ class EndPoints {
   static const String myServiceRequests = '${baseUrl}service-requests/me';
   static String serviceRequest(int requestId) =>
       '${baseUrl}service-requests/$requestId';
+  static String cancelServiceRequest(int requestId) =>
+      '${baseUrl}service-requests/$requestId/cancel';
 
   static const String usedProducts = '${baseUrl}used-products';
   static const String myUsedProducts = '${baseUrl}used-products/me';

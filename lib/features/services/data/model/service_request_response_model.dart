@@ -12,19 +12,9 @@ class ServiceRequestResponseModel {
     final item = payload['request'] is Map<String, dynamic>
         ? payload['request'] as Map<String, dynamic>
         : payload;
-    final nestedItem = item['item'] as Map<String, dynamic>?;
 
     return ServiceRequestResponseModel(
-      request: ServiceRequestModel(
-        id: item['id'] as int,
-        orderCode: item['order_code'] as String? ?? '',
-        businessId: item['business_id'] as int? ?? 0,
-        status: item['status'] as String? ?? 'pending_approval',
-        totalAmount: item['total_amount']?.toString() ?? '0',
-        serviceName: nestedItem?['name'] as String? ?? '',
-        createdAt: DateTime.tryParse(item['created_at'] as String? ?? '') ??
-            DateTime.now(),
-      ),
+      request: parseServiceRequest(item),
     );
   }
 }
@@ -42,20 +32,34 @@ class ServiceRequestListResponseModel {
         json['requests'] as List<dynamic>? ??
         [];
     return ServiceRequestListResponseModel(
-      requests: items.map((raw) {
-        final item = raw as Map<String, dynamic>;
-        final nestedItem = item['item'] as Map<String, dynamic>?;
-        return ServiceRequestModel(
-          id: item['id'] as int,
-          orderCode: item['order_code'] as String? ?? '',
-          businessId: item['business_id'] as int? ?? 0,
-          status: item['status'] as String? ?? 'pending_approval',
-          totalAmount: item['total_amount']?.toString() ?? '0',
-          serviceName: nestedItem?['name'] as String? ?? '',
-          createdAt: DateTime.tryParse(item['created_at'] as String? ?? '') ??
-              DateTime.now(),
-        );
-      }).toList(),
+      requests: items
+          .whereType<Map<String, dynamic>>()
+          .map(parseServiceRequest)
+          .toList(),
     );
   }
+}
+
+ServiceRequestModel parseServiceRequest(Map<String, dynamic> item) {
+  final nestedItem = item['item'] as Map<String, dynamic>?;
+
+  return ServiceRequestModel(
+    id: item['id'] as int,
+    orderCode: item['order_code'] as String? ?? '',
+    businessId: item['business_id'] as int? ?? 0,
+    status: item['status'] as String? ?? 'pending_approval',
+    totalAmount: item['total_amount']?.toString() ?? '0',
+    serviceName: nestedItem?['name'] as String? ?? '',
+    createdAt: DateTime.tryParse(item['created_at'] as String? ?? '') ??
+        DateTime.now(),
+    customerName: item['customer_name'] as String?,
+    locationFullName: item['service_location_full_name'] as String?,
+    locationCity: item['service_location_city'] as String?,
+    locationStreet: item['service_location_street'] as String?,
+    locationBuilding: item['service_location_building'] as String?,
+    locationFloor: item['service_location_floor'] as String?,
+    serviceDate: item['service_date'] as String?,
+    serviceTime: item['service_time'] as String?,
+    serviceNote: item['service_note'] as String?,
+  );
 }

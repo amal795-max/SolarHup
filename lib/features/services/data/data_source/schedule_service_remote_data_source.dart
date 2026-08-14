@@ -58,22 +58,25 @@ class ScheduleServiceRemoteDataSourceImpl
     ),
   };
 
-  static final _fallback = ScheduleServiceModel(
-    serviceId: 'svc-default',
-    title: 'Maintenance Check',
-    subtitle: 'Expert solar panel optimization',
-    heroColorValue: 0xFF1A3A5C,
-    appointmentSummaryTitle: 'Full Panel Service',
-    timeSlots: _defaultTimeSlots,
-    defaultSelectedDate: DateTime(2024, 10, 10),
-    defaultSelectedTimeSlotId: '11-00',
-    calendarYear: 2024,
-    calendarMonth: 10,
-  );
+  static ScheduleServiceModel _buildFallback(String serviceId) {
+    final now = DateTime.now();
+    return ScheduleServiceModel(
+      serviceId: serviceId,
+      title: 'Service Booking',
+      subtitle: 'Choose your preferred date and time',
+      heroColorValue: 0xFF1A3A5C,
+      appointmentSummaryTitle: 'Service Visit',
+      timeSlots: _defaultTimeSlots,
+      defaultSelectedDate: now,
+      defaultSelectedTimeSlotId: '11-00',
+      calendarYear: now.year,
+      calendarMonth: now.month,
+    );
+  }
 
   @override
   Future<ScheduleServiceModel> getScheduleService(String serviceId) async {
     await Future<void>.delayed(const Duration(milliseconds: 350));
-    return _services[serviceId] ?? _fallback;
+    return _services[serviceId] ?? _buildFallback(serviceId);
   }
 }

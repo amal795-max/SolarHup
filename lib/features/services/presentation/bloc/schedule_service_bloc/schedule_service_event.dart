@@ -44,24 +44,6 @@ final class ChangeScheduleMonthEvent extends ScheduleServiceEvent {
   List<Object?> get props => [delta];
 }
 
-final class UpdateSchedulePriorityEvent extends ScheduleServiceEvent {
-  final String value;
-
-  const UpdateSchedulePriorityEvent(this.value);
-
-  @override
-  List<Object?> get props => [value];
-}
-
-final class UpdateSchedulePanelsEvent extends ScheduleServiceEvent {
-  final String value;
-
-  const UpdateSchedulePanelsEvent(this.value);
-
-  @override
-  List<Object?> get props => [value];
-}
-
 final class UpdateScheduleNotesEvent extends ScheduleServiceEvent {
   final String value;
 

@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/features/services/data/models/service_address_model.dart';
 import 'package:untitled1/features/services/data/repositories/service_address_repository.dart';
 
@@ -25,19 +24,22 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
     Emitter<ServiceAddressState> emit,
   ) async {
     emit(ServiceAddressLoading());
-    final result = await repository.getServiceAddress(event.serviceId);
-    result.fold(
-      (failure) =>
-          emit(ServiceAddressError(message: _mapFailureToMessage(failure))),
-      (data) => emit(
-        ServiceAddressLoaded(
-          address: data,
-          fullName: '',
-          streetAddress: '',
-          city: '',
-          building: '',
-          floor: '',
+    emit(
+      ServiceAddressLoaded(
+        address: ServiceAddressModel(
+          serviceId: event.serviceId,
+          defaultFullName: '',
+          defaultStreetAddress: '',
+          defaultCity: '',
+          defaultBuilding: '',
+          defaultFloor: '',
+          grandTotal: event.servicePrice,
         ),
+        fullName: '',
+        streetAddress: '',
+        city: '',
+        building: '',
+        floor: '',
       ),
     );
   }
@@ -85,16 +87,5 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
     final current = state;
     if (current is! ServiceAddressLoaded) return;
     emit(current.copyWith(floor: event.value));
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case const (OfflineFailure):
-        return 'No internet connection';
-      case const (ServerFailure):
-        return (failure as ServerFailure).message;
-      default:
-        return 'Unexpected error occurred';
-    }
   }
 }

@@ -2,16 +2,13 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class LearningHubSafetySection extends StatelessWidget {
   final List<String> tips;
-  final VoidCallback? onManualTap;
 
   const LearningHubSafetySection({
     super.key,
     required this.tips,
-    this.onManualTap,
   });
 
   @override
@@ -74,15 +71,6 @@ class LearningHubSafetySection extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          SizedBox(height: 6.h),
-          CustomButton(
-            text: 'learning_full_safety_manual'.tr(),
-            onPressed: onManualTap,
-            backgroundColor: AppColors.primaryColor,
-            textColor: AppColors.white,
-            height: 44.h,
-            borderRadius: 10,
           ),
         ],
       ),

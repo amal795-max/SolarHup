@@ -7,6 +7,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/models/expert_service_model.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class FeaturedServiceCard extends StatelessWidget {
@@ -119,7 +120,14 @@ class FeaturedServiceCard extends StatelessWidget {
                         textColor: AppColors.primaryColor,
                         onPressed: onQuoteTap ??
                             () => context.push(
-                                  AppRoutes.scheduleService(service.id.toString()),
+                                  AppRoutes.scheduleService(
+                                    service.id.toString(),
+                                  ),
+                                  extra: ServiceBookingDraft(
+                                    serviceId: service.id,
+                                    serviceName: service.title,
+                                    servicePrice: service.price,
+                                  ),
                                 ),
                       ),
                     ),

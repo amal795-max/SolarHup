@@ -2,13 +2,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/data/models/workshop_detail_model.dart';
 import 'package:untitled1/features/services/data/models/workshop_service_model.dart';
-import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/services/presentation/bloc/workshop_detail_cubit/workshop_detail_cubit.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
 import 'package:untitled1/features/services/presentation/widgets/workshop_info_services_section.dart';
@@ -253,7 +255,7 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
               bottom: 0,
               child: _WorkshopRequestBar(
                 service: selected,
-                onRequest: () => _submitRequest(context, selected),
+                onRequest: () => _startBooking(context, selected),
               ),
             ),
         ],
@@ -261,26 +263,21 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
     );
   }
 
-  Future<void> _submitRequest(
+  void _startBooking(
     BuildContext context,
     WorkshopServiceItem service,
-  ) async {
+  ) {
     final serviceId = int.tryParse(service.id);
     if (serviceId == null) return;
 
-    final request =
-        await context.read<ServiceRequestsCubit>().requestService(serviceId);
-    if (request != null && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'services_request_success'.tr(
-              namedArgs: {'code': request.orderCode},
-            ),
-          ),
-        ),
-      );
-    }
+    context.push(
+      AppRoutes.scheduleService(service.id),
+      extra: ServiceBookingDraft(
+        serviceId: serviceId,
+        serviceName: service.name,
+        servicePrice: service.price,
+      ),
+    );
   }
 }
 
@@ -622,28 +619,15 @@ class _WorkshopRequestBar extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12.w),
-            BlocConsumer<ServiceRequestsCubit, ServiceRequestsState>(
-              listenWhen: (prev, curr) => curr is ServiceRequestsError,
-              listener: (context, state) {
-                if (state is ServiceRequestsError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
-                }
-              },
-              builder: (context, state) {
-                final isSubmitting = state is ServiceRequestsSubmitting;
-                return SizedBox(
-                  width: 170.w,
-                  child: CustomButton(
-                    text: 'services_request_service'.tr(),
-                    onPressed: isSubmitting ? null : onRequest,
-                    icon: Icons.send_rounded,
-                    iconLeft: false,
-                    height: 48.h,
-                  ),
-                );
-              },
+            SizedBox(
+              width: 170.w,
+              child: CustomButton(
+                text: 'services_request_service'.tr(),
+                onPressed: onRequest,
+                icon: Icons.send_rounded,
+                iconLeft: false,
+                height: 48.h,
+              ),
             ),
           ],
         ),

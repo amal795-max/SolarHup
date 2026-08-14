@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/api/api_response_utils.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/features/blog/data/model/blog_list_response_model.dart';
@@ -23,7 +24,11 @@ class BlogDetailRemoteDataSourceImpl implements BlogDetailRemoteDataSource {
           message: getErrorMessage(response.statusCode ?? 0),
         );
       } else {
-        return BlogArticleApiModel.fromJson(response.data).toDetailModel();
+        final data = response.data;
+        final json = data is Map<String, dynamic>
+            ? unwrapApiPayload(data)
+            : data as Map<String, dynamic>;
+        return BlogArticleApiModel.fromJson(json).toDetailModel();
       }
     } on DioException catch (e) {
       throw ServerException(message: mapDioError(e));

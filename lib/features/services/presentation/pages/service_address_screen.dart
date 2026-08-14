@@ -4,22 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/network/check_internet.dart';
-import 'package:untitled1/core/routing/app_routes.dart';import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/services/data/data_source/service_address_remote_data_source.dart';
+import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/data/repositories/service_address_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_address_bloc/service_address_bloc.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_bottom_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_form_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_header_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class ServiceAddressScreen extends StatelessWidget {
   final String serviceId;
+  final ServiceBookingDraft draft;
 
-  const ServiceAddressScreen({super.key, required this.serviceId});
+  const ServiceAddressScreen({
+    super.key,
+    required this.serviceId,
+    required this.draft,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,90 +35,128 @@ class ServiceAddressScreen extends StatelessWidget {
           networkInfo: NetworkInfoImpl(),
           useNetworkCheck: false,
         ),
-      )..add(LoadServiceAddressEvent(serviceId)),
-      child: _ServiceAddressView(serviceId: serviceId),
+      )..add(
+          LoadServiceAddressEvent(
+            serviceId,
+            servicePrice: draft.servicePrice,
+          ),
+        ),
+      child: _ServiceAddressView(
+        serviceId: serviceId,
+        draft: draft,
+      ),
     );
   }
 }
 
 class _ServiceAddressView extends StatelessWidget {
   final String serviceId;
+  final ServiceBookingDraft draft;
 
-  const _ServiceAddressView({required this.serviceId});
+  const _ServiceAddressView({
+    required this.serviceId,
+    required this.draft,
+  });
+
+  Future<void> _submitRequest(
+    BuildContext context,
+    ServiceAddressLoaded state,
+  ) async {
+    final updatedDraft = draft.copyWith(
+      fullName: state.fullName,
+      street: state.streetAddress,
+      city: state.city,
+      building: state.building,
+      floor: state.floor.trim().isEmpty ? null : state.floor.trim(),
+    );
+
+    if (!updatedDraft.hasSchedule) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('schedule_select_time'.tr())),
+      );
+      return;
+    }
+
+    if (!updatedDraft.hasRequiredAddress) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('service_booking_required_fields'.tr())),
+      );
+      return;
+    }
+
+    final request = await context
+        .read<ServiceRequestsCubit>()
+        .requestService(updatedDraft.toPayload());
+
+    if (!context.mounted || request == null) return;
+
+    final confirmation = updatedDraft.toConfirmation(
+      orderCode: request.orderCode,
+    );
+
+    context.pushReplacement(
+      AppRoutes.bookingConfirmation(serviceId),
+      extra: confirmation,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: BlocBuilder<ServiceAddressBloc, ServiceAddressState>(
-          builder: (context, state) {
-            return switch (state) {
-              ServiceAddressLoading() => const LoadingIndicator(),
-              ServiceAddressError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context
-                        .read<ServiceAddressBloc>()
-                        .add(LoadServiceAddressEvent(serviceId)),
-                    width: 160.w,
-                  ),
-                ),
-              ServiceAddressLoaded() => _ServiceAddressBody(
-                  state: state,
-                  serviceId: serviceId,
-                ),
-              _ => const SizedBox.shrink(),
-            };
+        child: BlocConsumer<ServiceRequestsCubit, ServiceRequestsState>(
+          listenWhen: (prev, curr) => curr is ServiceRequestsError,
+          listener: (context, state) {
+            if (state is ServiceRequestsError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            }
+          },
+          builder: (context, requestState) {
+            final isSubmitting = requestState is ServiceRequestsSubmitting;
+
+            return BlocBuilder<ServiceAddressBloc, ServiceAddressState>(
+              builder: (context, state) {
+                if (state is ServiceAddressLoading || isSubmitting) {
+                  return const LoadingIndicator();
+                }
+
+                if (state is! ServiceAddressLoaded) {
+                  return const SizedBox.shrink();
+                }
+
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.w, 4.h, 16.w, 0),
+                      child: const Align(
+                        alignment: Alignment.centerLeft,
+                        child: BackButtonWidget(),
+                      ),
+                    ),
+                    SizedBox(height: 8.h),
+                    const ServiceAddressHeaderSection(),
+                    SizedBox(height: 20.h),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: ServiceAddressFormSection(state: state),
+                      ),
+                    ),
+                    ServiceAddressBottomSection(
+                      state: state,
+                      onConfirmTap: () => _submitRequest(context, state),
+                    ),
+                  ],
+                );
+              },
+            );
           },
         ),
       ),
-    );
-  }
-}
-
-class _ServiceAddressBody extends StatelessWidget {
-  final ServiceAddressLoaded state;
-  final String serviceId;
-
-  const _ServiceAddressBody({
-    required this.state,
-    required this.serviceId,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.fromLTRB(8.w, 4.h, 16.w, 0),
-          child: const Align(
-            alignment: Alignment.centerLeft,
-            child: BackButtonWidget(),
-          ),
-        ),
-        SizedBox(height: 8.h),
-        const ServiceAddressHeaderSection(),
-        SizedBox(height: 20.h),
-        Expanded(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: ServiceAddressFormSection(state: state),
-          ),
-        ),
-        ServiceAddressBottomSection(
-          state: state,
-          onConfirmTap: () => context.pushReplacement(
-            AppRoutes.bookingConfirmation(serviceId),
-          ),
-        ),
-      ],
     );
   }
 }

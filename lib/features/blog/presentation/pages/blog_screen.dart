@@ -8,7 +8,6 @@ import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_article_card.dart';
-import 'package:untitled1/features/blog/presentation/widgets/blog_category_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_featured_card.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_pagination_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_search_section.dart';
@@ -90,8 +89,6 @@ class _BlogLoadedBody extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14.h),
-          const BlogCategorySection(),
-          SizedBox(height: 16.h),
           BlogFeaturedCard(article: state.featured),
           SizedBox(height: 16.h),
           if (articles.isEmpty)

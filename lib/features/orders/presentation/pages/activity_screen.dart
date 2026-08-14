@@ -175,7 +175,17 @@ class _ActivityScreenState extends State<ActivityScreen> {
               separatorBuilder: (_, __) => SizedBox(height: 16.h),
               itemBuilder: (context, index) {
                 final request = requests[index];
-                return _ServiceRequestCard(request: request);
+                return GestureDetector(
+                  onTap: () {
+                    context
+                        .read<ServiceRequestsCubit>()
+                        .loadRequestDetail(request.id);
+                    context.push(
+                      AppRoutes.serviceRequestDetail(request.id),
+                    );
+                  },
+                  child: _ServiceRequestCard(request: request),
+                );
               },
             ),
           ),

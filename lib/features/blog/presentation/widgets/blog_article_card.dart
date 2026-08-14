@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/blog/data/models/blog_article_model.dart';
+import 'package:untitled1/features/blog/presentation/widgets/blog_article_image.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 
@@ -15,12 +16,6 @@ class BlogArticleCard extends StatelessWidget {
     required this.article,
     this.onTap,
   });
-
-  IconData _iconForType(String type) => switch (type) {
-        'battery' => Icons.battery_charging_full_outlined,
-        'inverter' => Icons.bolt_rounded,
-        _ => Icons.description_outlined,
-      };
 
   @override
   Widget build(BuildContext context) {
@@ -38,19 +33,11 @@ class BlogArticleCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            BlogArticleImage(
               height: 132.h,
-              width: double.infinity,
-              color: Color(article.imagePlaceholderColorValue),
-              child: article.iconType == 'document'
-                  ? null
-                  : Center(
-                      child: Icon(
-                        _iconForType(article.iconType),
-                        size: 42.sp,
-                        color: AppColors.grey.withValues(alpha: 0.55),
-                      ),
-                    ),
+              imageUrl: article.imageUrl,
+              placeholderColorValue: article.imagePlaceholderColorValue,
+              placeholderIcon: Icons.article_outlined,
             ),
             container(
               context: context,
@@ -82,32 +69,14 @@ class BlogArticleCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? theme.colorScheme.tertiaryContainer
-                              : AppColors.lightGrey,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          article.categoryLabel,
-                          style: theme.textTheme.labelSmall,
-                        ),
-                      ),
-                      const Spacer(),
-                      TextWithIcon(
-                        title: 'blog_read_more'.tr(),
-                        icon: Icons.arrow_forward_rounded,
-                        color: theme.colorScheme.onSurface,
-                        onTap: onTap,
-                      ),
-                    ],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextWithIcon(
+                      title: 'blog_read_more'.tr(),
+                      icon: Icons.arrow_forward_rounded,
+                      color: theme.colorScheme.onSurface,
+                      onTap: onTap,
+                    ),
                   ),
                 ],
               ),

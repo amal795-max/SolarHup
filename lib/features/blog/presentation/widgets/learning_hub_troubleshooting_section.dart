@@ -8,12 +8,10 @@ import 'package:untitled1/widgets/container_style_widget.dart';
 
 class LearningHubTroubleshootingSection extends StatelessWidget {
   final List<LearningTroubleshootingModel> items;
-  final void Function(LearningTroubleshootingModel item)? onItemTap;
 
   const LearningHubTroubleshootingSection({
     super.key,
     required this.items,
-    this.onItemTap,
   });
 
   @override
@@ -40,34 +38,20 @@ class LearningHubTroubleshootingSection extends StatelessWidget {
           ...items.map(
             (item) => Padding(
               padding: EdgeInsets.only(bottom: 8.h),
-              child: Material(
-                color: tileColor,
-                borderRadius: BorderRadius.circular(10.r),
-                clipBehavior: Clip.antiAlias,
-                child: InkWell(
-                  onTap: onItemTap != null ? () => onItemTap!(item) : null,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 14.w,
-                      vertical: 14.h,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            item.title,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          color: AppColors.grey,
-                          size: 22.sp,
-                        ),
-                      ],
-                    ),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: 14.w,
+                  vertical: 14.h,
+                ),
+                decoration: BoxDecoration(
+                  color: tileColor,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Text(
+                  item.title,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),

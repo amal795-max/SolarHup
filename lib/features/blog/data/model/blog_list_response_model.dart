@@ -1,3 +1,5 @@
+import 'package:untitled1/core/api/api_response_utils.dart';
+
 import '../models/blog_article_detail_model.dart';
 import '../models/blog_article_model.dart';
 
@@ -5,6 +7,8 @@ class BlogArticleApiModel {
   final int id;
   final String title;
   final String content;
+  final String? excerpt;
+  final String? imageUrl;
   final DateTime createdAt;
 
   BlogArticleApiModel({
@@ -12,14 +16,18 @@ class BlogArticleApiModel {
     required this.title,
     required this.content,
     required this.createdAt,
+    this.excerpt,
+    this.imageUrl,
   });
 
   factory BlogArticleApiModel.fromJson(Map<String, dynamic> json) {
     return BlogArticleApiModel(
-      id: json['id'],
-      title: json['title'],
-      content: json['content'],
-      createdAt: DateTime.parse(json['created_at']),
+      id: json['id'] as int,
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      excerpt: json['excerpt'] as String?,
+      imageUrl: json['image_url'] as String?,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
@@ -29,18 +37,13 @@ class BlogArticleApiModel {
       title: title,
       categoryBadge: 'BLOG',
       heroColorValue: _placeholderColor(id),
+      imageUrl: imageUrl,
       author: BlogAuthorModel(
         name: 'SolarHub Team',
         role: 'Editorial',
         dateLabel: _formatDate(createdAt),
       ),
-      contentBlocks: [
-        BlogContentBlockModel(
-          type: BlogContentBlockType.paragraph,
-          text: content,
-        ),
-      ],
-      relatedArticles: const [],
+      content: content,
     );
   }
 }
@@ -51,10 +54,14 @@ class BlogListResponseModel {
   BlogListResponseModel({required this.articles});
 
   factory BlogListResponseModel.fromJson(Map<String, dynamic> json) {
-    final items = json['articles'] as List<dynamic>? ?? [];
+    final payload = unwrapApiPayload(json);
+    final items = payload['articles'] as List<dynamic>? ??
+        json['articles'] as List<dynamic>? ??
+        const [];
     return BlogListResponseModel(
       articles: items
-          .map((item) => BlogArticleApiModel.fromJson(item as Map<String, dynamic>))
+          .whereType<Map<String, dynamic>>()
+          .map(BlogArticleApiModel.fromJson)
           .toList(),
     );
   }
@@ -69,10 +76,7 @@ class BlogListResponseModel {
           title: '',
           excerpt: '',
           dateLabel: '',
-          categoryKey: 'panels',
-          categoryLabel: 'Panels',
           imagePlaceholderColorValue: 0xFF1A3A5C,
-          iconType: 'featured',
         ),
         articles: [],
         totalPages: 1,
@@ -80,7 +84,7 @@ class BlogListResponseModel {
     }
 
     return BlogFeedModel(
-      featured: mapped.first.copyWith(iconType: 'featured'),
+      featured: mapped.first,
       articles: mapped.length > 1 ? mapped.sublist(1) : const [],
       totalPages: (mapped.length / 3).ceil().clamp(1, 999),
     );
@@ -91,13 +95,17 @@ BlogArticleModel _toArticleModel(BlogArticleApiModel article) {
   return BlogArticleModel(
     id: article.id.toString(),
     title: article.title,
-    excerpt: _excerpt(article.content),
+    excerpt: _articleExcerpt(article),
     dateLabel: _formatDate(article.createdAt),
-    categoryKey: 'panels',
-    categoryLabel: 'Panels',
     imagePlaceholderColorValue: _placeholderColor(article.id),
-    iconType: 'document',
+    imageUrl: article.imageUrl,
   );
+}
+
+String _articleExcerpt(BlogArticleApiModel article) {
+  final excerpt = article.excerpt?.trim();
+  if (excerpt != null && excerpt.isNotEmpty) return excerpt;
+  return _excerpt(article.content);
 }
 
 String _excerpt(String content) {

@@ -49,6 +49,10 @@ abstract class AppRoutes {
 
   static String bookingConfirmation(String serviceId) =>
       '$bookingConfirmationBase/$serviceId';
+  static const serviceRequestDetailBase = '/serviceRequestDetailScreen';
+
+  static String serviceRequestDetail(int requestId) =>
+      '$serviceRequestDetailBase/$requestId';
   static const rateServiceBase = '/rateServiceScreen';
 
   static String rateService(String serviceId) => '$rateServiceBase/$serviceId';

@@ -30,3 +30,32 @@ final class ServiceRequestsError extends ServiceRequestsState {
   @override
   List<Object?> get props => [message];
 }
+
+final class ServiceRequestDetailsLoading extends ServiceRequestsState {}
+
+final class ServiceRequestDetailsLoaded extends ServiceRequestsState {
+  final ServiceRequestModel request;
+
+  const ServiceRequestDetailsLoaded({required this.request});
+
+  @override
+  List<Object?> get props => [request];
+}
+
+final class ServiceRequestDetailsError extends ServiceRequestsState {
+  final String message;
+
+  const ServiceRequestDetailsError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}
+
+final class ServiceRequestCancelling extends ServiceRequestsState {
+  final ServiceRequestModel request;
+
+  const ServiceRequestCancelling({required this.request});
+
+  @override
+  List<Object?> get props => [request];
+}

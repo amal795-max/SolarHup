@@ -68,7 +68,7 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Text(
-                    'status_confirmed'.tr(),
+                    booking.statusLabel ?? 'status_confirmed'.tr(),
                     style: AppStyle.labelSmall.copyWith(
                       color: AppColors.tertiaryColor,
                       fontWeight: FontWeight.w700,
