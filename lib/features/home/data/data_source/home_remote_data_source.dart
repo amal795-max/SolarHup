@@ -1,14 +1,21 @@
-import '../../../../core/constants/app_images.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:dio/dio.dart';
+import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/core/constants/app_images.dart';
+import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
 import '../models/product_model.dart';
+import '../models/tip_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<ProductModel>> getUsedProducts();
+  Future<List<TipModel>> getRandomTips();
 }
 
-/// Mock implementation — replace bodies with real API calls when backend is ready.
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
-  const HomeRemoteDataSourceImpl();
+  final ApiRequest apiRequest;
+
+  const HomeRemoteDataSourceImpl(this.apiRequest);
 
   @override
   Future<List<ProductModel>> getUsedProducts() async {
@@ -28,7 +35,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         name: 'Hybrid Inv...',
         price: 680.00,
         badgeText: 'Certified',
-        badgeColorValue:AppColors.lightGrey,
+        badgeColorValue: AppColors.lightGrey,
         image: AppImages.batteryTest1,
         iconType: 'inverter',
       ),
@@ -43,5 +50,20 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         iconType: 'solar',
       ),
     ];
+  }
+
+  @override
+  Future<List<TipModel>> getRandomTips() async {
+    try {
+      final response = await apiRequest.get(EndPoints.randomTips);
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: getErrorMessage(response.statusCode ?? 0),
+        );
+      }
+      return parseTipsResponse(response.data);
+    } on DioException catch (e) {
+      throw ServerException(message: mapDioError(e));
+    }
   }
 }

@@ -9,11 +9,13 @@ import 'package:untitled1/features/catalog/data/repositories/catalog_repository.
 import '../data_source/home_remote_data_source.dart';
 import '../models/blog_model.dart';
 import '../models/product_model.dart';
+import '../models/tip_model.dart';
 
 abstract class HomeRepository {
   Future<Either<Failure, List<ProductModel>>> getUsedProducts();
   Future<Either<Failure, List<ProductModel>>> getNewOffers();
   Future<Either<Failure, List<BlogModel>>> getBlogPosts();
+  Future<Either<Failure, List<TipModel>>> getRandomTips();
 }
 
 class HomeRepositoryImpl implements HomeRepository {
@@ -60,6 +62,10 @@ class HomeRepositoryImpl implements HomeRepository {
           products.map(discountedProductToHomeProduct).toList(growable: false),
     );
   }
+
+  @override
+  Future<Either<Failure, List<TipModel>>> getRandomTips() =>
+      _handle(() => remote.getRandomTips());
 
   @override
   Future<Either<Failure, List<BlogModel>>> getBlogPosts() async {

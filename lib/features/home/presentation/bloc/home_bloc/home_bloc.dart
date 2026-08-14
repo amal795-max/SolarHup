@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
+import 'package:untitled1/features/home/data/models/tip_model.dart';
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 
 part 'home_event.dart';
@@ -38,11 +39,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final usedResult = await repository.getUsedProducts();
     final newResult = await repository.getNewOffers();
     final blogResult = await repository.getBlogPosts();
+    final tipsResult = await repository.getRandomTips();
 
     String? error;
     List<ProductModel> usedProducts = [];
     List<ProductModel> newOffers = [];
     List<BlogModel> blogPosts = [];
+    List<TipModel> tips = [];
 
     usedResult.fold(
       (f) => error = _mapFailureToMessage(f),
@@ -67,10 +70,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (data) => blogPosts = data,
     );
 
+    tipsResult.fold(
+      (_) => tips = [],
+      (data) => tips = data,
+    );
+
     emit(HomeLoaded(
       usedProducts: usedProducts,
       newOffers: newOffers,
       blogPosts: blogPosts,
+      tips: tips,
     ));
   }
 

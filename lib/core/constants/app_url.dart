@@ -61,6 +61,7 @@ class EndPoints {
   static const String submitCart = '${baseUrl}orders/cart/submit';
   static String favoriteItem(String itemType, int itemId) => '${baseUrl}favorites/$itemType/$itemId';
   static const String privacyPolicy = '${baseUrl}privacy-policy';
+  static const String randomTips = '${baseUrl}random';
 }
 
 class ApiKeys {

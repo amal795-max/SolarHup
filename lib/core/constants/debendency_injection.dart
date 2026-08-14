@@ -141,7 +141,7 @@ Future<void> init() async {
   );
 
   getIt.registerLazySingleton<HomeRemoteDataSource>(
-    () => const HomeRemoteDataSourceImpl(),
+    () => HomeRemoteDataSourceImpl(getIt()),
   );
 
   getIt.registerLazySingleton<HomeRepository>(

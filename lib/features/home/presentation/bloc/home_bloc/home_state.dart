@@ -16,15 +16,17 @@ final class HomeLoaded extends HomeState {
   final List<ProductModel> usedProducts;
   final List<ProductModel> newOffers;
   final List<BlogModel> blogPosts;
+  final List<TipModel> tips;
 
   const HomeLoaded({
     required this.usedProducts,
     required this.newOffers,
     required this.blogPosts,
+    this.tips = const [],
   });
 
   @override
-  List<Object?> get props => [usedProducts, newOffers, blogPosts];
+  List<Object?> get props => [usedProducts, newOffers, blogPosts, tips];
 }
 
 final class HomeError extends HomeState {

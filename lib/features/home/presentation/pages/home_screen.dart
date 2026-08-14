@@ -14,6 +14,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
+import 'package:untitled1/features/home/data/models/tip_model.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_card.dart';
 import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
@@ -218,6 +219,7 @@ class _HomeViewState extends State<_HomeView> {
     if (state is HomeLoading || state is HomeInitial) {
       return _buildScrollable(
         isLoading: true,
+        tips: const [],
         usedProducts: _skeletonProducts,
         newOffers: _skeletonProducts,
         blogPosts: _skeletonBlogs,
@@ -225,6 +227,7 @@ class _HomeViewState extends State<_HomeView> {
     }
     if (state is HomeLoaded) {
       return _buildScrollable(
+        tips: state.tips,
         usedProducts: state.usedProducts.map(_mapProduct).toList(),
         newOffers: state.newOffers.map(_mapProduct).toList(),
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
@@ -238,6 +241,7 @@ class _HomeViewState extends State<_HomeView> {
 
   Widget _buildScrollable({
     bool isLoading = false,
+    required List<TipModel> tips,
     required List<ProductCardData> usedProducts,
     required List<ProductCardData> newOffers,
     required List<BlogCardData> blogPosts,
@@ -273,7 +277,7 @@ class _HomeViewState extends State<_HomeView> {
             ),
           ),
           SizedBox(height: 16.h),
-          const DidYouKnowBanner(),
+          DidYouKnowBanner(tips: tips),
           if (!isLoading && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
 
             Padding(
