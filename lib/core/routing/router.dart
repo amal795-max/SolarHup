@@ -30,6 +30,8 @@ import 'package:untitled1/features/services/presentation/pages/workshop_picker_r
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_route_args.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
@@ -133,6 +135,19 @@ final GoRouter router = GoRouter(
       path: AppRoutes.filterProductScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const FiltersScreen();
+      },),
+      GoRoute(
+      path: AppRoutes.storeDiscountedProductsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as StoreDiscountedProductsRouteArgs?;
+        return StoreDiscountedProductsScreen(
+          args: args ??
+              const StoreDiscountedProductsRouteArgs(
+                storeId: 0,
+                storeName: '',
+                products: [],
+              ),
+        );
       },),
     GoRoute(
       path: AppRoutes.myListeningScreen,
