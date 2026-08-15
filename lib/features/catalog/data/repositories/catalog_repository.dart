@@ -13,6 +13,11 @@ abstract class CatalogRepository {
     int? limit,
     String? businessType,
   });
+  Future<Either<Failure, List<DiscountedProductModel>>>
+      getDiscountedProductPreviews({
+    int? limit,
+    String? businessType,
+  });
   Future<Either<Failure, List<DiscountedProductModel>>> getStoreDiscountedProducts(
     int businessId, {
     int? limit,
@@ -42,6 +47,26 @@ class CatalogRepositoryImpl implements CatalogRepository {
       final discounts = await remote.getDiscounts(businessType: businessType);
       final products = await _enrichDiscountProducts(discounts, limit: limit);
       return Right(products);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DiscountedProductModel>>>
+      getDiscountedProductPreviews({
+    int? limit,
+    String? businessType,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
+    }
+    try {
+      final discounts = await remote.getDiscounts(businessType: businessType);
+      final candidates = topDiscountCandidates(discounts, limit: limit);
+      return Right(
+        candidates.map(candidateToDiscountedProductPreview).toList(),
+      );
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     }

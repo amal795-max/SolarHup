@@ -19,13 +19,14 @@ class ProductCardData {
   final int? imagePlaceholderColorValue;
   final int? discountPercent;
   final String iconType;
+  final bool showPrice;
 
   const ProductCardData({
     this.id,
     this.businessId,
     required this.name,
     this.category,
-    required this.price,
+    this.price = 0,
     this.originalPrice,
     this.badgeText,
     this.badgeColor,
@@ -35,6 +36,7 @@ class ProductCardData {
     this.imagePlaceholderColorValue,
     this.discountPercent,
     this.iconType = 'solar',
+    this.showPrice = true,
   });
 
   IconData get imageIcon {
@@ -108,7 +110,7 @@ class ProductCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
-                  _PriceRow(data: data, isDark: isDark),
+                  if (data.showPrice) _PriceRow(data: data, isDark: isDark),
                   if (data.metaText != null) ...[
                     SizedBox(height: 2.h),
                     Text(

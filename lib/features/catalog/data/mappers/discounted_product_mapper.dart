@@ -62,6 +62,58 @@ List<DiscountProductCandidate> flattenDiscountProducts(
   return bestByKey.values.toList();
 }
 
+List<DiscountProductCandidate> topDiscountCandidates(
+  List<DiscountModel> discounts, {
+  int? limit,
+}) {
+  final candidates = flattenDiscountProducts(discounts)
+    ..sort(
+      (a, b) => _effectiveDiscountPercent(b.discountType, b.discountValue)
+          .compareTo(_effectiveDiscountPercent(a.discountType, a.discountValue)),
+    );
+  if (limit == null) return candidates;
+  return candidates.take(limit).toList();
+}
+
+DiscountedProductModel candidateToDiscountedProductPreview(
+  DiscountProductCandidate candidate,
+) {
+  return DiscountedProductModel(
+    productId: candidate.productId,
+    businessId: candidate.businessId,
+    name: candidate.name,
+    category: _formatCategory(candidate.category),
+    businessName: candidate.businessName,
+    discountLabel: candidate.discountLabel,
+    price: 0,
+    originalPrice: 0,
+    discountPercent: _previewDiscountPercent(
+      candidate.discountType,
+      candidate.discountValue,
+    ),
+    imageUrl: null,
+    imagePlaceholderColorValue: _placeholderColorForProductId(candidate.productId),
+  );
+}
+
+int? _previewDiscountPercent(String discountType, double discountValue) {
+  if (discountType != 'percentage') return null;
+  final percent = discountValue.round();
+  return percent > 0 ? percent : null;
+}
+
+int _placeholderColorForProductId(String productId) {
+  const palette = [
+    0xFF0A2A43,
+    0xFF1A3A5C,
+    0xFF2A4A6C,
+    0xFF3A5A7C,
+    0xFF4A6A8C,
+  ];
+  final id = int.tryParse(productId) ?? productId.hashCode;
+  return palette[id.abs() % palette.length];
+}
+
 DiscountedProductModel mergeDiscountWithProductDetail({
   required DiscountProductCandidate candidate,
   required ProductDetailModel detail,
@@ -96,6 +148,8 @@ ProductModel discountedProductToHomeProduct(DiscountedProductModel product) {
     category: product.category,
     price: product.price,
     originalPrice: product.originalPrice,
+    badgeText:
+        product.discountLabel.isNotEmpty ? product.discountLabel : null,
     discountPercent: product.discountPercent,
     metaText: product.businessName,
     imageUrl: product.imageUrl,

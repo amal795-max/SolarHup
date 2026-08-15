@@ -53,8 +53,8 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<Either<Failure, List<ProductModel>>> getNewOffers() async {
-    final result = await catalogRepository.getDiscountedProducts(
-      limit: 6,
+    final result = await catalogRepository.getDiscountedProductPreviews(
+      limit: 5,
       businessType: 'store',
     );
     return result.map(

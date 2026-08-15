@@ -108,6 +108,15 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
+  static final List<ProductCardData> _skeletonNewOffers = List.generate(
+    3,
+    (i) => const ProductCardData(
+      name: 'Loading Product Name',
+      imagePlaceholderColorValue: 0xFF0A2A43,
+      showPrice: false,
+    ),
+  );
+
   static final List<BlogCardData> _skeletonBlogs = List.generate(
     2,
     (i) => BlogCardData(
@@ -136,6 +145,22 @@ class _HomeViewState extends State<_HomeView> {
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     discountPercent: m.discountPercent,
     iconType: m.iconType,
+  );
+
+  ProductCardData _mapNewOffer(ProductModel m) => ProductCardData(
+    id: m.id,
+    businessId: m.businessId,
+    name: m.name,
+    category: m.category,
+    badgeText: m.badgeText,
+    badgeColor: m.badgeColorValue,
+    metaText: m.metaText,
+    imageAssetPath: m.image.isNotEmpty ? m.image : null,
+    imageUrl: m.imageUrl,
+    imagePlaceholderColorValue: m.imagePlaceholderColorValue,
+    discountPercent: m.discountPercent,
+    iconType: m.iconType,
+    showPrice: false,
   );
 
   BlogCardData _mapBlog(BlogModel m) => BlogCardData(
@@ -222,7 +247,7 @@ class _HomeViewState extends State<_HomeView> {
         isLoading: true,
         tips: const [],
         usedProducts: _skeletonProducts,
-        newOffers: _skeletonProducts,
+        newOffers: _skeletonNewOffers,
         blogPosts: _skeletonBlogs,
       );
     }
@@ -230,7 +255,7 @@ class _HomeViewState extends State<_HomeView> {
       return _buildScrollable(
         tips: state.tips,
         usedProducts: state.usedProducts.map(_mapProduct).toList(),
-        newOffers: state.newOffers.map(_mapProduct).toList(),
+        newOffers: state.newOffers.map(_mapNewOffer).toList(),
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
       );
     }
