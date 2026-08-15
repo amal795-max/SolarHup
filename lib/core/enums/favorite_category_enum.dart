@@ -10,4 +10,11 @@ enum FavoriteCategoryEnum {
   final IconData icon;
 
   const FavoriteCategoryEnum(this.name, this.icon);
+
+  /// Categories shown in the favorites screen (workshop-only favorites removed).
+  static List<FavoriteCategoryEnum> get favoritesTabs => [
+        FavoriteCategoryEnum.product,
+        FavoriteCategoryEnum.service,
+        FavoriteCategoryEnum.store,
+      ];
 }

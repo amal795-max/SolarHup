@@ -29,6 +29,8 @@ class DiscountModel {
   final double discountValue;
   final String discountLabel;
   final double minPurchaseAmount;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final List<DiscountProductInfo> products;
 
   const DiscountModel({
@@ -42,6 +44,8 @@ class DiscountModel {
     required this.discountValue,
     required this.discountLabel,
     required this.minPurchaseAmount,
+    this.startDate,
+    this.endDate,
     required this.products,
   });
 
@@ -58,6 +62,8 @@ class DiscountModel {
       discountValue: _parseDecimal(json['discount_value']),
       discountLabel: json['discount_label'] as String? ?? '',
       minPurchaseAmount: _parseDecimal(json['min_purchase_amount']),
+      startDate: _parseDate(json['start_date']),
+      endDate: _parseDate(json['end_date']),
       products: productItems
           .map(
             (item) =>
@@ -66,6 +72,12 @@ class DiscountModel {
           .toList(),
     );
   }
+}
+
+DateTime? _parseDate(dynamic value) {
+  if (value == null) return null;
+  if (value is DateTime) return value;
+  return DateTime.tryParse(value.toString());
 }
 
 double _parseDecimal(dynamic value) {

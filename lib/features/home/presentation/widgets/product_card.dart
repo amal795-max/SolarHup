@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/widgets/discount_meta_lines.dart';
 import 'package:untitled1/widgets/image_widget.dart';
+import 'package:untitled1/widgets/product_favorite_button.dart';
 
 class ProductCardData {
   final String? id;
@@ -20,6 +22,9 @@ class ProductCardData {
   final int? discountPercent;
   final String iconType;
   final bool showPrice;
+  final String? discountDescription;
+  final DateTime? discountStartDate;
+  final DateTime? discountEndDate;
 
   const ProductCardData({
     this.id,
@@ -37,6 +42,9 @@ class ProductCardData {
     this.discountPercent,
     this.iconType = 'solar',
     this.showPrice = true,
+    this.discountDescription,
+    this.discountStartDate,
+    this.discountEndDate,
   });
 
   IconData get imageIcon {
@@ -54,8 +62,16 @@ class ProductCardData {
 class ProductCard extends StatelessWidget {
   final ProductCardData data;
   final VoidCallback? onTap;
+  final bool fillWidth;
+  final bool showFavorite;
 
-  const ProductCard({super.key, required this.data, this.onTap});
+  const ProductCard({
+    super.key,
+    required this.data,
+    this.onTap,
+    this.fillWidth = false,
+    this.showFavorite = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +79,9 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.45,
-        constraints: const BoxConstraints(maxWidth: 200),
+        width: fillWidth ? double.infinity : MediaQuery.of(context).size.width * 0.45,
+        height: fillWidth ? double.infinity : null,
+        constraints: fillWidth ? null : const BoxConstraints(maxWidth: 200),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkContainer : AppColors.white,
           borderRadius: BorderRadius.circular(14.r),
@@ -80,51 +97,18 @@ class ProductCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            _CardImage(data: data),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 10.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (data.category != null) ...[
-                    Text(
-                      data.category!,
-                      style: AppStyle.labelXSmall.copyWith(
-                        color: AppColors.primaryColor,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                  ],
-                  Text(
-                    data.name,
-                    style: AppStyle.labelSmall.copyWith(
-                      color: isDark ? AppColors.white : AppColors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4.h),
-                  if (data.showPrice) _PriceRow(data: data, isDark: isDark),
-                  if (data.metaText != null) ...[
-                    SizedBox(height: 2.h),
-                    Text(
-                      data.metaText!,
-                      style: AppStyle.labelXSmall.copyWith(
-                        color: AppColors.grey,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ],
-              ),
-            ),
+            _CardImage(data: data, showFavorite: showFavorite),
+            if (fillWidth)
+              Expanded(
+                child: _CardBody(
+                  data: data,
+                  isDark: isDark,
+                  compactMeta: true,
+                ),
+              )
+            else
+              _CardBody(data: data, isDark: isDark),
           ],
         ),
       ),
@@ -132,9 +116,137 @@ class ProductCard extends StatelessWidget {
   }
 }
 
+class _CardBody extends StatelessWidget {
+  final ProductCardData data;
+  final bool isDark;
+  final bool compactMeta;
+
+  const _CardBody({
+    required this.data,
+    required this.isDark,
+    this.compactMeta = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final name = Text(
+      data.name,
+      style: AppStyle.labelSmall.copyWith(
+        color: isDark ? AppColors.white : AppColors.black,
+        fontWeight: FontWeight.w600,
+      ),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 10.h),
+      child: compactMeta ? _buildCompactBody(name) : _buildDefaultBody(name),
+    );
+  }
+
+  Widget _buildDefaultBody(Widget name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (data.category != null) ...[
+          Text(
+            data.category!,
+            style: AppStyle.labelXSmall.copyWith(
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 2.h),
+        ],
+        name,
+        SizedBox(height: 4.h),
+        if (data.showPrice) _PriceRow(data: data, isDark: isDark),
+        DiscountMetaLines(
+          description: data.discountDescription,
+          startDate: data.discountStartDate,
+          endDate: data.discountEndDate,
+        ),
+        if (data.metaText != null) ...[
+          SizedBox(height: 2.h),
+          Text(
+            data.metaText!,
+            style: AppStyle.labelXSmall.copyWith(
+              color: AppColors.grey,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildCompactBody(Widget name) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (data.category != null) ...[
+          Text(
+            data.category!,
+            style: AppStyle.labelXSmall.copyWith(
+              color: AppColors.primaryColor,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: 2.h),
+        ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: name,
+                ),
+              ),
+              if (data.showPrice) _PriceRow(data: data, isDark: isDark),
+              DiscountMetaLines(
+                description: data.discountDescription,
+                startDate: data.discountStartDate,
+                endDate: data.discountEndDate,
+                compact: true,
+              ),
+              if (data.metaText != null) ...[
+                SizedBox(height: 2.h),
+                Text(
+                  data.metaText!,
+                  style: AppStyle.labelXSmall.copyWith(
+                    color: AppColors.grey,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _CardImage extends StatelessWidget {
   final ProductCardData data;
-  const _CardImage({required this.data});
+  final bool showFavorite;
+
+  const _CardImage({
+    required this.data,
+    this.showFavorite = true,
+  });
 
   bool get _hasNetworkImage =>
       data.imageUrl != null && data.imageUrl!.isNotEmpty;
@@ -208,6 +320,15 @@ class _CardImage extends StatelessWidget {
               ),
             ),
           ),
+        if (showFavorite)
+          Positioned(
+            top: data.discountPercent != null ? 36.h : 8.h,
+            right: 8.w,
+            child: ProductFavoriteButton(
+              productId: data.id,
+              businessId: data.businessId,
+            ),
+          ),
       ],
     );
   }
@@ -223,24 +344,30 @@ class _PriceRow extends StatelessWidget {
     if (data.originalPrice != null) {
       return Row(
         children: [
-          Text(
-            '\$${data.originalPrice!.toStringAsFixed(2)}',
-            style: AppStyle.labelXSmall.copyWith(
-              color: AppColors.grey,
-              decoration: TextDecoration.lineThrough,
-              decorationColor: AppColors.grey,
-              decorationThickness: 16,
-              decorationStyle: TextDecorationStyle.solid,
+          Flexible(
+            child: Text(
+              '\$${data.originalPrice!.toStringAsFixed(2)}',
+              style: AppStyle.labelXSmall.copyWith(
+                color: AppColors.grey,
+                decoration: TextDecoration.lineThrough,
+                decorationColor: AppColors.grey,
+                decorationThickness: 16,
+                decorationStyle: TextDecorationStyle.solid,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-
-
           ),
           SizedBox(width: 5.w),
-          Text(
-            '\$${data.price.toStringAsFixed(2)}',
-            style: AppStyle.bodySmall.copyWith(
-              color: AppColors.primaryColor,
-              fontWeight: FontWeight.w700,
+          Flexible(
+            child: Text(
+              '\$${data.price.toStringAsFixed(2)}',
+              style: AppStyle.bodySmall.copyWith(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -252,6 +379,8 @@ class _PriceRow extends StatelessWidget {
         color: isDark ? AppColors.white : AppColors.primaryColor,
         fontWeight: FontWeight.w700,
       ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

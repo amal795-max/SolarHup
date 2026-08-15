@@ -8,11 +8,6 @@ sealed class StoreInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-/// Toggles the follow / unfollow state for this store.
-final class ToggleFollowStoreEvent extends StoreInfoEvent {
-  const ToggleFollowStoreEvent();
-}
-
 /// Sets the active category chip to [index].
 final class SelectStoreCategoryEvent extends StoreInfoEvent {
   final int index;

@@ -22,6 +22,8 @@ abstract class CatalogRepository {
     int businessId, {
     int? limit,
   });
+  Future<Either<Failure, List<DiscountModel>>> getStoreDiscounts(int businessId);
+  Future<Either<Failure, List<DiscountModel>>> getWorkshopDiscounts(int businessId);
 }
 
 class CatalogRepositoryImpl implements CatalogRepository {
@@ -85,6 +87,36 @@ class CatalogRepositoryImpl implements CatalogRepository {
       final discounts = await remote.getStoreDiscounts(businessId);
       final products = await _enrichDiscountProducts(discounts, limit: limit);
       return Right(products);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DiscountModel>>> getStoreDiscounts(
+    int businessId,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
+    }
+    try {
+      final discounts = await remote.getStoreDiscounts(businessId);
+      return Right(discounts);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DiscountModel>>> getWorkshopDiscounts(
+    int businessId,
+  ) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
+    }
+    try {
+      final discounts = await remote.getWorkshopDiscounts(businessId);
+      return Right(discounts);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
     }

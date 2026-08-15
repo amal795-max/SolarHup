@@ -16,10 +16,11 @@ class LabelWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title ?? '', style: AppStyle.labelMedium),
-          InkWell(
-            onTap: onTap,
-            child: Text(more ?? 'View All', style: AppStyle.labelMoreStyle),
-          ),
+          if (onTap != null)
+            InkWell(
+              onTap: onTap,
+              child: Text(more ?? 'View All', style: AppStyle.labelMoreStyle),
+            ),
         ],
 
     );

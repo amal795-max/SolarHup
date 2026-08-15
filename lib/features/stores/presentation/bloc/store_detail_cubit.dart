@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 import 'package:untitled1/features/catalog/data/models/discounted_product_model.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
@@ -42,6 +43,12 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
           (items) => items,
         );
 
+        final discountsResult = await catalogRepository.getStoreDiscounts(businessId);
+        final discounts = discountsResult.fold(
+          (_) => <DiscountModel>[],
+          (items) => items,
+        );
+
         final discountedResult =
             await catalogRepository.getStoreDiscountedProducts(businessId);
         final discountedProducts = discountedResult.fold(
@@ -55,6 +62,7 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
             categories: categories,
             products: products,
             discountedProducts: discountedProducts,
+            discounts: discounts,
           ),
         );
       },

@@ -39,11 +39,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _fetchAll(Emitter<HomeState> emit) async {
-    final layoutResult = await repository.getHomeLayout();
-    final usedResult = await repository.getUsedProducts();
-    final newResult = await repository.getNewOffers();
-    final blogResult = await repository.getBlogPosts();
-    final tipsResult = await repository.getRandomTips();
+    final (
+      layoutResult,
+      usedResult,
+      newResult,
+      blogResult,
+      tipsResult,
+    ) = await (
+      repository.getHomeLayout(),
+      repository.getUsedProducts(),
+      repository.getNewOffers(),
+      repository.getBlogPosts(),
+      repository.getRandomTips(),
+    ).wait;
 
     String? error;
     List<HomeLayoutModel> homeLayout = [];

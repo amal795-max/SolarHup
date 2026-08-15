@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/catalog/utils/discount_period_formatter.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_screen.dart';
+import 'package:untitled1/widgets/discount_meta_lines.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
+import 'package:untitled1/widgets/workshop_service_favorite_button.dart';
 
 class WorkshopInfoServicesSection extends StatelessWidget {
+  final String workshopId;
+  final String workshopName;
   final List<WorkshopServiceItem> services;
   final String? selectedServiceId;
   final ValueChanged<String> onServiceSelected;
 
   const WorkshopInfoServicesSection({
     super.key,
+    required this.workshopId,
+    required this.workshopName,
     required this.services,
     required this.selectedServiceId,
     required this.onServiceSelected,
@@ -22,6 +29,7 @@ class WorkshopInfoServicesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final parsedWorkshopId = int.tryParse(workshopId);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -50,6 +58,8 @@ class WorkshopInfoServicesSection extends StatelessWidget {
           else
             ...services.map(
               (service) => _WorkshopServiceTile(
+                workshopId: parsedWorkshopId,
+                workshopName: workshopName,
                 service: service,
                 isSelected: service.id == selectedServiceId,
                 isDark: isDark,
@@ -63,12 +73,16 @@ class WorkshopInfoServicesSection extends StatelessWidget {
 }
 
 class _WorkshopServiceTile extends StatelessWidget {
+  final int? workshopId;
+  final String workshopName;
   final WorkshopServiceItem service;
   final bool isSelected;
   final bool isDark;
   final VoidCallback onTap;
 
   const _WorkshopServiceTile({
+    required this.workshopId,
+    required this.workshopName,
     required this.service,
     required this.isSelected,
     required this.isDark,
@@ -78,6 +92,7 @@ class _WorkshopServiceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasImage = _isValidImageUrl(service.imageUrl);
+    final parsedServiceId = int.tryParse(service.id);
 
     return Padding(
       padding: EdgeInsets.only(bottom: 10.h),
@@ -159,13 +174,37 @@ class _WorkshopServiceTile extends StatelessWidget {
                       SizedBox(height: 6.h),
                       Row(
                         children: [
-                          Text(
-                            '\$${service.price.toStringAsFixed(2)}',
-                            style: AppStyle.bodyMedium.copyWith(
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.primaryColor,
+                          if (service.hasDiscount)
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '\$${service.originalPrice!.toStringAsFixed(2)}',
+                                    style: AppStyle.labelSmall.copyWith(
+                                      color: AppColors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                      decorationColor: AppColors.grey,
+                                    ),
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Text(
+                                    '\$${service.price.toStringAsFixed(2)}',
+                                    style: AppStyle.bodyMedium.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            Text(
+                              '\$${service.price.toStringAsFixed(2)}',
+                              style: AppStyle.bodyMedium.copyWith(
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.primaryColor,
+                              ),
                             ),
-                          ),
                           if (service.durationMinutes > 0) ...[
                             SizedBox(width: 8.w),
                             Container(
@@ -190,10 +229,34 @@ class _WorkshopServiceTile extends StatelessWidget {
                           ],
                         ],
                       ),
+                      if (service.hasDiscount &&
+                          hasDiscountMeta(
+                            description: service.discountDescription,
+                            startDate: service.discountStartDate,
+                            endDate: service.discountEndDate,
+                          )) ...[
+                        SizedBox(height: 4.h),
+                        DiscountMetaLines(
+                          description: service.discountDescription,
+                          startDate: service.discountStartDate,
+                          endDate: service.discountEndDate,
+                          compact: true,
+                        ),
+                      ],
                     ],
                   ),
                 ),
-                SizedBox(width: 8.w),
+                if (workshopId != null && parsedServiceId != null) ...[
+                  SizedBox(width: 4.w),
+                  WorkshopServiceFavoriteButton(
+                    workshopId: workshopId!,
+                    serviceId: parsedServiceId,
+                    workshopName: workshopName,
+                    iconSize: 20.sp,
+                    backgroundColor: Colors.transparent,
+                  ),
+                ],
+                SizedBox(width: 4.w),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 180),
                   width: 24.w,

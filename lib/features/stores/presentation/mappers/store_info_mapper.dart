@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
+import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 import 'package:untitled1/features/catalog/data/models/discounted_product_model.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
@@ -10,6 +12,7 @@ StoreInfoData storeDetailToInfoData(
   List<StoreCategoryModel> categories = const [],
   List<StoreProductModel> products = const [],
   List<DiscountedProductModel> discountedProducts = const [],
+  List<DiscountModel> discounts = const [],
 }) {
   final categoryItems = categories.isNotEmpty
       ? apiCategoriesToItems(categories)
@@ -20,7 +23,7 @@ StoreInfoData storeDetailToInfoData(
 
   final discountItems = discountedProducts.map(discountedProductToStoreItem).toList();
   final discountByProductId = {
-    for (final item in discountItems) item.id: item,
+    for (final item in discountItems) normalizeProductId(item.id): item,
   };
 
   final featuredProducts = products
@@ -30,24 +33,21 @@ StoreInfoData storeDetailToInfoData(
             product,
             categoryName: categoryNames[product.categoryId],
           );
-          final discounted = discountByProductId[product.id];
-          if (discounted == null) return base;
+          final discounted = discountByProductId[normalizeProductId(product.id)];
+          if (discounted != null) {
+            return mergeStoreItemWithDiscount(base, discounted);
+          }
 
-          return StoreProductItem(
-            id: base.id,
-            name: discounted.name.isNotEmpty ? discounted.name : base.name,
-            categoryLabel: base.categoryLabel,
-            categoryKey: base.categoryKey,
-            categoryId: base.categoryId,
-            price: discounted.price,
-            originalPrice: discounted.originalPrice,
-            discountPercent: discounted.discountPercent,
-            description: base.description,
-            imagePlaceholderColorValue: discounted.imagePlaceholderColorValue,
-            imageIcon: base.imageIcon,
-            imageUrl: discounted.imageUrl ?? base.imageUrl,
-            isKitProduct: base.isKitProduct,
+          final candidate = findBestDiscountForProduct(
+            discounts: discounts,
+            businessId: model.id,
+            productId: product.id,
           );
+          if (candidate != null) {
+            return mergeStoreItemWithCandidate(base, candidate, product.price);
+          }
+
+          return base;
         },
       )
       .toList();
@@ -92,6 +92,67 @@ List<StoreCategoryItem> categoriesForStore(
       .toList();
 }
 
+StoreProductItem mergeStoreItemWithDiscount(
+  StoreProductItem base,
+  StoreProductItem discounted,
+) {
+  return StoreProductItem(
+    id: base.id,
+    name: discounted.name.isNotEmpty ? discounted.name : base.name,
+    categoryLabel: base.categoryLabel,
+    categoryKey: base.categoryKey,
+    categoryId: base.categoryId,
+    price: discounted.price,
+    originalPrice: discounted.originalPrice,
+    discountPercent: discounted.discountPercent,
+    badgeText: discounted.badgeText,
+    description: base.description,
+    discountDescription: discounted.discountDescription,
+    discountStartDate: discounted.discountStartDate,
+    discountEndDate: discounted.discountEndDate,
+    imagePlaceholderColorValue: discounted.imagePlaceholderColorValue,
+    imageIcon: base.imageIcon,
+    imageUrl: discounted.imageUrl ?? base.imageUrl,
+    isKitProduct: base.isKitProduct,
+  );
+}
+
+StoreProductItem mergeStoreItemWithCandidate(
+  StoreProductItem base,
+  DiscountProductCandidate candidate,
+  double retailPrice,
+) {
+  final pricing = computeDiscountPricing(
+    retailPrice: retailPrice,
+    discountType: candidate.discountType,
+    discountValue: candidate.discountValue,
+  );
+  if (pricing.discountPercent == null && pricing.salePrice >= retailPrice) {
+    return base;
+  }
+
+  return StoreProductItem(
+    id: base.id,
+    name: base.name,
+    categoryLabel: base.categoryLabel,
+    categoryKey: base.categoryKey,
+    categoryId: base.categoryId,
+    price: pricing.salePrice,
+    originalPrice: retailPrice,
+    discountPercent: pricing.discountPercent,
+    badgeText:
+        candidate.discountLabel.isNotEmpty ? candidate.discountLabel : null,
+    description: base.description,
+    discountDescription: candidate.description,
+    discountStartDate: candidate.startDate,
+    discountEndDate: candidate.endDate,
+    imagePlaceholderColorValue: base.imagePlaceholderColorValue,
+    imageIcon: base.imageIcon,
+    imageUrl: base.imageUrl,
+    isKitProduct: base.isKitProduct,
+  );
+}
+
 StoreProductItem discountedProductToStoreItem(DiscountedProductModel product) {
   return StoreProductItem(
     id: product.productId,
@@ -102,7 +163,10 @@ StoreProductItem discountedProductToStoreItem(DiscountedProductModel product) {
     price: product.price,
     originalPrice: product.originalPrice,
     discountPercent: product.discountPercent,
-    description: product.discountLabel,
+    badgeText: product.discountLabel.isNotEmpty ? product.discountLabel : null,
+    discountDescription: product.discountDescription,
+    discountStartDate: product.discountStartDate,
+    discountEndDate: product.discountEndDate,
     imagePlaceholderColorValue: product.imagePlaceholderColorValue,
     imageIcon: _iconForCategory(product.category),
     imageUrl: product.imageUrl,

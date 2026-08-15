@@ -27,15 +27,13 @@ class StoreInfoCategoriesSection extends StatelessWidget {
             child: Text('categories'.tr(), style: theme.textTheme.titleMedium),
           ),
           BlocBuilder<StoreInfoBloc, StoreInfoState>(
-          buildWhen: (prev, curr) =>
-              prev.selectedCategoryIndex != curr.selectedCategoryIndex,
           builder: (context, state) {
             if (categories.isEmpty) {
               return const SizedBox.shrink();
             }
 
             return SizedBox(
-              height: 110.h,
+              height: 120.h,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),

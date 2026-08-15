@@ -13,7 +13,10 @@ import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
 import 'core/constants/app_url.dart';
 import 'core/constants/debendency_injection.dart' as di;
 import 'core/helper/app_bloc_observer.dart';
@@ -85,6 +88,28 @@ class MyApp extends StatelessWidget {
                 supportedLocales: context.supportedLocales,
                 locale: context.locale,
                 routerConfig: router,
+                builder: (context, child) {
+                  return BlocListener<FavoritesCubit, FavoritesState>(
+                    listenWhen: (prev, curr) =>
+                        curr is FavoriteActionSuccess ||
+                        curr is FavoriteActionError,
+                    listener: (context, state) {
+                      if (state is FavoriteActionSuccess) {
+                        DataHelper.showSnackBar(
+                          message: state.message,
+                          context: context,
+                        );
+                      } else if (state is FavoriteActionError) {
+                        DataHelper.showSnackBar(
+                          message: state.message,
+                          context: context,
+                          color: AppColors.red,
+                        );
+                      }
+                    },
+                    child: child ?? const SizedBox.shrink(),
+                  );
+                },
               );
             },
           );

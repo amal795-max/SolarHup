@@ -39,6 +39,9 @@ class ProductDetailModel extends Equatable {
   final double? originalPrice;
   final int? discountPercent;
   final String? discountLabel;
+  final String? discountDescription;
+  final DateTime? discountStartDate;
+  final DateTime? discountEndDate;
   final List<String> imageUrls;
   final int imagePlaceholderColorValue;
   final bool isAvailable;
@@ -55,6 +58,9 @@ class ProductDetailModel extends Equatable {
     this.originalPrice,
     this.discountPercent,
     this.discountLabel,
+    this.discountDescription,
+    this.discountStartDate,
+    this.discountEndDate,
     required this.imageUrls,
     required this.imagePlaceholderColorValue,
     required this.isAvailable,
@@ -78,6 +84,9 @@ class ProductDetailModel extends Equatable {
         originalPrice,
         discountPercent,
         discountLabel,
+        discountDescription,
+        discountStartDate,
+        discountEndDate,
         imageUrls,
         imagePlaceholderColorValue,
         isAvailable,

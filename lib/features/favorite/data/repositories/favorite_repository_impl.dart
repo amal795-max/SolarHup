@@ -30,10 +30,18 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> addFavorite(String itemType, int itemId) async {
+  Future<Either<Failure, Unit>> addFavorite(
+    String itemType,
+    int itemId, {
+    int? workshopId,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.addFavorite(itemType, itemId);
+        await remoteDataSource.addFavorite(
+          itemType,
+          itemId,
+          workshopId: workshopId,
+        );
         return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

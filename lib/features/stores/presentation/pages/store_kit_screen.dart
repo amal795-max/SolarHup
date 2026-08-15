@@ -8,6 +8,9 @@ import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_cubit.dart';
 import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
 import 'package:untitled1/features/stores/presentation/mappers/store_kit_mapper.dart';
+import 'package:untitled1/features/catalog/data/models/discount_model.dart';
+import 'package:untitled1/features/stores/data/models/store_category_model.dart';
+import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_products_section.dart';
@@ -24,6 +27,9 @@ class StoreKitProductData {
   final String categoryKey;
   final String name;
   final double price;
+  final double? originalPrice;
+  final int? discountPercent;
+  final String? badgeText;
   final double rating;
   final int reviews;
   final int imageColorValue;
@@ -36,11 +42,17 @@ class StoreKitProductData {
     required this.categoryKey,
     required this.name,
     required this.price,
+    this.originalPrice,
+    this.discountPercent,
+    this.badgeText,
     required this.rating,
     required this.reviews,
     required this.imageColorValue,
     this.imageUrl,
   });
+
+  bool get hasDiscount =>
+      originalPrice != null && originalPrice! > price;
 }
 
 class StoreKitScreen extends StatelessWidget {
@@ -56,7 +68,18 @@ class StoreKitScreen extends StatelessWidget {
           create: (_) =>
               getIt<StoreKitCubit>()..loadProducts(args.storeId),
         ),
-        BlocProvider(create: (_) => StoreKitBloc()),
+        BlocProvider(
+          create: (_) {
+            final bloc = StoreKitBloc();
+            final initialCategoryIndex = args.initialCategoryIndex;
+            if (initialCategoryIndex != null && initialCategoryIndex >= 0) {
+              bloc.add(
+                SelectStoreKitCategoryEvent(initialCategoryIndex + 1),
+              );
+            }
+            return bloc;
+          },
+        ),
       ],
       child: _StoreKitView(args: args),
     );
@@ -91,35 +114,66 @@ class _StoreKitView extends StatelessWidget {
                     width: 160.w,
                   ),
                 ),
-              StoreKitCubitLoaded(:final categories, :final products) =>
-                  SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        StoreKitHeaderSection(storeName: args.storeName),
-                        SizedBox(height: 16.h),
-                        StoreKitSearchSection(
-                          categories: apiCategoriesToItems(categories),
-                        ),
-                        SizedBox(height: 14.h),
-                        StoreKitProductsSection(
-                          businessId: args.storeId,
-                          categories: apiCategoriesToItems(categories),
-                          products: storeProductsToKitData(products),
-                        ),
-                        SizedBox(height: 16.h),
-                        const StoreKitSpecialOfferSection(),
-                        SizedBox(height: 20.h),
-                      ],
-                    ),
-                  ),
+              StoreKitCubitLoaded(:final categories, :final products, :final discounts) =>
+                _StoreKitLoadedBody(
+                  args: args,
+                  categories: categories,
+                  products: products,
+                  discounts: discounts,
                 ),
               _ => const SizedBox.shrink(),
             };
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _StoreKitLoadedBody extends StatelessWidget {
+  final StoreKitRouteArgs args;
+  final List<StoreCategoryModel> categories;
+  final List<StoreProductModel> products;
+  final List<DiscountModel> discounts;
+
+  const _StoreKitLoadedBody({
+    required this.args,
+    required this.categories,
+    required this.products,
+    required this.discounts,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final categoryNames = {
+      for (final category in categories) category.id: category.name,
+    };
+    final categoryItems = categoriesForStore(products, categoryNames);
+
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            StoreKitHeaderSection(storeName: args.storeName),
+            SizedBox(height: 16.h),
+            StoreKitSearchSection(categories: categoryItems),
+            SizedBox(height: 14.h),
+            StoreKitProductsSection(
+              businessId: args.storeId,
+              categories: categoryItems,
+              products: storeProductsToKitData(
+                products,
+                businessId: args.storeId,
+                discounts: discounts,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            const StoreKitSpecialOfferSection(),
+            SizedBox(height: 20.h),
+          ],
         ),
       ),
     );

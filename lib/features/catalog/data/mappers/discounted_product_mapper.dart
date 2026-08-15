@@ -13,6 +13,9 @@ class DiscountProductCandidate {
   final String discountType;
   final double discountValue;
   final String discountLabel;
+  final String? description;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   const DiscountProductCandidate({
     required this.productId,
@@ -23,6 +26,9 @@ class DiscountProductCandidate {
     required this.discountType,
     required this.discountValue,
     required this.discountLabel,
+    this.description,
+    this.startDate,
+    this.endDate,
   });
 }
 
@@ -43,6 +49,9 @@ List<DiscountProductCandidate> flattenDiscountProducts(
         discountType: discount.discountType,
         discountValue: discount.discountValue,
         discountLabel: discount.discountLabel,
+        description: discount.description,
+        startDate: discount.startDate,
+        endDate: discount.endDate,
       );
       final existing = bestByKey[key];
       if (existing == null ||
@@ -93,6 +102,9 @@ DiscountedProductModel candidateToDiscountedProductPreview(
     ),
     imageUrl: null,
     imagePlaceholderColorValue: _placeholderColorForProductId(candidate.productId),
+    discountDescription: candidate.description,
+    discountStartDate: candidate.startDate,
+    discountEndDate: candidate.endDate,
   );
 }
 
@@ -137,6 +149,9 @@ DiscountedProductModel mergeDiscountWithProductDetail({
     discountPercent: pricing.discountPercent,
     imageUrl: detail.imageUrls.isNotEmpty ? detail.imageUrls.first : null,
     imagePlaceholderColorValue: detail.imagePlaceholderColorValue,
+    discountDescription: candidate.description,
+    discountStartDate: candidate.startDate,
+    discountEndDate: candidate.endDate,
   );
 }
 
@@ -180,6 +195,9 @@ ProductDetailModel applyDiscountToProductDetail({
     originalPrice: product.currentPrice,
     discountPercent: pricing.discountPercent,
     discountLabel: candidate.discountLabel,
+    discountDescription: candidate.description,
+    discountStartDate: candidate.startDate,
+    discountEndDate: candidate.endDate,
     imageUrls: product.imageUrls,
     imagePlaceholderColorValue: product.imagePlaceholderColorValue,
     isAvailable: product.isAvailable,
@@ -195,11 +213,12 @@ DiscountProductCandidate? findBestDiscountForProduct({
   required int businessId,
   required String productId,
 }) {
+  final normalizedProductId = normalizeProductId(productId);
   final candidates = flattenDiscountProducts(discounts)
       .where(
         (candidate) =>
             candidate.businessId == businessId &&
-            candidate.productId == productId,
+            normalizeProductId(candidate.productId) == normalizedProductId,
       )
       .toList();
   if (candidates.isEmpty) return null;
@@ -208,6 +227,28 @@ DiscountProductCandidate? findBestDiscountForProduct({
         .compareTo(_effectiveDiscountPercent(a.discountType, a.discountValue)),
   );
   return candidates.first;
+}
+
+String normalizeProductId(String id) {
+  final trimmed = id.trim();
+  final parsed = int.tryParse(trimmed);
+  return parsed?.toString() ?? trimmed;
+}
+
+({double salePrice, int? discountPercent}) computeDiscountPricing({
+  required double retailPrice,
+  required String discountType,
+  required double discountValue,
+}) {
+  final pricing = _applyDiscount(
+    retailPrice: retailPrice,
+    discountType: discountType,
+    discountValue: discountValue,
+  );
+  return (
+    salePrice: pricing.salePrice,
+    discountPercent: pricing.discountPercent,
+  );
 }
 
 Map<int, double> buildDiscountedPriceMap(List<DiscountedProductModel> products) {

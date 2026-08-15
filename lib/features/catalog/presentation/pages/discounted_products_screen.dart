@@ -145,6 +145,7 @@ class _DiscountedProductsView extends StatelessWidget {
 
                             return ProductCard(
                               data: card,
+                              fillWidth: true,
                               onTap: isLoading
                                   ? null
                                   : () => context.push(

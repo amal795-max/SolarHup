@@ -28,12 +28,16 @@ import 'package:untitled1/features/services/presentation/pages/service_address_s
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_screen.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_discounted_services_route_args.dart';
+import 'package:untitled1/features/services/presentation/pages/workshop_discounted_services_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_route_args.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
@@ -162,6 +166,20 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
+      path: AppRoutes.storeDiscountedProductsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as StoreDiscountedProductsRouteArgs?;
+        return StoreDiscountedProductsScreen(
+          args: args ??
+              const StoreDiscountedProductsRouteArgs(
+                storeId: 0,
+                storeName: '',
+                products: [],
+              ),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRoutes.productDetailScreen,
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as ProductDetailRouteArgs?;
@@ -194,6 +212,20 @@ final GoRouter router = GoRouter(
         return WorkshopInfoScreen(
           args: args ??
               const WorkshopInfoRouteArgs(workshopId: '0'),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.workshopDiscountedServicesScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        final args = state.extra as WorkshopDiscountedServicesRouteArgs?;
+        return WorkshopDiscountedServicesScreen(
+          args: args ??
+              const WorkshopDiscountedServicesRouteArgs(
+                workshopId: '0',
+                workshopName: '',
+                services: [],
+              ),
         );
       },
     ),

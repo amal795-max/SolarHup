@@ -13,6 +13,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_info_screen.d
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
+import 'package:untitled1/widgets/product_favorite_button.dart';
 
 class StoreKitProductsSection extends StatelessWidget {
   final int businessId;
@@ -58,11 +59,10 @@ class StoreKitProductsSection extends StatelessWidget {
             crossAxisSpacing: 10.w,
             childAspectRatio: 0.62,
           ),
-          itemBuilder: (context, index) => _KitProductCard(
-            businessId: businessId,
-            product: filteredProducts[index],
-            isFavorite: state.isFavorite(filteredProducts[index].id),
-          ),
+              itemBuilder: (context, index) => _KitProductCard(
+                businessId: businessId,
+                product: filteredProducts[index],
+              ),
         );
       },
     );
@@ -113,12 +113,10 @@ class StoreKitProductsSection extends StatelessWidget {
 class _KitProductCard extends StatelessWidget {
   final int businessId;
   final StoreKitProductData product;
-  final bool isFavorite;
 
   const _KitProductCard({
     required this.businessId,
     required this.product,
-    required this.isFavorite,
   });
 
   @override
@@ -173,30 +171,56 @@ class _KitProductCard extends StatelessWidget {
                         Container(
                           color: Colors.black.withValues(alpha: 0.08),
                         ),
+                      if (product.badgeText != null)
+                        Positioned(
+                          top: 6.h,
+                          left: 6.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.blue,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Text(
+                              product.badgeText!,
+                              style: AppStyle.labelXSmall.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        )
+                      else if (product.discountPercent != null)
+                        Positioned(
+                          top: 6.h,
+                          left: 6.w,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.w,
+                              vertical: 4.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.red,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: Text(
+                              '-${product.discountPercent}%',
+                              style: AppStyle.labelXSmall.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
                       Positioned(
                         top: 6.h,
                         right: 6.w,
-                        child: Material(
-                          color: Theme.of(context).colorScheme.surface,
-                          shape: const CircleBorder(),
-                          clipBehavior: Clip.antiAlias,
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-
-                            onPressed: () {
-                              context.read<StoreKitBloc>().add(
-                                ToggleStoreKitFavoriteEvent(product.id),
-                              );
-                            },
-                            icon: Icon(
-                              isFavorite
-                                  ? Icons.favorite_rounded
-                                  : Icons.favorite_border_rounded,
-                              color: isFavorite
-                                  ? AppColors.red
-                                  : AppStyle.bodySmall.color,
-                            ),
-                          ),
+                        child: ProductFavoriteButton(
+                          productId: product.id,
+                          businessId: businessId,
                         ),
                       ),
                     ],
@@ -213,23 +237,62 @@ class _KitProductCard extends StatelessWidget {
                           style: AppStyle.bodySmall.copyWith(
                             color: AppStyle.bodySmall.color,
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 3.h),
-                        Text(
-                          product.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyle.labelMedium.copyWith(
-                            fontWeight: FontWeight.w600,
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              product.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyle.labelMedium.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                         SizedBox(height: 8.h),
-                        Text(
-                          '\$${product.price.toStringAsFixed(2)}',
-                          style: AppStyle.bodyMedium.copyWith(
-                            fontWeight: FontWeight.w700,
+                        if (product.hasDiscount)
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  '\$${product.originalPrice!.toStringAsFixed(2)}',
+                                  style: AppStyle.labelSmall.copyWith(
+                                    color: AppColors.grey,
+                                    decoration: TextDecoration.lineThrough,
+                                    decorationColor: AppColors.grey,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              SizedBox(width: 6.w),
+                              Flexible(
+                                child: Text(
+                                  '\$${product.price.toStringAsFixed(2)}',
+                                  style: AppStyle.bodyMedium.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          )
+                        else
+                          Text(
+                            '\$${product.price.toStringAsFixed(2)}',
+                            style: AppStyle.bodyMedium.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
                       ],
                     ),
                   ),

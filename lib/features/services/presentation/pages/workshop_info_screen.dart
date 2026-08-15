@@ -9,10 +9,10 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
-import 'package:untitled1/features/services/data/models/workshop_detail_model.dart';
-import 'package:untitled1/features/services/data/models/workshop_service_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/workshop_detail_cubit/workshop_detail_cubit.dart';
+import 'package:untitled1/features/services/presentation/mappers/workshop_info_mapper.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
+import 'package:untitled1/features/services/presentation/widgets/workshop_info_discounts_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/workshop_info_services_section.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
@@ -31,6 +31,7 @@ class WorkshopInfoData {
   final String? logoUrl;
   final String? coverImageUrl;
   final List<WorkshopServiceItem> services;
+  final List<WorkshopServiceItem> discountedServices;
 
   const WorkshopInfoData({
     required this.id,
@@ -43,6 +44,7 @@ class WorkshopInfoData {
     this.logoUrl,
     this.coverImageUrl,
     required this.services,
+    this.discountedServices = const [],
   });
 }
 
@@ -51,6 +53,12 @@ class WorkshopServiceItem {
   final String name;
   final String? description;
   final double price;
+  final double? originalPrice;
+  final int? discountPercent;
+  final String? badgeText;
+  final String? discountDescription;
+  final DateTime? discountStartDate;
+  final DateTime? discountEndDate;
   final int durationMinutes;
   final String? imageUrl;
   final int imagePlaceholderColorValue;
@@ -60,42 +68,19 @@ class WorkshopServiceItem {
     required this.name,
     this.description,
     required this.price,
+    this.originalPrice,
+    this.discountPercent,
+    this.badgeText,
+    this.discountDescription,
+    this.discountStartDate,
+    this.discountEndDate,
     required this.durationMinutes,
     this.imageUrl,
     required this.imagePlaceholderColorValue,
   });
-}
 
-WorkshopInfoData workshopDetailToInfoData(
-  WorkshopDetailModel workshop,
-  List<WorkshopServiceModel> services,
-) {
-  return WorkshopInfoData(
-    id: workshop.id,
-    name: workshop.name,
-    description: workshop.description,
-    location: workshop.location,
-    phone: workshop.phone,
-    region: workshop.region,
-    imagePlaceholderColorValue: workshop.imagePlaceholderColorValue,
-    logoUrl: workshop.logoUrl,
-    coverImageUrl: workshop.coverImageUrl,
-    services: services
-        .where((service) => service.isAvailable)
-        .map(
-          (service) => WorkshopServiceItem(
-            id: service.id,
-            name: service.name,
-            description:
-                service.description.isNotEmpty ? service.description : null,
-            price: service.price,
-            durationMinutes: service.estimatedDurationMinutes,
-            imageUrl: service.imageUrl,
-            imagePlaceholderColorValue: workshop.imagePlaceholderColorValue,
-          ),
-        )
-        .toList(),
-  );
+  bool get hasDiscount =>
+      originalPrice != null && originalPrice! > price;
 }
 
 final WorkshopInfoData sampleWorkshopInfo = WorkshopInfoData(
@@ -161,9 +146,13 @@ class _WorkshopInfoView extends StatelessWidget {
                       categoryId: args.categoryId,
                     ),
               ),
-            WorkshopDetailLoaded(:final workshop, :final services) =>
+            WorkshopDetailLoaded(:final workshop, :final services, :final discounts) =>
               _WorkshopInfoContent(
-                data: workshopDetailToInfoData(workshop, services),
+                data: workshopDetailToInfoData(
+                  workshop,
+                  services,
+                  discounts: discounts,
+                ),
                 initialSelectedServiceId: args.highlightServiceId,
               ),
             _ => const SizedBox.shrink(),
@@ -228,9 +217,20 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
               SliverToBoxAdapter(child: _WorkshopAboutSection(data: data)),
               SliverToBoxAdapter(child: SizedBox(height: 16.h)),
               SliverToBoxAdapter(child: _WorkshopContactSection(data: data)),
-              SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+              SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+              SliverToBoxAdapter(
+                child: WorkshopInfoDiscountsSection(
+                  workshopId: data.id,
+                  workshopName: data.name,
+                  services: data.discountedServices,
+                  onServiceTap: (id) => setState(() => _selectedServiceId = id),
+                ),
+              ),
+              SliverToBoxAdapter(child: SizedBox(height: 8.h)),
               SliverToBoxAdapter(
                 child: WorkshopInfoServicesSection(
+                  workshopId: data.id,
+                  workshopName: data.name,
                   services: data.services,
                   selectedServiceId: _selectedServiceId,
                   onServiceSelected: (id) =>
@@ -611,10 +611,29 @@ class _WorkshopRequestBar extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 2.h),
-                  Text(
-                    '\$${service.price.toStringAsFixed(2)}',
-                    style: AppStyle.h6.copyWith(color: AppColors.primaryColor),
-                  ),
+                  if (service.hasDiscount)
+                    Row(
+                      children: [
+                        Text(
+                          '\$${service.originalPrice!.toStringAsFixed(2)}',
+                          style: AppStyle.labelSmall.copyWith(
+                            color: AppColors.grey,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: AppColors.grey,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          '\$${service.price.toStringAsFixed(2)}',
+                          style: AppStyle.h6.copyWith(color: AppColors.primaryColor),
+                        ),
+                      ],
+                    )
+                  else
+                    Text(
+                      '\$${service.price.toStringAsFixed(2)}',
+                      style: AppStyle.h6.copyWith(color: AppColors.primaryColor),
+                    ),
                 ],
               ),
             ),

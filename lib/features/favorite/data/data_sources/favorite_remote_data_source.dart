@@ -6,7 +6,11 @@ import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
 
 abstract class FavoriteRemoteDataSource {
   Future<List<FavoriteModel>> getFavorites(String itemType);
-  Future<void> addFavorite(String itemType, int itemId);
+  Future<void> addFavorite(
+    String itemType,
+    int itemId, {
+    int? workshopId,
+  });
   Future<void> deleteFavorite(String itemType, int itemId);
 }
 
@@ -27,8 +31,11 @@ class FavoriteRemoteDataSourceImpl implements FavoriteRemoteDataSource {
           message: getErrorMessage(response.statusCode ?? 0),
         );
       } else {
-        return (response.data['favorites'] as List)
-            .map((item) => FavoriteModel.fromJson(item))
+        final favorites = response.data['favorites'];
+        final items = favorites is List ? favorites : const [];
+        return items
+            .whereType<Map<String, dynamic>>()
+            .map(FavoriteModel.fromJson)
             .toList();
       }
     } on DioException catch (e) {
@@ -37,21 +44,34 @@ class FavoriteRemoteDataSourceImpl implements FavoriteRemoteDataSource {
   }
 
   @override
-  Future<void> addFavorite(String itemType, int itemId) async {
+  Future<void> addFavorite(
+    String itemType,
+    int itemId, {
+    int? workshopId,
+  }) async {
     try {
+      final body = <String, dynamic>{
+        'item_type': itemType,
+        'item_id': itemId,
+      };
+      if (workshopId != null) {
+        body['workshop_id'] = workshopId;
+      }
+
       final response = await apiRequest.post(
         EndPoints.favorites,
-        body: {
-          'item_type': itemType,
-          'item_id': itemId,
-        },
+        body: body,
       );
-      if (response.statusCode != 201 && response.statusCode != 200) {
-        throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0),
-        );
+      if (response.statusCode == 201 ||
+          response.statusCode == 200 ||
+          response.statusCode == 409) {
+        return;
       }
+      throw ServerException(
+        message: getErrorMessage(response.statusCode ?? 0),
+      );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 409) return;
       throw ServerException(message: mapDioError(e));
     }
   }
@@ -62,12 +82,16 @@ class FavoriteRemoteDataSourceImpl implements FavoriteRemoteDataSource {
       final response = await apiRequest.delete(
         EndPoints.favoriteItem(itemType, itemId),
       );
-      if (response.statusCode != 200) {
-        throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0),
-        );
+      if (response.statusCode == 200 ||
+          response.statusCode == 204 ||
+          response.statusCode == 404) {
+        return;
       }
+      throw ServerException(
+        message: getErrorMessage(response.statusCode ?? 0),
+      );
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) return;
       throw ServerException(message: mapDioError(e));
     }
   }

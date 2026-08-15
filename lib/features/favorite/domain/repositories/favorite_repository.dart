@@ -4,6 +4,10 @@ import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
 
 abstract class FavoriteRepository {
   Future<Either<Failure, List<FavoriteModel>>> getFavorites(String itemType);
-  Future<Either<Failure, Unit>> addFavorite(String itemType, int itemId);
+  Future<Either<Failure, Unit>> addFavorite(
+    String itemType,
+    int itemId, {
+    int? workshopId,
+  });
   Future<Either<Failure, Unit>> deleteFavorite(String itemType, int itemId);
 }

@@ -192,10 +192,10 @@ Future<void> init() async {
   );
 
   getIt.registerFactory(() => StoreDetailCubit(getIt(), getIt()));
-  getIt.registerFactory(() => StoreKitCubit(getIt()));
+  getIt.registerFactory(() => StoreKitCubit(getIt(), getIt()));
   getIt.registerFactory(() => ServiceCategoriesCubit(getIt()));
   getIt.registerFactory(() => WorkshopPickerCubit(getIt()));
-  getIt.registerFactory(() => WorkshopDetailCubit(getIt()));
+  getIt.registerFactory(() => WorkshopDetailCubit(getIt(), getIt()));
   getIt.registerFactory(() => ServiceRequestsCubit(getIt()));
 
   getIt.registerFactory(() => ProductDetailBloc(getIt()));

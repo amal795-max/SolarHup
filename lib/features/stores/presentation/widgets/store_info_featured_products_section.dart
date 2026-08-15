@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
@@ -35,13 +37,18 @@ class StoreInfoFeaturedProductsSection extends StatelessWidget {
           LabelWidget(
             title: 'store_info_featured_products'.tr(),
             more: 'home_view_all'.tr(),
-            onTap: () => context.push(
-              AppRoutes.storeKitScreen,
-              extra: StoreKitRouteArgs(
-                storeId: storeId,
-                storeName: storeName,
-              ),
-            ),
+            onTap: () {
+              final selectedCategoryIndex =
+                  context.read<StoreInfoBloc>().state.selectedCategoryIndex;
+              context.push(
+                AppRoutes.storeKitScreen,
+                extra: StoreKitRouteArgs(
+                  storeId: storeId,
+                  storeName: storeName,
+                  initialCategoryIndex: selectedCategoryIndex,
+                ),
+              );
+            },
           ),
           SizedBox(height: 14.h),
           if (products.isEmpty)

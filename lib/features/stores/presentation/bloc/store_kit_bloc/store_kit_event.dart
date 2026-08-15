@@ -25,12 +25,3 @@ final class UpdateStoreKitSearchQueryEvent extends StoreKitEvent {
   @override
   List<Object?> get props => [query];
 }
-
-final class ToggleStoreKitFavoriteEvent extends StoreKitEvent {
-  final String productId;
-
-  const ToggleStoreKitFavoriteEvent(this.productId);
-
-  @override
-  List<Object?> get props => [productId];
-}

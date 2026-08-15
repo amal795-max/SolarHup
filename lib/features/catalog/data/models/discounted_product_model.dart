@@ -10,6 +10,9 @@ class DiscountedProductModel {
   final int? discountPercent;
   final String? imageUrl;
   final int imagePlaceholderColorValue;
+  final String? discountDescription;
+  final DateTime? discountStartDate;
+  final DateTime? discountEndDate;
 
   const DiscountedProductModel({
     required this.productId,
@@ -23,5 +26,8 @@ class DiscountedProductModel {
     this.discountPercent,
     this.imageUrl,
     required this.imagePlaceholderColorValue,
+    this.discountDescription,
+    this.discountStartDate,
+    this.discountEndDate,
   });
 }

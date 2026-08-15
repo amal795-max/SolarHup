@@ -14,14 +14,16 @@ final class WorkshopDetailLoading extends WorkshopDetailState {}
 final class WorkshopDetailLoaded extends WorkshopDetailState {
   final WorkshopDetailModel workshop;
   final List<WorkshopServiceModel> services;
+  final List<DiscountModel> discounts;
 
   const WorkshopDetailLoaded({
     required this.workshop,
     required this.services,
+    this.discounts = const [],
   });
 
   @override
-  List<Object?> get props => [workshop, services];
+  List<Object?> get props => [workshop, services, discounts];
 }
 
 final class WorkshopDetailError extends WorkshopDetailState {

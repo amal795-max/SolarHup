@@ -77,9 +77,12 @@ class StoreProductItem {
   final int categoryId;
   final double price;
   final double? originalPrice;
+  final String? description;
   final int? discountPercent;
   final String? badgeText;
-  final String? description;
+  final String? discountDescription;
+  final DateTime? discountStartDate;
+  final DateTime? discountEndDate;
   final int imagePlaceholderColorValue;
   final IconData imageIcon;
   final String? imageUrl;
@@ -96,6 +99,9 @@ class StoreProductItem {
     this.discountPercent,
     this.badgeText,
     this.description,
+    this.discountDescription,
+    this.discountStartDate,
+    this.discountEndDate,
     required this.imagePlaceholderColorValue,
     required this.imageIcon,
     this.imageUrl,
@@ -179,7 +185,7 @@ final StoreInfoData sampleStoreInfo = const StoreInfoData(
 // ---------------------------------------------------------------------------
 
 /// Entry point — loads store details from the API and provides [StoreInfoBloc]
-/// for local UI state (follow, category selection).
+/// for local UI state (category selection).
 class StoreInfoScreen extends StatelessWidget {
   final int storeId;
 
@@ -223,13 +229,14 @@ class _StoreInfoView extends StatelessWidget {
                 onPressed: ()=>
                 context.read<StoreDetailCubit>().loadStore(storeId),
             ),
-            StoreDetailLoaded(:final store, :final categories, :final products, :final discountedProducts) =>
+            StoreDetailLoaded(:final store, :final categories, :final products, :final discountedProducts, :final discounts) =>
                 _StoreInfoContent(
                 data: storeDetailToInfoData(
                   store,
                   categories: categories,
                   products: products,
                   discountedProducts: discountedProducts,
+                  discounts: discounts,
                 ),
               ),
             _ => const SizedBox.shrink(),
@@ -305,6 +312,7 @@ class _StoreInfoContent extends StatelessWidget {
                 StoreInfoCategoriesSection(categories: data.categories),
                 StoreInfoDiscountsSection(
                   storeId: data.id,
+                  storeName: data.name,
                   products: data.discountedProducts,
                 ),
                 SizedBox(height: 8.h),

@@ -5,16 +5,19 @@ import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
+import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/widgets/label_title_widget.dart';
 
 class StoreInfoDiscountsSection extends StatelessWidget {
   final int storeId;
+  final String storeName;
   final List<StoreProductItem> products;
 
   const StoreInfoDiscountsSection({
     super.key,
     required this.storeId,
+    required this.storeName,
     required this.products,
   });
 
@@ -26,7 +29,11 @@ class StoreInfoDiscountsSection extends StatelessWidget {
       category: product.categoryLabel,
       price: product.price,
       originalPrice: product.originalPrice,
+      badgeText: product.badgeText,
       discountPercent: product.discountPercent,
+      discountDescription: product.discountDescription,
+      discountStartDate: product.discountStartDate,
+      discountEndDate: product.discountEndDate,
       imageUrl: product.imageUrl,
       imagePlaceholderColorValue: product.imagePlaceholderColorValue,
       iconType: switch (product.imageIcon) {
@@ -50,11 +57,20 @@ class StoreInfoDiscountsSection extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: LabelWidget(
               title: 'store_info_special_offers'.tr(),
+              more: 'home_view_all'.tr(),
+              onTap: () => context.push(
+                AppRoutes.storeDiscountedProductsScreen,
+                extra: StoreDiscountedProductsRouteArgs(
+                  storeId: storeId,
+                  storeName: storeName,
+                  products: products,
+                ),
+              ),
             ),
           ),
           SizedBox(height: 12.h),
           SizedBox(
-            height: 225.h,
+            height: 260.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 16.w),

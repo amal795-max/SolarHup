@@ -41,7 +41,19 @@ void main() {
     expect(discounts, hasLength(1));
     expect(discounts.first.businessId, 42);
     expect(discounts.first.discountValue, 15);
+    expect(discounts.first.description, 'Panel discount');
+    expect(discounts.first.startDate, DateTime.parse('2026-07-01T00:00:00Z'));
+    expect(discounts.first.endDate, DateTime.parse('2026-12-31T23:59:59Z'));
     expect(discounts.first.products.first.id, 7);
+  });
+
+  test('flattenDiscountProducts keeps discount metadata', () {
+    final discounts = DiscountListResponseModel.fromJson(sampleJson).discounts;
+    final flattened = flattenDiscountProducts(discounts);
+
+    expect(flattened.first.description, 'Panel discount');
+    expect(flattened.first.startDate, isNotNull);
+    expect(flattened.first.endDate, isNotNull);
   });
 
   test('flattenDiscountProducts deduplicates by business and product', () {
@@ -106,7 +118,7 @@ void main() {
 
     final discounted = applyDiscountToProductDetail(
       product: product,
-      candidate: const DiscountProductCandidate(
+      candidate: DiscountProductCandidate(
         productId: '7',
         businessId: 42,
         name: 'SunPeak Ultra 450W',
@@ -115,12 +127,18 @@ void main() {
         discountType: 'percentage',
         discountValue: 15,
         discountLabel: '15% OFF',
+        description: 'Panel discount',
+        startDate: DateTime.utc(2026, 7, 1),
+        endDate: DateTime.utc(2026, 12, 31),
       ),
     );
 
     expect(discounted.currentPrice, 170);
     expect(discounted.originalPrice, 200);
     expect(discounted.discountPercent, 15);
+    expect(discounted.discountDescription, 'Panel discount');
+    expect(discounted.discountStartDate, isNotNull);
+    expect(discounted.discountEndDate, isNotNull);
     expect(discounted.hasDiscount, isTrue);
   });
 }

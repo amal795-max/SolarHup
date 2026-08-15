@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/enums/favorite_category_enum.dart';
-import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
+import 'package:untitled1/features/favorite/presentation/utils/favorite_navigation.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/favorite_heart_button.dart';
 import 'package:untitled1/widgets/header_section.dart';
 import 'package:untitled1/widgets/image_widget.dart';
+import 'package:untitled1/widgets/workshop_service_favorite_button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../widgets/error_widget.dart';
@@ -26,7 +28,8 @@ class FavoritesScreen extends StatefulWidget {
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
   String selectedCategory = FavoriteCategoryEnum.product.name;
-  final List<String> categories = FavoriteCategoryEnum.values.map((e) => e.name).toList();
+  final List<String> categories =
+      FavoriteCategoryEnum.favoritesTabs.map((e) => e.name).toList();
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             scrollDirection: Axis.horizontal,
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Row(
-              children: FavoriteCategoryEnum.values.map((category) {
+              children: FavoriteCategoryEnum.favoritesTabs.map((category) {
                 final isSelected = selectedCategory == category.name;
                 return Padding(
                   padding: EdgeInsets.only(right: 8.w),
@@ -94,30 +97,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ),
           ),
           Expanded(
-            child: BlocListener<FavoritesCubit, FavoritesState>(
-              listenWhen: (prev, curr) =>
-              curr is FavoriteActionSuccess || curr is FavoriteActionError,
-              listener: (context, state) {
-                if (state is FavoriteActionSuccess) {
-                  DataHelper.showSnackBar(
-                    message: state.message,
-                    context: context,
-                  );
-                } else if (state is FavoriteActionError) {
-                  DataHelper.showSnackBar(
-                    message: state.message,
-                    context: context,
-                    color: AppColors.red,
-                  );
-                }
-              },
+            child: BlocBuilder<FavoritesCubit, FavoritesState>(
+              buildWhen: (prev, curr) =>
+                  curr is FavoritesLoading ||
+                  curr is FavoritesSuccess ||
+                  curr is FavoritesError,
+              builder: (context, state) {
+                  final cubit = context.read<FavoritesCubit>();
 
-              child: BlocBuilder<FavoritesCubit, FavoritesState>(
-                buildWhen: (prev, curr) =>
-                curr is FavoritesLoading ||
-                    curr is FavoritesSuccess ||
-                    curr is FavoritesError,
-                builder: (context, state) {
                   if (state is FavoritesError) {
                     return errorWidget(
                       message: state.message,
@@ -132,20 +119,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   final items = state is FavoritesSuccess
                       ? state.items
                       : (state is FavoritesLoading
-                      ? List.generate(
-                    4,
-                        (index) =>
-                        FavoriteModel(
-                          id: 0,
-                          price: '0.00',
-                          itemType: '',
-                          itemId: 0,
-                          isAvailable: true,
-                        ),
-                  )
-                      : <FavoriteModel>[]);
+                          ? List.generate(
+                              4,
+                              (index) => FavoriteModel(
+                                id: 0,
+                                price: '0.00',
+                                itemType: '',
+                                itemId: 0,
+                                isAvailable: true,
+                              ),
+                            )
+                          : cubit.cachedFavorites);
 
-                  if (state is FavoritesSuccess && items.isEmpty) {
+                  if (items.isEmpty &&
+                      state is! FavoritesLoading &&
+                      state is! FavoritesInitial) {
                     return const EmptyWidget(
                       title: 'no_favorites_yet',
                       subtitle: 'start_adding_favorites',
@@ -166,7 +154,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 },
               ),
             ),
-          ),
         ],
       ),
     );
@@ -178,11 +165,57 @@ class _FavoriteItem extends StatelessWidget {
 
   const _FavoriteItem({required this.item});
 
+  String? get _priceLabel {
+    final price = item.price?.trim();
+    if (price == null || price.isEmpty || price == '0' || price == '0.00') {
+      return null;
+    }
+    return '$price USD';
+  }
+
+  String? _workshopSubtitle(BuildContext context) {
+    if (item.itemType != FavoriteCategoryEnum.service.name) return null;
+    final fromItem = item.workshopName?.trim();
+    if (fromItem != null && fromItem.isNotEmpty) return fromItem;
+    return context.read<FavoritesCubit>().workshopNameForService(item.itemId);
+  }
+
+  Widget _favoriteAction(BuildContext context) {
+    if (item.itemType == FavoriteCategoryEnum.service.name) {
+      final cubit = context.read<FavoritesCubit>();
+      final workshopId =
+          item.workshopId ?? cubit.workshopIdForService(item.itemId);
+      if (workshopId == null) {
+        return FavoriteHeartButton(
+          itemType: item.itemType,
+          itemId: item.itemId,
+          iconSize: 22.sp,
+          backgroundColor: Colors.transparent,
+        );
+      }
+      return WorkshopServiceFavoriteButton(
+        workshopId: workshopId,
+        serviceId: item.itemId,
+        workshopName:
+            item.workshopName ?? cubit.workshopNameForService(item.itemId),
+        iconSize: 22.sp,
+        backgroundColor: Colors.transparent,
+      );
+    }
+
+    return FavoriteHeartButton(
+      itemType: item.itemType,
+      itemId: item.itemId,
+      iconSize: 22.sp,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final workshopSubtitle = _workshopSubtitle(context);
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12.r),
@@ -194,64 +227,68 @@ class _FavoriteItem extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: SizedBox(
-              width: 70.w,
-              height: 70.w,
-              child: ImageWidget(image: item.image ?? ''),
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12.r),
+          onTap: () => openFavoriteItem(context, item),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.h),
+            child: Row(
               children: [
-                Text(
-                  item.name ?? 'Unknown',
-                  style: AppStyle.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  '${item.price} USD',
-                  style: AppStyle.bodySmall.copyWith(
-                    color: AppColors.primaryColor,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: SizedBox(
+                    width: 70.w,
+                    height: 70.w,
+                    child: ImageWidget(image: item.image ?? ''),
                   ),
                 ),
-                Text(
-                  item.isAvailable == true
-                      ? 'available'.tr()
-                      : 'unavailable'.tr(),
-                  style: AppStyle.bodySmall.copyWith(
-                    color: AppColors.primaryColor,
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name ?? 'Unknown',
+                        style: AppStyle.bodyMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (workshopSubtitle != null)
+                        Text(
+                          workshopSubtitle,
+                          style: AppStyle.bodySmall.copyWith(
+                            color: AppColors.grey,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      if (_priceLabel != null)
+                        Text(
+                          _priceLabel!,
+                          style: AppStyle.bodySmall.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      Text(
+                        item.isAvailable == true
+                            ? 'available'.tr()
+                            : 'unavailable'.tr(),
+                        style: AppStyle.bodySmall.copyWith(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-
+                _favoriteAction(context),
               ],
             ),
           ),
-          IconButton(
-              icon: const Icon(Icons.favorite, color: Colors.red),
-              onPressed: () =>
-                  DataHelper().showConfirmationDialog(
-                    context,
-                    'delete_product',
-                    'delete_product_confirm',
-                        () {
-                      context.read<FavoritesCubit>().toggleFavorite(
-                        item.itemType,
-                        item.itemId,
-                      );
-                      Navigator.pop(context);
-                    },
-                  )
-          ),
-        ],
+        ),
       ),
     );
   }

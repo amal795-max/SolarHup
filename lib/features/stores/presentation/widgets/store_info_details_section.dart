@@ -1,17 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/enums/favorite_category_enum.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
-import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/widgets/favorite_heart_button.dart';
 
 /// Store details card — sits inside the white sheet that slides over the hero.
 /// Layout (top to bottom):
-///   1. Row: store icon badge (left) + Follow Store pill button (right)
+///   1. Row: store icon badge (left) + favorite heart (right)
 ///   2. Row: store name (left) + star rating badge (right)
 ///   3. Description text
 ///   4. Row: location + Certified Vendor badge
@@ -28,9 +28,14 @@ class StoreInfoDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Align(
+          Align(
             alignment: Alignment.topRight,
-            child: _FollowStoreButton(),
+            child: FavoriteHeartButton(
+              itemType: FavoriteCategoryEnum.store.name,
+              itemId: data.id,
+              iconSize: 22.sp,
+              elevation: 2,
+            ),
           ),
 
           SizedBox(height: 14.h),
@@ -105,59 +110,6 @@ class StoreInfoDetailsSection extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Follow Store pill button — visual only, wired to API later
-// ---------------------------------------------------------------------------
-
-class _FollowStoreButton extends StatelessWidget {
-  const _FollowStoreButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<StoreInfoBloc, StoreInfoState>(
-      builder: (context, state) {
-        final isFollowing = state.isFollowing;
-
-        return Material(
-          color: isFollowing ? AppColors.lightGrey : AppColors.primaryColor,
-          borderRadius: BorderRadius.circular(20.r),
-          elevation: isFollowing ? 0 : 2,
-          shadowColor: AppColors.primaryColor.withValues(alpha: 0.28),
-          child: InkWell(
-            onTap: () => context.read<StoreInfoBloc>().add(
-              const ToggleFollowStoreEvent(),
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 9.h),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isFollowing ? Icons.check_rounded : Icons.add_rounded,
-                    color: isFollowing ? AppColors.deepGrey : AppColors.white,
-                    size: 15.sp,
-                  ),
-                  SizedBox(width: 5.w),
-                  Text(
-                    isFollowing
-                        ? 'store_info_following'.tr()
-                        : 'store_info_follow_store'.tr(),
-                    style: AppStyle.labelSmall.copyWith(
-                      color: isFollowing ? AppColors.deepGrey : AppColors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

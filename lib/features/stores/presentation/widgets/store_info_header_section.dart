@@ -4,7 +4,7 @@ import 'package:untitled1/features/stores/presentation/pages/store_info_screen.d
 import 'package:untitled1/widgets/image_widget.dart';
 
 /// Hero image section — cover photo from the API, or gradient fallback.
-/// All interactive elements (Follow button, store badge) live in the card below.
+/// All interactive elements (favorite heart, store badge) live in the card below.
 class StoreInfoHeaderSection extends StatelessWidget {
   final StoreInfoData data;
 

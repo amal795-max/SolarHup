@@ -6,6 +6,8 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
+import 'package:untitled1/features/catalog/utils/discount_period_formatter.dart';
+import 'package:untitled1/widgets/discount_meta_lines.dart';
 
 class ProductDetailInfoSection extends StatelessWidget {
   final ProductDetailModel product;
@@ -112,6 +114,20 @@ class ProductDetailInfoSection extends StatelessWidget {
             color: AppStyle.bodySmall.color,
           ),
         ),
+        if (product.hasDiscount &&
+            hasDiscountMeta(
+              description: product.discountDescription,
+              startDate: product.discountStartDate,
+              endDate: product.discountEndDate,
+            )) ...[
+          SizedBox(height: 8.h),
+          DiscountMetaLines(
+            description: product.discountDescription,
+            startDate: product.discountStartDate,
+            endDate: product.discountEndDate,
+            muted: true,
+          ),
+        ],
         SizedBox(height: 12.h),
         if (product.hasDiscount) ...[
           Row(
