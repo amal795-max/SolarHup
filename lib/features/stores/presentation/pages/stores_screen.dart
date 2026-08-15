@@ -14,6 +14,7 @@ import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../widgets/header_section.dart';
@@ -151,14 +152,16 @@ class _StoresViewState extends State<_StoresView> {
         stores: _skeletonStores,
       );
     }
-
     if (state is StoresLoaded) {
       return _buildScrollable(stores: state.stores.map(_mapStore).toList());
     }
     if (state is StoresError) {
       return _buildErrorBody(context);
     }
-    return const SizedBox.shrink();
+
+    if(state is StoresLoaded && state.stores.isEmpty){
+      return _buildNoResultsBody();
+    } return const SizedBox.shrink();
   }
 
   // ── Scrollable content ────────────────────────────────────────────────────
@@ -238,20 +241,12 @@ class _StoresViewState extends State<_StoresView> {
   }
 
   Widget _buildErrorBody(BuildContext context) {
-    return EmptyWidget(
-      icon: Icons.wifi_off_rounded,
-      iconSize: 56,
-      iconColor: AppColors.grey,
-      title: 'stores_error_title'.tr(),
-      subtitle: 'stores_error_subtitle'.tr(),
-      action: CustomButton(
-        text: 'stores_retry'.tr(),
-        icon: Icons.refresh_rounded,
-        iconLeft: true,
+    return errorWidget(
+      message: 'stores_error_subtitle'.tr(),
+      hasButton: true,
         onPressed: () =>
             context.read<StoresCubit>().loadStores(showLoading: true),
-        width: 160.w,
-      ),
+
     );
   }
 }

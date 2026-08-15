@@ -42,7 +42,7 @@ class RecommendResponseModel extends Equatable {
 }
 
 class RecommendedProduct extends Equatable {
-  final int id;
+  final int? id;
   final String name;
   final String description;
   final String price;
@@ -58,7 +58,7 @@ class RecommendedProduct extends Equatable {
 
   factory RecommendedProduct.fromJson(Map<String, dynamic> json) {
     return RecommendedProduct(
-      id: json['id'],
+      id: json['id']??0,
       name: json['name'],
       description: json['desc'] ?? json['name'],
       price: json['price'].toString(),

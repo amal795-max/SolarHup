@@ -36,7 +36,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   void _copySecurityCode() {
     Clipboard.setData(ClipboardData(text: securityCode));
-    DataHelper.showSnackBar(message: 'code_copied'.tr(), context: context);
   }
 
   @override

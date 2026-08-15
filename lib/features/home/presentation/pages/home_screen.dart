@@ -29,9 +29,7 @@ import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_backg
 import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
-
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
-
 import '../../../used_system/data/model/used_product_model.dart';
 import '../widgets/home_search_bar.dart';
 
@@ -420,7 +418,7 @@ class _HomeViewState extends State<_HomeView> {
 
   Widget _buildErrorBody(BuildContext context) {
     return EmptyWidget(
-      icon: Icons.wifi_off_rounded,
+      icon: Icons.error_outline,
       iconSize: 56,
       iconColor: AppColors.grey,
       title: 'stores_error_title'.tr(),
@@ -431,7 +429,7 @@ class _HomeViewState extends State<_HomeView> {
         iconLeft: true,
         onPressed: () =>
             context.read<HomeBloc>().add(const LoadHomeDataEvent()),
-        width: 160.w,
+        width: 0.5.sw,
       ),
     );
   }
