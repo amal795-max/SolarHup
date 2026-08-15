@@ -98,27 +98,28 @@ class _StoresSearchBarState extends State<StoresSearchBar> {
             ),
           ),
           SizedBox(width: 8.w),
-          Material(
-            color: containerColor,
-            borderRadius: BorderRadius.circular(12.r),
-            child: InkWell(
-              onTap: widget.onFilterTap,
+          if (widget.onFilterTap != null)
+            Material(
+              color: containerColor,
               borderRadius: BorderRadius.circular(12.r),
-              child: Container(
-                width: 48.h,
-                height: 48.h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
-                  border: Border.all(color: borderColor),
-                ),
-                child: Icon(
-                  Icons.tune_rounded,
-                  color: AppColors.primaryColor,
-                  size: 22.sp,
+              child: InkWell(
+                onTap: widget.onFilterTap,
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  width: 48.h,
+                  height: 48.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(color: borderColor),
+                  ),
+                  child: Icon(
+                    Icons.tune_rounded,
+                    color: AppColors.primaryColor,
+                    size: 22.sp,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

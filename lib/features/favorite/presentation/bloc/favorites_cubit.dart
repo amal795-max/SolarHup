@@ -15,6 +15,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   final Map<String, Set<int>> _favoriteIdsByType = {};
   final Set<String> _prefetchInFlight = {};
   final Set<String> _pendingToggles = {};
+  int _cacheRevision = 0;
 
   FavoritesCubit(this.repository) : super(FavoritesInitial()) {
     unawaited(_prefetchInitialFavorites());
@@ -26,7 +27,12 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       prefetchFavorites(FavoriteCategoryEnum.service.name),
       prefetchFavorites(FavoriteCategoryEnum.store.name),
     ]);
-    emit(FavoritesCacheReady());
+    emit(FavoritesCacheReady(_cacheRevision));
+  }
+
+  void _emitFavoriteCacheChanged() {
+    _cacheRevision++;
+    emit(FavoritesCacheReady(_cacheRevision));
   }
 
   Future<void> prefetchFavorites(String itemType) async {
@@ -121,7 +127,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
         }
 
         _favoriteIdsByType.putIfAbsent(itemType, () => {}).add(itemId);
-        emit(FavoritesCacheReady());
+        _emitFavoriteCacheChanged();
 
         final result = await repository.addFavorite(
           itemType,
@@ -135,7 +141,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
               _serviceWorkshopIds.remove(itemId);
               _serviceWorkshopNames.remove(itemId);
             }
-            emit(FavoritesCacheReady());
+            _emitFavoriteCacheChanged();
             _emitActionFeedback(mapFailureToMessage(failure), isError: true);
           },
           (_) async {
@@ -211,7 +217,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   }
 
   void _emitListUpdate() {
-    emit(FavoritesCacheReady());
+    _emitFavoriteCacheChanged();
     _restoreListState();
   }
 

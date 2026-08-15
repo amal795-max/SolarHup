@@ -69,4 +69,11 @@ class FavoriteActionError extends FavoritesState {
   List<Object?> get props => [message];
 }
 
-class FavoritesCacheReady extends FavoritesState {}
+class FavoritesCacheReady extends FavoritesState {
+  final int revision;
+
+  const FavoritesCacheReady(this.revision);
+
+  @override
+  List<Object?> get props => [revision];
+}

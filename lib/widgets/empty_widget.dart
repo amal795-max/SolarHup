@@ -46,13 +46,14 @@ class EmptyWidget extends StatelessWidget {
                 color: AppColors.grey,
               ),
             ),
-            Text(
-              subtitle?.tr() ?? 'add_your_first_item'.tr(),
-              style: AppStyle.bodySmall.copyWith(
-                color: AppColors.grey,
+            if (subtitle == null || subtitle!.isNotEmpty)
+              Text(
+                subtitle?.tr() ?? 'add_your_first_item'.tr(),
+                style: AppStyle.bodySmall.copyWith(
+                  color: AppColors.grey,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
             const SizedBox(height: 4,),
             if (action != null) ...[
               action!,

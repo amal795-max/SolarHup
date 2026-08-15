@@ -13,7 +13,7 @@ import 'package:untitled1/features/stores/presentation/widgets/store_info_produc
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/label_title_widget.dart';
 
-/// Shows the "Featured Products" header (with "View All" action) followed by
+/// Shows the "Available Products" header (with "View All" action) followed by
 /// a vertical list of [StoreInfoProductCard] widgets.
 class StoreInfoFeaturedProductsSection extends StatelessWidget {
   final int storeId;
@@ -56,8 +56,8 @@ class StoreInfoFeaturedProductsSection extends StatelessWidget {
               icon: Icons.inventory_2_outlined,
               iconSize: 48,
               iconColor: AppColors.grey,
-              title: 'stores_no_results'.tr(),
-              subtitle: 'stores_no_results_hint'.tr(),
+              title: 'compare_no_products_found'.tr(),
+              subtitle: '',
               padding: EdgeInsets.symmetric(vertical: 24.h),
             )
           else
