@@ -195,7 +195,7 @@ class _ListingCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          StatusBadge(status: product.status),
+                          StatusUsedBadge(status: product.status),
                         ],
                       ),
                       SizedBox(height: 4.h),

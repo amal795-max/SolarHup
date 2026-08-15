@@ -6,13 +6,13 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 class QuickActionsSection extends StatelessWidget {
-  final VoidCallback? onCalculatorTap;
-  final VoidCallback? onCompareTap;
+  final VoidCallback? onExpertTap;
+  final VoidCallback? onUsedSystemsTap;
 
   const QuickActionsSection({
     super.key,
-    this.onCalculatorTap,
-    this.onCompareTap,
+    this.onExpertTap,
+    this.onUsedSystemsTap,
   });
 
   @override
@@ -23,12 +23,12 @@ class QuickActionsSection extends StatelessWidget {
         children: [
           Expanded(
             child: _QuickActionCard(
-              iconBgColor: const Color(0xFFFFE08A),
+              iconBgColor: AppColors.lightYellow,
               iconColor: AppColors.brown,
               icon: Icons.support_agent,
               title: 'home_expert_call'.tr(),
               subtitle: 'home_expert_call_sub'.tr(),
-              onTap: onCalculatorTap,
+              onTap: onExpertTap,
             ),
           ),
           SizedBox(width: 12.w),
@@ -36,10 +36,10 @@ class QuickActionsSection extends StatelessWidget {
             child: _QuickActionCard(
               iconBgColor: AppColors.blue.withValues(alpha: 0.3),
               iconColor: AppColors.primaryColor,
-              icon: Icons.compare_arrows_rounded,
-              title: 'home_compare'.tr(),
-              subtitle: 'home_compare_desc'.tr(),
-              onTap: onCompareTap,
+              icon: Icons.recycling_rounded,
+              title: 'home_used_systems'.tr(),
+              subtitle: 'home_used_systems_desc'.tr(),
+              onTap: onUsedSystemsTap,
             ),
           ),
         ],
@@ -75,7 +75,9 @@ class _QuickActionCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: context.brightness ? AppColors.darkContainer : const Color(0xFFE3E2E4),
+            color: context.brightness
+                ? AppColors.darkContainer
+                : const Color(0xFFE3E2E4),
             borderRadius: BorderRadius.circular(18.r),
             boxShadow: context.brightness
                 ? null
@@ -107,7 +109,9 @@ class _QuickActionCard extends StatelessWidget {
                 Text(
                   title,
                   style: AppStyle.bodySmall.copyWith(
-                    color: context.brightness ? AppColors.white : AppColors.black,
+                    color: context.brightness
+                        ? AppColors.white
+                        : AppColors.black,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

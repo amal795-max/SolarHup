@@ -100,7 +100,7 @@ class UsedProductDetailsScreen extends StatelessWidget {
               ),
             Positioned(
               top: 48.h, right: 16,
-              child: StatusBadge(status: product.status),
+              child: StatusUsedBadge(status: product.status),
             ),
           ],
         ),

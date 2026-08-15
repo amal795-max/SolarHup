@@ -13,20 +13,22 @@ final class HomeInitial extends HomeState {}
 final class HomeLoading extends HomeState {}
 
 final class HomeLoaded extends HomeState {
-  final List<ProductModel> usedProducts;
+  final List<UsedProductModel> usedProducts;
   final List<ProductModel> newOffers;
   final List<BlogModel> blogPosts;
   final List<TipModel> tips;
+  final List<HomeLayoutModel> homeLayout;
+
 
   const HomeLoaded({
     required this.usedProducts,
     required this.newOffers,
     required this.blogPosts,
-    this.tips = const [],
+    this.tips = const [], required this.homeLayout,
   });
 
   @override
-  List<Object?> get props => [usedProducts, newOffers, blogPosts, tips];
+  List<Object?> get props => [usedProducts, newOffers, blogPosts, tips, homeLayout];
 }
 
 final class HomeError extends HomeState {

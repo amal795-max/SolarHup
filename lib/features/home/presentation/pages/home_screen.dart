@@ -13,6 +13,7 @@ import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/home/data/models/blog_model.dart';
+import 'package:untitled1/features/home/data/models/home_layout_model.dart';
 import 'package:untitled1/features/home/data/models/product_model.dart';
 import 'package:untitled1/features/home/data/models/tip_model.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
@@ -21,7 +22,8 @@ import 'package:untitled1/features/home/presentation/widgets/blog_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/did_you_know_banner.dart';
 import 'package:untitled1/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
-import 'package:untitled1/features/home/presentation/widgets/products_section.dart';
+import 'package:untitled1/features/home/presentation/widgets/promotion_product_section.dart';
+import 'package:untitled1/features/home/presentation/widgets/used_products_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_background.dart';
 import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
@@ -30,6 +32,7 @@ import 'package:untitled1/widgets/primary_button.dart';
 
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 
+import '../../../used_system/data/model/used_product_model.dart';
 import '../widgets/home_search_bar.dart';
 
 /// Entry point — provides the HomeBloc and immediately fires LoadHomeDataEvent.
@@ -89,6 +92,15 @@ class _HomeViewState extends State<_HomeView> {
     }).toList();
   }
 
+  List<UsedProductModel> _filterUsedProducts(List<UsedProductModel> products) {
+    if (_searchQuery.isEmpty) return products;
+    return products.where((p) {
+      return p.name.toLowerCase().contains(_searchQuery) ||
+          p.category.toLowerCase().contains(_searchQuery) ||
+          p.region.toLowerCase().contains(_searchQuery);
+    }).toList();
+  }
+
   List<BlogCardData> _filterBlogs(List<BlogCardData> blogs) {
     if (_searchQuery.isEmpty) return blogs;
     return blogs.where((b) {
@@ -117,6 +129,25 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
+  static final List<UsedProductModel> _skeletonUsedProducts = List.generate(
+    3,
+    (i) => UsedProductModel(
+      id: i,
+      sellerId: 0,
+      sellerPhone: '',
+      name: 'Loading Used Product',
+      description: '',
+      category: 'Category',
+      condition: 'Good',
+      price: '0.0',
+      region: 'Region',
+      status: 'active',
+      images: [],
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+  );
+
   static final List<BlogCardData> _skeletonBlogs = List.generate(
     2,
     (i) => BlogCardData(
@@ -126,6 +157,14 @@ class _HomeViewState extends State<_HomeView> {
       imagePlaceholderColorValue: 0xFF4A7B9D,
     ),
   );
+
+  static const List<HomeLayoutModel> _skeletonLayout = [
+    HomeLayoutModel(key: 'promotions', order: 1, isActive: true),
+    HomeLayoutModel(key: 'tips', order: 2, isActive: true),
+    HomeLayoutModel(key: 'best_sellers', order: 3, isActive: true),
+    HomeLayoutModel(key: 'blog_highlights', order: 4, isActive: true),
+    HomeLayoutModel(key: 'used_systems', order: 5, isActive: true),
+  ];
 
   // ── Model → UI data_source mappers ───────────────────────────────────────────────
   // ── Model → UI data mappers ───────────────────────────────────────────────
@@ -163,6 +202,16 @@ class _HomeViewState extends State<_HomeView> {
     showPrice: false,
   );
 
+  ProductCardData _mapUsedProduct(UsedProductModel m) => ProductCardData(
+    id: m.id.toString(),
+    name: m.name,
+    category: m.category,
+    price: double.tryParse(m.price) ?? 0.0,
+    metaText: m.region,
+    imageUrl: m.images.isNotEmpty ? m.images.first : null,
+    imagePlaceholderColorValue: 0xFF0A2A43,
+  );
+
   BlogCardData _mapBlog(BlogModel m) => BlogCardData(
     id: m.id,
     title: m.title,
@@ -189,6 +238,13 @@ class _HomeViewState extends State<_HomeView> {
         businessId: businessId,
         productId: productId,
       ),
+    );
+  }
+
+  void _navigateToUsedProductDetail(UsedProductModel product) {
+    context.push(
+      AppRoutes.usedProductDetailScreen,
+      extra: product,
     );
   }
 
@@ -245,16 +301,18 @@ class _HomeViewState extends State<_HomeView> {
     if (state is HomeLoading || state is HomeInitial) {
       return _buildScrollable(
         isLoading: true,
+        layout: _skeletonLayout,
         tips: const [],
-        usedProducts: _skeletonProducts,
+        usedProducts: _skeletonUsedProducts,
         newOffers: _skeletonNewOffers,
         blogPosts: _skeletonBlogs,
       );
     }
     if (state is HomeLoaded) {
       return _buildScrollable(
+        layout: state.homeLayout,
         tips: state.tips,
-        usedProducts: state.usedProducts.map(_mapProduct).toList(),
+        usedProducts: state.usedProducts,
         newOffers: state.newOffers.map(_mapNewOffer).toList(),
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
       );
@@ -267,111 +325,84 @@ class _HomeViewState extends State<_HomeView> {
 
   Widget _buildScrollable({
     bool isLoading = false,
+    required List<HomeLayoutModel> layout,
     required List<TipModel> tips,
-    required List<ProductCardData> usedProducts,
+    required List<UsedProductModel> usedProducts,
     required List<ProductCardData> newOffers,
     required List<BlogCardData> blogPosts,
   }) {
     final bool isSearching = _searchQuery.isNotEmpty && !isLoading;
 
-    final filteredUsed = isSearching
-        ? _filterProducts(usedProducts)
-        : usedProducts;
+    final filteredUsed = isSearching ? _filterUsedProducts(usedProducts) : usedProducts;
     final filteredNew = isSearching ? _filterProducts(newOffers) : newOffers;
     final filteredBlogs = isSearching ? _filterBlogs(blogPosts) : blogPosts;
 
-    final bool hasNoResults =
-        isSearching &&
-        filteredUsed.isEmpty &&
-        filteredNew.isEmpty &&
-        filteredBlogs.isEmpty;
+    final List<ProductCardData> usedProductsMapped = filteredUsed.map(_mapUsedProduct).toList();
+
+    final Map<String, Widget> sectionWidgets = {
+      'tips': DidYouKnowBanner(tips: tips),
+      'promotions': PromotionProductsSection(
+        titleKey: 'home_new_offer',
+        products: filteredNew,
+        onViewAll: isLoading ? null : _navigateToDiscountedProducts,
+        onProductTap: isLoading ? null : (index) => _navigateToProductDetail(filteredNew[index]),
+      ), // Replace with PromotionsSection() when available
+      'used_systems': UsedProductsSection(
+        titleKey: 'home_used_systems',
+        products: usedProductsMapped,
+        onViewAll: isLoading ? null : _navigateToUsedProducts,
+        onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
+      ),
+      'best_sellers': const SizedBox.shrink(),
+      'blog_highlights': BlogSection(
+        blogs: filteredBlogs,
+        onBlogTap: isLoading
+            ? null
+            : (articleId) => context.push(AppRoutes.blogArticleDetail(articleId)),
+      ),
+    };
 
     final content = SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric( horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: HomeSearchBar(
               controller: _searchController,
               enabled: !isLoading,
-              onChanged: (value) =>
-                  setState(() => _searchQuery = value.trim().toLowerCase()),
-              onClear: () => setState(() => _searchQuery = ''),
             ),
           ),
-          SizedBox(height: 16.h),
-          DidYouKnowBanner(tips: tips),
+
           if (!isLoading && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
-
-            Padding(
-              padding: EdgeInsets.only(top: 16.h),
-              child: const VerificationBanner(),
+            const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: VerificationBanner(),
             ),
-          SizedBox(height: 16.h),
-          // Collapse banners + quick actions while actively searching
+
           if (!isSearching) ...[
-
-            // const UsedSystemBanner(),
-            // SizedBox(height: 16.h),
-            QuickActionsSection(
-              onCalculatorTap: isLoading ? null : () {
-                context.push(AppRoutes.bookConsultationScreen);
-              },
-              onCompareTap: isLoading
-                  ? null
-                  : () => context.push(AppRoutes.packageComparisonScreen),
-            ),
+             QuickActionsSection(
+                 onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen)),
             SizedBox(height: 16.h),
-
-
-          if (hasNoResults)
-            _buildNoResultsBody()
-          else ...[
-            ProductsSection(
-              titleKey: 'home_used_systems',
-              products: filteredUsed,
-              onViewAll: isLoading ? null : _navigateToUsedProducts,
-              onProductTap: isLoading ? null : (_) => _navigateToUsedProducts(),
-            ),
-
-            SizedBox(height: 16.h), ],
-            ProductsSection(
-              titleKey: 'home_new_offer',
-              products: filteredNew,
-              onViewAll: isLoading ? null : _navigateToDiscountedProducts,
-              onProductTap: isLoading
-                  ? null
-                  : (index) => _navigateToProductDetail(filteredNew[index]),
-            ),
-            SizedBox(height: 24.h),
-            BlogSection(
-              blogs: filteredBlogs,
-              onBlogTap: isLoading
-                  ? null
-                  : (articleId) => context.push(
-                        AppRoutes.blogArticleDetail(articleId),
-                      ),
-            ),
           ],
+
+          ...layout
+              .where((section) => section.isActive)
+              .map((section) {
+            final widget = sectionWidgets[section.key];
+            if (widget == null) return const SizedBox.shrink();
+
+            return Padding(
+              padding: EdgeInsets.only(bottom: 16.h),
+              child: widget,
+            );
+          }).toList(),
         ],
       ),
     );
 
-    if (isLoading) {
-
-      return Skeletonizer(
-        enabled: true,
-        effect: const ShimmerEffect(
-          baseColor: Color(0xFFE0E0E0),
-          highlightColor: Color(0xFFF5F5F5),
-        ),
-        child: content,
-      );
-    }
-    return content;
+    return isLoading ? Skeletonizer(enabled: true, child: content) : content;
   }
 
   Widget _buildNoResultsBody() {
