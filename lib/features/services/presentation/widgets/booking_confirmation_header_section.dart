@@ -57,14 +57,14 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
         Text(
           (titleKey ?? 'booking_confirmed_title').tr(),
           textAlign: TextAlign.center,
-          style:AppStyle.labelSmall.copyWith(
+          style:AppStyle.h4.copyWith(
             fontWeight: FontWeight.w800,
             color: titleColor,
           ),
         ),
         SizedBox(height: 8.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
             (subtitleKey ?? 'booking_confirmed_subtitle').tr(),
             textAlign: TextAlign.center,

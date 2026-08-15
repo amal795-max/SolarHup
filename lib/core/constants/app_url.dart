@@ -68,6 +68,9 @@ class EndPoints {
   static const String privacyPolicy = '${baseUrl}privacy-policy';
   static const String randomTips = '${baseUrl}random';
   static const String reviews = '${baseUrl}reviews';
+
+  static const String expertConsultations = '${baseUrl}questions';
+  static const String myExpertConsultations = '${baseUrl}questions/me';
 }
 
 class ApiKeys {

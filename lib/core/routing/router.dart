@@ -10,14 +10,12 @@ import 'package:untitled1/features/authentication/presentation/pages/verificatio
 import 'package:untitled1/features/chatbot/presentation/pages/chatbot_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/home_screen.dart';
 import 'package:untitled1/features/catalog/presentation/pages/discounted_products_screen.dart';
-import 'package:untitled1/features/settings/presentation/pages/my_discounts_screen.dart';
 import 'package:untitled1/features/home/presentation/pages/navigation_bar.dart';
 import 'package:untitled1/features/settings/presentation/pages/settings_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/all_questions_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_article_detail_screen.dart';
 import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
-import 'package:untitled1/features/consultation/presentation/pages/book_consultation_screen.dart';
 import 'package:untitled1/features/product_compare/presentation/pages/product_compare_screen.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
@@ -28,16 +26,12 @@ import 'package:untitled1/features/services/presentation/pages/service_address_s
 import 'package:untitled1/features/services/presentation/pages/schedule_service_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_info_screen.dart';
-import 'package:untitled1/features/services/presentation/pages/workshop_discounted_services_route_args.dart';
-import 'package:untitled1/features/services/presentation/pages/workshop_discounted_services_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_screen.dart';
-import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_route_args.dart';
-import 'package:untitled1/features/stores/presentation/pages/store_discounted_products_screen.dart';
 import 'package:untitled1/features/stores/presentation/pages/stores_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
@@ -59,6 +53,8 @@ import 'package:untitled1/features/settings/presentation/pages/privacy_policy_sc
 import '../../features/complaints/presentation/pages/my_complaints_screen.dart';
 import '../../features/complaints/presentation/pages/complaint_details_screen.dart';
 import '../../features/complaints/presentation/pages/add_complaint_screen.dart';
+import '../../features/consultation/presentation/pages/ask_expert_screen.dart';
+import '../../features/consultation/presentation/pages/my_questions_screen.dart';
 
 import 'package:untitled1/core/routing/router_keys.dart';
 
@@ -165,20 +161,7 @@ final GoRouter router = GoRouter(
         );
       },
     ),
-    GoRoute(
-      path: AppRoutes.storeDiscountedProductsScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        final args = state.extra as StoreDiscountedProductsRouteArgs?;
-        return StoreDiscountedProductsScreen(
-          args: args ??
-              const StoreDiscountedProductsRouteArgs(
-                storeId: 0,
-                storeName: '',
-                products: [],
-              ),
-        );
-      },
-    ),
+
     GoRoute(
       path: AppRoutes.productDetailScreen,
       builder: (BuildContext context, GoRouterState state) {
@@ -216,30 +199,19 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRoutes.workshopDiscountedServicesScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        final args = state.extra as WorkshopDiscountedServicesRouteArgs?;
-        return WorkshopDiscountedServicesScreen(
-          args: args ??
-              const WorkshopDiscountedServicesRouteArgs(
-                workshopId: '0',
-                workshopName: '',
-                services: [],
-              ),
-        );
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.bookConsultationScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const BookConsultationScreen();
-      },
-    ),
-    GoRoute(
       path: AppRoutes.blogScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const BlogScreen();
       },
+      routes: [
+        GoRoute(
+          path: ':articleId',
+          builder: (BuildContext context, GoRouterState state) {
+            final articleId = state.pathParameters['articleId'] ?? 'blog-2';
+            return BlogArticleDetailScreen(articleId: articleId);
+          },
+        ),
+      ],
     ),
     GoRoute(
       path: '${AppRoutes.blogArticleDetailBase}/:articleId',
@@ -346,14 +318,6 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRoutes.discountsScreen,
-      builder: (BuildContext context, GoRouterState state) {
-        return const MyDiscountsScreen(
-
-        );
-      },
-    ),
-    GoRoute(
       path: AppRoutes.discountedProductsScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const DiscountedProductsScreen();
@@ -420,6 +384,18 @@ final GoRouter router = GoRouter(
           itemId: extra['itemId'] as String,
           itemName: extra['itemName'] as String,
         );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.askExpertScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const AskExpertScreen();
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.myQuestionsScreen,
+      builder: (BuildContext context, GoRouterState state) {
+        return const MyQuestionsScreen();
       },
     ),
   ],

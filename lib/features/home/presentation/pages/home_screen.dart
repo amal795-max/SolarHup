@@ -383,7 +383,9 @@ class _HomeViewState extends State<_HomeView> {
 
           if (!isSearching) ...[
              QuickActionsSection(
-                 onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen)),
+                 onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen),
+                 onExpertTap: () => context.push(AppRoutes.askExpertScreen),
+             ),
             SizedBox(height: 16.h),
           ],
 

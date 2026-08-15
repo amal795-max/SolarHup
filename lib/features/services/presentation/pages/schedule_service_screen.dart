@@ -22,6 +22,8 @@ import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
+import '../../../../core/helper/data_helper.dart';
+
 class ScheduleServiceScreen extends StatelessWidget {
   final String serviceId;
   final ServiceBookingDraft? draft;
@@ -106,9 +108,8 @@ class _ScheduleServiceBody extends StatelessWidget {
 
   void _continueToAddress(BuildContext context) {
     if (state.selectedTimeSlot == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('schedule_select_time'.tr())),
-      );
+      DataHelper.showSnackBar(message: 'schedule_select_time',context: context);
+
       return;
     }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/services/data/data_source/service_address_remote_data_source.dart';
@@ -71,16 +72,13 @@ class _ServiceAddressView extends StatelessWidget {
     );
 
     if (!updatedDraft.hasSchedule) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('schedule_select_time'.tr())),
-      );
+     DataHelper.showSnackBar(message: 'schedule_select_time',context: context);
       return;
     }
 
     if (!updatedDraft.hasRequiredAddress) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('service_booking_required_fields'.tr())),
-      );
+      DataHelper.showSnackBar(message: 'service_booking_required_fields',context: context);
+
       return;
     }
 
@@ -109,9 +107,8 @@ class _ServiceAddressView extends StatelessWidget {
           listenWhen: (prev, curr) => curr is ServiceRequestsError,
           listener: (context, state) {
             if (state is ServiceRequestsError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              DataHelper.showSnackBar(message:state.message,context: context);
+
             }
           },
           builder: (context, requestState) {
