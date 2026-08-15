@@ -38,11 +38,10 @@ class ServiceRequestModel {
     this.serviceNote,
   });
 
-  bool get canCancel =>
-      status != 'completed' &&
-      status != 'cancelled' &&
-      status != 'rejected' &&
-      status != 'delivered';
+  bool get isPending =>
+      status == 'pending_approval' || status == 'pending';
+
+  bool get canCancel => isPending;
 
   String get formattedAddress {
     final parts = <String>[

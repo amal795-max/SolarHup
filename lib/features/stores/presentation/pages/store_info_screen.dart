@@ -221,16 +221,22 @@ class _StoreInfoView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             StoreDetailLoading() => AppSkeletonizer(
-                child: _StoreInfoContent(data: sampleStoreInfo),
-              ),
+              child: _StoreInfoContent(data: sampleStoreInfo),
+            ),
             StoreDetailError(:final message) => errorWidget(
               message: message,
               hasButton: true,
-                onPressed: ()=>
-                context.read<StoreDetailCubit>().loadStore(storeId),
+              onPressed: () =>
+                  context.read<StoreDetailCubit>().loadStore(storeId),
             ),
-            StoreDetailLoaded(:final store, :final categories, :final products, :final discountedProducts, :final discounts) =>
-                _StoreInfoContent(
+            StoreDetailLoaded(
+              :final store,
+              :final categories,
+              :final products,
+              :final discountedProducts,
+              :final discounts,
+            ) =>
+              _StoreInfoContent(
                 data: storeDetailToInfoData(
                   store,
                   categories: categories,
@@ -256,7 +262,7 @@ class _StoreInfoContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final cardColor = Theme.of(context).scaffoldBackgroundColor;
     final isDark = context.brightness;
-     MediaQuery.of(context).padding.top;
+    MediaQuery.of(context).padding.top;
 
     return Scaffold(
       backgroundColor: cardColor,
@@ -302,8 +308,8 @@ class _StoreInfoContent extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      left: 35,
-                      bottom: 90.h,
+                      left: 35.w,
+                      bottom: 25.h,
                       child: _FloatingStoreLogoBadge(data: data),
                     ),
                   ],
@@ -339,7 +345,6 @@ class _StoreInfoContent extends StatelessWidget {
               ],
             ),
           ),
-
         ],
       ),
     );
@@ -397,4 +402,3 @@ bool _isValidImageUrl(String? url) {
 // ---------------------------------------------------------------------------
 // Back button — always white so it's legible over the hero image when expanded
 // ---------------------------------------------------------------------------
-

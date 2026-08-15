@@ -39,12 +39,15 @@ class StoreKitProductsSection extends StatelessWidget {
         );
 
         if (filteredProducts.isEmpty) {
+          final isStoreEmpty = products.isEmpty;
           return EmptyWidget(
-            icon: Icons.search_off_rounded,
+            icon: isStoreEmpty
+                ? Icons.inventory_2_outlined
+                : Icons.search_off_rounded,
             iconSize: 48,
             iconColor: AppColors.grey,
-            title: 'stores_no_results'.tr(),
-            subtitle: 'stores_no_results_hint'.tr(),
+            title: 'compare_no_products_found'.tr(),
+            subtitle: isStoreEmpty ? '' : 'stores_no_results_hint'.tr(),
             padding: EdgeInsets.symmetric(vertical: 24.h),
           );
         }

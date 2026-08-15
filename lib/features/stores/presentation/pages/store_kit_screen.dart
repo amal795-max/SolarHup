@@ -15,7 +15,6 @@ import 'package:untitled1/features/stores/presentation/pages/store_kit_route_arg
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_search_section.dart';
-import 'package:untitled1/features/stores/presentation/widgets/store_kit_special_offer_section.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -170,8 +169,6 @@ class _StoreKitLoadedBody extends StatelessWidget {
                 discounts: discounts,
               ),
             ),
-            SizedBox(height: 16.h),
-            const StoreKitSpecialOfferSection(),
             SizedBox(height: 20.h),
           ],
         ),

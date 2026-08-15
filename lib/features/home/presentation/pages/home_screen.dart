@@ -270,12 +270,11 @@ class _HomeViewState extends State<_HomeView> {
           child: SolarDynamicBackground(
               child: Scaffold(
             backgroundColor: Colors.transparent,
-            appBar: HomeAppBar(onMenuTap: () {
-              // context.push(AppRoutes.settingsScreen);
-            },
-                onCartTap: () {
-              context.push(AppRoutes.cartScreen);
-            }),
+            appBar: HomeAppBar(
+              onCartTap: () {
+                context.push(AppRoutes.cartScreen);
+              },
+            ),
             body: _buildBody(context, state),
             
             floatingActionButton: FloatingActionButton(
