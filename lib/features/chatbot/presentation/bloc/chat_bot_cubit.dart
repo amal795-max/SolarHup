@@ -66,6 +66,7 @@ class ChatBotCubit extends Cubit<ChatBotState> {
 
     messageController.clear();
     selectedImagePath = null;
+    deleteImage();
 
     final result = await repository.recommend(params);
 
@@ -76,6 +77,9 @@ class ChatBotCubit extends Cubit<ChatBotState> {
         messages.add(ChatMessage.assistant(success.reply));
         for (var product in success.recommendedProducts) {
           messages.add(ChatMessage.product(product));
+        }
+        for (var service in success.recommendedServices) {
+          messages.add(ChatMessage.service(service));
         }
         emit(ChatBotSuccess(success));
       },
@@ -113,17 +117,16 @@ class ChatBotCubit extends Cubit<ChatBotState> {
   }
 
   void startNewChat() {
+    selectedImagePath = null;
+    messageController.clear();
+    budgetController.clear();
+    messages.clear();
     messages.add(
       ChatMessage.assistant(
         'Hello! I can help you find the perfect solar solution. '
         'How can I assist you today?',
       ),
     );
-
-    selectedImagePath = null;
-    messageController.clear();
-    budgetController.clear();
-    messages.clear();
     currentConversationId = null;
     emit(ChatNewMessageAdded());
   }

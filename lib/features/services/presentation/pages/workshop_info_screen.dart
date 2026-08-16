@@ -83,7 +83,7 @@ class WorkshopServiceItem {
       originalPrice != null && originalPrice! > price;
 }
 
-final WorkshopInfoData sampleWorkshopInfo = WorkshopInfoData(
+final WorkshopInfoData sampleWorkshopInfo = const WorkshopInfoData(
   id: 'workshop-001',
   name: 'Solar Fix Workshop',
   description: 'Professional solar maintenance and repair services.',
@@ -91,7 +91,7 @@ final WorkshopInfoData sampleWorkshopInfo = WorkshopInfoData(
   phone: '+963912345678',
   region: 'Damascus',
   imagePlaceholderColorValue: 0xFF0A2A43,
-  services: const [
+  services: [
     WorkshopServiceItem(
       id: '1',
       name: 'Inverter Repair Visit',

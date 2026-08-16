@@ -277,6 +277,7 @@ class _HomeViewState extends State<_HomeView> {
         layout: _skeletonLayout,
         tips: const [],
         usedProducts: _skeletonUsedProducts,
+        topSellingProducts: _skeletonUsedProducts,
         newOffers: _skeletonNewOffers,
         blogPosts: _skeletonBlogs,
       );
@@ -286,6 +287,7 @@ class _HomeViewState extends State<_HomeView> {
         layout: state.homeLayout,
         tips: state.tips,
         usedProducts: state.usedProducts,
+        topSellingProducts: state.topSellingProducts,
         newOffers: state.newOffers.map(_mapNewOffer).toList(),
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
       );
@@ -301,16 +303,19 @@ class _HomeViewState extends State<_HomeView> {
     required List<HomeLayoutModel> layout,
     required List<TipModel> tips,
     required List<UsedProductModel> usedProducts,
+    required List<UsedProductModel> topSellingProducts,
     required List<ProductCardData> newOffers,
     required List<BlogCardData> blogPosts,
   }) {
     final bool isSearching = _searchQuery.isNotEmpty && !isLoading;
 
     final filteredUsed = isSearching ? _filterUsedProducts(usedProducts) : usedProducts;
+    final filteredTopSelling = isSearching ? _filterUsedProducts(topSellingProducts) : topSellingProducts;
     final filteredNew = isSearching ? _filterProducts(newOffers) : newOffers;
     final filteredBlogs = isSearching ? _filterBlogs(blogPosts) : blogPosts;
 
     final List<ProductCardData> usedProductsMapped = filteredUsed.map(_mapUsedProduct).toList();
+    final List<ProductCardData> topSellingMapped = filteredTopSelling.map(_mapUsedProduct).toList();
 
     final Map<String, Widget> sectionWidgets = {
       'tips': DidYouKnowBanner(tips: tips),
@@ -326,7 +331,12 @@ class _HomeViewState extends State<_HomeView> {
         onViewAll: isLoading ? null : _navigateToUsedProducts,
         onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
       ),
-      'best_sellers': const SizedBox.shrink(),
+      'best_sellers': PromotionProductsSection(
+        titleKey: 'top_selling',
+        products: topSellingMapped,
+        onViewAll: null, // As requested, just displaying them
+        onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredTopSelling[index]),
+      ),
       'blog_highlights': BlogSection(
         blogs: filteredBlogs,
         onBlogTap: isLoading

@@ -6,23 +6,34 @@ class ChatMessage {
   final String? content;
   final MessageRole role;
   final String? imagePath;
+
   final RecommendedProduct? product;
-  final bool isProduct;
+  final RecommendedService? service;
 
   ChatMessage({
     this.content,
     required this.role,
     this.imagePath,
     this.product,
-    this.isProduct = false,
+    this.service,
   });
 
-  factory ChatMessage.assistant(String text) => 
+  // ------------------ FACTORIES ------------------
+
+  factory ChatMessage.assistant(String text) =>
       ChatMessage(content: text, role: MessageRole.assistant);
 
-  factory ChatMessage.product(RecommendedProduct product) => 
-      ChatMessage(role: MessageRole.assistant, product: product, isProduct: true);
-
-  factory ChatMessage.user(String text, {String? imagePath}) => 
+  factory ChatMessage.user(String text, {String? imagePath}) =>
       ChatMessage(content: text, role: MessageRole.user, imagePath: imagePath);
+
+  factory ChatMessage.product(RecommendedProduct product) =>
+      ChatMessage(role: MessageRole.assistant, product: product);
+
+  factory ChatMessage.service(RecommendedService service) =>
+      ChatMessage(role: MessageRole.assistant, service: service);
+
+  // ------------------ GETTERS ------------------
+
+  bool get isProduct => product != null;
+  bool get isService => service != null;
 }

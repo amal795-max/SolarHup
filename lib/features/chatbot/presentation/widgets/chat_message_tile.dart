@@ -5,6 +5,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/chatbot/data/model/chat_message.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/bot_message.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/chat_product_card.dart';
+import 'package:untitled1/features/chatbot/presentation/widgets/service_card.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/user_message.dart';
 
 class ChatMessageTile extends StatelessWidget {
@@ -17,15 +18,18 @@ class ChatMessageTile extends StatelessWidget {
     if (message.isProduct) {
       return ChatProductCard(product: message.product!);
     }
+
+    if (message.isService) {
+      return ChatServiceCard(service: message.service!);
+    }
+
     final isUser = message.role == MessageRole.user;
 
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: 16.h,
-
-      ),
+      padding: EdgeInsets.only(bottom: 16.h),
       child: Column(
-        crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+        isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           if (message.imagePath != null)
             Container(
@@ -37,12 +41,15 @@ class ChatMessageTile extends StatelessWidget {
                 border: Border.all(color: AppColors.borderColor),
               ),
               clipBehavior: Clip.antiAlias,
-              child:  Image.file(
+              child: Image.file(
                 File(message.imagePath!),
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image),
+                errorBuilder: (_, __, ___) =>
+                const Icon(Icons.broken_image),
               ),
             ),
+
+          // TEXT MESSAGE
           if (message.content != null)
             isUser
                 ? buildUserMessage(context, message.content!)

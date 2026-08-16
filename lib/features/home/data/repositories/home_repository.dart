@@ -15,6 +15,7 @@ import '../models/tip_model.dart';
 
 abstract class HomeRepository {
   Future<Either<Failure, List<UsedProductModel>>> getUsedProducts();
+  Future<Either<Failure, List<UsedProductModel>>> getTopSellingProducts();
   Future<Either<Failure, List<ProductModel>>> getNewOffers();
   Future<Either<Failure, List<BlogModel>>> getBlogPosts();
   Future<Either<Failure, List<TipModel>>> getRandomTips();
@@ -63,6 +64,10 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<UsedProductModel>>> getUsedProducts() =>
       _handle(() => remote.getUsedProducts());
+
+  @override
+  Future<Either<Failure, List<UsedProductModel>>> getTopSellingProducts() =>
+      _handle(() => remote.getTopSellingProducts());
 
   @override
   Future<Either<Failure, List<ProductModel>>> getNewOffers() async {

@@ -8,6 +8,7 @@ import 'package:untitled1/features/chatbot/presentation/bloc/chat_bot_cubit.dart
 import 'package:untitled1/features/chatbot/presentation/pages/list_conversations.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/budget_bottom_sheet.dart';
 import 'package:untitled1/features/chatbot/presentation/widgets/chat_message_tile.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../widgets/chat_input_section.dart' show ChatInputSection;
 
 class ChatbotScreen extends StatefulWidget {
@@ -19,9 +20,30 @@ class ChatbotScreen extends StatefulWidget {
 
 class _ChatbotScreenState extends State<ChatbotScreen> {
   final ScrollController _scrollController = ScrollController();
+  bool _showScrollToBottom = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  void _scrollListener() {
+    if (_scrollController.hasClients) {
+      final isAtBottom = _scrollController.offset >=
+          (_scrollController.position.maxScrollExtent - 100);
+
+      if (isAtBottom && _showScrollToBottom) {
+        setState(() => _showScrollToBottom = false);
+      } else if (!isAtBottom && !_showScrollToBottom) {
+        setState(() => _showScrollToBottom = true);
+      }
+    }
+  }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
@@ -62,39 +84,42 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             ),
           ],
         ),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(
-              child: BlocBuilder<ChatBotCubit, ChatBotState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    addAutomaticKeepAlives:true ,
-                    controller: _scrollController,
-                    padding: EdgeInsets.all(16.w),
-                    itemCount: cubit.messages.length,
-                    itemBuilder: (context, index) {
-                      return ChatMessageTile(message: cubit.messages[index]);
+            Column(
+              children: [
+                Expanded(
+                  child: BlocBuilder<ChatBotCubit, ChatBotState>(
+                    builder: (context, state) {
+                      return ListView.builder(
+                        addAutomaticKeepAlives: true,
+                        controller: _scrollController,
+                        padding: EdgeInsets.all(16.w),
+                        itemCount: cubit.messages.length,
+                        itemBuilder: (context, index) {
+                          return ChatMessageTile(message: cubit.messages[index]);
+                        },
+                      );
                     },
-                  );
-                },
-              ),
+                  ),
+                ),
+                ChatInputSection(cubit: cubit),
+              ],
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: Align(
-            //     alignment: Alignment.bottomRight,
-            //     child: FloatingActionButton(
-            //       onPressed: () {
-            //         _scrollToBottom();
-            //       }
-            //       ,backgroundColor: AppColors.secondaryColor,
-            //       child: const Icon(Icons.keyboard_arrow_down_sharp,color: AppColors.tertiaryColor,),
-            //       mini: true,
-            //
-            //     ),
-            //   ),
-            // ),
-            ChatInputSection(cubit: cubit),
+            if (_showScrollToBottom)
+              Positioned(
+                bottom: 0.22.sh,
+                right: 16.w,
+                child: FloatingActionButton(
+                  onPressed: _scrollToBottom,
+                  backgroundColor: AppColors.secondaryColor,
+                  mini: true,
+                  child: const Icon(
+                    Icons.keyboard_arrow_down_sharp,
+                    color: AppColors.tertiaryColor,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

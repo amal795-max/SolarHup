@@ -30,7 +30,7 @@ class PromotionProductsSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: LabelWidget(
             title: titleKey.tr(),
-            more: 'home_view_all'.tr(),
+            more: onViewAll != null ? 'home_view_all'.tr() : '',
             onTap: onViewAll,
           ),
         ),

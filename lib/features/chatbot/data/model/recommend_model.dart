@@ -42,32 +42,81 @@ class RecommendResponseModel extends Equatable {
 }
 
 class RecommendedProduct extends Equatable {
-  final int? id;
-  final String name;
-  final String description;
-  final String price;
-  final String? image;
+  final ProductModel product;
+  final String reason;
 
   const RecommendedProduct({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.price,
-    this.image,
+    required this.product,
+    required this.reason,
   });
 
   factory RecommendedProduct.fromJson(Map<String, dynamic> json) {
     return RecommendedProduct(
-      id: json['id']??0,
-      name: json['name'],
-      description: json['desc'] ?? json['name'],
-      price: json['price'].toString(),
-      image: json['image'],
+      product: ProductModel.fromJson(json['product']),
+      reason: json['reason'] ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [id, name, description, price, image];
+  List<Object?> get props => [product, reason];
+}
+class ProductModel extends Equatable {
+  final int id;
+  final int businessId;
+  final int categoryId;
+  final String name;
+  final String description;
+  final String price;
+  final int quantity;
+  final List<String> images;
+  final bool isAvailable;
+  final String createdAt;
+  final String updatedAt;
+
+  const ProductModel({
+    required this.id,
+    required this.businessId,
+    required this.categoryId,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.quantity,
+    required this.images,
+    required this.isAvailable,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
+      id: json['id'],
+      businessId: json['business_id'],
+      categoryId: json['category_id'],
+      name: json['name'],
+      description: json['description'] ?? '',
+      price: json['price']?.toString() ?? '0',
+      quantity: json['quantity'] ?? 0,
+      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+      isAvailable: json['is_available'] ?? false,
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    businessId,
+    categoryId,
+    name,
+    description,
+    price,
+    quantity,
+    images,
+    isAvailable,
+    createdAt,
+    updatedAt,
+  ];
 }
 
 class RecommendedService extends Equatable {
@@ -131,15 +180,15 @@ class ServiceModel extends Equatable {
       categoryId: json['category_id'],
       name: json['name'],
       description: json['description'] ?? '',
-      price: (json['price']),
-      estimatedDuration: json['estimated_duration'],
-      serviceType: json['service_type'],
-      pricingModel: json['pricing_model'],
-      images: List<String>.from(json['images'] ?? []),
+      price: json['price']?.toString() ?? '0',
+      estimatedDuration: json['estimated_duration'] ?? 0,
+      serviceType: json['service_type'] ?? '',
+      pricingModel: json['pricing_model'] ?? '',
+      images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       isAvailable: json['is_available'] ?? false,
       status: json['status'] ?? '',
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      createdAt: json['created_at'] ?? '',
+      updatedAt: json['updated_at'] ?? '',
     );
   }
 

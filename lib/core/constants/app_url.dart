@@ -52,6 +52,7 @@ class EndPoints {
       '${baseUrl}service-requests/$requestId/cancel';
 
   static const String usedProducts = '${baseUrl}used-products';
+  static const String topSellingProducts = '${baseUrl}products/top-selling';
   static const String myUsedProducts = '${baseUrl}used-products/me';
   static String updateProductStatus(int id) => '${baseUrl}used-products/me/$id/status';
   static String deleteProduct(int id) => '${baseUrl}used-products/me/$id';

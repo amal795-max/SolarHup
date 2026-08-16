@@ -10,8 +10,12 @@ import '../models/tip_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<UsedProductModel>> getUsedProducts();
+
   Future<List<TipModel>> getRandomTips();
+
   Future<List<HomeLayoutModel>> getHomeLayout();
+
+  Future<List<UsedProductModel>> getTopSellingProducts();
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -34,9 +38,30 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw ServerException(message: mapDioError(e));
     }
   }
+
   @override
   Future<List<UsedProductModel>> getUsedProducts() async {
-    final response = await apiRequest.get(EndPoints.usedProducts);
+    try {
+      final response = await apiRequest.get(EndPoints.usedProducts);
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: getErrorMessage(response.statusCode ?? 0),
+        );
+      }
+      final List data = response.data['products'] ?? [];
+
+      return data.map((json) => UsedProductModel.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw ServerException(message: mapDioError(e));
+    }
+  }
+
+  @override
+  Future<List<UsedProductModel>> getTopSellingProducts() async {
+    final response = await apiRequest.get(
+      EndPoints.topSellingProducts,
+      query: {'limit': 10},
+    );
 
     final List data = response.data['products'] ?? [];
 

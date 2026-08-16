@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/chatbot/data/model/recommend_model.dart';
+
+import '../../../../core/routing/app_routes.dart';
 
 class ChatProductCard extends StatelessWidget {
   final RecommendedProduct product;
@@ -13,6 +16,8 @@ class ChatProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final p = product.product; // اختصار جميل
+
     return Container(
       margin: EdgeInsets.only(left: 44.w, bottom: 16.h),
       decoration: BoxDecoration(
@@ -25,6 +30,7 @@ class ChatProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ------------------ IMAGE ------------------
           Container(
             height: 120.h,
             width: double.infinity,
@@ -34,39 +40,53 @@ class ChatProductCard extends StatelessWidget {
                   : AppColors.lightGrey.withOpacity(0.5),
               borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
             ),
-            child: product.image != null
+            child: (p.images.isNotEmpty && p.images.first.isNotEmpty)
                 ? Image.network(
-                    product.image!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        Icon(Icons.solar_power, size: 60.sp, color: Colors.grey),
-                  )
+              p.images.first,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  Icon(Icons.solar_power, size: 60.sp, color: Colors.grey),
+            )
                 : Icon(Icons.solar_power, size: 60.sp, color: Colors.grey),
           ),
+
+          // ------------------ CONTENT ------------------
           Padding(
             padding: EdgeInsets.all(12.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product.name,
+                  p.name,
                   style: AppStyle.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+
                 SizedBox(height: 4.h),
-                Text(product.description, style: AppStyle.bodySmall),
+
+                Text(
+                  p.description,
+                  style: AppStyle.bodySmall,
+                ),
+
                 SizedBox(height: 12.h),
+
+                // PRICE + BUTTON
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product.price,
-                      style:AppStyle.bodyMedium
+                      p.price,
+                      style: AppStyle.bodyMedium,
                     ),
+
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: Implement View System navigation
+                        context.push(
+                          AppRoutes.productDetailScreen,
+                          extra: p.id,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
