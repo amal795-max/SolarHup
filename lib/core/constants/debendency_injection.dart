@@ -26,6 +26,7 @@ import 'package:untitled1/features/home/data/data_source/home_remote_data_source
 import 'package:untitled1/features/home/data/repositories/home_repository.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/features/home/presentation/bloc/home_bloc/home_bloc.dart';
+import 'package:untitled1/features/home/presentation/bloc/top_selling_products_cubit/top_selling_products_cubit.dart';
 import 'package:untitled1/features/services/data/data_source/service_requests_remote_data_source.dart';
 import 'package:untitled1/features/services/data/data_source/workshops_remote_data_source.dart';
 import 'package:untitled1/features/services/data/repositories/service_requests_repository.dart';
@@ -163,11 +164,13 @@ Future<void> init() async {
       remote: getIt(),
       catalogRepository: getIt(),
       blogRepository: getIt(),
+      productDetailRemote: getIt(),
       networkInfo: getIt(),
     ),
   );
 
   getIt.registerFactory(() => DiscountedProductsCubit(getIt()));
+  getIt.registerFactory(() => TopSellingProductsCubit(getIt()));
 
   getIt.registerFactory(() => BlogDetailCubit(getIt()));
   getIt.registerLazySingleton<WorkshopsRemoteDataSource>(

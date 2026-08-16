@@ -9,6 +9,9 @@ import 'package:untitled1/features/catalog/data/models/discounted_product_model.
 import 'package:untitled1/features/stores/data/data_source/product_detail_remote_data_source.dart';
 
 abstract class CatalogRepository {
+  Future<Either<Failure, List<DiscountModel>>> getDiscounts({
+    String? businessType,
+  });
   Future<Either<Failure, List<DiscountedProductModel>>> getDiscountedProducts({
     int? limit,
     String? businessType,
@@ -36,6 +39,21 @@ class CatalogRepositoryImpl implements CatalogRepository {
     required this.productDetailRemote,
     required this.networkInfo,
   });
+
+  @override
+  Future<Either<Failure, List<DiscountModel>>> getDiscounts({
+    String? businessType,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
+    }
+    try {
+      final discounts = await remote.getDiscounts(businessType: businessType);
+      return Right(discounts);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, List<DiscountedProductModel>>> getDiscountedProducts({

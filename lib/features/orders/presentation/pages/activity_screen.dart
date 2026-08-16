@@ -15,6 +15,7 @@ import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
@@ -102,14 +103,21 @@ class _ActivityScreenState extends State<ActivityScreen> {
                   :  context.read<OrdersCubit>().cachedOrders);
 
         if (state is OrdersLoaded && orders.isEmpty) {
-          return const EmptyWidget();
+          return AppRefreshIndicator(
+            onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
+            child: ListView(
+              physics: appRefreshPhysics,
+              children: const [EmptyWidget()],
+            ),
+          );
         }
 
-        return RefreshIndicator(
+        return AppRefreshIndicator(
             onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
             child :Skeletonizer(
           enabled: state is OrdersLoading,
           child:  ListView.separated(
+              physics: appRefreshPhysics,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               itemCount: orders.length,
               separatorBuilder: (context, index) => SizedBox(height: 16.h),
@@ -161,15 +169,23 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 : context.read<ServiceRequestsCubit>().cachedRequests);
 
         if (state is ServiceRequestsLoaded && requests.isEmpty) {
-          return const EmptyWidget();
+          return AppRefreshIndicator(
+            onRefresh: () async =>
+                context.read<ServiceRequestsCubit>().loadMyRequests(),
+            child: ListView(
+              physics: appRefreshPhysics,
+              children: const [EmptyWidget()],
+            ),
+          );
         }
 
-        return RefreshIndicator(
+        return AppRefreshIndicator(
           onRefresh: () async =>
               context.read<ServiceRequestsCubit>().loadMyRequests(),
           child: Skeletonizer(
             enabled: state is ServiceRequestsLoading,
             child: ListView.separated(
+              physics: appRefreshPhysics,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               itemCount: requests.length,
               separatorBuilder: (_, __) => SizedBox(height: 16.h),

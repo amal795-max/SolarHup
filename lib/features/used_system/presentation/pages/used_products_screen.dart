@@ -12,6 +12,7 @@ import 'package:untitled1/features/used_system/presentation/bloc/used_system_cub
 import 'package:untitled1/features/used_system/presentation/widgets/used_product_card.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 
@@ -37,9 +38,7 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
-        child: Column(
+      body: Column(
           children: [
             headerSection(
               title: 'home_used_systems',
@@ -56,7 +55,6 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
             ),
           ],
         ),
-      ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: isKeyboardOpen
@@ -103,14 +101,24 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
           );
 
     if (state is UsedProductsSuccess && products.isEmpty) {
-      return const EmptyWidget(subtitle: '', title: 'not_used_systems_found');
+      return AppRefreshIndicator(
+        onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
+        child: ListView(
+          physics: appRefreshPhysics,
+          children: const [
+            EmptyWidget(subtitle: '', title: 'not_used_systems_found'),
+          ],
+        ),
+      );
     }
 
-    return Skeletonizer(
+    return AppRefreshIndicator(
+      onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
+      child: Skeletonizer(
       enabled: isLoading,
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        physics: const AlwaysScrollableScrollPhysics(),
+        physics: appRefreshPhysics,
         child: Column(
           children: [
             SizedBox(height: 16.h),
@@ -119,6 +127,7 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
           ],
         ),
       ),
+    ),
     );
   }
 }

@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/widgets/section_error_widget.dart';
 import 'blog_card.dart';
 
 class BlogSection extends StatelessWidget {
   final List<BlogCardData> blogs;
+  final String? errorMessage;
+  final VoidCallback? onRetry;
   final void Function(String articleId)? onBlogTap;
 
   const BlogSection({
     super.key,
     required this.blogs,
+    this.errorMessage,
+    this.onRetry,
     this.onBlogTap,
   });
 
@@ -31,7 +36,13 @@ class BlogSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.h),
-        ...blogs.asMap().entries.map(
+        if (errorMessage != null)
+          SectionErrorWidget(
+            message: errorMessage!,
+            onRetry: onRetry,
+          )
+        else
+          ...blogs.asMap().entries.map(
           (entry) => BlogCard(
             data: entry.value,
             onTap: onBlogTap != null ? () => onBlogTap!(entry.value.id) : null,

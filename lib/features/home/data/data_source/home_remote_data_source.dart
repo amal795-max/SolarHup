@@ -1,10 +1,12 @@
-import 'package:dio/dio.dart';
-import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/api/api_response_utils.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
-import 'package:untitled1/core/constants/app_url.dart';
-import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
+import 'package:untitled1/features/home/data/models/top_selling_product_model.dart';
 import '../models/home_layout_model.dart';
 import '../models/tip_model.dart';
+import 'package:dio/dio.dart';
+import 'package:untitled1/core/api/api-requests.dart';
+import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<UsedProductModel>> getUsedProducts();
@@ -13,7 +15,7 @@ abstract class HomeRemoteDataSource {
 
   Future<List<HomeLayoutModel>> getHomeLayout();
 
-  Future<List<UsedProductModel>> getTopSellingProducts();
+  Future<List<TopSellingProductModel>> getTopSellingProducts({int limit = 10});
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -55,26 +57,27 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<List<UsedProductModel>> getTopSellingProducts() async {
-try {
-  final
-   response = await apiRequest.get(
-      EndPoints.topSellingProducts,
-      query: {'limit': 10},
-    );
-  if (response.statusCode != 200) {
-    throw ServerException(
-      message: getErrorMessage(response.statusCode ?? 0),
-    );
-  }
+  Future<List<TopSellingProductModel>> getTopSellingProducts({
+    int limit = 10,
+  }) async {
+    try {
+      final response = await apiRequest.get(
+        EndPoints.topSellingProducts,
+        query: {'limit': limit},
+      );
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: getErrorMessage(response.statusCode ?? 0),
+        );
+      }
 
-  final List data = response.data['products'] ?? [];
-
-  return data.map((json) => UsedProductModel.fromJson(json)).toList();
-
-} on DioException catch (e) {
-  throw ServerException(message: mapDioError(e));
-}
+      final payload = unwrapApiPayload(
+        response.data as Map<String, dynamic>,
+      );
+      return TopSellingProductModel.listFromResponse(payload);
+    } on DioException catch (e) {
+      throw ServerException(message: mapDioError(e));
+    }
   }
 
   @override

@@ -10,6 +10,7 @@ import 'package:untitled1/features/blog/presentation/bloc/blog_cubit.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_article_card.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_pagination_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_search_section.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -69,8 +70,10 @@ class _BlogLoadedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final articles = state.paginatedArticles;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+    return AppRefreshIndicator(
+      onRefresh: () => context.read<BlogCubit>().loadBlog(),
+      child: SingleChildScrollView(
+      physics: appRefreshPhysics,
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,6 +105,7 @@ class _BlogLoadedBody extends StatelessWidget {
           const BlogPaginationSection(),
         ],
       ),
+    ),
     );
   }
 }

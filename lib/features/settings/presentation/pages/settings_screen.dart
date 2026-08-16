@@ -10,6 +10,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/white_section_widget.dart';
 import 'package:untitled1/features/home/presentation/bloc/application_cubit.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 
 import '../../../../core/helper/extensions.dart';
 import '../../../used_system/presentation/bloc/used_system_cubit.dart';
@@ -23,9 +24,12 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('settings'.tr(),style: AppStyle.h5,),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-        child: Column(
+      body: AppRefreshIndicator(
+        onRefresh: () async {},
+        child: SingleChildScrollView(
+          physics: appRefreshPhysics,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionHeader(context, 'account_section'.tr()),
@@ -136,6 +140,7 @@ class SettingsScreen extends StatelessWidget {
             SizedBox(height: 50.h),
           ],
         ),
+      ),
       ),
     );
   }

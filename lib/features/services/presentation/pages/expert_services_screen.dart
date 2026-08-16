@@ -15,6 +15,7 @@ import 'package:untitled1/features/services/presentation/widgets/service_categor
 import 'package:untitled1/features/services/presentation/widgets/services_header_section.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 
 import '../../../../widgets/error_widget.dart';
 
@@ -78,6 +79,9 @@ class _ExpertServicesView extends StatelessWidget {
                   );
                 },
                 isLoading: isLoading,
+                onRefresh: isLoading
+                    ? null
+                    : () => context.read<ServiceCategoriesCubit>().loadCategories(),
               );
             },
           )
@@ -90,17 +94,21 @@ class _ServicesContent extends StatelessWidget {
   final List<StoreCategoryModel> categories;
   final ValueChanged<StoreCategoryModel> onCategoryTap;
   final bool isLoading;
+  final Future<void> Function()? onRefresh;
 
   const _ServicesContent({
     required this.categories,
     required this.onCategoryTap,
     required this.isLoading,
+    this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
+    return AppRefreshIndicator(
+      onRefresh: onRefresh,
+      child: CustomScrollView(
+      physics: appRefreshPhysics,
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
@@ -193,6 +201,7 @@ class _ServicesContent extends StatelessWidget {
             ),
           ),
       ],
+    ),
     );
   }
 }

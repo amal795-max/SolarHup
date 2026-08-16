@@ -19,6 +19,14 @@ class HomeLayoutModel extends Equatable {
     );
   }
 
+  static const List<HomeLayoutModel> defaultLayout = [
+    HomeLayoutModel(key: 'promotions', order: 1, isActive: true),
+    HomeLayoutModel(key: 'tips', order: 2, isActive: true),
+    HomeLayoutModel(key: 'best_sellers', order: 3, isActive: true),
+    HomeLayoutModel(key: 'blog_highlights', order: 4, isActive: true),
+    HomeLayoutModel(key: 'used_systems', order: 5, isActive: true),
+  ];
+
   @override
   List<Object?> get props => [key, order, isActive];
 }

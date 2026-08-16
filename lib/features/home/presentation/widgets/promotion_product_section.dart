@@ -5,11 +5,14 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/label_title_widget.dart';
+import 'package:untitled1/widgets/section_error_widget.dart';
 import 'product_card.dart';
 
 class PromotionProductsSection extends StatelessWidget {
   final String titleKey;
   final List<ProductCardData> products;
+  final String? errorMessage;
+  final VoidCallback? onRetry;
   final VoidCallback? onViewAll;
   final void Function(int index)? onProductTap;
 
@@ -17,6 +20,8 @@ class PromotionProductsSection extends StatelessWidget {
     super.key,
     required this.titleKey,
     required this.products,
+    this.errorMessage,
+    this.onRetry,
     this.onViewAll,
     this.onProductTap,
   });
@@ -35,7 +40,12 @@ class PromotionProductsSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.h),
-        if (products.isEmpty)
+        if (errorMessage != null)
+          SectionErrorWidget(
+            message: errorMessage!,
+            onRetry: onRetry,
+          )
+        else if (products.isEmpty)
           EmptyWidget(
             icon: Icons.search_off_rounded,
             iconSize: 18,

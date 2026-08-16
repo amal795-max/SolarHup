@@ -13,6 +13,7 @@ import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 
 import '../../../../widgets/header_section.dart';
@@ -169,8 +170,12 @@ class _StoresViewState extends State<_StoresView> {
     final filtered = isSearching ? _filter(stores) : stores;
     final hasNoResults = isSearching && filtered.isEmpty;
 
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
+    return AppRefreshIndicator(
+      onRefresh: isLoading
+          ? null
+          : () => context.read<StoresCubit>().refreshStores(),
+      child: CustomScrollView(
+      physics: appRefreshPhysics,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       slivers: [
         SliverToBoxAdapter(
@@ -214,6 +219,7 @@ class _StoresViewState extends State<_StoresView> {
 
         SliverToBoxAdapter(child: SizedBox(height: 80.h)),
       ],
+    ),
     );
   }
 

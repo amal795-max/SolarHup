@@ -10,6 +10,7 @@ import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import 'package:untitled1/features/favorite/presentation/bloc/favorites_state.dart';
 import 'package:untitled1/features/favorite/presentation/utils/favorite_navigation.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/favorite_heart_button.dart';
 import 'package:untitled1/widgets/header_section.dart';
@@ -134,15 +135,30 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   if (items.isEmpty &&
                       state is! FavoritesLoading &&
                       state is! FavoritesInitial) {
-                    return const EmptyWidget(
-                      title: 'no_favorites_yet',
-                      subtitle: 'start_adding_favorites',
+                    return AppRefreshIndicator(
+                      onRefresh: () => context
+                          .read<FavoritesCubit>()
+                          .loadFavorites(selectedCategory),
+                      child: ListView(
+                        physics: appRefreshPhysics,
+                        children: const [
+                          EmptyWidget(
+                            title: 'no_favorites_yet',
+                            subtitle: 'start_adding_favorites',
+                          ),
+                        ],
+                      ),
                     );
                   }
 
-                  return Skeletonizer(
+                  return AppRefreshIndicator(
+                    onRefresh: () => context
+                        .read<FavoritesCubit>()
+                        .loadFavorites(selectedCategory),
+                    child: Skeletonizer(
                     enabled: state is FavoritesLoading,
                     child: ListView.builder(
+                      physics: appRefreshPhysics,
                       padding: EdgeInsets.all(20.w),
                       itemCount: items.length,
                       itemBuilder: (context, index) {
@@ -150,6 +166,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         return _FavoriteItem(item: fav);
                       },
                     ),
+                  ),
                   );
                 },
               ),

@@ -6,6 +6,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
 import 'package:untitled1/features/complaints/presentation/bloc/complaint_cubit.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
@@ -99,16 +100,29 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                 }).toList();
 
                 if (state is ComplaintSuccess && complaints.isEmpty) {
-                  return const EmptyWidget(
-                    icon: Icons.assignment_late_outlined,
-                    title: 'no_complaints_found',
-                    subtitle: '',
+                  return AppRefreshIndicator(
+                    onRefresh: () async =>
+                        context.read<ComplaintCubit>().getMyComplaints(),
+                    child: ListView(
+                      physics: appRefreshPhysics,
+                      children: const [
+                        EmptyWidget(
+                          icon: Icons.assignment_late_outlined,
+                          title: 'no_complaints_found',
+                          subtitle: '',
+                        ),
+                      ],
+                    ),
                   );
                 }
 
-                return Skeletonizer(
+                return AppRefreshIndicator(
+                  onRefresh: () async =>
+                      context.read<ComplaintCubit>().getMyComplaints(),
+                  child: Skeletonizer(
                   enabled: isLoading,
                   child: ListView.builder(
+                    physics: appRefreshPhysics,
                     padding: EdgeInsets.symmetric(
                       horizontal: 16.w,
                       vertical: 8.h,
@@ -118,6 +132,7 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                       return AnimationWidget(child: ComplaintCard(complaint: complaints[index]));
                     },
                   ),
+                ),
                 );
               },
             ),

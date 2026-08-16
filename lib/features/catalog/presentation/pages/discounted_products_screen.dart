@@ -14,6 +14,7 @@ import 'package:untitled1/features/catalog/data/models/discounted_product_model.
 import 'package:untitled1/features/catalog/presentation/bloc/discounted_products_cubit/discounted_products_cubit.dart';
 import 'package:untitled1/features/home/presentation/widgets/product_card.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 
@@ -117,19 +118,34 @@ class _DiscountedProductsView extends StatelessWidget {
 
                       if (state is DiscountedProductsLoaded &&
                           products.isEmpty) {
-                        return EmptyWidget(
-                          icon: Icons.local_offer_outlined,
-                          iconSize: 48,
-                          iconColor: AppColors.grey,
-                          title: 'discounted_products_empty'.tr(),
-                          subtitle: 'discounted_products_empty_hint'.tr(),
-                          padding: EdgeInsets.symmetric(vertical: 32.h),
+                        return AppRefreshIndicator(
+                          onRefresh: () => context
+                              .read<DiscountedProductsCubit>()
+                              .loadDiscountedProducts(),
+                          child: ListView(
+                            physics: appRefreshPhysics,
+                            children: [
+                              EmptyWidget(
+                                icon: Icons.local_offer_outlined,
+                                iconSize: 48,
+                                iconColor: AppColors.grey,
+                                title: 'discounted_products_empty'.tr(),
+                                subtitle: 'discounted_products_empty_hint'.tr(),
+                                padding: EdgeInsets.symmetric(vertical: 32.h),
+                              ),
+                            ],
+                          ),
                         );
                       }
 
-                      return Skeletonizer(
+                      return AppRefreshIndicator(
+                        onRefresh: () => context
+                            .read<DiscountedProductsCubit>()
+                            .loadDiscountedProducts(),
+                        child: Skeletonizer(
                         enabled: isLoading,
                         child: GridView.builder(
+                          physics: appRefreshPhysics,
                           padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
@@ -158,6 +174,7 @@ class _DiscountedProductsView extends StatelessWidget {
                             );
                           },
                         ),
+                      ),
                       );
                     },
                   ),

@@ -20,3 +20,12 @@ final class LoadHomeDataEvent extends HomeEvent {
 final class RefreshHomeDataEvent extends HomeEvent {
   const RefreshHomeDataEvent();
 }
+
+final class RetryHomeSectionEvent extends HomeEvent {
+  final String sectionKey;
+
+  const RetryHomeSectionEvent(this.sectionKey);
+
+  @override
+  List<Object?> get props => [sectionKey];
+}

@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +7,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/app_images.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
-import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -27,8 +25,8 @@ import 'package:untitled1/features/home/presentation/widgets/used_products_secti
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_background.dart';
 import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
+import 'package:untitled1/widgets/section_error_widget.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import '../../../used_system/data/model/used_product_model.dart';
 import '../widgets/home_search_bar.dart';
@@ -148,13 +146,8 @@ class _HomeViewState extends State<_HomeView> {
     ),
   );
 
-  static const List<HomeLayoutModel> _skeletonLayout = [
-    HomeLayoutModel(key: 'promotions', order: 1, isActive: true),
-    HomeLayoutModel(key: 'tips', order: 2, isActive: true),
-    HomeLayoutModel(key: 'best_sellers', order: 3, isActive: true),
-    HomeLayoutModel(key: 'blog_highlights', order: 4, isActive: true),
-    HomeLayoutModel(key: 'used_systems', order: 5, isActive: true),
-  ];
+  static const List<HomeLayoutModel> _skeletonLayout =
+      HomeLayoutModel.defaultLayout;
 
   // ── Model → UI data_source mappers ───────────────────────────────────────────────
   // ── Model → UI data mappers ───────────────────────────────────────────────
@@ -202,6 +195,9 @@ class _HomeViewState extends State<_HomeView> {
   void _navigateToDiscountedProducts() =>
       context.push(AppRoutes.discountedProductsScreen);
 
+  void _navigateToTopSellingProducts() =>
+      context.push(AppRoutes.topSellingProductsScreen);
+
   void _navigateToProductDetail(ProductCardData product) {
     final businessId = product.businessId;
     final productId = product.id;
@@ -222,24 +218,24 @@ class _HomeViewState extends State<_HomeView> {
     );
   }
 
+  Future<void> _refreshHome() async {
+    final bloc = context.read<HomeBloc>();
+    final startToken = switch (bloc.state) {
+      HomeLoaded(:final refreshToken) => refreshToken,
+      _ => 0,
+    };
 
-
+    bloc.add(const RefreshHomeDataEvent());
+    await bloc.stream.firstWhere(
+      (state) => state is HomeLoaded && state.refreshToken > startToken,
+    );
+  }
 
   // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeBloc, HomeState>(
-      listenWhen: (_, curr) => curr is HomeError,
-      listener: (context, state) {
-        if (state is HomeError) {
-          DataHelper.showSnackBar(
-            message: state.message,
-            context: context,
-            color: AppColors.red,
-          );
-        }
-      },
+    return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
           return SafeArea(
           top: false,
@@ -277,7 +273,7 @@ class _HomeViewState extends State<_HomeView> {
         layout: _skeletonLayout,
         tips: const [],
         usedProducts: _skeletonUsedProducts,
-        topSellingProducts: _skeletonUsedProducts,
+        topSellingProducts: _skeletonNewOffers,
         newOffers: _skeletonNewOffers,
         blogPosts: _skeletonBlogs,
       );
@@ -286,14 +282,16 @@ class _HomeViewState extends State<_HomeView> {
       return _buildScrollable(
         layout: state.homeLayout,
         tips: state.tips,
+        tipsError: state.tipsError,
         usedProducts: state.usedProducts,
-        topSellingProducts: state.topSellingProducts,
+        usedProductsError: state.usedProductsError,
+        topSellingProducts: state.topSellingProducts.map(_mapNewOffer).toList(),
+        topSellingProductsError: state.topSellingProductsError,
         newOffers: state.newOffers.map(_mapNewOffer).toList(),
+        newOffersError: state.newOffersError,
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
+        blogPostsError: state.blogPostsError,
       );
-    }
-    if (state is HomeError) {
-      return _buildErrorBody(context);
     }
     return const SizedBox.shrink();
   }
@@ -302,52 +300,80 @@ class _HomeViewState extends State<_HomeView> {
     bool isLoading = false,
     required List<HomeLayoutModel> layout,
     required List<TipModel> tips,
+    String? tipsError,
     required List<UsedProductModel> usedProducts,
-    required List<UsedProductModel> topSellingProducts,
+    String? usedProductsError,
+    required List<ProductCardData> topSellingProducts,
+    String? topSellingProductsError,
     required List<ProductCardData> newOffers,
+    String? newOffersError,
     required List<BlogCardData> blogPosts,
+    String? blogPostsError,
   }) {
     final bool isSearching = _searchQuery.isNotEmpty && !isLoading;
+    final homeBloc = context.read<HomeBloc>();
+
+    VoidCallback? retrySection(String sectionKey) => isLoading
+        ? null
+        : () => homeBloc.add(RetryHomeSectionEvent(sectionKey));
 
     final filteredUsed = isSearching ? _filterUsedProducts(usedProducts) : usedProducts;
-    final filteredTopSelling = isSearching ? _filterUsedProducts(topSellingProducts) : topSellingProducts;
+    final filteredTopSelling =
+        isSearching ? _filterProducts(topSellingProducts) : topSellingProducts;
     final filteredNew = isSearching ? _filterProducts(newOffers) : newOffers;
     final filteredBlogs = isSearching ? _filterBlogs(blogPosts) : blogPosts;
 
-    final List<ProductCardData> usedProductsMapped = filteredUsed.map(_mapUsedProduct).toList();
-    final List<ProductCardData> topSellingMapped = filteredTopSelling.map(_mapUsedProduct).toList();
+    final List<ProductCardData> usedProductsMapped =
+        filteredUsed.map(_mapUsedProduct).toList();
 
     final Map<String, Widget> sectionWidgets = {
-      'tips': DidYouKnowBanner(tips: tips),
+      'tips': tipsError != null
+          ? SectionErrorWidget(
+              message: tipsError,
+              onRetry: retrySection('tips'),
+            )
+          : DidYouKnowBanner(tips: tips),
       'promotions': PromotionProductsSection(
         titleKey: 'home_new_offer',
         products: filteredNew,
+        errorMessage: newOffersError,
+        onRetry: retrySection('promotions'),
         onViewAll: isLoading ? null : _navigateToDiscountedProducts,
         onProductTap: isLoading ? null : (index) => _navigateToProductDetail(filteredNew[index]),
-      ), // Replace with PromotionsSection() when available
+      ),
       'used_systems': UsedProductsSection(
         titleKey: 'home_used_systems',
         products: usedProductsMapped,
+        errorMessage: usedProductsError,
+        onRetry: retrySection('used_systems'),
         onViewAll: isLoading ? null : _navigateToUsedProducts,
         onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
       ),
       'best_sellers': PromotionProductsSection(
         titleKey: 'top_selling',
-        products: topSellingMapped,
-        onViewAll: null, // As requested, just displaying them
-        onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredTopSelling[index]),
+        products: filteredTopSelling,
+        errorMessage: topSellingProductsError,
+        onRetry: retrySection('best_sellers'),
+        onViewAll: isLoading ? null : _navigateToTopSellingProducts,
+        onProductTap: isLoading
+            ? null
+            : (index) => _navigateToProductDetail(filteredTopSelling[index]),
       ),
       'blog_highlights': BlogSection(
         blogs: filteredBlogs,
+        errorMessage: blogPostsError,
+        onRetry: retrySection('blog_highlights'),
         onBlogTap: isLoading
             ? null
             : (articleId) => context.push(AppRoutes.blogArticleDetail(articleId)),
       ),
     };
 
-    final content = SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
+    final content = AppRefreshIndicator(
+      onRefresh: isLoading ? null : _refreshHome,
+      child: SingleChildScrollView(
+        physics: appRefreshPhysics,
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -385,28 +411,10 @@ class _HomeViewState extends State<_HomeView> {
           }),
         ],
       ),
+    ),
     );
 
     return isLoading ? Skeletonizer(enabled: true, child: content) : content;
-  }
-
-
-  Widget _buildErrorBody(BuildContext context) {
-    return EmptyWidget(
-      icon: Icons.error_outline,
-      iconSize: 56,
-      iconColor: AppColors.grey,
-      title: 'stores_error_title'.tr(),
-      subtitle: 'stores_error_subtitle'.tr(),
-      action: CustomButton(
-        text: 'stores_retry'.tr(),
-        icon: Icons.refresh_rounded,
-        iconLeft: true,
-        onPressed: () =>
-            context.read<HomeBloc>().add(const LoadHomeDataEvent()),
-        width: 0.5.sw,
-      ),
-    );
   }
 }
 

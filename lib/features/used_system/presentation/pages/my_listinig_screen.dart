@@ -8,6 +8,7 @@ import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/header_section.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -116,12 +117,21 @@ class MyListingScreen extends StatelessWidget {
         : context.read<UsedSystemCubit>().myProducts;
 
     if (!isLoading && products.isEmpty) {
-      return const EmptyWidget();
+      return AppRefreshIndicator(
+        onRefresh: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
+        child: ListView(
+          physics: appRefreshPhysics,
+          children: const [EmptyWidget()],
+        ),
+      );
     }
 
-    return Skeletonizer(
+    return AppRefreshIndicator(
+      onRefresh: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
+      child: Skeletonizer(
       enabled: isLoading,
       child: ListView.separated(
+        physics: appRefreshPhysics,
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         itemCount: products.length,
         separatorBuilder: (context, index) => SizedBox(height: 16.h),
@@ -132,6 +142,7 @@ class MyListingScreen extends StatelessWidget {
               .slideX(begin: 0.2, end: 0);
         },
       ),
+    ),
     );
   }
 }

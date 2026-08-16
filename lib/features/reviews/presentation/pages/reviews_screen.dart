@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import '../../data/models/review_model.dart';
@@ -40,11 +41,15 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           ),
           centerTitle: true,
         ),
-        body: RefreshIndicator(
+        body: AppRefreshIndicator(
           onRefresh: () async {
-            context.read<ReviewsCubit>().getReviews(widget.itemType, widget.itemId);
+            await context.read<ReviewsCubit>().getReviews(
+              widget.itemType,
+              widget.itemId,
+            );
           },
           child: ListView(
+            physics: appRefreshPhysics,
             padding: EdgeInsets.all(16.w),
             children: [
               ReviewFormWidget(
