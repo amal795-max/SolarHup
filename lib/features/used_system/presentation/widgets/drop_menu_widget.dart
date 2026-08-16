@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+
 import '../../../../core/theme/app_colors.dart';
 
 class DropdownField extends StatelessWidget {
@@ -30,7 +31,7 @@ class DropdownField extends StatelessWidget {
           child: DropdownButton2<String>(
             isExpanded: true,
             hint: Text(
-              value?.tr()??'select_item'.tr(),
+              value?.tr() ?? 'select_item'.tr(),
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -38,7 +39,8 @@ class DropdownField extends StatelessWidget {
               ),
               overflow: TextOverflow.ellipsis,
             ),
-            items: items.map(
+            items: items
+                .map(
                   (String item) => DropdownItem<String>(
                     value: item,
                     child: Text(
@@ -63,9 +65,7 @@ class DropdownField extends StatelessWidget {
               ),
             ),
             iconStyleData: const IconStyleData(
-              icon: Icon(
-                Icons.keyboard_arrow_down,
-              ),
+              icon: Icon(Icons.keyboard_arrow_down),
               iconEnabledColor: Colors.grey,
               iconDisabledColor: Colors.grey,
             ),

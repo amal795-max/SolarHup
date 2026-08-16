@@ -12,7 +12,6 @@ import 'package:untitled1/features/stores/data/models/store_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
-import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
@@ -146,10 +145,7 @@ class _StoresViewState extends State<_StoresView> {
 
   Widget _buildBody(BuildContext context, StoresState state) {
     if (state is StoresLoading || state is StoresInitial) {
-      return _buildScrollable(
-        isLoading: true,
-        stores: _skeletonStores,
-      );
+      return _buildScrollable(isLoading: true, stores: _skeletonStores);
     }
 
     if (state is StoresLoaded) {
@@ -190,7 +186,6 @@ class _StoresViewState extends State<_StoresView> {
                   _searchController.clear();
                   setState(() => _searchQuery = '');
                 },
-                onFilterTap: () {},
               ),
               SizedBox(height: 8.h),
             ],
@@ -204,25 +199,21 @@ class _StoresViewState extends State<_StoresView> {
           )
         else
           SliverList(
-            delegate: SliverChildBuilderDelegate(
-                  (context, i) {
-                return Skeletonizer(
-                  enabled: isLoading,
-                  child: StoreCard(
-                    data: filtered[i],
-                    onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
-                  ),
-                );
-              },
-              childCount: filtered.length,
-            ),
+            delegate: SliverChildBuilderDelegate((context, i) {
+              return Skeletonizer(
+                enabled: isLoading,
+                child: StoreCard(
+                  data: filtered[i],
+                  onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+                ),
+              );
+            }, childCount: filtered.length),
           ),
 
         SliverToBoxAdapter(child: SizedBox(height: 24.h)),
       ],
     );
   }
-
 
   // ── Empty / error bodies ──────────────────────────────────────────────────
 

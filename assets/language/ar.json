@@ -228,6 +228,8 @@
   "store_info_expert_subtitle": "مستشارونا الشمسيون متاحون لتحديد حجم النظام المجاني وتحليل العائد على الاستثمار.",
   "store_info_live_chat": "الدردشة المباشرة",
   "your_cart": "عربتك",
+  "cart_empty": "سلتك فارغة",
+  "cart_empty_hint": "تصفح المتاجر لإضافة منتجات إلى سلتك.",
   "items_count": "{} عناصر",
   "remove": "حذف",
   "order_summary": "ملخص الطلب",

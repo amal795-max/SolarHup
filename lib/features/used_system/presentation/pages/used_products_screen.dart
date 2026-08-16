@@ -1,26 +1,22 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
+import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/features/used_system/presentation/widgets/used_product_card.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
-import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/image_widget.dart';
-import '../../../../core/helper/extensions.dart';
-import '../../../../widgets/header_section.dart';
-import '../widgets/badge_product_status.dart';
-import '../widgets/category_chip.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:skeletonizer/skeletonizer.dart';
-import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
-import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 
+import '../../../../widgets/header_section.dart';
+import '../widgets/category_chip.dart';
 import 'filters_screen.dart';
 
 class UsedProductsScreen extends StatefulWidget {
@@ -191,13 +187,13 @@ class _ProductGrid extends StatelessWidget {
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
-        return AnimationWidget(child: UsedProductCard(product: products[index]));
-
+        return AnimationWidget(
+          child: UsedProductCard(product: products[index]),
+        );
       },
     );
   }
 }
-
 
 class _SellSystemButton extends StatelessWidget {
   const _SellSystemButton();

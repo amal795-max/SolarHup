@@ -11,7 +11,7 @@ import 'package:untitled1/widgets/primary_button.dart';
 
 /// Full-width product card used inside the Featured Products section.
 /// Handles three display modes automatically based on [StoreProductItem] data_source:
-///   - Standard  : image + category + name + price + cart icon + optional "New" badge
+///   - Standard  : image + category + name + price + optional "New" badge
 ///   - Discounted: same as above with crossed-out original price + %-off badge
 ///   - Kit       : image + category + name + description + price + "Configure Kit" button
 class StoreInfoProductCard extends StatelessWidget {
@@ -256,7 +256,7 @@ class _DiscountBadge extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Info section — name, pricing, action (cart or configure-kit button)
+// Info section — name, pricing, optional configure-kit button
 // ---------------------------------------------------------------------------
 
 class _ProductInfoSection extends StatelessWidget {
@@ -323,52 +323,13 @@ class _ProductInfoSection extends StatelessWidget {
                 ),
               ],
 
-              const Spacer(),
-
-              // Action: either a cart icon button or the "Configure Kit" button
-              if (product.isKitProduct)
-                _ConfigureKitButton()
-              else
-                _CartIconButton(isDark: isDark),
+              if (product.isKitProduct) ...[
+                const Spacer(),
+                _ConfigureKitButton(),
+              ],
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Cart icon button (standard and discounted products)
-// ---------------------------------------------------------------------------
-
-class _CartIconButton extends StatelessWidget {
-  final bool isDark;
-
-  const _CartIconButton({required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.r),
-      child: Material(
-        color: isDark ? AppColors.darkGray : AppColors.lightGrey,
-        child: InkWell(
-          onTap: () {
-            context.push(AppRoutes.cartScreen);
-          },
-          splashColor: AppColors.primaryColor.withValues(alpha: 0.18),
-          highlightColor: AppColors.primaryColor.withValues(alpha: 0.08),
-          child: SizedBox(
-            width: 36.w,
-            height: 36.w,
-            child: Icon(
-              Icons.shopping_cart_outlined,
-              size: 18.sp,
-              color: isDark ? AppColors.blue : AppColors.deepGrey,
-            ),
-          ),
-        ),
       ),
     );
   }

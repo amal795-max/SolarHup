@@ -29,10 +29,18 @@ final class BlogLoaded extends BlogState {
     this.currentPage = 1,
   });
 
+  List<BlogArticleModel> get displayArticles {
+    if (featured.title.isEmpty) return allArticles;
+    if (allArticles.any((article) => article.id == featured.id)) {
+      return allArticles;
+    }
+    return [featured, ...allArticles];
+  }
+
   List<BlogArticleModel> get filteredArticles {
     final query = searchQuery.trim().toLowerCase();
-    if (query.isEmpty) return allArticles;
-    return allArticles
+    if (query.isEmpty) return displayArticles;
+    return displayArticles
         .where(
           (article) =>
               article.title.toLowerCase().contains(query) ||

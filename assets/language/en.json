@@ -217,6 +217,8 @@
   "store_info_expert_subtitle": "Our solar consultants are available for a free system sizing and ROI analysis.",
   "store_info_live_chat": "Live Chat",
   "your_cart": "Your Cart",
+  "cart_empty": "Your cart is empty",
+  "cart_empty_hint": "Browse stores to add products to your cart.",
   "items_count": "{} Items",
   "remove": "Remove",
   "order_summary": "Order Summary",

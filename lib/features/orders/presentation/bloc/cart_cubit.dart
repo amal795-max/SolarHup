@@ -112,7 +112,8 @@ class CartCubit extends Cubit<CartState> {
     emit(CartActionLoading());
     final result = await repository.clearCart();
     result.fold((failure) => emit(CartError(failure.message)), (_) {
-      order?.items.clear();
+      order = OrderModel.empty();
+      emit(CartSuccess(order!));
       emit(const CartActionSuccess(cartClearedSuccessfully));
     });
   }

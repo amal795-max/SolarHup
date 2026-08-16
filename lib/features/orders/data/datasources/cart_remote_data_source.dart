@@ -28,6 +28,10 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     try {
       final response = await apiRequest.get(EndPoints.cart);
 
+      if (response.statusCode == 404) {
+        return OrderModel.empty();
+      }
+
       if (response.statusCode != 200) {
         throw ServerException(
           message: getErrorMessage(response.statusCode ?? 0),
@@ -36,6 +40,9 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         return OrderModel.fromJson(response.data);
       }
     } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        return OrderModel.empty();
+      }
       throw ServerException(message: mapDioError(e));
     }
   }

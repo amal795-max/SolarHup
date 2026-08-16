@@ -37,6 +37,19 @@ class OrderModel {
     this.updatedAt, required this.statusEnum,
   });
 
+  factory OrderModel.empty() {
+    return OrderModel(
+      id: 0,
+      orderCode: '',
+      businessId: 0,
+      customerId: 0,
+      status: OrderStatusEnum.pending.status,
+      totalAmount: '0.00',
+      items: const [],
+      statusEnum: OrderStatusEnum.pending,
+    );
+  }
+
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     final payload = unwrapOrderPayload(json);
     return OrderModel(

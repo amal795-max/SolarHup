@@ -119,7 +119,11 @@ class _CartScreenState extends State<CartScreen> {
     final cartToShow = (state is CartSuccess) ? state.cart : fakeCart;
 
     if (state is CartSuccess && cartToShow.items.isEmpty && !isLoading) {
-      return const EmptyWidget();
+      return const EmptyWidget(
+        icon: Icons.shopping_cart_outlined,
+        title: 'cart_empty',
+        subtitle: 'cart_empty_hint',
+      );
     }
 
     return Skeletonizer(
