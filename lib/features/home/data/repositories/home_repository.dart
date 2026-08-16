@@ -148,7 +148,7 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<Either<Failure, List<ProductModel>>> getNewOffers() async {
-    final result = await catalogRepository.getDiscountedProductPreviews(
+    final result = await catalogRepository.getDiscountedProducts(
       limit: 5,
       businessType: 'store',
     );
