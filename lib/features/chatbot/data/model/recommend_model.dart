@@ -21,24 +21,24 @@ class RecommendResponseModel extends Equatable {
       reply: json['reply'],
       needsClarification: json['needs_clarification'],
       recommendedProducts: (json['recommended_products'] as List?)
-              ?.map((e) => RecommendedProduct.fromJson(e))
-              .toList() ??
+          ?.map((e) => RecommendedProduct.fromJson(e))
+          .toList() ??
           [],
       recommendedServices: (json['recommended_services'] as List?)
-              ?.map((e) => RecommendedService.fromJson(e))
-              .toList() ??
+          ?.map((e) => RecommendedService.fromJson(e))
+          .toList() ??
           [],
     );
   }
 
   @override
   List<Object?> get props => [
-        conversationId,
-        reply,
-        needsClarification,
-        recommendedProducts,
-        recommendedServices,
-      ];
+    conversationId,
+    reply,
+    needsClarification,
+    recommendedProducts,
+    recommendedServices,
+  ];
 }
 
 class RecommendedProduct extends Equatable {
@@ -71,29 +71,96 @@ class RecommendedProduct extends Equatable {
 }
 
 class RecommendedService extends Equatable {
-  final int id;
-  final String name;
-  final String description;
+  final ServiceModel service;
+  final String reason;
 
   const RecommendedService({
-    required this.id,
-    required this.name,
-    required this.description,
+    required this.service,
+    required this.reason,
   });
 
   factory RecommendedService.fromJson(Map<String, dynamic> json) {
     return RecommendedService(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'] ?? '',
+      service: ServiceModel.fromJson(json['service']),
+      reason: json['reason'] ?? '',
     );
   }
 
   @override
-  List<Object?> get props => [id, name, description];
+  List<Object?> get props => [service, reason];
 }
 
 
+class ServiceModel extends Equatable {
+  final int id;
+  final int businessId;
+  final int categoryId;
+  final String name;
+  final String description;
+  final String price;
+  final int estimatedDuration;
+  final String serviceType;
+  final String pricingModel;
+  final List<String> images;
+  final bool isAvailable;
+  final String status;
+  final String createdAt;
+  final String updatedAt;
+
+  const ServiceModel({
+    required this.id,
+    required this.businessId,
+    required this.categoryId,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.estimatedDuration,
+    required this.serviceType,
+    required this.pricingModel,
+    required this.images,
+    required this.isAvailable,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory ServiceModel.fromJson(Map<String, dynamic> json) {
+    return ServiceModel(
+      id: json['id'],
+      businessId: json['business_id'],
+      categoryId: json['category_id'],
+      name: json['name'],
+      description: json['description'] ?? '',
+      price: (json['price']),
+      estimatedDuration: json['estimated_duration'],
+      serviceType: json['service_type'],
+      pricingModel: json['pricing_model'],
+      images: List<String>.from(json['images'] ?? []),
+      isAvailable: json['is_available'] ?? false,
+      status: json['status'] ?? '',
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    id,
+    businessId,
+    categoryId,
+    name,
+    description,
+    price,
+    estimatedDuration,
+    serviceType,
+    pricingModel,
+    images,
+    isAvailable,
+    status,
+    createdAt,
+    updatedAt,
+  ];
+}
 
 class ChatMessage extends Equatable {
   final int id;

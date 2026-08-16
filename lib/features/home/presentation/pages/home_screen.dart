@@ -109,14 +109,6 @@ class _HomeViewState extends State<_HomeView> {
 
   // ── Skeleton mock data_source (shown while HomeLoading) ──────────────────────────
 
-  static final List<ProductCardData> _skeletonProducts = List.generate(
-    3,
-    (i) => const ProductCardData(
-      name: 'Loading Product Name',
-      price: 149.00,
-      imagePlaceholderColorValue: 0xFF0A2A43,
-    ),
-  );
 
   static final List<ProductCardData> _skeletonNewOffers = List.generate(
     3,
@@ -167,22 +159,6 @@ class _HomeViewState extends State<_HomeView> {
   // ── Model → UI data_source mappers ───────────────────────────────────────────────
   // ── Model → UI data mappers ───────────────────────────────────────────────
 
-  ProductCardData _mapProduct(ProductModel m) => ProductCardData(
-    id: m.id,
-    businessId: m.businessId,
-    name: m.name,
-    category: m.category,
-    price: m.price,
-    originalPrice: m.originalPrice,
-    badgeText: m.badgeText,
-    badgeColor: m.badgeColorValue,
-    metaText: m.metaText,
-    imageAssetPath: m.image.isNotEmpty ? m.image : null,
-    imageUrl: m.imageUrl,
-    imagePlaceholderColorValue: m.imagePlaceholderColorValue,
-    discountPercent: m.discountPercent,
-    iconType: m.iconType,
-  );
 
   ProductCardData _mapNewOffer(ProductModel m) => ProductCardData(
     id: m.id,
@@ -374,7 +350,7 @@ class _HomeViewState extends State<_HomeView> {
 
           if (!isLoading && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
             const Padding(
-              padding: EdgeInsets.only(top: 16),
+              padding: EdgeInsets.only(bottom: 12),
               child: VerificationBanner(),
             ),
 
@@ -404,16 +380,6 @@ class _HomeViewState extends State<_HomeView> {
     return isLoading ? Skeletonizer(enabled: true, child: content) : content;
   }
 
-  Widget _buildNoResultsBody() {
-    return EmptyWidget(
-      icon: Icons.search_off_rounded,
-      iconSize: 52,
-      iconColor: AppColors.borderColor,
-      title: 'No results for "$_searchQuery"',
-      subtitle: 'Try different keywords or check the spelling.',
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
-    );
-  }
 
   Widget _buildErrorBody(BuildContext context) {
     return EmptyWidget(

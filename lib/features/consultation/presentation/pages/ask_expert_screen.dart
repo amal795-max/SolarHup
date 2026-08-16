@@ -10,6 +10,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/consultation/presentation/bloc/expert_consultation_cubit.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class AskExpertScreen extends StatefulWidget {
@@ -48,7 +49,7 @@ class _AskExpertScreenState extends State<AskExpertScreen> {
               context: context,
               message: 'question_sent_success'.tr(),
             );
-            _questionController.clear();
+            context.push(AppRoutes.myQuestionsScreen);
           } else if (state is ExpertConsultationError) {
             DataHelper.showSnackBar(
               context: context,
@@ -58,6 +59,9 @@ class _AskExpertScreenState extends State<AskExpertScreen> {
           }
         },
         builder: (context, state) {
+          if(state is ExpertConsultationSending){
+            return const LoadingIndicator();
+          }
           return SingleChildScrollView(
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -82,7 +86,6 @@ class _AskExpertScreenState extends State<AskExpertScreen> {
                 SizedBox(height: 24.h),
                 CustomButton(
                   text: 'send_question'.tr(),
-                  isLoading: state is ExpertConsultationSending,
                   onPressed: () {
                     final q = _questionController.text.trim();
                     if (key.currentState!.validate()){
