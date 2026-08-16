@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/services/presentation/mappers/workshop_picker_mapper.dart';
@@ -19,8 +20,8 @@ class WorkshopPickerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final hasCover = _isValidImageUrl(group.coverImageUrl);
-    final hasLogo = _isValidImageUrl(group.logoUrl);
+    final hasCover = isDisplayableImageUrl(group.coverImageUrl);
+    final hasLogo = isDisplayableImageUrl(group.logoUrl);
     final base = Color(group.iconColorValue);
     final darker = Color.fromARGB(
       255,
@@ -221,8 +222,3 @@ class WorkshopPickerCard extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -125,7 +126,7 @@ class _KitProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.brightness;
-    final hasImage = _isValidImageUrl(product.imageUrl);
+    final hasImage = isDisplayableImageUrl(product.imageUrl);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(16.r),
@@ -309,8 +310,3 @@ class _KitProductCard extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}

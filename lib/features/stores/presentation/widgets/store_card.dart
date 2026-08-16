@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/image_widget.dart';
@@ -117,7 +118,7 @@ class _StoreImageSection extends StatelessWidget {
       (base.g * 0.55).round(),
       (base.b * 0.55).round(),
     );
-    final hasCover = _isValidImageUrl(data.coverImageUrl);
+    final hasCover = isDisplayableImageUrl(data.coverImageUrl);
 
     return SizedBox(
       height: 140.h,
@@ -275,7 +276,7 @@ class _StoreIconBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasLogo = _isValidImageUrl(logoUrl);
+    final hasLogo = isDisplayableImageUrl(logoUrl);
 
     return Container(
       width: 60.w,
@@ -309,11 +310,6 @@ class _StoreIconBadge extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}
 
 // ---------------------------------------------------------------------------
 // Info section — name, location, tags, CTA button

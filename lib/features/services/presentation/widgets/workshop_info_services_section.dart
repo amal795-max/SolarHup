@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/catalog/utils/discount_period_formatter.dart';
@@ -91,7 +92,7 @@ class _WorkshopServiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = _isValidImageUrl(service.imageUrl);
+    final hasImage = isDisplayableImageUrl(service.imageUrl);
     final parsedServiceId = int.tryParse(service.id);
 
     return Padding(
@@ -290,8 +291,3 @@ class _WorkshopServiceTile extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}

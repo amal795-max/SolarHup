@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -84,7 +85,7 @@ class _ProductImageSection extends StatelessWidget {
       (base.g * 0.50).round(),
       (base.b * 0.50).round(),
     );
-    final hasImage = _isValidImageUrl(product.imageUrl);
+    final hasImage = isDisplayableImageUrl(product.imageUrl);
 
     return SizedBox(
       height: 160.h,
@@ -164,11 +165,6 @@ class _ProductImageSection extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}
 
 // ---------------------------------------------------------------------------
 // Category label chip on top of the image

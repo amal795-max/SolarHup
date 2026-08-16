@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -286,7 +287,7 @@ class _WorkshopHeroSliver extends StatelessWidget {
 
   const _WorkshopHeroSliver({required this.data});
 
-  bool get _hasCover => _isValidImageUrl(data.coverImageUrl);
+  bool get _hasCover => isDisplayableImageUrl(data.coverImageUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -362,7 +363,7 @@ class _WorkshopProfileSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.brightness;
-    final hasLogo = _isValidImageUrl(data.logoUrl);
+    final hasLogo = isDisplayableImageUrl(data.logoUrl);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -655,8 +656,3 @@ class _WorkshopRequestBar extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}

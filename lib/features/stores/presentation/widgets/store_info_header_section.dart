@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 
@@ -10,7 +11,7 @@ class StoreInfoHeaderSection extends StatelessWidget {
 
   const StoreInfoHeaderSection({super.key, required this.data});
 
-  bool get _hasCover => _isValidImageUrl(data.coverImageUrl);
+  bool get _hasCover => isDisplayableImageUrl(data.coverImageUrl);
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +76,3 @@ class StoreInfoHeaderSection extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}

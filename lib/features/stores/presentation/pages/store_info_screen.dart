@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
@@ -356,7 +357,7 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final hasLogo = _isValidImageUrl(data.logoUrl);
+    final hasLogo = isDisplayableImageUrl(data.logoUrl);
 
     return Container(
       width: 65.w,
@@ -390,11 +391,6 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
   }
 }
 
-bool _isValidImageUrl(String? url) {
-  if (url == null || url.isEmpty) return false;
-  final uri = Uri.tryParse(url);
-  return uri != null && uri.isAbsolute;
-}
 
 // ---------------------------------------------------------------------------
 // Back button — always white so it's legible over the hero image when expanded

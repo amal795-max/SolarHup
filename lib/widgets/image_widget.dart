@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:untitled1/core/helper/image_url_utils.dart';
 // import 'package:shimmer/shimmer.dart';
 
 class ImageWidget extends StatelessWidget {
@@ -24,17 +25,16 @@ class ImageWidget extends StatelessWidget {
     this.heroTag,
   });
 
-  bool get _isSvg => image != null && image!.toLowerCase().endsWith('.svg');
+  String get _resolvedImageUrl => resolveImageUrl(image);
 
-  bool get _isValidUrl {
-    if (image == null || image!.isEmpty) return false;
-    final uri = Uri.tryParse(image!);
-    return uri != null && uri.isAbsolute;
-  }
+  bool get _isSvg =>
+      _resolvedImageUrl.toLowerCase().endsWith('.svg');
+
+  bool get _hasImage => isDisplayableImageUrl(image);
 
   @override
   Widget build(BuildContext context) {
-    if (!_isValidUrl) {
+    if (!_hasImage) {
       return _fallbackIcon();
     }
 
@@ -57,7 +57,7 @@ class ImageWidget extends StatelessWidget {
 
   Widget _buildSvg() {
     return SvgPicture.network(
-      image!,
+      _resolvedImageUrl,
       height: height,
       width: width,
       fit: fit,
@@ -67,7 +67,7 @@ class ImageWidget extends StatelessWidget {
 
   Widget _buildNetworkImage() {
     return CachedNetworkImage(
-      imageUrl: image!,
+      imageUrl: _resolvedImageUrl,
       height: height,
       width: width,
       fit: fit,
@@ -97,7 +97,7 @@ class ImageWidget extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (_) => FullScreenImage(
-          image: image!,
+          image: _resolvedImageUrl,
           heroTag: heroTag!,
         ),
       ),
