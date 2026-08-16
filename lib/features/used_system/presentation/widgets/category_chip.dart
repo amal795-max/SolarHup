@@ -71,12 +71,12 @@ class _CategoryChip extends StatelessWidget {
         margin: EdgeInsets.only(right: 10.w),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.tertiaryColor : AppColors.lightGrey,
+          color: isSelected ? AppColors.tertiaryColor:null,
           borderRadius: BorderRadius.circular(25.r),
           border: Border.all(
             color: isSelected
                 ? AppColors.primaryColor
-                : context.colorScheme.outline.withOpacity(0.3),
+                : context.colorScheme.outline,
           ),
         ),
         child: Row(

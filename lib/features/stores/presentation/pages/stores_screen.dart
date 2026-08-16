@@ -14,7 +14,6 @@ import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../widgets/header_section.dart';
 
@@ -213,7 +212,7 @@ class _StoresViewState extends State<_StoresView> {
             }, childCount: filtered.length),
           ),
 
-        SliverToBoxAdapter(child: SizedBox(height: 24.h)),
+        SliverToBoxAdapter(child: SizedBox(height: 80.h)),
       ],
     );
   }

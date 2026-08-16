@@ -382,7 +382,7 @@ class _HomeViewState extends State<_HomeView> {
               padding: EdgeInsets.only(bottom: 16.h),
               child: widget,
             );
-          }).toList(),
+          }),
         ],
       ),
     );

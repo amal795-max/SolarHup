@@ -42,14 +42,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     final (
       layoutResult,
       usedResult,
-      topSellingResult,
+      // topSellingResult,
       newResult,
       blogResult,
       tipsResult,
     ) = await (
       repository.getHomeLayout(),
       repository.getUsedProducts(),
-      repository.getTopSellingProducts(),
+      // repository.getTopSellingProducts(),
       repository.getNewOffers(),
       repository.getBlogPosts(),
       repository.getRandomTips(),
@@ -58,7 +58,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     String? error;
     List<HomeLayoutModel> homeLayout = [];
     List<UsedProductModel> usedProducts = [];
-    List<UsedProductModel> topSellingProducts = [];
+    // List<UsedProductModel> topSellingProducts = [];
     List<ProductModel> newOffers = [];
     List<BlogModel> blogPosts = [];
     List<TipModel> tips = [];
@@ -81,14 +81,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       return;
     }
 
-    topSellingResult.fold(
-      (f) => error = _mapFailureToMessage(f),
-      (data) => topSellingProducts = data,
-    );
-    if (error != null) {
-      emit(HomeError(message: error!));
-      return;
-    }
+    // topSellingResult.fold(
+    //   (f) => error = _mapFailureToMessage(f),
+    //   (data) => topSellingProducts = data,
+    // );
+    // if (error != null) {
+    //   emit(HomeError(message: error!));
+    //   return;
+    // }
 
     newResult.fold(
       (f) => error = _mapFailureToMessage(f),
@@ -111,7 +111,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     emit(HomeLoaded(
       usedProducts: usedProducts,
-      topSellingProducts: topSellingProducts,
+      topSellingProducts: [],
       newOffers: newOffers,
       blogPosts: blogPosts,
       tips: tips,

@@ -175,7 +175,7 @@ class _CompareEmptyState extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Padding(
             padding: EdgeInsets.only(left: 8.w, top: 4.h),
-            child: BackButtonWidget(),
+            child: const BackButtonWidget(),
           ),
         ),
         Expanded(

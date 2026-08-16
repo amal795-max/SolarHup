@@ -51,14 +51,30 @@ class ComplaintCubit extends Cubit<ComplaintState> {
       },
     );
   }
-  Future<void> sendMessage({required int complaintId, required String message,}) async {
+  Future<void> sendMessage({
+    required int complaintId,
+    required String message,
+  }) async {
 
-    final complaintIndex = _cachedComplaints.indexWhere((complaint) => complaint.id == complaintId,);
-    final currentComplaint = _cachedComplaints[complaintIndex];
+    final index = _cachedComplaints.indexWhere((c) => c.id == complaintId);
+    if (index == -1) return;
+
+    final original = _cachedComplaints[index];
+
+    final tempMessage = ComplaintMessageModel(
+      id: -DateTime.now().millisecondsSinceEpoch,
+      senderId: original.customerId,
+      senderRole: 'customer',
+      message: message,
+      createdAt: DateTime.now().subtract(const Duration(hours: 3)),
+      
+    );
+
+    final optimisticMessages = [...original.messages, tempMessage];
 
     emit(
       ComplaintDetailsSuccess(
-        complaint: currentComplaint,
+        complaint: original.copyWith(messages: optimisticMessages),
         isSendingMessage: true,
       ),
     );
@@ -72,15 +88,21 @@ class ComplaintCubit extends Cubit<ComplaintState> {
           (failure) {
         emit(
           ComplaintDetailsSuccess(
-            complaint: currentComplaint,
+            complaint: original,
             isSendingMessage: false,
             messageError: mapFailureToMessage(failure),
           ),
         );
       },
-          (complaint) {
-            currentComplaint.copyWith(messages: complaint.messages);
-        emit(ComplaintDetailsSuccess(complaint: complaint, isSendingMessage: false,),
+
+          (updatedComplaint) {
+        _cachedComplaints[index] = updatedComplaint;
+
+        emit(
+          ComplaintDetailsSuccess(
+            complaint: updatedComplaint,
+            isSendingMessage: false,
+          ),
         );
       },
     );

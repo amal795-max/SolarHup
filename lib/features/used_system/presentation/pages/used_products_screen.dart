@@ -32,9 +32,10 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
     super.initState();
     context.read<UsedSystemCubit>().getUsedProducts();
   }
-
   @override
   Widget build(BuildContext context) {
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
@@ -56,8 +57,11 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
           ],
         ),
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: const _SellSystemButton(),
+      floatingActionButton: isKeyboardOpen
+          ? const SizedBox()
+          : const _SellSystemButton(),
     );
   }
 

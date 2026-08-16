@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -25,7 +26,7 @@ class DropdownField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppStyle.labelSmall),
+        Text(title, style: AppStyle.labelMedium.copyWith( color:   context.brightness?AppColors.blue:AppColors.grey  )),
         SizedBox(height: 5.h),
         DropdownButtonHideUnderline(
           child: DropdownButton2<String>(
@@ -35,7 +36,6 @@ class DropdownField extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -45,10 +45,10 @@ class DropdownField extends StatelessWidget {
                     value: item,
                     child: Text(
                       item.tr(),
-                      style: const TextStyle(
+                      style:  const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                      ),
+                         ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -59,9 +59,9 @@ class DropdownField extends StatelessWidget {
               height: 55.h,
               padding: const EdgeInsets.only(left: 14, right: 14),
               decoration: BoxDecoration(
+                color: context.colorScheme.tertiaryContainer,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.borderColor),
-                color: AppColors.white,
+                border: Border.all(color: context.colorScheme.outline),
               ),
             ),
             iconStyleData: const IconStyleData(

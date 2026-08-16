@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -68,34 +69,32 @@ class ChatBubble extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              text,
-              style: AppStyle.bodyMedium.copyWith(
-                color: isMe
-                    ? Colors.white
-                    : null,
-                height: 1.4,
-              ),
-            ),
-            SizedBox(
-              height: 4.h,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                DateFormat('hh:mm a').format(
-                  message.createdAt,
-                ),
-                style: AppStyle.bodyXSmall.copyWith(
-                  color: isMe
-                      ? Colors.white70
-                      : AppColors.grey,
-                ),
-              ),
-            ),
-          ],
+          Text(
+          text,
+          style: AppStyle.bodyMedium.copyWith(
+            color: isMe
+                ? Colors.white
+                : null,
+            height: 1.4,
+          ),
+        ),
+        SizedBox(
+          height: 4.h,
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Text(
+            DataHelper.dateFormat('hh:mm a', message.createdAt,locale: context.locale),
+            style: AppStyle.bodyXSmall.copyWith(
+          color: isMe
+            ? Colors.white70
+            : AppColors.grey,
+          ),
         ),
       ),
+      ],
+    ),)
+    ,
     );
   }
 }

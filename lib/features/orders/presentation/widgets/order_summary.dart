@@ -88,8 +88,7 @@ class _SummaryRow extends StatelessWidget {
 
   const _SummaryRow({
     required this.label,
-    required this.value,
-    this.valueColor,
+    required this.value, this.valueColor,
   });
 
   @override

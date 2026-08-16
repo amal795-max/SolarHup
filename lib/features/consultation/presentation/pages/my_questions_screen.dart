@@ -9,7 +9,6 @@ import 'package:untitled1/features/consultation/presentation/bloc/expert_consult
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class MyQuestionsScreen extends StatefulWidget {
   const MyQuestionsScreen({super.key});

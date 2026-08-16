@@ -30,35 +30,37 @@ class EmptyWidget extends StatelessWidget {
     return Center(
       child: Padding(
         padding: padding,
-        child: Column(
-          spacing: 4,
-          mainAxisAlignment: alignment,
-          children: [
-            Icon(
-              icon,
-              size: iconSize,
-              color: iconColor ?? AppColors.lightGrey,
-            ),
-            Text(
-              title?.tr()?? 'no_items_added'.tr(),
-              textAlign: TextAlign.center,
-              style: AppStyle.bodyMedium.copyWith(
-                color: AppColors.grey,
+        child: SingleChildScrollView(
+          child: Column(
+            spacing: 4,
+            mainAxisAlignment: alignment,
+            children: [
+              Icon(
+                icon,
+                size: iconSize,
+                color: iconColor ?? AppColors.lightGrey,
               ),
-            ),
-            if (subtitle == null || subtitle!.isNotEmpty)
               Text(
-                subtitle?.tr() ?? 'add_your_first_item'.tr(),
-                style: AppStyle.bodySmall.copyWith(
+                title?.tr()?? 'no_items_added'.tr(),
+                textAlign: TextAlign.center,
+                style: AppStyle.bodyMedium.copyWith(
                   color: AppColors.grey,
                 ),
-                textAlign: TextAlign.center,
               ),
-            const SizedBox(height: 4,),
-            if (action != null) ...[
-              action!,
-            ]
-          ],
+              if (subtitle == null || subtitle!.isNotEmpty)
+                Text(
+                  subtitle?.tr() ?? 'add_your_first_item'.tr(),
+                  style: AppStyle.bodySmall.copyWith(
+                    color: AppColors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              const SizedBox(height: 4,),
+              if (action != null) ...[
+                action!,
+              ]
+            ],
+          ),
         ),
       ),
     );
