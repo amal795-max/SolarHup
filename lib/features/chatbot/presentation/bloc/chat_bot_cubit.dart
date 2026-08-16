@@ -123,6 +123,7 @@ class ChatBotCubit extends Cubit<ChatBotState> {
     selectedImagePath = null;
     messageController.clear();
     budgetController.clear();
+    messages.clear();
     currentConversationId = null;
     emit(ChatNewMessageAdded());
   }

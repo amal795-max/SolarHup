@@ -35,11 +35,12 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
       final result = await repository.setNewPassword(params);
 
       result.fold(
-        (failure) =>
+            (failure) =>
             emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
-        (success) => emit(
-          const ResetPasswordSuccess(message: resetPasswordSuccessMessage),
-        ),
+            (success) =>
+            emit(
+              const ResetPasswordSuccess(message: resetPasswordSuccessMessage),
+            ),
       );
     }
   }
@@ -55,13 +56,16 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
       final result = await repository.changePassword(params);
 
       result.fold(
-        (failure) => emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
-        (success) => emit(const ResetPasswordSuccess(message: changePasswordSuccessMessage)),
+            (failure) =>
+            emit(ResetPasswordFailure(message: mapFailureToMessage(failure))),
+            (success) =>
+            emit(const ResetPasswordSuccess(
+                message: changePasswordSuccessMessage)),
       );
     }
   }
 
-  void sendOtpVerification({required  bool isReset}) async {
+  void sendOtpVerification({required bool isReset}) async {
     OtpParams otpParams = OtpParams(
         DataHelper.formatePhoneNumber(''),
         isReset: isReset
@@ -76,7 +80,7 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     );
   }
 
-  void confirmOtp({required  bool isReset}) async {
+  void confirmOtp({required bool isReset}) async {
     ConfirmOtpParams otpParams = ConfirmOtpParams(
       DataHelper.formatePhoneNumber(''),
       otpCodeController.text.trim(),
@@ -87,10 +91,12 @@ class ResetPasswordCubit extends Cubit<ResetPasswordState> {
     result.fold(
           (failure) =>
           emit(ConfirmOtpFailure(message: mapFailureToMessage(failure))),
-          (success) =>
-          emit(const ConfirmOtpSuccess()),
+          (success) {
+            !isReset ? LocalStorage().saveData(key: ApiKeys.isVerified, value: true):null;
+            emit(const ConfirmOtpSuccess());}
     );
   }
+
   @override
   Future<void> close() {
     oldPasswordController.dispose();

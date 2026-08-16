@@ -10,7 +10,6 @@ import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper
 import 'package:untitled1/features/stores/presentation/widgets/store_info_categories_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_details_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_discounts_section.dart';
-import 'package:untitled1/features/stores/presentation/widgets/store_info_expert_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
@@ -340,8 +339,6 @@ class _StoreInfoContent extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 16.h),
-                const StoreInfoExpertSection(),
-                SizedBox(height: 32.h),
               ],
             ),
           ),

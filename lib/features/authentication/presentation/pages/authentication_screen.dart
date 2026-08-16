@@ -28,8 +28,8 @@ class AuthenticationScreen extends StatelessWidget {
   void _listener(BuildContext context, AuthenticationState state) {
     if (state is AuthenticationSuccess) {
       state.isExists
-          ? context.pushReplacement(AppRoutes.loginScreen)
-          : context.pushReplacement(AppRoutes.registerScreen);
+          ? context.push(AppRoutes.loginScreen)
+          : context.push(AppRoutes.registerScreen);
     } else if (state is AuthenticationFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }

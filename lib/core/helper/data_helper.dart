@@ -59,11 +59,11 @@ class DataHelper {
     }
     return  '+963$raw';
   }
-
-  static String dateFormat(String newPattern,DateTime date,{Locale? locale} ){
-    return DateFormat(newPattern,locale?.languageCode ).format(date);
-
+  static String dateFormat(String newPattern, DateTime date, {Locale? locale}) {
+    final updatedDate = date.add(const Duration(hours: 3));
+    return DateFormat(newPattern, locale?.languageCode).format(updatedDate);
   }
+
 
   Future<void> makeCall(String phoneNumber) async {
     final Uri launchUri = Uri(
