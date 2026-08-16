@@ -1,3 +1,5 @@
+import 'package:untitled1/core/enums/order_status_enum.dart';
+
 class BookingTechnicianModel {
   final String name;
   final String? avatarUrl;
@@ -18,6 +20,7 @@ class BookingConfirmationModel {
   final BookingTechnicianModel technician;
   final String address;
   final String? receiptUrl;
+  final OrderStatusEnum statusEnum;
   final String? statusLabel;
 
   const BookingConfirmationModel({
@@ -28,6 +31,6 @@ class BookingConfirmationModel {
     required this.technician,
     required this.address,
     this.receiptUrl,
-    this.statusLabel,
+    this.statusLabel, required this.statusEnum,
   });
 }

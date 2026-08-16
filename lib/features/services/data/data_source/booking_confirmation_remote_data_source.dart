@@ -1,3 +1,5 @@
+import 'package:untitled1/core/enums/order_status_enum.dart';
+
 import '../models/booking_confirmation_model.dart';
 
 abstract class BookingConfirmationRemoteDataSource {
@@ -21,12 +23,14 @@ class BookingConfirmationRemoteDataSourceImpl
       ),
       address: '1248 Oakwood Avenue, Los Angeles, CA 90024',
       receiptUrl: 'https://example.com/receipts/SH-88291.pdf',
+      statusEnum: OrderStatusEnum.pending,
     ),
     'svc-2': BookingConfirmationModel(
       serviceId: 'svc-2',
       bookingId: '#SH-88292',
       serviceType: 'Maintenance',
       dateTimeLabel: 'Wednesday, Oct 25 • 02:00 PM',
+      statusEnum: OrderStatusEnum.pending,
       technician: BookingTechnicianModel(
         name: 'Alex Henderson',
         avatarColorValue: 0xFF5B7A99,
@@ -39,6 +43,7 @@ class BookingConfirmationRemoteDataSourceImpl
       bookingId: '#SH-88293',
       serviceType: 'Installation',
       dateTimeLabel: 'Tuesday, Oct 24 • 09:00 AM',
+      statusEnum: OrderStatusEnum.pending,
       technician: BookingTechnicianModel(
         name: 'Alex Henderson',
         avatarColorValue: 0xFF5B7A99,
@@ -53,6 +58,7 @@ class BookingConfirmationRemoteDataSourceImpl
     bookingId: '#SH-88291',
     serviceType: 'Installation',
     dateTimeLabel: 'Tuesday, Oct 24 • 09:00 AM',
+    statusEnum: OrderStatusEnum.pending,
     technician: BookingTechnicianModel(
       name: 'Alex Henderson',
       avatarColorValue: 0xFF5B7A99,

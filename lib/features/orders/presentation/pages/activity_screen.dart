@@ -20,6 +20,7 @@ import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
+import '../widgets/staus_order_service.dart';
 
 class ActivityScreen extends StatefulWidget {
   const ActivityScreen({super.key});
@@ -125,8 +126,8 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 final order = orders[index];
                 return GestureDetector(
                   onTap: () {
-                    context.read<OrdersCubit>().getOrderDetails(order.id);
-                    context.push( AppRoutes.orderTrackingScreen);
+                    context.read<OrdersCubit>().getOrderDetails(order);
+                    context.push(AppRoutes.orderTrackingScreen,extra: order);
                   },
                   child: _OrderCard(
                     orderCode: order.orderCode,
@@ -161,6 +162,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       orderCode: 'SR-000000',
                       businessId: 0,
                       status: 'pending_approval',
+                      statusEnum: OrderStatusEnum.pending,
                       totalAmount: '0.00',
                       serviceName: 'Loading service name',
                       createdAt: DateTime.now(),
@@ -315,7 +317,7 @@ class _OrderCard extends StatelessWidget {
                   size: 20.sp,
                 ),
               ),
-              _StatusBadge(text: status.status.tr(), color: status),
+              StatusOrderService(text: status.status.tr(), color: status),
             ],
           ),
           SizedBox(height: 12.h),
@@ -347,32 +349,6 @@ class _OrderCard extends StatelessWidget {
   }
 }
 
-class _StatusBadge extends StatelessWidget {
-  final String text;
-  final OrderStatusEnum color;
-
-  const _StatusBadge({required this.text, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: color.backgroundColor ,
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: color.borderAndLabelColor),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: color.borderAndLabelColor,
-          fontSize: 10.sp,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
 
 class _ServiceRequestCard extends StatelessWidget {
   final ServiceRequestModel request;
@@ -388,9 +364,9 @@ class _ServiceRequestCard extends StatelessWidget {
     final createdAt = request.createdAt;
     final month = DateFormat('MMM').format(createdAt).toUpperCase();
     final day = DateFormat('d').format(createdAt);
-    final isActive = request.status != 'completed' &&
-        request.status != 'cancelled' &&
-        request.status != 'rejected';
+    final status = request.statusEnum;
+    final isActive = status != OrderStatusEnum.completed &&
+        status != OrderStatusEnum.rejected;
 
     return container(
       context: context,
@@ -421,23 +397,26 @@ class _ServiceRequestCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  request.serviceName.isNotEmpty
-                      ? request.serviceName
-                      : request.orderCode,
-                  style: AppStyle.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        request.serviceName.isNotEmpty
+                            ? request.serviceName
+                            : request.orderCode,
+                        style: AppStyle.bodyMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    StatusOrderService(text: status.status.tr(), color: status),
+                  ],
                 ),
                 SizedBox(height: 4.h),
                 TextWithIcon(
                   title: request.orderCode,
                   icon: Icons.tag_outlined,
-                  color: AppColors.grey,
-                ),
-                TextWithIcon(
-                  title: _formatStatus(request.status),
-                  icon: Icons.info_outline,
                   color: AppColors.grey,
                 ),
                 SizedBox(height: 12.h),

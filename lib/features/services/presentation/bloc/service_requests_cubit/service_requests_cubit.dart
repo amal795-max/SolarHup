@@ -53,8 +53,13 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
       (failure) => emit(
         ServiceRequestDetailsError(message: _mapFailure(failure)),
       ),
-      (request) => emit(ServiceRequestDetailsLoaded(request: request)),
-    );
+      (request) {
+        final index = _cachedRequests.indexWhere((o) => o.id == requestId);
+        if (index != -1) {
+          _cachedRequests[index] = request;
+        }
+        emit(ServiceRequestDetailsLoaded(request: request));
+      });
   }
 
   Future<bool> cancelRequest(int requestId) async {

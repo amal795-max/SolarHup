@@ -7,6 +7,7 @@ import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -51,21 +52,30 @@ class OrderTrackingScreen extends StatelessWidget {
                         items: [],
                         statusEnum: OrderStatusEnum.pending,
                       ));
-          return SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Skeletonizer(ignoreContainers: true,
-              enabled: state is OrdersLoading,
-              child: Column(
-                spacing: 16.h,
-                children: [
-                  _OrderHeaderCard(order: order),
-                  if (order.statusEnum == OrderStatusEnum.rejected)
-                    _EstimatedDeliveryBanner(order: order),
-                  OrderTrackingTimeline(order: order),
-                  _ShippingAddressSection(order: order),
-                  _OrderSummarySection(order: order),
-                  SizedBox(height: 24.h),
-                ],
+          return AppRefreshIndicator(
+            onRefresh: () async {
+              if (order.id != 0) {
+                await context.read<OrdersCubit>().getOrderDetails(order);
+              }
+            },
+            child: SingleChildScrollView(
+              physics: appRefreshPhysics,
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Skeletonizer(
+                ignoreContainers: true,
+                enabled: state is OrdersLoading,
+                child: Column(
+                  spacing: 16.h,
+                  children: [
+                    _OrderHeaderCard(order: order),
+                    if (order.statusEnum == OrderStatusEnum.rejected)
+                      _EstimatedDeliveryBanner(order: order),
+                    OrderTrackingTimeline(order: order),
+                    _ShippingAddressSection(order: order),
+                    _OrderSummarySection(order: order),
+                    SizedBox(height: 24.h),
+                  ],
+                ),
               ),
             ),
           );

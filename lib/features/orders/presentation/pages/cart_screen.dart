@@ -136,8 +136,6 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             _CartList(items: cartToShow.items),
             OrderSummary(cart: cartToShow),
-            SizedBox(height: 16.h),
-            const _PromoCodeField(),
             SizedBox(height: 24.h),
           ],
         ),
@@ -163,28 +161,6 @@ class _CartList extends StatelessWidget {
         final item = items[index];
         return CartItem(item: item);
       },
-    );
-  }
-}
-
-class _PromoCodeField extends StatelessWidget {
-  const _PromoCodeField();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: CustomTextField(
-            hasTitle: false,
-            hint: 'promo_code'.tr(),
-            title: '',
-          ),
-        ),
-        SizedBox(width: 12.w),
-        Expanded(child: CustomButton(text: 'apply'.tr())),
-      ],
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 
 class ServiceRequestModel {
@@ -6,6 +7,7 @@ class ServiceRequestModel {
   final String orderCode;
   final int businessId;
   final String status;
+  final OrderStatusEnum statusEnum;
   final String totalAmount;
   final String serviceName;
   final DateTime createdAt;
@@ -24,6 +26,7 @@ class ServiceRequestModel {
     required this.orderCode,
     required this.businessId,
     required this.status,
+    required this.statusEnum,
     required this.totalAmount,
     required this.serviceName,
     required this.createdAt,
@@ -88,6 +91,7 @@ class ServiceRequestModel {
           ? formattedAddress
           : 'Address not available',
       statusLabel: formattedStatus,
+      statusEnum: statusEnum,
     );
   }
 

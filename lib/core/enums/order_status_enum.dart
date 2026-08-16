@@ -30,6 +30,12 @@ enum OrderStatusEnum {
     'delivered',
     AppColors.deliveredBg,
     AppColors.deliveredBorder,
+  ),
+
+  completed(
+    'completed',
+    AppColors.completedBg,
+    AppColors.completedBorder,
   );
 
   final String status;
@@ -51,8 +57,9 @@ enum OrderStatusEnum {
       case 'in_transit':
         return OrderStatusEnum.inTransit;
       case 'delivered':
-      case 'completed':
         return OrderStatusEnum.delivered;
+      case 'completed':
+        return OrderStatusEnum.completed;
       case 'rejected':
         return OrderStatusEnum.rejected;
       default:

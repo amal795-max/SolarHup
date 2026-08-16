@@ -19,12 +19,19 @@ class OrdersCubit extends Cubit<OrdersState> {
       });
   }
 
-  Future<void> getOrderDetails(int orderId) async {
+  Future<void> getOrderDetails(OrderModel order) async {
     emit(OrdersLoading());
-    final result = await repository.getOrderDetails(orderId);
+    final result = await repository.getOrderDetails(order.id);
     result.fold(
-      (failure) => emit(OrdersError(failure.message)),
-      (order) => emit(OrderDetailsLoaded(order)),
+          (failure) => emit(OrdersError(failure.message)),
+          (orderResponse) {
+            final index = cachedOrders.indexWhere((o) => o.id == order.id);
+        if (index != -1) {
+          cachedOrders[index] = orderResponse;
+        }
+        emit(OrderDetailsLoaded(orderResponse));
+      },
     );
   }
+
 }

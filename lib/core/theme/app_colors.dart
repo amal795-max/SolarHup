@@ -52,4 +52,8 @@ class AppColors {
   // Delivered
   static const Color deliveredBg = Color(0xFFE8F5E9);
   static const Color deliveredBorder = green;
+
+  // Completed
+  static const Color completedBg = Color(0xFFC8E6C9);
+  static const Color completedBorder = Color(0xFF1B5E20);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/orders/presentation/widgets/staus_order_service.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/presentation/widgets/appointment_detail_row.dart';
 import 'package:untitled1/widgets/text_rich_widget.dart';
@@ -59,22 +60,8 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.secondaryColor.withValues(
-                      alpha: isDark ? 0.25 : 0.35,
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    booking.statusLabel ?? 'status_confirmed'.tr(),
-                    style: AppStyle.labelSmall.copyWith(
-                      color: AppColors.tertiaryColor,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+                StatusOrderService(text: booking.statusEnum.status.tr(), color: booking.statusEnum),
+
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_request_create_payload.dart';
 
@@ -18,6 +19,7 @@ class ServiceBookingDraft {
   final String? city;
   final String? building;
   final String? floor;
+  final OrderStatusEnum statusEnum;
 
   const ServiceBookingDraft({
     required this.serviceId,
@@ -32,6 +34,7 @@ class ServiceBookingDraft {
     this.city,
     this.building,
     this.floor,
+    this.statusEnum = OrderStatusEnum.pending,
   });
 
   bool get hasSchedule =>
@@ -63,6 +66,7 @@ class ServiceBookingDraft {
     String? city,
     String? building,
     String? floor,
+    OrderStatusEnum? statusEnum,
   }) {
     return ServiceBookingDraft(
       serviceId: serviceId ?? this.serviceId,
@@ -77,6 +81,7 @@ class ServiceBookingDraft {
       city: city ?? this.city,
       building: building ?? this.building,
       floor: floor ?? this.floor,
+      statusEnum: statusEnum ?? this.statusEnum,
     );
   }
 
@@ -122,6 +127,8 @@ class ServiceBookingDraft {
       serviceId: serviceId.toString(),
       serviceType: serviceName,
       dateTimeLabel: formattedDateTime,
+      statusEnum: statusEnum,
+      statusLabel: statusEnum.status.tr(),
       technician: const BookingTechnicianModel(
         name: 'Pending assignment',
       ),

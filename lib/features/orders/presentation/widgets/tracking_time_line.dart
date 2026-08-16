@@ -1,7 +1,7 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 
 import '../../../../core/enums/order_status_enum.dart';
 import '../../../../core/helper/extensions.dart';
@@ -22,9 +22,21 @@ class OrderTrackingTimeline extends StatelessWidget {
     bool isAccepted = status == OrderStatusEnum.accepted;
     bool isInTransit = status == OrderStatusEnum.inTransit;
     bool isDelivered = status == OrderStatusEnum.delivered;
+    bool isCompleted = status == OrderStatusEnum.completed;
 
-    bool hasPassedAccepted = isAccepted || isInTransit || isDelivered;
-    bool hasPassedInTransit = isInTransit || isDelivered;
+    bool hasPassedAccepted = isAccepted || isInTransit || isDelivered || isCompleted;
+    bool hasPassedInTransit = isInTransit || isDelivered || isCompleted;
+    bool hasPassedDelivered = isDelivered || isCompleted;
+
+    String? formattedDate(String? dateStr) {
+      if (dateStr == null) return null;
+      try {
+        final date = DateTime.parse(dateStr);
+        return DataHelper.dateFormat('MMM d, yyyy • hh:mm a', date,locale: context.locale);
+      } catch (_) {
+        return dateStr;
+      }
+    }
 
     return Container(
       padding: EdgeInsets.all(20.w),
@@ -43,6 +55,7 @@ class OrderTrackingTimeline extends StatelessWidget {
           _TimelineItem(
             title: 'tracking_created'.tr(),
             subtitle: 'order_placed_successfully'.tr(),
+            date: formattedDate(order.createdAt),
             isCompleted: true,
           ),
           _TimelineItem(
@@ -60,9 +73,16 @@ class OrderTrackingTimeline extends StatelessWidget {
           _TimelineItem(
             title: 'tracking_delivered'.tr(),
             subtitle: 'order_delivered_desc'.tr(),
-            isLast: true,
-            isCompleted: isDelivered,
+            isCompleted: hasPassedDelivered,
             isCurrent: isInTransit,
+          ),
+          _TimelineItem(
+            title: 'completed'.tr(),
+            subtitle: 'order_completed_desc'.tr(),
+            date: isCompleted ? formattedDate(order.updatedAt) : null,
+            isLast: true,
+            isCompleted: isCompleted,
+            isCurrent: isDelivered,
           ),
         ],
       ),
@@ -73,6 +93,7 @@ class OrderTrackingTimeline extends StatelessWidget {
 class _TimelineItem extends StatelessWidget {
   final String title;
   final String subtitle;
+  final String? date;
   final bool isCompleted;
   final bool isCurrent;
   final bool isLast;
@@ -82,9 +103,12 @@ class _TimelineItem extends StatelessWidget {
   const _TimelineItem({
     required this.title,
     required this.subtitle,
+    this.date,
     this.isCompleted = false,
     this.isCurrent = false,
-    this.isLast = false, this.icon, this.iconColor,
+    this.isLast = false,
+    this.icon,
+    this.iconColor,
   });
 
   @override
@@ -154,6 +178,17 @@ class _TimelineItem extends StatelessWidget {
                     fontSize: 12.sp,
                   ),
                 ),
+                if (date != null)
+                  Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Text(
+                      date!,
+                      style: AppStyle.labelSmall.copyWith(
+                        color: AppColors.primaryColor.withOpacity(0.6),
+                        fontSize: 10.sp,
+                      ),
+                    ),
+                  ),
                 SizedBox(height: 24.h),
               ],
             ),

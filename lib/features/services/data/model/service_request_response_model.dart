@@ -1,3 +1,4 @@
+import '../../../../core/enums/order_status_enum.dart';
 import '../models/service_request_model.dart';
 
 class ServiceRequestResponseModel {
@@ -43,11 +44,14 @@ class ServiceRequestListResponseModel {
 ServiceRequestModel parseServiceRequest(Map<String, dynamic> item) {
   final nestedItem = item['item'] as Map<String, dynamic>?;
 
+  final statusStr = item['status'] as String? ?? 'pending_approval';
+
   return ServiceRequestModel(
     id: item['id'] as int,
     orderCode: item['order_code'] as String? ?? '',
     businessId: item['business_id'] as int? ?? 0,
-    status: item['status'] as String? ?? 'pending_approval',
+    status: statusStr,
+    statusEnum: OrderStatusEnum.fromString(statusStr),
     totalAmount: item['total_amount']?.toString() ?? '0',
     serviceName: nestedItem?['name'] as String? ?? '',
     createdAt: DateTime.tryParse(item['created_at'] as String? ?? '') ??

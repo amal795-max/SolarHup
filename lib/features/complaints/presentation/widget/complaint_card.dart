@@ -57,7 +57,7 @@ class ComplaintCard extends StatelessWidget {
                       ),
                       Text(
                         DataHelper.dateFormat(
-                            'MMM dd, yyyy - HH:mm', complaint.updatedAt,locale: context.locale),
+                            'MMM dd, yyyy - hh:mm a', complaint.updatedAt,locale: context.locale),
                         style: AppStyle.bodySmall.copyWith(
                             color: AppColors.grey),
                       ),
