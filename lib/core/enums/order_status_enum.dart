@@ -54,6 +54,7 @@ enum OrderStatusEnum {
       case 'completed':
         return OrderStatusEnum.delivered;
       case 'rejected':
+      case 'cancelled':
         return OrderStatusEnum.rejected;
       default:
         return OrderStatusEnum.pending;

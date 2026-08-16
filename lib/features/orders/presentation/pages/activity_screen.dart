@@ -8,12 +8,11 @@ import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
-import 'package:untitled1/features/services/data/models/service_request_model.dart';
-import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
-import 'package:untitled1/widgets/container_style_widget.dart';
-import 'package:untitled1/widgets/text_with_icon.dart';
+import 'package:untitled1/features/orders/presentation/widgets/activity_list_card.dart';
+import 'package:untitled1/features/services/data/models/service_request_model.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
@@ -128,9 +127,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
                     context.read<OrdersCubit>().getOrderDetails(order.id);
                     context.push( AppRoutes.orderTrackingScreen);
                   },
-                  child: _OrderCard(
-                    orderCode: order.orderCode,
-                    date: order.items.isNotEmpty
+                  child: ActivityListCard(
+                    icon: Icons.shopping_bag_outlined,
+                    code: order.orderCode,
+                    title: order.items.isNotEmpty
                         ? 'Item Count: ${order.items.length}'
                         : 'No items',
                     price: order.totalAmount,
@@ -200,7 +200,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       AppRoutes.serviceRequestDetail(request.id),
                     );
                   },
-                  child: _ServiceRequestCard(request: request),
+                  child: ActivityListCard(
+                    icon: Icons.home_repair_service_outlined,
+                    code: request.orderCode,
+                    title: request.serviceName.isNotEmpty
+                        ? request.serviceName
+                        : request.formattedDateTime,
+                    price: request.totalAmount,
+                    status: OrderStatusEnum.fromString(request.status),
+                  ),
                 );
               },
             ),
@@ -273,202 +281,6 @@ class _TabItem extends StatelessWidget {
             color: isActive ? context.colorScheme.onSurface : AppColors.grey,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _OrderCard extends StatelessWidget {
-  final String orderCode;
-  final String date;
-  final String price;
-  final OrderStatusEnum status;
-
-  const _OrderCard({
-    required this.orderCode,
-    required this.date,
-    required this.price,
-    required this.status,
-  });
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return container(
-      context: context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Icon(
-                  Icons.shopping_bag_outlined,
-                  color: AppColors.primaryColor,
-                  size: 20.sp,
-                ),
-              ),
-              _StatusBadge(text: status.status.tr(), color: status),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            orderCode,
-            style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-          ),
-          Text(
-            date,
-            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Divider(color: AppColors.borderColor),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'total_price_label'.tr(),
-                style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-              ),
-              Text(
-                '$price \$',
-                style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  final String text;
-  final OrderStatusEnum color;
-
-  const _StatusBadge({required this.text, required this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      decoration: BoxDecoration(
-        color: color.backgroundColor ,
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: color.borderAndLabelColor),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: color.borderAndLabelColor,
-          fontSize: 10.sp,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class _ServiceRequestCard extends StatelessWidget {
-  final ServiceRequestModel request;
-
-  const _ServiceRequestCard({required this.request});
-
-  String _formatStatus(String status) {
-    return status.replaceAll('_', ' ').toUpperCase();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final createdAt = request.createdAt;
-    final month = DateFormat('MMM').format(createdAt).toUpperCase();
-    final day = DateFormat('d').format(createdAt);
-    final isActive = request.status != 'completed' &&
-        request.status != 'cancelled' &&
-        request.status != 'rejected';
-
-    return container(
-      context: context,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: context.colorScheme.tertiaryContainer,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  month,
-                  style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-                ),
-                Text(
-                  day,
-                  style: AppStyle.h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  request.serviceName.isNotEmpty
-                      ? request.serviceName
-                      : request.orderCode,
-                  style: AppStyle.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                TextWithIcon(
-                  title: request.orderCode,
-                  icon: Icons.tag_outlined,
-                  color: AppColors.grey,
-                ),
-                TextWithIcon(
-                  title: _formatStatus(request.status),
-                  icon: Icons.info_outline,
-                  color: AppColors.grey,
-                ),
-                SizedBox(height: 12.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'total_price_label'.tr(),
-                      style: AppStyle.labelSmall.copyWith(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    Text(
-                      '\$${request.totalAmount}',
-                      style: AppStyle.bodyLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                if (isActive) ...[
-                  SizedBox(height: 8.h),
-                  Text(
-                    'services_request_pending_hint'.tr(),
-                    style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
