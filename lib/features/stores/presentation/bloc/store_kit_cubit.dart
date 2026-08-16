@@ -15,7 +15,7 @@ class StoreKitCubit extends Cubit<StoreKitCubitState> {
   final CatalogRepository catalogRepository;
 
   StoreKitCubit(this.repository, this.catalogRepository)
-      : super(StoreKitCubitInitial());
+    : super(StoreKitCubitInitial());
 
   Future<void> loadProducts(int businessId, {int? categoryId}) async {
     emit(StoreKitCubitLoading());
@@ -26,7 +26,9 @@ class StoreKitCubit extends Cubit<StoreKitCubitState> {
       (items) => items,
     );
 
-    final discountsResult = await catalogRepository.getStoreDiscounts(businessId);
+    final discountsResult = await catalogRepository.getStoreDiscounts(
+      businessId,
+    );
     final discounts = discountsResult.fold(
       (_) => <DiscountModel>[],
       (items) => items,

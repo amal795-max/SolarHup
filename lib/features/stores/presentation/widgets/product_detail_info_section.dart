@@ -7,6 +7,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/features/catalog/utils/discount_period_formatter.dart';
+import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
 import 'package:untitled1/widgets/discount_meta_lines.dart';
 
 class ProductDetailInfoSection extends StatelessWidget {
@@ -72,7 +73,10 @@ class ProductDetailInfoSection extends StatelessWidget {
                 ),
               ],
             ),
-            GestureDetector(
+            ReviewSummaryIndicator(
+              itemType: 'product',
+              itemId: product.id,
+              variant: ReviewSummaryVariant.productLink,
               onTap: () {
                 context.push(
                   AppRoutes.reviewsScreen,
@@ -83,20 +87,6 @@ class ProductDetailInfoSection extends StatelessWidget {
                   },
                 );
               },
-              child: Row(
-                children: [
-                  Icon(Icons.star_rounded, color: Colors.orange, size: 20.sp),
-                  SizedBox(width: 4.w),
-                  Text(
-                    'see_all_reviews'.tr(),
-                    style: AppStyle.labelSmall.copyWith(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.w600,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),

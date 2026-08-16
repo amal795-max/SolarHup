@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
-import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
-import 'package:untitled1/features/services/data/data_source/schedule_service_remote_data_source.dart';
+import 'package:untitled1/features/services/data/data_source/workshops_remote_data_source.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/data/repositories/schedule_service_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/schedule_service_bloc/schedule_service_bloc.dart';
@@ -28,26 +28,25 @@ class ScheduleServiceScreen extends StatelessWidget {
   final String serviceId;
   final ServiceBookingDraft? draft;
 
-  const ScheduleServiceScreen({
-    super.key,
-    required this.serviceId,
-    this.draft,
-  });
+  const ScheduleServiceScreen({super.key, required this.serviceId, this.draft});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ScheduleServiceBloc(
-        ScheduleServiceRepositoryImpl(
-          remote: const ScheduleServiceRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(LoadScheduleServiceEvent(serviceId)),
-      child: _ScheduleServiceView(
-        serviceId: serviceId,
-        draft: draft,
-      ),
+      create: (_) =>
+          ScheduleServiceBloc(
+            ScheduleServiceRepositoryImpl(
+              workshopsRemote: getIt<WorkshopsRemoteDataSource>(),
+              networkInfo: getIt(),
+            ),
+          )..add(
+            LoadScheduleServiceEvent(
+              serviceId: serviceId,
+              businessId: draft?.businessId,
+              serviceName: draft?.serviceName,
+            ),
+          ),
+      child: _ScheduleServiceView(serviceId: serviceId, draft: draft),
     );
   }
 }
@@ -56,10 +55,7 @@ class _ScheduleServiceView extends StatelessWidget {
   final String serviceId;
   final ServiceBookingDraft? draft;
 
-  const _ScheduleServiceView({
-    required this.serviceId,
-    this.draft,
-  });
+  const _ScheduleServiceView({required this.serviceId, this.draft});
 
   @override
   Widget build(BuildContext context) {
@@ -71,23 +67,27 @@ class _ScheduleServiceView extends StatelessWidget {
             return switch (state) {
               ScheduleServiceLoading() => const LoadingIndicator(),
               ScheduleServiceError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context
-                        .read<ScheduleServiceBloc>()
-                        .add(LoadScheduleServiceEvent(serviceId)),
-                    width: 160.w,
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message,
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () => context.read<ScheduleServiceBloc>().add(
+                    LoadScheduleServiceEvent(
+                      serviceId: serviceId,
+                      businessId: draft?.businessId,
+                      serviceName: draft?.serviceName,
+                    ),
                   ),
+                  width: 160.w,
                 ),
+              ),
               ScheduleServiceLoaded() => _ScheduleServiceBody(
-                  state: state,
-                  draft: draft,
-                ),
+                state: state,
+                draft: draft,
+              ),
               _ => const SizedBox.shrink(),
             };
           },
@@ -101,19 +101,24 @@ class _ScheduleServiceBody extends StatelessWidget {
   final ScheduleServiceLoaded state;
   final ServiceBookingDraft? draft;
 
-  const _ScheduleServiceBody({
-    required this.state,
-    this.draft,
-  });
+  const _ScheduleServiceBody({required this.state, this.draft});
 
   void _continueToAddress(BuildContext context) {
+    if (!state.hasBookableDays || state.selectedDate == null) {
+      return;
+    }
+
     if (state.selectedTimeSlot == null) {
-      DataHelper.showSnackBar(message: 'schedule_select_time',context: context);
+      DataHelper.showSnackBar(
+        message: 'schedule_select_time',
+        context: context,
+      );
 
       return;
     }
 
-    final baseDraft = draft ??
+    final baseDraft =
+        draft ??
         ServiceBookingDraft(
           serviceId: int.tryParse(state.service.serviceId) ?? 0,
           serviceName: state.service.title,
@@ -180,7 +185,9 @@ class _ScheduleServiceBody extends StatelessWidget {
                 SizedBox(height: 24.h),
                 CustomButton(
                   text: 'continue'.tr(),
-                  onPressed: () => _continueToAddress(context),
+                  onPressed: state.hasBookableDays
+                      ? () => _continueToAddress(context)
+                      : null,
                 ),
               ],
             ),

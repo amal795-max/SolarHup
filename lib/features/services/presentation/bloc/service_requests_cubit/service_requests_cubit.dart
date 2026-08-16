@@ -50,16 +50,16 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
     emit(ServiceRequestDetailsLoading());
     final result = await repository.getServiceRequest(requestId);
     result.fold(
-      (failure) => emit(
-        ServiceRequestDetailsError(message: _mapFailure(failure)),
-      ),
+      (failure) =>
+          emit(ServiceRequestDetailsError(message: _mapFailure(failure))),
       (request) {
         final index = _cachedRequests.indexWhere((o) => o.id == requestId);
         if (index != -1) {
           _cachedRequests[index] = request;
         }
         emit(ServiceRequestDetailsLoaded(request: request));
-      });
+      },
+    );
   }
 
   Future<bool> cancelRequest(int requestId) async {

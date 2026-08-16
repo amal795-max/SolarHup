@@ -15,7 +15,8 @@ class ExpertConsultationCubit extends Cubit<ExpertConsultationState> {
     emit(ExpertConsultationLoading());
     final result = await repository.getMyQuestions();
     result.fold(
-      (failure) => emit(ExpertConsultationError(message: mapFailureToMessage(failure))),
+      (failure) =>
+          emit(ExpertConsultationError(message: mapFailureToMessage(failure))),
       (questions) => emit(ExpertConsultationSuccess(questions: questions)),
     );
   }
@@ -24,7 +25,8 @@ class ExpertConsultationCubit extends Cubit<ExpertConsultationState> {
     emit(ExpertConsultationSending());
     final result = await repository.sendQuestion(question);
     result.fold(
-      (failure) => emit(ExpertConsultationError(message: mapFailureToMessage(failure))),
+      (failure) =>
+          emit(ExpertConsultationError(message: mapFailureToMessage(failure))),
       (data) => emit(ExpertConsultationSent(question: data)),
     );
   }

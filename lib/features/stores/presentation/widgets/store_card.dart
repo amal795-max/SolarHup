@@ -9,6 +9,8 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
+import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
+
 import '../../../../core/routing/app_routes.dart';
 
 // ---------------------------------------------------------------------------
@@ -168,7 +170,7 @@ class _StoreImageSection extends StatelessWidget {
               children: [
                 _ComplaintButton(data: data),
                 SizedBox(width: 8.w),
-                _RatingBadge(rating: data.rating),
+                _RatingBadge(data: data),
               ],
             ),
           ),
@@ -218,43 +220,25 @@ class _ComplaintButton extends StatelessWidget {
 // ---------------------------------------------------------------------------
 
 class _RatingBadge extends StatelessWidget {
-  final double rating;
+  final StoreCardData data;
 
-  const _RatingBadge({required this.rating});
+  const _RatingBadge({required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.18),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.star_rounded,
-            color: AppColors.secondaryColor,
-            size: 13.sp,
-          ),
-          SizedBox(width: 3.w),
-          Text(
-            rating.toStringAsFixed(1),
-            style: AppStyle.labelXSmall.copyWith(
-              color: AppColors.black,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
+    return ReviewSummaryIndicator(
+      itemType: 'store',
+      itemId: data.id,
+      onTap: () {
+        context.push(
+          AppRoutes.reviewsScreen,
+          extra: {
+            'itemType': 'store',
+            'itemId': data.id.toString(),
+            'itemName': data.name,
+          },
+        );
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:untitled1/core/api/api-requests.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/api/api_response_utils.dart';
+import 'package:untitled1/features/services/data/models/workshop_availability_model.dart';
 import 'package:untitled1/features/services/data/models/workshop_detail_model.dart';
 import 'package:untitled1/features/services/data/model/workshop_list_response_model.dart';
 import 'package:untitled1/features/services/data/model/workshop_services_response_model.dart';
@@ -21,6 +22,7 @@ abstract class WorkshopsRemoteDataSource {
     int? categoryId,
   });
   Future<List<WorkshopOfferingModel>> getOfferingsForCategory(int categoryId);
+  Future<WorkshopAvailabilityModel> getWorkshopAvailability(int businessId);
 }
 
 class WorkshopsRemoteDataSourceImpl implements WorkshopsRemoteDataSource {
@@ -154,5 +156,26 @@ class WorkshopsRemoteDataSourceImpl implements WorkshopsRemoteDataSource {
 
     offerings.sort((a, b) => a.price.compareTo(b.price));
     return offerings;
+  }
+
+  @override
+  Future<WorkshopAvailabilityModel> getWorkshopAvailability(
+    int businessId,
+  ) async {
+    try {
+      final response = await apiRequest.get(
+        EndPoints.workshopAvailability(businessId),
+      );
+      if (response.statusCode != 200) {
+        throw ServerException(
+          message: getErrorMessage(response.statusCode ?? 0),
+        );
+      }
+      return WorkshopAvailabilityModel.fromJson(
+        response.data as Map<String, dynamic>,
+      );
+    } on DioException catch (e) {
+      throw ServerException(message: mapDioError(e));
+    }
   }
 }

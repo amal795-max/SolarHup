@@ -8,6 +8,7 @@ import 'package:untitled1/features/services/data/models/service_request_create_p
 
 class ServiceBookingDraft {
   final int serviceId;
+  final int? businessId;
   final String serviceName;
   final double servicePrice;
   final DateTime? selectedDate;
@@ -19,10 +20,12 @@ class ServiceBookingDraft {
   final String? city;
   final String? building;
   final String? floor;
+  final String? couponCode;
   final OrderStatusEnum statusEnum;
 
   const ServiceBookingDraft({
     required this.serviceId,
+    this.businessId,
     required this.serviceName,
     required this.servicePrice,
     this.selectedDate,
@@ -34,6 +37,7 @@ class ServiceBookingDraft {
     this.city,
     this.building,
     this.floor,
+    this.couponCode,
     this.statusEnum = OrderStatusEnum.pending,
   });
 
@@ -55,6 +59,7 @@ class ServiceBookingDraft {
 
   ServiceBookingDraft copyWith({
     int? serviceId,
+    int? businessId,
     String? serviceName,
     double? servicePrice,
     DateTime? selectedDate,
@@ -66,10 +71,12 @@ class ServiceBookingDraft {
     String? city,
     String? building,
     String? floor,
+    String? couponCode,
     OrderStatusEnum? statusEnum,
   }) {
     return ServiceBookingDraft(
       serviceId: serviceId ?? this.serviceId,
+      businessId: businessId ?? this.businessId,
       serviceName: serviceName ?? this.serviceName,
       servicePrice: servicePrice ?? this.servicePrice,
       selectedDate: selectedDate ?? this.selectedDate,
@@ -81,6 +88,7 @@ class ServiceBookingDraft {
       city: city ?? this.city,
       building: building ?? this.building,
       floor: floor ?? this.floor,
+      couponCode: couponCode ?? this.couponCode,
       statusEnum: statusEnum ?? this.statusEnum,
     );
   }
@@ -96,6 +104,7 @@ class ServiceBookingDraft {
       time: _formatApiTime(selectedTimeSlotId!),
       floor: floor?.trim(),
       note: note?.trim(),
+      couponCode: couponCode?.trim(),
     );
   }
 
@@ -121,6 +130,10 @@ class ServiceBookingDraft {
 
   BookingConfirmationModel toConfirmation({
     required String orderCode,
+    double? originalPrice,
+    double? finalPrice,
+    double? discountAmount,
+    String? couponCode,
   }) {
     return BookingConfirmationModel(
       bookingId: orderCode,
@@ -133,6 +146,10 @@ class ServiceBookingDraft {
         name: 'Pending assignment',
       ),
       address: formattedAddress,
+      originalPrice: originalPrice ?? servicePrice,
+      finalPrice: finalPrice ?? servicePrice,
+      discountAmount: discountAmount,
+      couponCode: couponCode,
     );
   }
 

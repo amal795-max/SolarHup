@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
@@ -30,13 +29,24 @@ class ComplaintCubit extends Cubit<ComplaintState> {
     );
   }
 
-  Future<void> addComplaints({required int businessId, required String subject, required String message,}) async {AddComplaintParams params = AddComplaintParams(businessId: businessId, subject: subject, message: message,);
+  Future<void> addComplaints({
+    required int businessId,
+    required String subject,
+    required String message,
+  }) async {
+    AddComplaintParams params = AddComplaintParams(
+      businessId: businessId,
+      subject: subject,
+      message: message,
+    );
     emit(ComplaintLoading());
     final result = await repository.createComplaint(params);
     result.fold(
       (failure) => emit(ComplaintError(message: mapFailureToMessage(failure))),
       (complaint) {
-        emit(const ComplaintActionSuccess(message: complaintSubmittedSuccessfully));
+        emit(
+          const ComplaintActionSuccess(message: complaintSubmittedSuccessfully),
+        );
       },
     );
   }
@@ -51,11 +61,11 @@ class ComplaintCubit extends Cubit<ComplaintState> {
       },
     );
   }
+
   Future<void> sendMessage({
     required int complaintId,
     required String message,
   }) async {
-
     final index = _cachedComplaints.indexWhere((c) => c.id == complaintId);
     if (index == -1) return;
 
@@ -67,7 +77,6 @@ class ComplaintCubit extends Cubit<ComplaintState> {
       senderRole: 'customer',
       message: message,
       createdAt: DateTime.now().subtract(const Duration(hours: 3)),
-      
     );
 
     final optimisticMessages = [...original.messages, tempMessage];
@@ -85,7 +94,7 @@ class ComplaintCubit extends Cubit<ComplaintState> {
     );
 
     result.fold(
-          (failure) {
+      (failure) {
         emit(
           ComplaintDetailsSuccess(
             complaint: original,
@@ -95,7 +104,7 @@ class ComplaintCubit extends Cubit<ComplaintState> {
         );
       },
 
-          (updatedComplaint) {
+      (updatedComplaint) {
         _cachedComplaints[index] = updatedComplaint;
 
         emit(

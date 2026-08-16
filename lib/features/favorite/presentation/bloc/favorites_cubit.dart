@@ -44,16 +44,13 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     _prefetchInFlight.add(itemType);
     try {
       final result = await repository.getFavorites(itemType);
-      result.fold(
-        (_) => _favoriteIdsByType[itemType] = {},
-        (items) {
-          _favoriteIdsByType[itemType] = items.map((item) => item.itemId).toSet();
-          _cacheFavoriteMetadata(items);
-          if (itemType == _currentCategory) {
-            _cachedFavorites = items;
-          }
-        },
-      );
+      result.fold((_) => _favoriteIdsByType[itemType] = {}, (items) {
+        _favoriteIdsByType[itemType] = items.map((item) => item.itemId).toSet();
+        _cacheFavoriteMetadata(items);
+        if (itemType == _currentCategory) {
+          _cachedFavorites = items;
+        }
+      });
     } finally {
       _prefetchInFlight.remove(itemType);
     }
@@ -64,15 +61,14 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     emit(FavoritesLoading(category));
     final result = await repository.getFavorites(category);
 
-    result.fold(
-      (failure) => emit(FavoritesError(failure.message, category)),
-      (items) {
-        _cachedFavorites = items;
-        _favoriteIdsByType[category] = items.map((item) => item.itemId).toSet();
-        _cacheFavoriteMetadata(items);
-        emit(FavoritesSuccess(items: items, category: category));
-      },
-    );
+    result.fold((failure) => emit(FavoritesError(failure.message, category)), (
+      items,
+    ) {
+      _cachedFavorites = items;
+      _favoriteIdsByType[category] = items.map((item) => item.itemId).toSet();
+      _cacheFavoriteMetadata(items);
+      emit(FavoritesSuccess(items: items, category: category));
+    });
   }
 
   Future<void> toggleFavorite(
@@ -118,7 +114,8 @@ class FavoritesCubit extends Cubit<FavoritesState> {
           },
         );
       } else {
-        if (itemType == FavoriteCategoryEnum.service.name && workshopId != null) {
+        if (itemType == FavoriteCategoryEnum.service.name &&
+            workshopId != null) {
           rememberServiceWorkshop(
             serviceId: itemId,
             workshopId: workshopId,
@@ -161,7 +158,8 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     return _favoriteIdsByType[itemType]?.contains(itemId) ?? false;
   }
 
-  List<FavoriteModel> get cachedFavorites => List.unmodifiable(_cachedFavorites);
+  List<FavoriteModel> get cachedFavorites =>
+      List.unmodifiable(_cachedFavorites);
 
   final Map<int, int> _productBusinessIds = {};
   final Map<int, int> _serviceWorkshopIds = {};
@@ -241,17 +239,13 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
   Future<void> _refreshCurrentCategorySilently() async {
     final result = await repository.getFavorites(_currentCategory);
-    result.fold(
-      (_) {},
-      (items) {
-        _cachedFavorites = items;
-        _favoriteIdsByType[_currentCategory] =
-            items.map((item) => item.itemId).toSet();
-        _cacheFavoriteMetadata(items);
-        emit(
-          FavoritesSuccess(items: items, category: _currentCategory),
-        );
-      },
-    );
+    result.fold((_) {}, (items) {
+      _cachedFavorites = items;
+      _favoriteIdsByType[_currentCategory] = items
+          .map((item) => item.itemId)
+          .toSet();
+      _cacheFavoriteMetadata(items);
+      emit(FavoritesSuccess(items: items, category: _currentCategory));
+    });
   }
 }

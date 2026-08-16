@@ -1,4 +1,3 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +29,8 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 
   void _scrollListener() {
     if (_scrollController.hasClients) {
-      final isAtBottom = _scrollController.offset >=
+      final isAtBottom =
+          _scrollController.offset >=
           (_scrollController.position.maxScrollExtent - 100);
 
       if (isAtBottom && _showScrollToBottom) {
@@ -47,6 +47,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     _scrollController.dispose();
     super.dispose();
   }
+
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -72,7 +73,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.attach_money),
-              onPressed: () =>_showBudgetSheet(context, cubit),
+              onPressed: () => _showBudgetSheet(context, cubit),
               tooltip: 'set_budget_title'.tr(),
             ),
             IconButton(
@@ -97,7 +98,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                         padding: EdgeInsets.all(16.w),
                         itemCount: cubit.messages.length,
                         itemBuilder: (context, index) {
-                          return ChatMessageTile(message: cubit.messages[index]);
+                          return ChatMessageTile(
+                            message: cubit.messages[index],
+                          );
                         },
                       );
                     },
@@ -125,18 +128,18 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       ),
     );
   }
+
   void _listener(BuildContext context, ChatBotState state) {
     if (state is ChatBotSuccess ||
         state is ChatNewMessageAdded ||
         state is ConversationDetailsSuccess ||
         state is ChatImageSelected) {
       _scrollToBottom();
-    }
-
-    else if (state is ChatBotFailure) {
+    } else if (state is ChatBotFailure) {
       DataHelper.showSnackBar(message: state.message, context: context);
     }
   }
+
   void _showBudgetSheet(BuildContext context, ChatBotCubit cubit) {
     showModalBottomSheet(
       context: context,
@@ -146,5 +149,5 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       ),
       builder: (_) => BudgetBottomSheet(cubit: cubit),
     );
-  }}
-
+  }
+}

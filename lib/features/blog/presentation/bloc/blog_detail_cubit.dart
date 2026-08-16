@@ -16,8 +16,7 @@ class BlogDetailCubit extends Cubit<BlogDetailState> {
     emit(BlogDetailLoading());
     final result = await repository.getArticleDetail(articleId);
     result.fold(
-      (failure) =>
-          emit(BlogDetailError(message: mapFailureToMessage(failure))),
+      (failure) => emit(BlogDetailError(message: mapFailureToMessage(failure))),
       (article) => emit(BlogDetailLoaded(article: article)),
     );
   }

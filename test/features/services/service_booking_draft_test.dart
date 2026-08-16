@@ -32,5 +32,32 @@ void main() {
         'note': 'Gate code 1234',
       },
     );
+  test('ServiceBookingDraft builds service request payload with coupon', () {
+    final draft = ServiceBookingDraft(
+      serviceId: 12,
+      serviceName: 'Panel Cleaning',
+      servicePrice: 90,
+      selectedDate: DateTime(2026, 3, 15),
+      selectedTimeSlotId: '09-00',
+      fullName: 'Jane Doe',
+      street: '123 Solar Way',
+      city: 'Palo Alto',
+      building: '5',
+      couponCode: 'SAVE10',
+    );
+
+    expect(
+      draft.toPayload().toJson(),
+      {
+        'service_id': 12,
+        'full_name': 'Jane Doe',
+        'city': 'Palo Alto',
+        'street': '123 Solar Way',
+        'building': '5',
+        'date': '2026-03-15',
+        'time': '09:00:00',
+        'coupon_code': 'SAVE10',
+      },
+    );
   });
 }

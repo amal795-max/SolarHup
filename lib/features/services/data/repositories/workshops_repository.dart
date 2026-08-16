@@ -3,6 +3,7 @@ import 'package:untitled1/core/api/errors/exceptions.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/features/services/data/data_source/workshops_remote_data_source.dart';
+import 'package:untitled1/features/services/data/models/workshop_availability_model.dart';
 import 'package:untitled1/features/services/data/models/workshop_detail_model.dart';
 import 'package:untitled1/features/services/data/models/workshop_offering_model.dart';
 import 'package:untitled1/features/services/data/models/workshop_service_model.dart';
@@ -17,6 +18,9 @@ abstract class WorkshopsRepository {
   });
   Future<Either<Failure, List<WorkshopOfferingModel>>> getOfferingsForCategory(
     int categoryId,
+  );
+  Future<Either<Failure, WorkshopAvailabilityModel>> getWorkshopAvailability(
+    int businessId,
   );
 }
 
@@ -83,6 +87,21 @@ class WorkshopsRepositoryImpl implements WorkshopsRepository {
       try {
         final offerings = await remote.getOfferingsForCategory(categoryId);
         return Right(offerings);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    }
+    return const Left(OfflineFailure());
+  }
+
+  @override
+  Future<Either<Failure, WorkshopAvailabilityModel>> getWorkshopAvailability(
+    int businessId,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final availability = await remote.getWorkshopAvailability(businessId);
+        return Right(availability);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }

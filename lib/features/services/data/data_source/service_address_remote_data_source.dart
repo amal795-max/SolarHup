@@ -16,6 +16,7 @@ class ServiceAddressRemoteDataSourceImpl
       defaultCity: 'Palo Alto',
       defaultBuilding: '123',
       defaultFloor: '2',
+      originalTotal: 1345.00,
       grandTotal: 1345.00,
     ),
     'svc-2': const ServiceAddressModel(
@@ -25,6 +26,7 @@ class ServiceAddressRemoteDataSourceImpl
       defaultCity: 'Palo Alto',
       defaultBuilding: '123',
       defaultFloor: '2',
+      originalTotal: 1345.00,
       grandTotal: 1345.00,
     ),
     'svc-featured-1': const ServiceAddressModel(
@@ -34,6 +36,7 @@ class ServiceAddressRemoteDataSourceImpl
       defaultCity: 'Palo Alto',
       defaultBuilding: '123',
       defaultFloor: '2',
+      originalTotal: 1345.00,
       grandTotal: 1345.00,
     ),
   };
@@ -45,6 +48,7 @@ class ServiceAddressRemoteDataSourceImpl
     defaultCity: 'Palo Alto',
     defaultBuilding: '123',
     defaultFloor: '2',
+    originalTotal: 1345.00,
     grandTotal: 1345.00,
   );
 

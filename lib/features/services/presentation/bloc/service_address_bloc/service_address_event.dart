@@ -62,3 +62,20 @@ final class UpdateServiceFloorEvent extends ServiceAddressEvent {
   @override
   List<Object?> get props => [value];
 }
+
+final class UpdateServiceCouponCodeEvent extends ServiceAddressEvent {
+  final String value;
+
+  const UpdateServiceCouponCodeEvent(this.value);
+
+  @override
+  List<Object?> get props => [value];
+}
+
+final class ApplyServiceCouponEvent extends ServiceAddressEvent {
+  const ApplyServiceCouponEvent();
+}
+
+final class ClearServiceCouponEvent extends ServiceAddressEvent {
+  const ClearServiceCouponEvent();
+}

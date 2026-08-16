@@ -35,28 +35,16 @@ const ProductDetailModel _skeletonProduct = ProductDetailModel(
       icon: Icons.bolt_rounded,
       fullWidth: true,
     ),
-    ProductSpecHighlight(
-      labelKey: 'product_detail_efficiency',
-      value: '00%',
-    ),
-    ProductSpecHighlight(
-      labelKey: 'product_detail_warranty',
-      value: '00 yrs',
-    ),
+    ProductSpecHighlight(labelKey: 'product_detail_efficiency', value: '00%'),
+    ProductSpecHighlight(labelKey: 'product_detail_warranty', value: '00 yrs'),
   ],
   technicalRows: [
-    ProductDetailDataRow(
-      labelKey: 'product_detail_weight',
-      value: '00.0 kg',
-    ),
+    ProductDetailDataRow(labelKey: 'product_detail_weight', value: '00.0 kg'),
     ProductDetailDataRow(
       labelKey: 'product_detail_dimensions',
       value: '000 x 000 x 000',
     ),
-    ProductDetailDataRow(
-      labelKey: 'product_detail_sku',
-      value: 'SKU-0000',
-    ),
+    ProductDetailDataRow(labelKey: 'product_detail_sku', value: 'SKU-0000'),
   ],
 );
 
@@ -92,36 +80,33 @@ class _ProductDetailView extends StatelessWidget {
         return Scaffold(
           body: switch (state) {
             ProductDetailLoading() => AppSkeletonizer(
-                child: _ProductDetailBody(
-                  businessId: args.businessId,
-                  product: _skeletonProduct,
-                  selectedImageIndex: 0,
-                  storeName: args.storeName,
-                ),
+              child: _ProductDetailBody(
+                businessId: args.businessId,
+                product: _skeletonProduct,
+                selectedImageIndex: 0,
+                storeName: args.storeName,
               ),
+            ),
             ProductDetailError(:final message) => SafeArea(
-                child: EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message.tr(),
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context.read<ProductDetailBloc>().add(
-                          LoadProductDetailEvent(
-                            businessId: args.businessId,
-                            productId: args.productId,
-                          ),
-                        ),
-                    width: 160.w,
+              child: EmptyWidget(
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message.tr(),
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () => context.read<ProductDetailBloc>().add(
+                    LoadProductDetailEvent(
+                      businessId: args.businessId,
+                      productId: args.productId,
+                    ),
                   ),
+                  width: 160.w,
                 ),
               ),
-            ProductDetailLoaded(
-              :final product,
-              :final selectedImageIndex,
-            ) =>
+            ),
+            ProductDetailLoaded(:final product, :final selectedImageIndex) =>
               _ProductDetailBody(
                 businessId: args.businessId,
                 product: product,

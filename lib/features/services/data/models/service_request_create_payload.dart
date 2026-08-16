@@ -8,6 +8,7 @@ class ServiceRequestCreatePayload {
   final String time;
   final String? floor;
   final String? note;
+  final String? couponCode;
 
   const ServiceRequestCreatePayload({
     required this.serviceId,
@@ -19,6 +20,7 @@ class ServiceRequestCreatePayload {
     required this.time,
     this.floor,
     this.note,
+    this.couponCode,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,6 +34,8 @@ class ServiceRequestCreatePayload {
       'time': time,
       if (floor != null && floor!.trim().isNotEmpty) 'floor': floor!.trim(),
       if (note != null && note!.trim().isNotEmpty) 'note': note!.trim(),
+      if (couponCode != null && couponCode!.trim().isNotEmpty)
+        'coupon_code': couponCode!.trim(),
     };
   }
 }

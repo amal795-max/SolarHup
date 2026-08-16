@@ -80,8 +80,7 @@ class WorkshopServiceItem {
     required this.imagePlaceholderColorValue,
   });
 
-  bool get hasDiscount =>
-      originalPrice != null && originalPrice! > price;
+  bool get hasDiscount => originalPrice != null && originalPrice! > price;
 }
 
 final WorkshopInfoData sampleWorkshopInfo = const WorkshopInfoData(
@@ -112,11 +111,9 @@ class WorkshopInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<WorkshopDetailCubit>()
-        ..loadWorkshop(
-          args.workshopId,
-          categoryId: args.categoryId,
-        ),
+      create: (_) =>
+          getIt<WorkshopDetailCubit>()
+            ..loadWorkshop(args.workshopId, categoryId: args.categoryId),
       child: _WorkshopInfoView(args: args),
     );
   }
@@ -134,20 +131,24 @@ class _WorkshopInfoView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             WorkshopDetailLoading() => AppSkeletonizer(
-                child: _WorkshopInfoContent(
-                  data: sampleWorkshopInfo,
-                  initialSelectedServiceId: args.highlightServiceId,
-                ),
+              child: _WorkshopInfoContent(
+                data: sampleWorkshopInfo,
+                initialSelectedServiceId: args.highlightServiceId,
               ),
+            ),
             WorkshopDetailError(:final message) => errorWidget(
-                message: message,
-                hasButton: true,
-                onPressed: () => context.read<WorkshopDetailCubit>().loadWorkshop(
-                      args.workshopId,
-                      categoryId: args.categoryId,
-                    ),
+              message: message,
+              hasButton: true,
+              onPressed: () => context.read<WorkshopDetailCubit>().loadWorkshop(
+                args.workshopId,
+                categoryId: args.categoryId,
               ),
-            WorkshopDetailLoaded(:final workshop, :final services, :final discounts) =>
+            ),
+            WorkshopDetailLoaded(
+              :final workshop,
+              :final services,
+              :final discounts,
+            ) =>
               _WorkshopInfoContent(
                 data: workshopDetailToInfoData(
                   workshop,
@@ -204,8 +205,9 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
     final selected = _selectedService;
 
     return Scaffold(
-      backgroundColor:
-          isDark ? Theme.of(context).scaffoldBackgroundColor : AppColors.backGroundGrey,
+      backgroundColor: isDark
+          ? Theme.of(context).scaffoldBackgroundColor
+          : AppColors.backGroundGrey,
       body: Stack(
         children: [
           CustomScrollView(
@@ -264,10 +266,7 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
     );
   }
 
-  void _startBooking(
-    BuildContext context,
-    WorkshopServiceItem service,
-  ) {
+  void _startBooking(BuildContext context, WorkshopServiceItem service) {
     final serviceId = int.tryParse(service.id);
     if (serviceId == null) return;
 
@@ -275,6 +274,7 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
       AppRoutes.scheduleService(service.id),
       extra: ServiceBookingDraft(
         serviceId: serviceId,
+        businessId: int.tryParse(widget.data.id),
         serviceName: service.name,
         servicePrice: service.price,
       ),
@@ -374,7 +374,9 @@ class _WorkshopProfileSection extends StatelessWidget {
             width: 72.w,
             height: 72.w,
             decoration: BoxDecoration(
-              color: hasLogo ? AppColors.white : Color(data.imagePlaceholderColorValue),
+              color: hasLogo
+                  ? AppColors.white
+                  : Color(data.imagePlaceholderColorValue),
               borderRadius: BorderRadius.circular(18.r),
               border: Border.all(
                 color: isDark ? AppColors.darkGray : AppColors.white,
@@ -414,7 +416,10 @@ class _WorkshopProfileSection extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.lightYellow,
                     borderRadius: BorderRadius.circular(20.r),
@@ -511,23 +516,14 @@ class _WorkshopContactSection extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         children: [
-          _ContactChip(
-            icon: Icons.location_on_rounded,
-            label: data.location,
-          ),
+          _ContactChip(icon: Icons.location_on_rounded, label: data.location),
           if (data.region.isNotEmpty && data.region != data.location) ...[
             SizedBox(width: 8.w),
-            _ContactChip(
-              icon: Icons.map_outlined,
-              label: data.region,
-            ),
+            _ContactChip(icon: Icons.map_outlined, label: data.region),
           ],
           if (data.phone.isNotEmpty) ...[
             SizedBox(width: 8.w),
-            _ContactChip(
-              icon: Icons.phone_rounded,
-              label: data.phone,
-            ),
+            _ContactChip(icon: Icons.phone_rounded, label: data.phone),
           ],
         ],
       ),
@@ -573,10 +569,7 @@ class _WorkshopRequestBar extends StatelessWidget {
   final WorkshopServiceItem service;
   final VoidCallback onRequest;
 
-  const _WorkshopRequestBar({
-    required this.service,
-    required this.onRequest,
-  });
+  const _WorkshopRequestBar({required this.service, required this.onRequest});
 
   @override
   Widget build(BuildContext context) {
@@ -626,14 +619,18 @@ class _WorkshopRequestBar extends StatelessWidget {
                         SizedBox(width: 6.w),
                         Text(
                           '\$${service.price.toStringAsFixed(2)}',
-                          style: AppStyle.h6.copyWith(color: AppColors.primaryColor),
+                          style: AppStyle.h6.copyWith(
+                            color: AppColors.primaryColor,
+                          ),
                         ),
                       ],
                     )
                   else
                     Text(
                       '\$${service.price.toStringAsFixed(2)}',
-                      style: AppStyle.h6.copyWith(color: AppColors.primaryColor),
+                      style: AppStyle.h6.copyWith(
+                        color: AppColors.primaryColor,
+                      ),
                     ),
                 ],
               ),
@@ -655,4 +652,3 @@ class _WorkshopRequestBar extends StatelessWidget {
     );
   }
 }
-

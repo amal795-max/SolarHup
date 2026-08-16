@@ -20,6 +20,8 @@ class ServiceRequestModel {
   final String? serviceDate;
   final String? serviceTime;
   final String? serviceNote;
+  final String? discountAmount;
+  final String? couponCode;
 
   const ServiceRequestModel({
     required this.id,
@@ -39,12 +41,33 @@ class ServiceRequestModel {
     this.serviceDate,
     this.serviceTime,
     this.serviceNote,
+    this.discountAmount,
+    this.couponCode,
   });
 
   bool get isPending =>
       status == 'pending_approval' || status == 'pending';
 
+  bool get isCompleted => statusEnum == OrderStatusEnum.completed;
+
   bool get canCancel => isPending;
+
+  String get displayDate {
+    final date = serviceDate?.trim();
+    if (date != null && date.isNotEmpty) {
+      final parsed = DateTime.tryParse(date) ?? DateTime.tryParse('${date}T00:00:00');
+      if (parsed != null) {
+        return DateFormat('MMM d, yyyy').format(parsed);
+      }
+      return date;
+    }
+    return DateFormat('MMM d, yyyy').format(createdAt);
+  }
+
+  String get displayTime {
+    final time = _formatDisplayTime(serviceTime);
+    return time ?? DateFormat('hh:mm a').format(createdAt);
+  }
 
   String get formattedAddress {
     final parts = <String>[

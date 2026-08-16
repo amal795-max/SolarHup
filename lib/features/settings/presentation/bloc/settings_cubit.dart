@@ -16,7 +16,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     final result = await repository.getPrivacyPolicy();
     result.fold(
       (failure) => emit(SettingsError(message: mapFailureToMessage(failure))),
-      (privacyPolicy) => emit(PrivacyPolicySuccess(privacyPolicy: privacyPolicy)),
+      (privacyPolicy) =>
+          emit(PrivacyPolicySuccess(privacyPolicy: privacyPolicy)),
     );
   }
 }

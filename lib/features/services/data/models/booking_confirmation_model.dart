@@ -22,6 +22,10 @@ class BookingConfirmationModel {
   final String? receiptUrl;
   final OrderStatusEnum statusEnum;
   final String? statusLabel;
+  final double? originalPrice;
+  final double? finalPrice;
+  final double? discountAmount;
+  final String? couponCode;
 
   const BookingConfirmationModel({
     required this.bookingId,
@@ -31,6 +35,17 @@ class BookingConfirmationModel {
     required this.technician,
     required this.address,
     this.receiptUrl,
-    this.statusLabel, required this.statusEnum,
+    this.statusLabel,
+    required this.statusEnum,
+    this.originalPrice,
+    this.finalPrice,
+    this.discountAmount,
+    this.couponCode,
   });
+
+  bool get hasCouponDiscount =>
+      (discountAmount ?? 0) > 0 &&
+      originalPrice != null &&
+      finalPrice != null &&
+      originalPrice! > finalPrice!;
 }

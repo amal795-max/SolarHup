@@ -19,9 +19,8 @@ class TopSellingProductsCubit extends Cubit<TopSellingProductsState> {
       limit: viewAllLimit,
     );
     result.fold(
-      (failure) => emit(
-        TopSellingProductsError(message: mapFailureToMessage(failure)),
-      ),
+      (failure) =>
+          emit(TopSellingProductsError(message: mapFailureToMessage(failure))),
       (products) => emit(TopSellingProductsLoaded(products: products)),
     );
   }

@@ -7,6 +7,7 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
+import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
 import 'package:untitled1/widgets/favorite_heart_button.dart';
 
 /// Store details card — sits inside the white sheet that slides over the hero.
@@ -53,8 +54,10 @@ class StoreInfoDetailsSection extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 10.w),
-              _RatingBadge(
-                rating: data.rating,
+              ReviewSummaryIndicator(
+                itemType: 'store',
+                itemId: data.id,
+                variant: ReviewSummaryVariant.storeProfile,
                 onTap: () {
                   context.push(
                     AppRoutes.reviewsScreen,
@@ -109,49 +112,6 @@ class StoreInfoDetailsSection extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Star rating badge
-// ---------------------------------------------------------------------------
-
-class _RatingBadge extends StatelessWidget {
-  final double rating;
-  final VoidCallback? onTap;
-
-  const _RatingBadge({required this.rating, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-        decoration: BoxDecoration(
-          color: AppColors.lightOrange,
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Row(
-          spacing: 4,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.star_rounded,
-              color: AppColors.brown,
-              size: 16.sp,
-            ),
-            Text(
-              rating.toStringAsFixed(1),
-              style: AppStyle.labelSmall.copyWith(
-                color: AppColors.brown,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

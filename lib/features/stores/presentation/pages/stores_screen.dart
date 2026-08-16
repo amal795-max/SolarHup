@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/user_city_preference.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
@@ -51,14 +52,21 @@ class _StoresViewState extends State<_StoresView> {
   @override
   void initState() {
     super.initState();
+    UserCityPreference.cityNotifier.addListener(_onCityChanged);
     _searchController.addListener(() {
       final q = _searchController.text.trim().toLowerCase();
       if (q != _searchQuery) setState(() => _searchQuery = q);
     });
   }
 
+  void _onCityChanged() {
+    if (!mounted) return;
+    context.read<StoresCubit>().loadStores(showLoading: true);
+  }
+
   @override
   void dispose() {
+    UserCityPreference.cityNotifier.removeListener(_onCityChanged);
     _searchController.dispose();
     super.dispose();
   }

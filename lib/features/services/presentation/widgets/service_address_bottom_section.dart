@@ -20,10 +20,9 @@ class ServiceAddressBottomSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
-    final formattedTotal = NumberFormat.currency(
-      symbol: r'$',
-      decimalDigits: 2,
-    ).format(state.address.grandTotal);
+    final currency = NumberFormat.currency(symbol: r'$', decimalDigits: 2);
+    final formattedTotal = currency.format(state.address.grandTotal);
+    final hasCouponDiscount = state.address.hasCouponDiscount;
 
     return Container(
       width: double.infinity,
@@ -53,13 +52,47 @@ class ServiceAddressBottomSection extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 4.h),
-                  Text(
-                    formattedTotal,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: titleColor,
+                  if (hasCouponDiscount)
+                    Row(
+                      children: [
+                        Text(
+                          currency.format(state.address.originalTotal),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: AppColors.grey,
+                            decoration: TextDecoration.lineThrough,
+                            decorationColor: AppColors.grey,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Text(
+                          formattedTotal,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w800,
+                            color: titleColor,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Text(
+                      formattedTotal,
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: titleColor,
+                      ),
                     ),
-                  ),
+                  if (hasCouponDiscount) ...[
+                    SizedBox(height: 4.h),
+                    Text(
+                      'service_coupon_saved'.tr(
+                        args: [currency.format(state.address.discountAmount)],
+                      ),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: AppColors.tertiaryColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ],

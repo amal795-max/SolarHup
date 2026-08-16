@@ -22,6 +22,7 @@ import 'core/constants/app_url.dart';
 import 'core/constants/debendency_injection.dart' as di;
 import 'core/helper/app_bloc_observer.dart';
 import 'core/helper/local_storage.dart';
+import 'core/helper/user_city_preference.dart';
 import 'core/routing/router.dart';
 import 'features/blog/presentation/bloc/faq_cubit.dart';
 import 'package:untitled1/features/product_compare/presentation/cubit/compare_session_cubit.dart';
@@ -32,6 +33,7 @@ void main() async {
   Bloc.observer = AppBlocObserver();
   await di.init();
   await LocalStorage().init();
+  UserCityPreference.syncNotifier();
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(

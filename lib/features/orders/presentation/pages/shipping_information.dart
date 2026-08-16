@@ -78,7 +78,6 @@ class ShippingInformationScreen extends StatelessWidget {
   }
 }
 
-
 class _OrderSummaryCard extends StatelessWidget {
   const _OrderSummaryCard();
 

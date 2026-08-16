@@ -12,8 +12,8 @@ class ScheduleDateSection extends StatelessWidget {
 
   const ScheduleDateSection({super.key, required this.state});
 
-  bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
+  bool _isSameDay(DateTime a, DateTime? b) =>
+      b != null && a.year == b.year && a.month == b.month && a.day == b.day;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +57,16 @@ class ScheduleDateSection extends StatelessWidget {
           ],
         ),
         SizedBox(height: 14.h),
+        if (state.availabilitySummary != null) ...[
+          Text(
+            state.availabilitySummary!,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: AppColors.grey,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 10.h),
+        ],
         Row(
           children: weekdayLabels
               .map(
@@ -86,9 +96,11 @@ class ScheduleDateSection extends StatelessWidget {
                   child: _CalendarDayCell(
                     day: day,
                     isSelected: isSelected,
-                    onTap: () => context
-                        .read<ScheduleServiceBloc>()
-                        .add(SelectScheduleDateEvent(day)),
+                    onTap: day.isSelectable
+                        ? () => context
+                            .read<ScheduleServiceBloc>()
+                            .add(SelectScheduleDateEvent(day))
+                        : null,
                   ),
                 );
               }).toList(),
@@ -103,7 +115,7 @@ class ScheduleDateSection extends StatelessWidget {
 class _CalendarDayCell extends StatelessWidget {
   final ScheduleCalendarDayModel day;
   final bool isSelected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _CalendarDayCell({
     required this.day,
@@ -114,6 +126,7 @@ class _CalendarDayCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isEnabled = day.isSelectable;
 
     return Material(
       color: Colors.transparent,
@@ -136,9 +149,11 @@ class _CalendarDayCell extends StatelessWidget {
               style: AppStyle.labelMedium.copyWith(
                 color: isSelected
                     ? AppColors.white
-                    : day.isCurrentMonth
-                        ? theme.colorScheme.onSurface
-                        : AppColors.grey.withValues(alpha: 0.5),
+                    : !isEnabled
+                        ? AppColors.grey.withValues(alpha: 0.35)
+                        : day.isCurrentMonth
+                            ? theme.colorScheme.onSurface
+                            : AppColors.grey.withValues(alpha: 0.5),
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
             ),

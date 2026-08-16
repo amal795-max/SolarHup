@@ -42,10 +42,8 @@ class CartCubit extends Cubit<CartState> {
 
     return result.fold(
       (_) => cart,
-      (products) => applyDiscountPricingToCart(
-        cart,
-        buildDiscountedPriceMap(products),
-      ),
+      (products) =>
+          applyDiscountPricingToCart(cart, buildDiscountedPriceMap(products)),
     );
   }
 
@@ -126,16 +124,13 @@ class CartCubit extends Cubit<CartState> {
       building: buildingController.text.trim(),
       floor: floorController.text.trim(),
     );
-      emit(CartActionLoading());
-      final result = await repository.submitCart(params);
-      result.fold(
-              (failure) => emit(CartActionError(failure.message)),
-              (_) {
-        clearForm();
-        // order?.items.clear();
-        emit(const CartActionSuccess(cartSubmittedSuccessfully));
-      });
-
+    emit(CartActionLoading());
+    final result = await repository.submitCart(params);
+    result.fold((failure) => emit(CartActionError(failure.message)), (_) {
+      clearForm();
+      // order?.items.clear();
+      emit(const CartActionSuccess(cartSubmittedSuccessfully));
+    });
   }
 
   void clearForm() {

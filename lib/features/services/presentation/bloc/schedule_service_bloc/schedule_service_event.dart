@@ -10,11 +10,19 @@ sealed class ScheduleServiceEvent extends Equatable {
 
 final class LoadScheduleServiceEvent extends ScheduleServiceEvent {
   final String serviceId;
+  final int? businessId;
+  final String? serviceName;
+  final String? serviceSubtitle;
 
-  const LoadScheduleServiceEvent(this.serviceId);
+  const LoadScheduleServiceEvent({
+    required this.serviceId,
+    this.businessId,
+    this.serviceName,
+    this.serviceSubtitle,
+  });
 
   @override
-  List<Object?> get props => [serviceId];
+  List<Object?> get props => [serviceId, businessId, serviceName, serviceSubtitle];
 }
 
 final class SelectScheduleDateEvent extends ScheduleServiceEvent {

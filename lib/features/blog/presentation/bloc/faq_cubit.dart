@@ -20,7 +20,6 @@ class FaqCubit extends Cubit<FaqState> {
     );
   }
 
-
   void updateSearch(String query) {
     if (state is FaqSuccess) {
       final currentState = state as FaqSuccess;

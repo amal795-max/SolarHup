@@ -129,20 +129,20 @@ class MyListingScreen extends StatelessWidget {
     return AppRefreshIndicator(
       onRefresh: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
       child: Skeletonizer(
-      enabled: isLoading,
-      child: ListView.separated(
-        physics: appRefreshPhysics,
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-        itemCount: products.length,
-        separatorBuilder: (context, index) => SizedBox(height: 16.h),
-        itemBuilder: (context, index) {
-          return _ListingCard(product: products[index])
-              .animate()
-              .fadeIn(duration: 400.ms, delay: (index * 100).ms)
-              .slideX(begin: 0.2, end: 0);
-        },
+        enabled: isLoading,
+        child: ListView.separated(
+          physics: appRefreshPhysics,
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          itemCount: products.length,
+          separatorBuilder: (context, index) => SizedBox(height: 16.h),
+          itemBuilder: (context, index) {
+            return _ListingCard(product: products[index])
+                .animate()
+                .fadeIn(duration: 400.ms, delay: (index * 100).ms)
+                .slideX(begin: 0.2, end: 0);
+          },
+        ),
       ),
-    ),
     );
   }
 }

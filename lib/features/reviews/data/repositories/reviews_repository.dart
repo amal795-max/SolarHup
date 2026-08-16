@@ -4,9 +4,14 @@ import '../../../../core/api/errors/failures.dart';
 import '../../../../core/network/check_internet.dart';
 import '../data_sources/reviews_remote_data_source.dart';
 import '../models/review_model.dart';
+import '../models/review_summary_model.dart';
 
 abstract class ReviewsRepository {
   Future<Either<Failure, List<ReviewModel>>> getReviews(String itemType, String itemId);
+  Future<Either<Failure, ReviewSummaryModel>> getReviewSummary(
+    String itemType,
+    int itemId,
+  );
   Future<Either<Failure, Unit>> addReview(CreateReviewRequest request);
 }
 
@@ -25,6 +30,23 @@ class ReviewsRepositoryImpl implements ReviewsRepository {
     if (await networkInfo.isConnected) {
       try {
         final data = await remote.getReviews(itemType, itemId);
+        return Right(data);
+      } on ServerException catch (e) {
+        return Left(ServerFailure(e.message));
+      }
+    } else {
+      return const Left(OfflineFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, ReviewSummaryModel>> getReviewSummary(
+    String itemType,
+    int itemId,
+  ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final data = await remote.getReviewSummary(itemType, itemId);
         return Right(data);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

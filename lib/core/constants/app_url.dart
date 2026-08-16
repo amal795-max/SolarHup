@@ -43,6 +43,8 @@ class EndPoints {
   static String workshop(String businessId) => '${baseUrl}workshops/$businessId';
   static String workshopServices(String businessId) =>
       '${baseUrl}workshops/$businessId/services';
+  static String workshopAvailability(int businessId) =>
+      '${baseUrl}workshops/$businessId/availability';
 
   static const String serviceRequests = '${baseUrl}service-requests';
   static const String myServiceRequests = '${baseUrl}service-requests/me';
@@ -69,6 +71,7 @@ class EndPoints {
   static const String privacyPolicy = '${baseUrl}privacy-policy';
   static const String randomTips = '${baseUrl}random';
   static const String reviews = '${baseUrl}reviews';
+  static const String reviewsSummary = '${baseUrl}reviews/summary';
 
   static const String expertConsultations = '${baseUrl}questions';
   static const String myExpertConsultations = '${baseUrl}questions/me';
@@ -91,6 +94,5 @@ class StorageKeys {
   static const String mode = 'mode';
   static const String langCode = 'langCode';
   static const String onboardingCompleted = 'onboardingCompleted';
-
-
+  static const String selectedCity = 'selectedCity';
 }

@@ -17,6 +17,9 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
     on<UpdateServiceCityEvent>(_onUpdateCity);
     on<UpdateServiceBuildingEvent>(_onUpdateBuilding);
     on<UpdateServiceFloorEvent>(_onUpdateFloor);
+    on<UpdateServiceCouponCodeEvent>(_onUpdateCouponCode);
+    on<ApplyServiceCouponEvent>(_onApplyCoupon);
+    on<ClearServiceCouponEvent>(_onClearCoupon);
   }
 
   Future<void> _onLoad(
@@ -33,6 +36,7 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
           defaultCity: '',
           defaultBuilding: '',
           defaultFloor: '',
+          originalTotal: event.servicePrice,
           grandTotal: event.servicePrice,
         ),
         fullName: '',
@@ -87,5 +91,61 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
     final current = state;
     if (current is! ServiceAddressLoaded) return;
     emit(current.copyWith(floor: event.value));
+  }
+
+  void _onUpdateCouponCode(
+    UpdateServiceCouponCodeEvent event,
+    Emitter<ServiceAddressState> emit,
+  ) {
+    final current = state;
+    if (current is! ServiceAddressLoaded) return;
+    emit(
+      current.copyWith(
+        couponCode: event.value,
+        clearCouponError: true,
+      ),
+    );
+  }
+
+  void _onApplyCoupon(
+    ApplyServiceCouponEvent event,
+    Emitter<ServiceAddressState> emit,
+  ) {
+    final current = state;
+    if (current is! ServiceAddressLoaded) return;
+
+    final code = current.couponCode.trim();
+    if (code.isEmpty) {
+      emit(current.copyWith(couponError: 'service_coupon_required'));
+      return;
+    }
+
+    emit(
+      current.copyWith(
+        couponCode: code,
+        clearCouponError: true,
+        address: current.address.copyWith(appliedCouponCode: code),
+      ),
+    );
+  }
+
+  void _onClearCoupon(
+    ClearServiceCouponEvent event,
+    Emitter<ServiceAddressState> emit,
+  ) {
+    final current = state;
+    if (current is! ServiceAddressLoaded) return;
+
+    emit(
+      current.copyWith(
+        couponCode: '',
+        clearCouponError: true,
+        address: current.address.copyWith(
+          grandTotal: current.address.originalTotal,
+          discountAmount: 0,
+          clearAppliedCouponCode: true,
+        ),
+      ),
+    );
   }
 }

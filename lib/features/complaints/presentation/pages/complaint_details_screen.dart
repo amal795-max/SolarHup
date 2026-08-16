@@ -117,7 +117,7 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
           ),
 
           SizedBox(height: 16.h),
-          AnimationWidget(child: buildTimeline(complaint,context)),
+          AnimationWidget(child: buildTimeline(complaint, context)),
         ],
       ),
     );
@@ -139,7 +139,11 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
             children: [
               ComplaintStatus(status: complaint.status),
               Text(
-                DataHelper.dateFormat('MMM dd, yyyy',complaint.createdAt,locale: context.locale),
+                DataHelper.dateFormat(
+                  'MMM dd, yyyy',
+                  complaint.createdAt,
+                  locale: context.locale,
+                ),
                 style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
               ),
             ],

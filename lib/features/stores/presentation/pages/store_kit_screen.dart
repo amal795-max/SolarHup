@@ -50,8 +50,7 @@ class StoreKitProductData {
     this.imageUrl,
   });
 
-  bool get hasDiscount =>
-      originalPrice != null && originalPrice! > price;
+  bool get hasDiscount => originalPrice != null && originalPrice! > price;
 }
 
 class StoreKitScreen extends StatelessWidget {
@@ -64,17 +63,14 @@ class StoreKitScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) =>
-              getIt<StoreKitCubit>()..loadProducts(args.storeId),
+          create: (_) => getIt<StoreKitCubit>()..loadProducts(args.storeId),
         ),
         BlocProvider(
           create: (_) {
             final bloc = StoreKitBloc();
             final initialCategoryIndex = args.initialCategoryIndex;
             if (initialCategoryIndex != null && initialCategoryIndex >= 0) {
-              bloc.add(
-                SelectStoreKitCategoryEvent(initialCategoryIndex + 1),
-              );
+              bloc.add(SelectStoreKitCategoryEvent(initialCategoryIndex + 1));
             }
             return bloc;
           },
@@ -100,20 +96,23 @@ class _StoreKitView extends StatelessWidget {
             return switch (state) {
               StoreKitCubitLoading() => const LoadingIndicator(),
               StoreKitCubitError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context
-                        .read<StoreKitCubit>()
-                        .loadProducts(args.storeId),
-                    width: 160.w,
-                  ),
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message,
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () =>
+                      context.read<StoreKitCubit>().loadProducts(args.storeId),
+                  width: 160.w,
                 ),
-              StoreKitCubitLoaded(:final categories, :final products, :final discounts) =>
+              ),
+              StoreKitCubitLoaded(
+                :final categories,
+                :final products,
+                :final discounts,
+              ) =>
                 _StoreKitLoadedBody(
                   args: args,
                   categories: categories,

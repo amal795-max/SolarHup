@@ -1,39 +1,60 @@
 import 'package:dartz/dartz.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
-import 'package:untitled1/features/services/data/data_source/schedule_service_remote_data_source.dart';
+import 'package:untitled1/features/services/data/data_source/workshops_remote_data_source.dart';
 import 'package:untitled1/features/services/data/models/schedule_service_model.dart';
+import 'package:untitled1/features/services/data/models/workshop_availability_model.dart';
 
 abstract class ScheduleServiceRepository {
-  Future<Either<Failure, ScheduleServiceModel>> getScheduleService(
-    String serviceId,
-  );
+  Future<Either<Failure, ScheduleServiceModel>> getScheduleService({
+    required String serviceId,
+    int? businessId,
+    String? title,
+    String? subtitle,
+  });
 }
 
 class ScheduleServiceRepositoryImpl implements ScheduleServiceRepository {
-  final ScheduleServiceRemoteDataSource remote;
+  final WorkshopsRemoteDataSource workshopsRemote;
   final NetworkInfo networkInfo;
-  final bool useNetworkCheck;
 
   const ScheduleServiceRepositoryImpl({
-    required this.remote,
+    required this.workshopsRemote,
     required this.networkInfo,
-    this.useNetworkCheck = false,
   });
 
   @override
-  Future<Either<Failure, ScheduleServiceModel>> getScheduleService(
-    String serviceId,
-  ) async {
-    if (useNetworkCheck) {
-      final isConnected = await networkInfo.isConnected;
-      if (!isConnected) return const Left(OfflineFailure());
+  Future<Either<Failure, ScheduleServiceModel>> getScheduleService({
+    required String serviceId,
+    int? businessId,
+    String? title,
+    String? subtitle,
+  }) async {
+    if (!await networkInfo.isConnected) {
+      return const Left(OfflineFailure());
     }
-    try {
-      final data = await remote.getScheduleService(serviceId);
-      return Right(data);
-    } catch (e) {
-      return Left(ServerFailure(e.toString()));
+
+    WorkshopAvailabilityModel? availability;
+    if (businessId != null) {
+      try {
+        availability = await workshopsRemote.getWorkshopAvailability(businessId);
+      } catch (e) {
+        return Left(ServerFailure(e.toString()));
+      }
     }
+
+    final now = DateTime.now();
+    return Right(
+      ScheduleServiceModel(
+        serviceId: serviceId,
+        title: title ?? 'Service Booking',
+        subtitle: subtitle ?? 'Choose your preferred date and time',
+        heroColorValue: 0xFF1A3A5C,
+        appointmentSummaryTitle: title ?? 'Service Visit',
+        availability: availability,
+        calendarYear: now.year,
+        calendarMonth: now.month,
+      ),
+    );
   }
 }

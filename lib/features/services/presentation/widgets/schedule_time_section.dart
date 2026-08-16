@@ -20,7 +20,29 @@ class ScheduleTimeSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final headingColor = isDark ? AppColors.blue : AppColors.primaryColor;
-    final slots = state.service.timeSlots;
+    final slots = state.timeSlots;
+
+    if (slots.isEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'schedule_select_time'.tr(),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: headingColor,
+            ),
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            'schedule_no_time_slots'.tr(),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColors.grey,
+            ),
+          ),
+        ],
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

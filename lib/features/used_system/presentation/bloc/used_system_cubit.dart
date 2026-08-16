@@ -32,13 +32,12 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
   String? filterCategory;
   String? filterCondition;
   String? filterRegion;
-  
+
   List<String> images = [];
   List<UsedProductModel> products = [];
   List<UsedProductModel> myProducts = [];
 
   UsedSystemCubit(this.repository) : super(UsedSystemInitial());
-
 
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -52,7 +51,7 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
       emit(UploadImage());
     }
   }
-  
+
   void removeImage(int index) {
     images.removeAt(index);
     emit(UploadImage());
@@ -152,7 +151,9 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
           condition: params.condition,
           price: params.price.toString(),
           region: params.region,
-          images: images.any((img) => !img.startsWith('http')) ? images : myProducts[index].images,
+          images: images.any((img) => !img.startsWith('http'))
+              ? images
+              : myProducts[index].images,
         );
         emit(MyUsedProductsSuccess(List.from(myProducts)));
       }
@@ -174,7 +175,6 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
   }
 
   Future<void> updateProductStatus(int id, String status) async {
-
     final oldMyProducts = List<UsedProductModel>.from(myProducts);
     final index = myProducts.indexWhere((p) => p.id == id);
     if (index != -1) {
@@ -191,7 +191,9 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
         emit(UpdateProductStatusFailure(mapFailureToMessage(failure)));
       },
       (success) {
-        emit(const UpdateProductStatusSuccess(productUpdatedStatusSuccessfully));
+        emit(
+          const UpdateProductStatusSuccess(productUpdatedStatusSuccessfully),
+        );
       },
     );
   }
@@ -234,7 +236,6 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     descriptionController.clear();
     priceController.clear();
     images.clear();
-
   }
 
   @override
@@ -242,6 +243,6 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     nameController.dispose();
     descriptionController.dispose();
     priceController.dispose();
-   return super.close();
+    return super.close();
   }
 }

@@ -20,6 +20,7 @@ import 'package:untitled1/features/blog/presentation/pages/blog_screen.dart';
 import 'package:untitled1/features/product_compare/presentation/pages/product_compare_screen.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
+import 'package:untitled1/features/services/data/models/service_request_model.dart';
 import 'package:untitled1/features/services/presentation/pages/rate_service_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_request_detail_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
@@ -281,10 +282,10 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '${AppRoutes.rateServiceBase}/:serviceId',
+      path: AppRoutes.rateServiceScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
-        return RateServiceScreen(serviceId: serviceId);
+        final request = state.extra! as ServiceRequestModel;
+        return RateServiceScreen(request: request);
       },
     ),
     GoRoute(

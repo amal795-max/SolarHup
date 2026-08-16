@@ -13,6 +13,7 @@ import 'package:untitled1/features/services/presentation/bloc/service_requests_c
 import 'package:untitled1/features/services/presentation/widgets/service_address_bottom_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_form_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_header_section.dart';
+import 'package:untitled1/features/services/presentation/widgets/service_coupon_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 
@@ -68,6 +69,7 @@ class _ServiceAddressView extends StatelessWidget {
       city: state.city,
       building: state.building,
       floor: state.floor.trim().isEmpty ? null : state.floor.trim(),
+      couponCode: state.address.appliedCouponCode,
     );
 
     if (!updatedDraft.hasSchedule) {
@@ -87,8 +89,18 @@ class _ServiceAddressView extends StatelessWidget {
 
     if (!context.mounted || request == null) return;
 
+    final originalPrice = draft.servicePrice;
+    final finalPrice = double.tryParse(request.totalAmount) ?? originalPrice;
+    final parsedDiscount = double.tryParse(request.discountAmount ?? '');
+    final discountAmount = parsedDiscount ??
+        (originalPrice - finalPrice).clamp(0, double.infinity);
+
     final confirmation = updatedDraft.toConfirmation(
       orderCode: request.orderCode,
+      originalPrice: originalPrice,
+      finalPrice: finalPrice,
+      discountAmount: discountAmount > 0 ? discountAmount : null,
+      couponCode: request.couponCode ?? state.address.appliedCouponCode,
     );
 
     context.pushReplacement(
@@ -139,7 +151,13 @@ class _ServiceAddressView extends StatelessWidget {
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: ServiceAddressFormSection(state: state),
+                        child: Column(
+                          children: [
+                            ServiceAddressFormSection(state: state),
+                            SizedBox(height: 16.h),
+                            ServiceCouponSection(state: state),
+                          ],
+                        ),
                       ),
                     ),
                     ServiceAddressBottomSection(

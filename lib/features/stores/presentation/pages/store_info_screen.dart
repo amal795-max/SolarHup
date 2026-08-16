@@ -274,47 +274,52 @@ class _StoreInfoContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Hero + floating details card
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    SizedBox(
-                      height: 0.3.sh,
-                      width: double.infinity,
-                      child: StoreInfoHeaderSection(data: data),
-                    ),
-                    Positioned(
-                      left: 16.w,
-                      right: 16.w,
-                      bottom: -120.h,
-                      child: Container(
-                        padding: EdgeInsets.only(top: 8.h),
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Theme.of(context).colorScheme.surface
-                              : AppColors.white,
-                          borderRadius: BorderRadius.circular(16.r),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(
-                                alpha: isDark ? 0.25 : 0.12,
-                              ),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: StoreInfoDetailsSection(data: data),
+                // Hero + floating details card — sized so taps register on the card
+                SizedBox(
+                  height: 0.3.sh + 140.h,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: 0.3.sh,
+                        child: StoreInfoHeaderSection(data: data),
                       ),
-                    ),
-                    Positioned(
-                      left: 35.w,
-                      bottom: 25.h,
-                      child: _FloatingStoreLogoBadge(data: data),
-                    ),
-                  ],
+                      Positioned(
+                        top: 0.3.sh - 60.h,
+                        left: 16.w,
+                        right: 16.w,
+                        child: Container(
+                          padding: EdgeInsets.only(top: 8.h),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? Theme.of(context).colorScheme.surface
+                                : AppColors.white,
+                            borderRadius: BorderRadius.circular(16.r),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(
+                                  alpha: isDark ? 0.25 : 0.12,
+                                ),
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: StoreInfoDetailsSection(data: data),
+                        ),
+                      ),
+                      Positioned(
+                        top: 0.3.sh - 100.h,
+                        left: 35.w,
+                        child: _FloatingStoreLogoBadge(data: data),
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 0.17.sh),
+                SizedBox(height: 8.h),
                 StoreInfoCategoriesSection(categories: data.categories),
                 StoreInfoDiscountsSection(
                   storeId: data.id,
@@ -390,7 +395,6 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
     );
   }
 }
-
 
 // ---------------------------------------------------------------------------
 // Back button — always white so it's legible over the hero image when expanded

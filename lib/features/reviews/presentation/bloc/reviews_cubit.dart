@@ -16,8 +16,8 @@ class ReviewsCubit extends Cubit<ReviewsState> {
     final result = await repository.getReviews(itemType, itemId);
 
     result.fold(
-          (failure) => emit(ReviewsError(message: mapFailureToMessage(failure))),
-          (reviews) => emit(ReviewsLoaded(reviews)),
+      (failure) => emit(ReviewsError(message: mapFailureToMessage(failure))),
+      (reviews) => emit(ReviewsLoaded(reviews)),
     );
   }
 
@@ -27,8 +27,9 @@ class ReviewsCubit extends Cubit<ReviewsState> {
     final result = await repository.addReview(request);
 
     result.fold(
-          (failure) => emit(ReviewSubmitError(message: mapFailureToMessage(failure))),
-          (_) => emit(const ReviewSubmitSuccess( message: submitReviewSuccessfully)),
+      (failure) =>
+          emit(ReviewSubmitError(message: mapFailureToMessage(failure))),
+      (_) => emit(const ReviewSubmitSuccess(message: submitReviewSuccessfully)),
     );
   }
 

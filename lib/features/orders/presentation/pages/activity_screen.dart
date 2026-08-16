@@ -82,13 +82,12 @@ class _ActivityScreenState extends State<ActivityScreen> {
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         if (state is OrdersError) {
-          return errorWidget(
-            message: state.message, hasButton: false,
-          );
+          return errorWidget(message: state.message, hasButton: false);
         }
         final orders = state is OrdersLoaded
             ? state.orders
-            : (state is OrdersLoading ? List.generate(
+            : (state is OrdersLoading
+                  ? List.generate(
                       4,
                       (index) => OrderModel(
                         id: 0,
@@ -98,10 +97,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
                         status: 'pending',
                         totalAmount: '0.00',
                         items: [],
-                        statusEnum: OrderStatusEnum.pending
+                        statusEnum: OrderStatusEnum.pending,
                       ),
                     )
-                  :  context.read<OrdersCubit>().cachedOrders);
+                  : context.read<OrdersCubit>().cachedOrders);
 
         if (state is OrdersLoaded && orders.isEmpty) {
           return AppRefreshIndicator(
@@ -114,10 +113,10 @@ class _ActivityScreenState extends State<ActivityScreen> {
         }
 
         return AppRefreshIndicator(
-            onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
-            child :Skeletonizer(
-          enabled: state is OrdersLoading,
-          child:  ListView.separated(
+          onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
+          child: Skeletonizer(
+            enabled: state is OrdersLoading,
+            child: ListView.separated(
               physics: appRefreshPhysics,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
               itemCount: orders.length,
@@ -127,7 +126,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 return GestureDetector(
                   onTap: () {
                     context.read<OrdersCubit>().getOrderDetails(order);
-                    context.push(AppRoutes.orderTrackingScreen,extra: order);
+                    context.push(AppRoutes.orderTrackingScreen, extra: order);
                   },
                   child: _OrderCard(
                     orderCode: order.orderCode,
@@ -140,8 +139,9 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 );
               },
             ),
-          ));
-        },
+          ),
+        );
+      },
     );
   }
 
@@ -155,20 +155,20 @@ class _ActivityScreenState extends State<ActivityScreen> {
         final requests = state is ServiceRequestsLoaded
             ? state.requests
             : (state is ServiceRequestsLoading
-                ? List.generate(
-                    3,
-                    (index) => ServiceRequestModel(
-                      id: index,
-                      orderCode: 'SR-000000',
-                      businessId: 0,
-                      status: 'pending_approval',
-                      statusEnum: OrderStatusEnum.pending,
-                      totalAmount: '0.00',
-                      serviceName: 'Loading service name',
-                      createdAt: DateTime.now(),
-                    ),
-                  )
-                : context.read<ServiceRequestsCubit>().cachedRequests);
+                  ? List.generate(
+                      3,
+                      (index) => ServiceRequestModel(
+                        id: index,
+                        orderCode: 'SR-000000',
+                        businessId: 0,
+                        status: 'pending_approval',
+                        statusEnum: OrderStatusEnum.pending,
+                        totalAmount: '0.00',
+                        serviceName: 'Loading service name',
+                        createdAt: DateTime.now(),
+                      ),
+                    )
+                  : context.read<ServiceRequestsCubit>().cachedRequests);
 
         if (state is ServiceRequestsLoaded && requests.isEmpty) {
           return AppRefreshIndicator(
@@ -195,12 +195,15 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 final request = requests[index];
                 return GestureDetector(
                   onTap: () {
-                    context
-                        .read<ServiceRequestsCubit>()
-                        .loadRequestDetail(request.id);
-                    context.push(
-                      AppRoutes.serviceRequestDetail(request.id),
+                    if (request.isCompleted) {
+                      context.push(AppRoutes.rateServiceScreen, extra: request);
+                      return;
+                    }
+
+                    context.read<ServiceRequestsCubit>().loadRequestDetail(
+                      request.id,
                     );
+                    context.push(AppRoutes.serviceRequestDetail(request.id));
                   },
                   child: _ServiceRequestCard(request: request),
                 );
@@ -293,8 +296,6 @@ class _OrderCard extends StatelessWidget {
     required this.status,
   });
 
-
-
   @override
   Widget build(BuildContext context) {
     return container(
@@ -349,15 +350,10 @@ class _OrderCard extends StatelessWidget {
   }
 }
 
-
 class _ServiceRequestCard extends StatelessWidget {
   final ServiceRequestModel request;
 
   const _ServiceRequestCard({required this.request});
-
-  String _formatStatus(String status) {
-    return status.replaceAll('_', ' ').toUpperCase();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -365,7 +361,8 @@ class _ServiceRequestCard extends StatelessWidget {
     final month = DateFormat('MMM').format(createdAt).toUpperCase();
     final day = DateFormat('d').format(createdAt);
     final status = request.statusEnum;
-    final isActive = status != OrderStatusEnum.completed &&
+    final isActive =
+        status != OrderStatusEnum.completed &&
         status != OrderStatusEnum.rejected;
 
     return container(

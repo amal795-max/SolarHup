@@ -1,3 +1,5 @@
+import 'workshop_availability_model.dart';
+
 class ServiceTimeSlotModel {
   final String id;
   final String label;
@@ -15,10 +17,12 @@ class ServiceTimeSlotModel {
 class ScheduleCalendarDayModel {
   final DateTime date;
   final bool isCurrentMonth;
+  final bool isSelectable;
 
   const ScheduleCalendarDayModel({
     required this.date,
     required this.isCurrentMonth,
+    this.isSelectable = true,
   });
 }
 
@@ -28,9 +32,7 @@ class ScheduleServiceModel {
   final String subtitle;
   final int heroColorValue;
   final String appointmentSummaryTitle;
-  final List<ServiceTimeSlotModel> timeSlots;
-  final DateTime defaultSelectedDate;
-  final String defaultSelectedTimeSlotId;
+  final WorkshopAvailabilityModel? availability;
   final int calendarYear;
   final int calendarMonth;
 
@@ -40,9 +42,7 @@ class ScheduleServiceModel {
     required this.subtitle,
     required this.heroColorValue,
     required this.appointmentSummaryTitle,
-    required this.timeSlots,
-    required this.defaultSelectedDate,
-    required this.defaultSelectedTimeSlotId,
+    this.availability,
     required this.calendarYear,
     required this.calendarMonth,
   });
@@ -52,15 +52,26 @@ List<ScheduleCalendarDayModel> buildMonthCalendarDays(
   int year,
   int month, {
   int rowCount = 4,
+  WorkshopAvailabilityModel? availability,
 }) {
   final firstDay = DateTime(year, month, 1);
   final startDate = firstDay.subtract(Duration(days: firstDay.weekday - 1));
 
   return List.generate(rowCount * 7, (index) {
     final date = startDate.add(Duration(days: index));
+    final isSelectable = availability?.isDateSelectable(date) ??
+        !_isPastDate(date);
     return ScheduleCalendarDayModel(
       date: date,
       isCurrentMonth: date.month == month,
+      isSelectable: isSelectable,
     );
   });
+}
+
+bool _isPastDate(DateTime date) {
+  final today = DateTime.now();
+  final todayOnly = DateTime(today.year, today.month, today.day);
+  final candidate = DateTime(date.year, date.month, date.day);
+  return candidate.isBefore(todayOnly);
 }

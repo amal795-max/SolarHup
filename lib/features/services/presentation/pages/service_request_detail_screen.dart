@@ -11,17 +11,15 @@ import 'package:untitled1/widgets/primary_button.dart';
 class ServiceRequestDetailScreen extends StatefulWidget {
   final int requestId;
 
-  const ServiceRequestDetailScreen({
-    super.key,
-    required this.requestId,
-  });
+  const ServiceRequestDetailScreen({super.key, required this.requestId});
 
   @override
   State<ServiceRequestDetailScreen> createState() =>
       _ServiceRequestDetailScreenState();
 }
 
-class _ServiceRequestDetailScreenState extends State<ServiceRequestDetailScreen> {
+class _ServiceRequestDetailScreenState
+    extends State<ServiceRequestDetailScreen> {
   @override
   void initState() {
     super.initState();
@@ -29,15 +27,15 @@ class _ServiceRequestDetailScreenState extends State<ServiceRequestDetailScreen>
   }
 
   Future<void> _reload() async {
-    await context
-        .read<ServiceRequestsCubit>()
-        .loadRequestDetail(widget.requestId);
+    await context.read<ServiceRequestsCubit>().loadRequestDetail(
+      widget.requestId,
+    );
   }
 
   Future<void> _cancelRequest() async {
-    final success = await context
-        .read<ServiceRequestsCubit>()
-        .cancelRequest(widget.requestId);
+    final success = await context.read<ServiceRequestsCubit>().cancelRequest(
+      widget.requestId,
+    );
 
     if (!mounted) return;
 
@@ -60,16 +58,14 @@ class _ServiceRequestDetailScreenState extends State<ServiceRequestDetailScreen>
           previous is! ServiceRequestDetailsLoading,
       listener: (context, state) {
         if (state is ServiceRequestDetailsError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
         if (state is ServiceRequestDetailsLoading) {
-          return const Scaffold(
-            body: SafeArea(child: LoadingIndicator()),
-          );
+          return const Scaffold(body: SafeArea(child: LoadingIndicator()));
         }
 
         if (state is ServiceRequestDetailsError) {
@@ -90,9 +86,7 @@ class _ServiceRequestDetailScreenState extends State<ServiceRequestDetailScreen>
 
         final request = _resolveRequest(state);
         if (request == null) {
-          return const Scaffold(
-            body: SafeArea(child: LoadingIndicator()),
-          );
+          return const Scaffold(body: SafeArea(child: LoadingIndicator()));
         }
 
         final isCancelling = state is ServiceRequestCancelling;
@@ -103,7 +97,9 @@ class _ServiceRequestDetailScreenState extends State<ServiceRequestDetailScreen>
           headerSubtitleKey: 'service_request_details_subtitle',
           showCancelButton: request.canCancel,
           isCancelling: isCancelling,
-          onCancelTap: request.canCancel && !isCancelling ? _cancelRequest : null,
+          onCancelTap: request.canCancel && !isCancelling
+              ? _cancelRequest
+              : null,
           showBackButton: true,
         );
       },

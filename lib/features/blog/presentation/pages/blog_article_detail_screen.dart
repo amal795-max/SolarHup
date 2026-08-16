@@ -21,8 +21,7 @@ class BlogArticleDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<BlogDetailCubit>()
-        ..loadArticleDetail(articleId),
+      create: (_) => getIt<BlogDetailCubit>()..loadArticleDetail(articleId),
       child: _BlogArticleDetailView(articleId: articleId),
     );
   }
@@ -42,24 +41,24 @@ class _BlogArticleDetailView extends StatelessWidget {
           return switch (state) {
             BlogDetailLoading() => const LoadingIndicator(),
             BlogDetailError(:final message) => SafeArea(
-                child: EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context.read<BlogDetailCubit>().loadArticleDetail(
-                          articleId,
-                        ),
-                    width: 160.w,
-                  ),
+              child: EmptyWidget(
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message,
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () => context
+                      .read<BlogDetailCubit>()
+                      .loadArticleDetail(articleId),
+                  width: 160.w,
                 ),
               ),
+            ),
             BlogDetailLoaded(:final article) => _BlogDetailBody(
-                article: article,
-              ),
+              article: article,
+            ),
             _ => const SizedBox.shrink(),
           };
         },

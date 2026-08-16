@@ -19,6 +19,8 @@ final class ServiceAddressLoaded extends ServiceAddressState {
   final String city;
   final String building;
   final String floor;
+  final String couponCode;
+  final String? couponError;
 
   const ServiceAddressLoaded({
     required this.address,
@@ -27,6 +29,8 @@ final class ServiceAddressLoaded extends ServiceAddressState {
     required this.city,
     required this.building,
     required this.floor,
+    this.couponCode = '',
+    this.couponError,
   });
 
   ServiceAddressLoaded copyWith({
@@ -36,6 +40,9 @@ final class ServiceAddressLoaded extends ServiceAddressState {
     String? city,
     String? building,
     String? floor,
+    String? couponCode,
+    String? couponError,
+    bool clearCouponError = false,
   }) {
     return ServiceAddressLoaded(
       address: address ?? this.address,
@@ -44,6 +51,8 @@ final class ServiceAddressLoaded extends ServiceAddressState {
       city: city ?? this.city,
       building: building ?? this.building,
       floor: floor ?? this.floor,
+      couponCode: couponCode ?? this.couponCode,
+      couponError: clearCouponError ? null : (couponError ?? this.couponError),
     );
   }
 
@@ -55,6 +64,8 @@ final class ServiceAddressLoaded extends ServiceAddressState {
         city,
         building,
         floor,
+        couponCode,
+        couponError,
       ];
 }
 

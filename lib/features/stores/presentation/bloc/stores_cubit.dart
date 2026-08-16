@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/api/errors/exceptions.dart';
+import 'package:untitled1/core/helper/user_city_preference.dart';
 import 'package:untitled1/features/stores/data/models/store_model.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 
@@ -24,7 +25,10 @@ class StoresCubit extends Cubit<StoresState> {
   }
 
   Future<void> _fetchStores() async {
-    final result = await repository.getStores();
+    final region = UserCityPreference.selectedRegion;
+    final result = await repository.getStores(
+      region: region == null || region.isEmpty ? null : region,
+    );
     result.fold(
       (failure) => emit(StoresError(message: mapFailureToMessage(failure))),
       (stores) => emit(StoresLoaded(stores: stores)),

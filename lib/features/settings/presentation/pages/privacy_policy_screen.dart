@@ -22,12 +22,12 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   void initState() {
     super.initState();
     context.read<SettingsCubit>().getPrivacyPolicy();
-  }@override
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('privacy_policy'.tr()),
-      ),
+      appBar: AppBar(title: Text('privacy_policy'.tr())),
       body: BlocBuilder<SettingsCubit, SettingsState>(
         builder: (context, state) {
           if (state is SettingsError) {
@@ -39,8 +39,9 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           }
 
           final isLoading = state is PrivacyPolicyLoading;
-          final privacyPolicy =
-          state is PrivacyPolicySuccess ? state.privacyPolicy : null;
+          final privacyPolicy = state is PrivacyPolicySuccess
+              ? state.privacyPolicy
+              : null;
 
           if (isLoading) {
             return const LoadingIndicator();
@@ -60,7 +61,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                           'yyyy-MM-dd',
                           privacyPolicy.updatedAt,
                           locale: context.locale,
-                        )
+                        ),
                       ],
                     ),
                     style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
@@ -73,9 +74,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                       fontSize: FontSize(14.sp),
                       lineHeight: const LineHeight(1.3),
                     ),
-                    'h2': Style(
-                      color: AppColors.primaryColor,
-                    ),
+                    'h2': Style(color: AppColors.primaryColor),
                   },
                 ),
               ],
@@ -85,5 +84,4 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
       ),
     );
   }
-
 }

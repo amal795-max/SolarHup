@@ -33,28 +33,29 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
     super.initState();
     context.read<UsedSystemCubit>().getUsedProducts();
   }
+
   @override
   Widget build(BuildContext context) {
     final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom != 0;
 
     return Scaffold(
       body: Column(
-          children: [
-            headerSection(
-              title: 'home_used_systems',
-              subTitle: 'home_used_system_desc',
+        children: [
+          headerSection(
+            title: 'home_used_systems',
+            subTitle: 'home_used_system_desc',
+          ),
+          SizedBox(height: 16.h),
+          const _SearchAndFilterRow(),
+          const CategoryFilterSection(),
+          Expanded(
+            child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
+              buildWhen: _buildWhen,
+              builder: _builder,
             ),
-            SizedBox(height: 16.h),
-            const _SearchAndFilterRow(),
-            const CategoryFilterSection(),
-            Expanded(
-              child: BlocBuilder<UsedSystemCubit, UsedSystemState>(
-                buildWhen: _buildWhen,
-                builder: _builder,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       floatingActionButton: isKeyboardOpen
@@ -115,19 +116,19 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
     return AppRefreshIndicator(
       onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
       child: Skeletonizer(
-      enabled: isLoading,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        physics: appRefreshPhysics,
-        child: Column(
-          children: [
-            SizedBox(height: 16.h),
-            _ProductGrid(products: products),
-            SizedBox(height: 100.h),
-          ],
+        enabled: isLoading,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          physics: appRefreshPhysics,
+          child: Column(
+            children: [
+              SizedBox(height: 16.h),
+              _ProductGrid(products: products),
+              SizedBox(height: 100.h),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 }

@@ -32,7 +32,8 @@ class ServiceRequestsRemoteDataSourceImpl
       );
       if (response.statusCode != 201 && response.statusCode != 200) {
         throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0),
+          message: _readErrorDetail(response) ??
+              getErrorMessage(response.statusCode ?? 0),
         );
       }
       return ServiceRequestResponseModel.fromJson(
@@ -95,4 +96,19 @@ class ServiceRequestsRemoteDataSourceImpl
       throw ServerException(message: mapDioError(e));
     }
   }
+}
+
+String? _readErrorDetail(Response<dynamic> response) {
+  final data = response.data;
+  if (data is Map<String, dynamic>) {
+    final detail = data['detail'];
+    if (detail is String && detail.trim().isNotEmpty) return detail.trim();
+    if (detail is List && detail.isNotEmpty) {
+      final first = detail.first;
+      if (first is Map && first['msg'] != null) {
+        return first['msg'].toString();
+      }
+    }
+  }
+  return null;
 }

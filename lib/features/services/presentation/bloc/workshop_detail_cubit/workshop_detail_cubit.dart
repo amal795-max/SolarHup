@@ -14,12 +14,9 @@ class WorkshopDetailCubit extends Cubit<WorkshopDetailState> {
   final CatalogRepository catalogRepository;
 
   WorkshopDetailCubit(this.repository, this.catalogRepository)
-      : super(WorkshopDetailInitial());
+    : super(WorkshopDetailInitial());
 
-  Future<void> loadWorkshop(
-    String businessId, {
-    int? categoryId,
-  }) async {
+  Future<void> loadWorkshop(String businessId, {int? categoryId}) async {
     emit(WorkshopDetailLoading());
 
     final workshopResult = await repository.getWorkshop(businessId);
@@ -39,8 +36,9 @@ class WorkshopDetailCubit extends Cubit<WorkshopDetailState> {
 
         final parsedBusinessId = int.tryParse(businessId) ?? 0;
         final discounts = parsedBusinessId > 0
-            ? (await catalogRepository.getWorkshopDiscounts(parsedBusinessId))
-                .fold((_) => <DiscountModel>[], (items) => items)
+            ? (await catalogRepository.getWorkshopDiscounts(
+                parsedBusinessId,
+              )).fold((_) => <DiscountModel>[], (items) => items)
             : <DiscountModel>[];
 
         emit(

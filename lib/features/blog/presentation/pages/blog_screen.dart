@@ -40,17 +40,17 @@ class _BlogView extends StatelessWidget {
             return switch (state) {
               BlogLoading() => const LoadingIndicator(),
               BlogError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context.read<BlogCubit>().loadBlog(),
-                    width: 160.w,
-                  ),
+                icon: Icons.error_outline_rounded,
+                iconSize: 48,
+                iconColor: AppColors.red,
+                title: 'stores_error_title'.tr(),
+                subtitle: message,
+                action: CustomButton(
+                  text: 'stores_retry'.tr(),
+                  onPressed: () => context.read<BlogCubit>().loadBlog(),
+                  width: 160.w,
                 ),
+              ),
               BlogLoaded() => _BlogLoadedBody(state: state),
               _ => const SizedBox.shrink(),
             };
@@ -73,39 +73,38 @@ class _BlogLoadedBody extends StatelessWidget {
     return AppRefreshIndicator(
       onRefresh: () => context.read<BlogCubit>().loadBlog(),
       child: SingleChildScrollView(
-      physics: appRefreshPhysics,
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const BlogSearchSection(),
-          SizedBox(height: 14.h),
-          if (articles.isEmpty)
-            EmptyWidget(
-              icon: Icons.search_off_rounded,
-              iconSize: 48,
-              iconColor: AppColors.grey,
-              title: 'blog_no_results'.tr(),
-              subtitle: 'blog_no_results_hint'.tr(),
-              padding: EdgeInsets.symmetric(vertical: 32.h),
-            )
-          else
-            ...articles.map(
-              (article) => Padding(
-                padding: EdgeInsets.only(bottom: 14.h),
-                child: BlogArticleCard(
-                  article: article,
-                  onTap: () => context.push(
-                    AppRoutes.blogArticleDetail(article.id),
+        physics: appRefreshPhysics,
+        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 24.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const BlogSearchSection(),
+            SizedBox(height: 14.h),
+            if (articles.isEmpty)
+              EmptyWidget(
+                icon: Icons.search_off_rounded,
+                iconSize: 48,
+                iconColor: AppColors.grey,
+                title: 'blog_no_results'.tr(),
+                subtitle: 'blog_no_results_hint'.tr(),
+                padding: EdgeInsets.symmetric(vertical: 32.h),
+              )
+            else
+              ...articles.map(
+                (article) => Padding(
+                  padding: EdgeInsets.only(bottom: 14.h),
+                  child: BlogArticleCard(
+                    article: article,
+                    onTap: () =>
+                        context.push(AppRoutes.blogArticleDetail(article.id)),
                   ),
                 ),
               ),
-            ),
-          SizedBox(height: 8.h),
-          const BlogPaginationSection(),
-        ],
+            SizedBox(height: 8.h),
+            const BlogPaginationSection(),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

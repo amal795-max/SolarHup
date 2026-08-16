@@ -65,5 +65,7 @@ ServiceRequestModel parseServiceRequest(Map<String, dynamic> item) {
     serviceDate: item['service_date'] as String?,
     serviceTime: item['service_time'] as String?,
     serviceNote: item['service_note'] as String?,
+    discountAmount: item['discount_amount']?.toString(),
+    couponCode: item['coupon_code']?.toString(),
   );
 }

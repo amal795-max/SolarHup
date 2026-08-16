@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
-import 'package:untitled1/features/services/data/models/service_rating_model.dart';
+import 'package:untitled1/features/orders/presentation/widgets/staus_order_service.dart';
+import 'package:untitled1/features/services/data/models/service_request_model.dart';
 import 'package:untitled1/widgets/text_with_icon.dart';
 
 class RateServiceSummaryCard extends StatelessWidget {
-  final ServiceRatingModel rating;
+  final ServiceRequestModel request;
 
-  const RateServiceSummaryCard({super.key, required this.rating});
+  const RateServiceSummaryCard({super.key, required this.request});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final titleColor = isDark ? AppColors.blue : AppColors.primaryColor;
-    final technician = rating.technician;
+    final serviceTitle = request.serviceName.isNotEmpty
+        ? request.serviceName
+        : request.orderCode;
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -40,21 +43,12 @@ class RateServiceSummaryCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 28.r,
-                backgroundColor: Color(technician.avatarColorValue),
-                backgroundImage: technician.avatarUrl != null
-                    ? NetworkImage(technician.avatarUrl!)
-                    : null,
-                child: technician.avatarUrl == null
-                    ? Text(
-                        technician.name.isNotEmpty
-                            ? technician.name[0].toUpperCase()
-                            : '?',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    : null,
+                backgroundColor: AppColors.primaryColor.withValues(alpha: 0.12),
+                child: Icon(
+                  Icons.home_repair_service_outlined,
+                  color: AppColors.primaryColor,
+                  size: 24.sp,
+                ),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -69,7 +63,7 @@ class RateServiceSummaryCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                technician.name,
+                                serviceTitle,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w800,
                                   color: titleColor,
@@ -77,7 +71,7 @@ class RateServiceSummaryCard extends StatelessWidget {
                               ),
                               SizedBox(height: 2.h),
                               Text(
-                                technician.role,
+                                'services_tab'.tr(),
                                 style: theme.textTheme.labelSmall?.copyWith(
                                   color: AppColors.grey,
                                 ),
@@ -86,7 +80,7 @@ class RateServiceSummaryCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          rating.serviceReferenceId,
+                          '#${request.orderCode}',
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: AppColors.grey,
                             fontWeight: FontWeight.w600,
@@ -95,27 +89,9 @@ class RateServiceSummaryCard extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 8.h),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 3.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF22C55E).withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: Text(
-                          'completed'.tr(),
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: const Color(0xFF16A34A),
-                            fontWeight: FontWeight.w800,
-                            fontSize: 9.sp,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
+                    StatusOrderService(
+                      text: request.statusEnum.status.tr(),
+                      color: request.statusEnum,
                     ),
                   ],
                 ),
@@ -127,13 +103,13 @@ class RateServiceSummaryCard extends StatelessWidget {
             children: [
               TextWithIcon(
                 icon: Icons.calendar_today_outlined,
-                title: rating.serviceDate,
+                title: request.displayDate,
                 color: AppColors.grey,
               ),
               SizedBox(width: 20.w),
               TextWithIcon(
                 icon: Icons.access_time,
-                title: rating.serviceTime,
+                title: request.displayTime,
                 color: AppColors.grey,
               ),
             ],
