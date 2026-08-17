@@ -18,7 +18,7 @@ import 'package:untitled1/features/services/presentation/widgets/schedule_form_s
 import 'package:untitled1/features/services/presentation/widgets/schedule_service_hero_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/schedule_time_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
@@ -66,22 +66,15 @@ class _ScheduleServiceView extends StatelessWidget {
           builder: (context, state) {
             return switch (state) {
               ScheduleServiceLoading() => const LoadingIndicator(),
-              ScheduleServiceError(:final message) => EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                iconSize: 48,
-                iconColor: AppColors.red,
-                title: 'stores_error_title'.tr(),
-                subtitle: message,
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: () => context.read<ScheduleServiceBloc>().add(
-                    LoadScheduleServiceEvent(
-                      serviceId: serviceId,
-                      businessId: draft?.businessId,
-                      serviceName: draft?.serviceName,
-                    ),
+              ScheduleServiceError(:final message) => errorWidget(
+                message: message,
+                hasButton: true,
+                onPressed: () => context.read<ScheduleServiceBloc>().add(
+                  LoadScheduleServiceEvent(
+                    serviceId: serviceId,
+                    businessId: draft?.businessId,
+                    serviceName: draft?.serviceName,
                   ),
-                  width: 160.w,
                 ),
               ),
               ScheduleServiceLoaded() => _ScheduleServiceBody(

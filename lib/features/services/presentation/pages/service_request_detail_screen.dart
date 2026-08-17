@@ -1,12 +1,10 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/features/services/data/models/service_request_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class ServiceRequestDetailScreen extends StatefulWidget {
   final int requestId;
@@ -54,14 +52,10 @@ class _ServiceRequestDetailScreenState
         if (state is ServiceRequestDetailsError && !hasCachedData) {
           return Scaffold(
             body: SafeArea(
-              child: EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                title: 'stores_error_title'.tr(),
-                subtitle: state.message,
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: _reload,
-                ),
+              child: errorWidget(
+                message: state.message,
+                hasButton: true,
+                onPressed: _reload,
               ),
             ),
           );

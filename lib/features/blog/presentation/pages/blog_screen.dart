@@ -11,9 +11,9 @@ import 'package:untitled1/features/blog/presentation/widgets/blog_article_card.d
 import 'package:untitled1/features/blog/presentation/widgets/blog_pagination_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_search_section.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class BlogScreen extends StatelessWidget {
   const BlogScreen({super.key});
@@ -39,17 +39,10 @@ class _BlogView extends StatelessWidget {
           builder: (context, state) {
             return switch (state) {
               BlogLoading() => const LoadingIndicator(),
-              BlogError(:final message) => EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                iconSize: 48,
-                iconColor: AppColors.red,
-                title: 'stores_error_title'.tr(),
-                subtitle: message,
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: () => context.read<BlogCubit>().loadBlog(),
-                  width: 160.w,
-                ),
+              BlogError(:final message) => errorWidget(
+                message: message,
+                hasButton: true,
+                onPressed: () => context.read<BlogCubit>().loadBlog(),
               ),
               BlogLoaded() => _BlogLoadedBody(state: state),
               _ => const SizedBox.shrink(),

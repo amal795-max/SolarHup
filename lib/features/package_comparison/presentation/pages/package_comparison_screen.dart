@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/network/check_internet.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/package_comparison/data/data_source/package_comparison_remote_data_source.dart';
 import 'package:untitled1/features/package_comparison/data/repositories/package_comparison_repository.dart';
 import 'package:untitled1/features/package_comparison/presentation/bloc/package_comparison_bloc/package_comparison_bloc.dart';
@@ -14,9 +13,8 @@ import 'package:untitled1/features/package_comparison/presentation/widgets/packa
 import 'package:untitled1/features/package_comparison/presentation/widgets/package_comparison_product_cards_section.dart';
 import 'package:untitled1/features/package_comparison/presentation/widgets/package_comparison_specs_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class PackageComparisonScreen extends StatelessWidget {
   const PackageComparisonScreen({super.key});
@@ -61,19 +59,12 @@ class _PackageComparisonView extends StatelessWidget {
           builder: (context, state) {
             return switch (state) {
               PackageComparisonLoading() => const LoadingIndicator(),
-              PackageComparisonError(:final message) => EmptyWidget(
-                  icon: Icons.error_outline_rounded,
-                  iconSize: 48,
-                  iconColor: AppColors.red,
-                  title: 'stores_error_title'.tr(),
-                  subtitle: message,
-                  action: CustomButton(
-                    text: 'stores_retry'.tr(),
-                    onPressed: () => context
-                        .read<PackageComparisonBloc>()
-                        .add(const LoadPackageComparisonEvent()),
-                    width: 160.w,
-                  ),
+              PackageComparisonError(:final message) => errorWidget(
+                  message: message,
+                  hasButton: true,
+                  onPressed: () => context
+                      .read<PackageComparisonBloc>()
+                      .add(const LoadPackageComparisonEvent()),
                 ),
               PackageComparisonLoaded() => _PackageComparisonBody(state: state),
               _ => const SizedBox.shrink(),

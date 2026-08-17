@@ -17,6 +17,7 @@ import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../widgets/empty_widget.dart';
+import '../../../../widgets/error_widget.dart';
 import '../widgets/badge_product_status.dart';
 import 'add_used_system/add_used_product_screen.dart';
 
@@ -83,18 +84,10 @@ class MyListingScreen extends StatelessWidget {
       return const LoadingIndicator();
     }
     if (state is MyUsedProductsFailure) {
-      return EmptyWidget(
-        icon: Icons.error_outline,
-        iconSize: 56,
-        iconColor: AppColors.grey,
-        title: 'stores_error_title',
-        subtitle: state.message,
-        action: CustomButton(
-          text: 'stores_retry'.tr(),
-          icon: Icons.refresh_rounded,
-          iconLeft: true,
-          onPressed: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
-        ),
+      return errorWidget(
+        message: state.message,
+        hasButton: true,
+        onPressed: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
       );
     }
     final cubit = context.read<UsedSystemCubit>();

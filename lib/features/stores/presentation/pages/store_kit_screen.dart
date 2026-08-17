@@ -1,9 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_bloc/store_kit_bloc.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_kit_cubit.dart';
 import 'package:untitled1/features/stores/presentation/mappers/store_info_mapper.dart';
@@ -15,9 +13,8 @@ import 'package:untitled1/features/stores/presentation/pages/store_kit_route_arg
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_search_section.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class StoreKitProductData {
   final String id;
@@ -95,18 +92,11 @@ class _StoreKitView extends StatelessWidget {
           builder: (context, state) {
             return switch (state) {
               StoreKitCubitLoading() => const LoadingIndicator(),
-              StoreKitCubitError(:final message) => EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                iconSize: 48,
-                iconColor: AppColors.red,
-                title: 'stores_error_title'.tr(),
-                subtitle: message,
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: () =>
-                      context.read<StoreKitCubit>().loadProducts(args.storeId),
-                  width: 160.w,
-                ),
+              StoreKitCubitError(:final message) => errorWidget(
+                message: message,
+                hasButton: true,
+                onPressed: () =>
+                    context.read<StoreKitCubit>().loadProducts(args.storeId),
               ),
               StoreKitCubitLoaded(
                 :final categories,

@@ -17,8 +17,9 @@ abstract class WorkshopsRepository {
     int? categoryId,
   });
   Future<Either<Failure, List<WorkshopOfferingModel>>> getOfferingsForCategory(
-    int categoryId,
-  );
+    int categoryId, {
+    String? region,
+  });
   Future<Either<Failure, WorkshopAvailabilityModel>> getWorkshopAvailability(
     int businessId,
   );
@@ -81,11 +82,15 @@ class WorkshopsRepositoryImpl implements WorkshopsRepository {
 
   @override
   Future<Either<Failure, List<WorkshopOfferingModel>>> getOfferingsForCategory(
-    int categoryId,
-  ) async {
+    int categoryId, {
+    String? region,
+  }) async {
     if (await networkInfo.isConnected) {
       try {
-        final offerings = await remote.getOfferingsForCategory(categoryId);
+        final offerings = await remote.getOfferingsForCategory(
+          categoryId,
+          region: region,
+        );
         return Right(offerings);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,9 +8,8 @@ import 'package:untitled1/features/blog/presentation/bloc/blog_detail_cubit.dart
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_author_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_content_section.dart';
 import 'package:untitled1/features/blog/presentation/widgets/blog_detail_hero_section.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
-import 'package:untitled1/widgets/primary_button.dart';
 
 class BlogArticleDetailScreen extends StatelessWidget {
   final String articleId;
@@ -41,19 +39,12 @@ class _BlogArticleDetailView extends StatelessWidget {
           return switch (state) {
             BlogDetailLoading() => const LoadingIndicator(),
             BlogDetailError(:final message) => SafeArea(
-              child: EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                iconSize: 48,
-                iconColor: AppColors.red,
-                title: 'stores_error_title'.tr(),
-                subtitle: message,
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: () => context
-                      .read<BlogDetailCubit>()
-                      .loadArticleDetail(articleId),
-                  width: 160.w,
-                ),
+              child: errorWidget(
+                message: message,
+                hasButton: true,
+                onPressed: () => context
+                    .read<BlogDetailCubit>()
+                    .loadArticleDetail(articleId),
               ),
             ),
             BlogDetailLoaded(:final article) => _BlogDetailBody(

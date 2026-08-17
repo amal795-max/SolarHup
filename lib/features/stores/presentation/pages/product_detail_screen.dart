@@ -1,9 +1,7 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
-import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
@@ -15,8 +13,7 @@ import 'package:untitled1/features/stores/presentation/widgets/product_detail_in
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_technical_sheet_section.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 
 const ProductDetailModel _skeletonProduct = ProductDetailModel(
   id: 0,
@@ -91,21 +88,14 @@ class _ProductDetailView extends StatelessWidget {
               ),
             ),
             ProductDetailError(:final message) => SafeArea(
-              child: EmptyWidget(
-                icon: Icons.error_outline_rounded,
-                iconSize: 48,
-                iconColor: AppColors.red,
-                title: 'stores_error_title'.tr(),
-                subtitle: message.tr(),
-                action: CustomButton(
-                  text: 'stores_retry'.tr(),
-                  onPressed: () => context.read<ProductDetailBloc>().add(
-                    LoadProductDetailEvent(
-                      businessId: args.businessId,
-                      productId: args.productId,
-                    ),
+              child: errorWidget(
+                message: message,
+                hasButton: true,
+                onPressed: () => context.read<ProductDetailBloc>().add(
+                  LoadProductDetailEvent(
+                    businessId: args.businessId,
+                    productId: args.productId,
                   ),
-                  width: 160.w,
                 ),
               ),
             ),

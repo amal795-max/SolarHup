@@ -21,7 +21,10 @@ abstract class WorkshopsRemoteDataSource {
     String businessId, {
     int? categoryId,
   });
-  Future<List<WorkshopOfferingModel>> getOfferingsForCategory(int categoryId);
+  Future<List<WorkshopOfferingModel>> getOfferingsForCategory(
+    int categoryId, {
+    String? region,
+  });
   Future<WorkshopAvailabilityModel> getWorkshopAvailability(int businessId);
 }
 
@@ -114,9 +117,10 @@ class WorkshopsRemoteDataSourceImpl implements WorkshopsRemoteDataSource {
 
   @override
   Future<List<WorkshopOfferingModel>> getOfferingsForCategory(
-    int categoryId,
-  ) async {
-    final workshops = await getWorkshops();
+    int categoryId, {
+    String? region,
+  }) async {
+    final workshops = await getWorkshops(region: region);
     final offerings = <WorkshopOfferingModel>[];
 
     await Future.wait(

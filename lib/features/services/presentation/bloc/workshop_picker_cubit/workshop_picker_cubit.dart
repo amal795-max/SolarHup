@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:untitled1/core/api/errors/failures.dart';
+import 'package:untitled1/core/helper/user_city_preference.dart';
 import 'package:untitled1/features/services/data/models/workshop_offering_model.dart';
 import 'package:untitled1/features/services/data/repositories/workshops_repository.dart';
 
@@ -19,7 +20,10 @@ class WorkshopPickerCubit extends Cubit<WorkshopPickerState> {
     if (showLoading || state is! WorkshopPickerLoaded) {
       emit(WorkshopPickerLoading(categoryName: categoryName));
     }
-    final result = await repository.getOfferingsForCategory(categoryId);
+    final result = await repository.getOfferingsForCategory(
+      categoryId,
+      region: _selectedRegion,
+    );
     result.fold(
       (failure) => emit(
         WorkshopPickerError(
@@ -43,5 +47,10 @@ class WorkshopPickerCubit extends Cubit<WorkshopPickerState> {
       OfflineFailure() => 'No internet connection',
       _ => 'Something went wrong',
     };
+  }
+
+  String? get _selectedRegion {
+    final region = UserCityPreference.selectedRegion;
+    return region == null || region.isEmpty ? null : region;
   }
 }

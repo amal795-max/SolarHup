@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/user_city_preference.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -17,7 +18,7 @@ import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
-import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/error_widget.dart';
 
 class WorkshopPickerScreen extends StatelessWidget {
   final WorkshopPickerRouteArgs args;
@@ -37,14 +38,49 @@ class WorkshopPickerScreen extends StatelessWidget {
   }
 }
 
-class _WorkshopPickerView extends StatelessWidget {
+class _WorkshopPickerView extends StatefulWidget {
   final WorkshopPickerRouteArgs args;
 
   const _WorkshopPickerView({required this.args});
 
   @override
+  State<_WorkshopPickerView> createState() => _WorkshopPickerViewState();
+}
+
+class _WorkshopPickerViewState extends State<_WorkshopPickerView> {
+  @override
+  void initState() {
+    super.initState();
+    UserCityPreference.cityNotifier.addListener(_onCityChanged);
+  }
+
+  void _onCityChanged() {
+    if (!mounted) return;
+    context.read<WorkshopPickerCubit>().loadOfferings(
+          categoryId: widget.args.categoryId,
+          categoryName: widget.args.categoryName,
+          showLoading: true,
+        );
+  }
+
+  @override
+  void dispose() {
+    UserCityPreference.cityNotifier.removeListener(_onCityChanged);
+    super.dispose();
+  }
+
+  void _loadOfferings({bool showLoading = false}) {
+    context.read<WorkshopPickerCubit>().loadOfferings(
+          categoryId: widget.args.categoryId,
+          categoryName: widget.args.categoryName,
+          showLoading: showLoading,
+        );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final isDark = context.brightness;
+    final args = widget.args;
 
     return Scaffold(
       backgroundColor:
@@ -83,32 +119,15 @@ class _WorkshopPickerView extends StatelessWidget {
                           ],
                         ),
                       ),
-                    WorkshopPickerError(:final message) => EmptyWidget(
-                        icon: Icons.error_outline_rounded,
-                        iconSize: 48,
-                        iconColor: AppColors.red,
-                        title: 'stores_error_title'.tr(),
-                        subtitle: message,
-                        action: CustomButton(
-                          text: 'stores_retry'.tr(),
-                          onPressed: () => context
-                              .read<WorkshopPickerCubit>()
-                              .loadOfferings(
-                                categoryId: args.categoryId,
-                                categoryName: args.categoryName,
-                              ),
-                          width: 160.w,
-                        ),
+                    WorkshopPickerError(:final message) => errorWidget(
+                        message: message,
+                        hasButton: true,
+                        onPressed: () => _loadOfferings(showLoading: true),
                       ),
                     WorkshopPickerLoaded(:final offerings) => _PickerContent(
                         args: args,
                         groups: groupOfferingsByWorkshop(offerings),
-                        onRefresh: () => context
-                            .read<WorkshopPickerCubit>()
-                            .loadOfferings(
-                              categoryId: args.categoryId,
-                              categoryName: args.categoryName,
-                            ),
+                        onRefresh: () async => _loadOfferings(),
                       ),
                     _ => const SizedBox.shrink(),
                   };
