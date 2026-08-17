@@ -15,6 +15,9 @@ import 'package:untitled1/features/services/presentation/mappers/workshop_info_m
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
 import 'package:untitled1/features/services/presentation/widgets/workshop_info_discounts_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/workshop_info_services_section.dart';
+import 'package:untitled1/features/reviews/presentation/utils/reviews_navigation.dart';
+import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
@@ -131,6 +134,8 @@ class _WorkshopInfoView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             WorkshopDetailLoading() => AppSkeletonizer(
+              isLoading: true,
+              hasCachedData: false,
               child: _WorkshopInfoContent(
                 data: sampleWorkshopInfo,
                 initialSelectedServiceId: args.highlightServiceId,
@@ -156,6 +161,10 @@ class _WorkshopInfoView extends StatelessWidget {
                   discounts: discounts,
                 ),
                 initialSelectedServiceId: args.highlightServiceId,
+                onRefresh: () => context.read<WorkshopDetailCubit>().loadWorkshop(
+                  args.workshopId,
+                  categoryId: args.categoryId,
+                ),
               ),
             _ => const SizedBox.shrink(),
           };
@@ -168,10 +177,12 @@ class _WorkshopInfoView extends StatelessWidget {
 class _WorkshopInfoContent extends StatefulWidget {
   final WorkshopInfoData data;
   final String? initialSelectedServiceId;
+  final Future<void> Function()? onRefresh;
 
   const _WorkshopInfoContent({
     required this.data,
     this.initialSelectedServiceId,
+    this.onRefresh,
   });
 
   @override
@@ -204,47 +215,55 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
     final data = widget.data;
     final selected = _selectedService;
 
+    final scrollView = CustomScrollView(
+      physics: appRefreshPhysics,
+      slivers: [
+        _WorkshopHeroSliver(data: data),
+        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        SliverToBoxAdapter(child: _WorkshopProfileSection(data: data)),
+        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        SliverToBoxAdapter(child: _WorkshopAboutSection(data: data)),
+        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        SliverToBoxAdapter(child: _WorkshopContactSection(data: data)),
+        SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+        SliverToBoxAdapter(
+          child: WorkshopInfoDiscountsSection(
+            workshopId: data.id,
+            workshopName: data.name,
+            services: data.discountedServices,
+            onServiceTap: (id) => setState(() => _selectedServiceId = id),
+          ),
+        ),
+        SliverToBoxAdapter(child: SizedBox(height: 8.h)),
+        SliverToBoxAdapter(
+          child: WorkshopInfoServicesSection(
+            workshopId: data.id,
+            workshopName: data.name,
+            services: data.services,
+            selectedServiceId: _selectedServiceId,
+            onServiceSelected: (id) => setState(() => _selectedServiceId = id),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(height: selected != null ? 100.h : 32.h),
+        ),
+      ],
+    );
+
+    final scrollBody = widget.onRefresh != null
+        ? AppRefreshIndicator(
+            onRefresh: widget.onRefresh,
+            child: scrollView,
+          )
+        : scrollView;
+
     return Scaffold(
       backgroundColor: isDark
           ? Theme.of(context).scaffoldBackgroundColor
           : AppColors.backGroundGrey,
       body: Stack(
         children: [
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              _WorkshopHeroSliver(data: data),
-              SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-              SliverToBoxAdapter(child: _WorkshopProfileSection(data: data)),
-              SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-              SliverToBoxAdapter(child: _WorkshopAboutSection(data: data)),
-              SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-              SliverToBoxAdapter(child: _WorkshopContactSection(data: data)),
-              SliverToBoxAdapter(child: SizedBox(height: 16.h)),
-              SliverToBoxAdapter(
-                child: WorkshopInfoDiscountsSection(
-                  workshopId: data.id,
-                  workshopName: data.name,
-                  services: data.discountedServices,
-                  onServiceTap: (id) => setState(() => _selectedServiceId = id),
-                ),
-              ),
-              SliverToBoxAdapter(child: SizedBox(height: 8.h)),
-              SliverToBoxAdapter(
-                child: WorkshopInfoServicesSection(
-                  workshopId: data.id,
-                  workshopName: data.name,
-                  services: data.services,
-                  selectedServiceId: _selectedServiceId,
-                  onServiceSelected: (id) =>
-                      setState(() => _selectedServiceId = id),
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: SizedBox(height: selected != null ? 100.h : 32.h),
-              ),
-            ],
-          ),
+          scrollBody,
           SafeArea(
             child: Padding(
               padding: EdgeInsets.only(left: 8.w, top: 8.h),
@@ -282,10 +301,24 @@ class _WorkshopInfoContentState extends State<_WorkshopInfoContent> {
   }
 }
 
+void _openWorkshopReviews(BuildContext context, WorkshopInfoData data) {
+  final workshopId = int.tryParse(data.id);
+  if (workshopId == null) return;
+
+  openReviewsScreen(
+    context,
+    itemType: 'workshop',
+    itemId: workshopId,
+    itemName: data.name,
+  );
+}
+
 class _WorkshopHeroSliver extends StatelessWidget {
   final WorkshopInfoData data;
 
   const _WorkshopHeroSliver({required this.data});
+
+  int get _workshopId => int.tryParse(data.id) ?? 0;
 
   bool get _hasCover => isDisplayableImageUrl(data.coverImageUrl);
 
@@ -348,6 +381,16 @@ class _WorkshopHeroSliver extends StatelessWidget {
                   color: Colors.white.withValues(alpha: 0.08),
                 ),
               ),
+            Positioned(
+              top: 12.h,
+              right: 12.w,
+              child: ReviewSummaryIndicator(
+                itemType: 'workshop',
+                itemId: _workshopId,
+                variant: ReviewSummaryVariant.workshopBanner,
+                onTap: () => _openWorkshopReviews(context, data),
+              ),
+            ),
           ],
         ),
       ),
@@ -359,6 +402,8 @@ class _WorkshopProfileSection extends StatelessWidget {
   final WorkshopInfoData data;
 
   const _WorkshopProfileSection({required this.data});
+
+  int get _workshopId => int.tryParse(data.id) ?? 0;
 
   @override
   Widget build(BuildContext context) {
@@ -410,9 +455,25 @@ class _WorkshopProfileSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  data.name,
-                  style: AppStyle.h5.copyWith(fontWeight: FontWeight.w800),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        data.name,
+                        style: AppStyle.h5.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8.w),
+                    ReviewSummaryIndicator(
+                      itemType: 'workshop',
+                      itemId: _workshopId,
+                      variant: ReviewSummaryVariant.workshopDetail,
+                      onTap: () => _openWorkshopReviews(context, data),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 8.h),
                 Container(

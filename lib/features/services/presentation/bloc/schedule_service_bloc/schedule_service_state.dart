@@ -31,23 +31,20 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
     this.notes = '',
   });
 
-  List<ScheduleCalendarDayModel> get calendarDays =>
-      buildMonthCalendarDays(
-        viewYear,
-        viewMonth,
-        rowCount: calendarRowCount,
-        availability: service.availability,
-      );
+  List<ScheduleCalendarDayModel> get calendarDays => buildMonthCalendarDays(
+    viewYear,
+    viewMonth,
+    rowCount: calendarRowCount,
+    availability: service.availability,
+  );
 
-  List<ServiceTimeSlotModel> get timeSlots {
+  WorkshopAvailabilityModel get timeAvailability =>
+      service.availability ?? defaultScheduleAvailability();
+
+  bool get hasSelectableTimes {
     final date = selectedDate;
-    if (date == null) return const [];
-    final availability = service.availability;
-    if (availability != null) {
-      if (!availability.isDateSelectable(date)) return const [];
-      return availability.buildTimeSlots(forDate: date);
-    }
-    return defaultScheduleTimeSlots();
+    if (date == null) return false;
+    return timeAvailability.hasSelectableTimes(date);
   }
 
   bool get hasBookableDays {
@@ -61,6 +58,8 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
     return service.availability?.summaryLabel;
   }
 
+  String? get shiftWindowLabel => timeAvailability.shiftWindowLabel;
+
   String get monthYearLabel =>
       DateFormat('MMMM yyyy').format(DateTime(viewYear, viewMonth));
 
@@ -71,11 +70,25 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
   }
 
   ServiceTimeSlotModel? get selectedTimeSlot {
-    if (selectedTimeSlotId == null) return null;
-    for (final slot in timeSlots) {
-      if (slot.id == selectedTimeSlotId) return slot;
+    final id = selectedTimeSlotId;
+    final date = selectedDate;
+    if (id == null || date == null) return null;
+
+    final parsed = timeAvailability.parseSlotId(id);
+    if (parsed == null) return null;
+    if (!timeAvailability.isTimeSelectable(
+      forDate: date,
+      hour: parsed.$1,
+      minute: parsed.$2,
+    )) {
+      return null;
     }
-    return null;
+
+    return timeAvailability.createSlotModel(
+      forDate: date,
+      hour: parsed.$1,
+      minute: parsed.$2,
+    );
   }
 
   ScheduleServiceLoaded copyWith({
@@ -90,8 +103,9 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
   }) {
     return ScheduleServiceLoaded(
       service: service ?? this.service,
-      selectedDate:
-          clearSelectedDate ? null : (selectedDate ?? this.selectedDate),
+      selectedDate: clearSelectedDate
+          ? null
+          : (selectedDate ?? this.selectedDate),
       selectedTimeSlotId: clearSelectedTimeSlot
           ? null
           : (selectedTimeSlotId ?? this.selectedTimeSlotId),
@@ -103,13 +117,13 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
 
   @override
   List<Object?> get props => [
-        service,
-        selectedDate,
-        selectedTimeSlotId,
-        viewYear,
-        viewMonth,
-        notes,
-      ];
+    service,
+    selectedDate,
+    selectedTimeSlotId,
+    viewYear,
+    viewMonth,
+    notes,
+  ];
 }
 
 final class ScheduleServiceError extends ScheduleServiceState {

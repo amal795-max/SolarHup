@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
@@ -17,11 +18,14 @@ class ReviewsScreen extends StatefulWidget {
   final String itemType;
   final String itemId;
   final String itemName;
+  final bool showReviewForm;
+
   const ReviewsScreen({
     super.key,
     required this.itemType,
     required this.itemId,
     required this.itemName,
+    this.showReviewForm = true,
   });
 
   @override
@@ -53,25 +57,33 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           physics: appRefreshPhysics,
           padding: EdgeInsets.all(16.w),
           children: [
-            ReviewFormWidget(
-              itemType: widget.itemType,
-              itemId: widget.itemId,
-              onSuccess: () {
-                context.read<ReviewsCubit>().getReviews(
-                  widget.itemType,
-                  widget.itemId,
-                );
-              },
-            ),
-            SizedBox(height: 24.h),
+            if (widget.showReviewForm) ...[
+              ReviewFormWidget(
+                itemType: widget.itemType,
+                itemId: widget.itemId,
+                onSuccess: () {
+                  context.read<ReviewsCubit>().getReviews(
+                    widget.itemType,
+                    widget.itemId,
+                  );
+                },
+              ),
+              SizedBox(height: 24.h),
+            ],
             Text('all_reviews'.tr(), style: AppStyle.h6),
             SizedBox(height: 16.h),
             BlocBuilder<ReviewsCubit, ReviewsState>(
               builder: (context, state) {
+                final cubit = context.read<ReviewsCubit>();
                 final isLoading = state is ReviewsLoading;
+                final cachedReviews = cubit.cachedReviews;
+                final showSkeleton = showInitialLoadingSkeleton(
+                  isLoading: isLoading,
+                  hasCachedData: cachedReviews.isNotEmpty,
+                );
                 List<ReviewModel> sourceList;
 
-                if (isLoading) {
+                if (isLoading && cachedReviews.isEmpty) {
                   sourceList = List.generate(
                     4,
                     (index) => ReviewModel(
@@ -84,6 +96,8 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   );
                 } else if (state is ReviewsLoaded) {
                   sourceList = state.reviews;
+                } else if (isLoading && cachedReviews.isNotEmpty) {
+                  sourceList = cachedReviews;
                 } else {
                   sourceList = [];
                 }
@@ -102,7 +116,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 }
 
                 return Skeletonizer(
-                  enabled: isLoading,
+                  enabled: showSkeleton,
                   child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

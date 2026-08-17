@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/enums/favorite_category_enum.dart';
-import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/features/reviews/presentation/utils/reviews_navigation.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_info_screen.dart';
@@ -59,13 +58,11 @@ class StoreInfoDetailsSection extends StatelessWidget {
                 itemId: data.id,
                 variant: ReviewSummaryVariant.storeProfile,
                 onTap: () {
-                  context.push(
-                    AppRoutes.reviewsScreen,
-                    extra: {
-                      'itemType': 'store',
-                      'itemId': data.id.toString(),
-                      'itemName': data.name,
-                    },
+                  openReviewsScreen(
+                    context,
+                    itemType: 'store',
+                    itemId: data.id,
+                    itemName: data.name,
                   );
                 },
               ),

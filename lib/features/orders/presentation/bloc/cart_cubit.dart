@@ -24,8 +24,10 @@ class CartCubit extends Cubit<CartState> {
 
   CartCubit(this.repository, this.catalogRepository) : super(CartInitial());
 
-  Future<void> getCart() async {
-    emit(CartLoading());
+  Future<void> getCart({bool showLoading = false}) async {
+    if (showLoading || order == null) {
+      emit(CartLoading());
+    }
     final result = await repository.getCart();
     result.fold((failure) => emit(CartError(failure.message)), (cart) async {
       order = await _applyDiscountPricing(cart);

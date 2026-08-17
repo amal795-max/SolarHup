@@ -11,8 +11,10 @@ class DiscountedProductsCubit extends Cubit<DiscountedProductsState> {
 
   DiscountedProductsCubit(this.repository) : super(DiscountedProductsInitial());
 
-  Future<void> loadDiscountedProducts() async {
-    emit(DiscountedProductsLoading());
+  Future<void> loadDiscountedProducts({bool showLoading = false}) async {
+    if (showLoading || state is! DiscountedProductsLoaded) {
+      emit(DiscountedProductsLoading());
+    }
     final result = await repository.getDiscountedProducts(businessType: 'store');
     result.fold(
       (failure) => emit(

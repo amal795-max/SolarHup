@@ -11,8 +11,10 @@ class ServiceCategoriesCubit extends Cubit<ServiceCategoriesState> {
 
   ServiceCategoriesCubit(this.repository) : super(ServiceCategoriesInitial());
 
-  Future<void> loadCategories() async {
-    emit(ServiceCategoriesLoading());
+  Future<void> loadCategories({bool showLoading = false}) async {
+    if (showLoading || state is! ServiceCategoriesLoaded) {
+      emit(ServiceCategoriesLoading());
+    }
     final result = await repository.getWorkshopCategories();
     result.fold(
       (failure) => emit(ServiceCategoriesError(message: _mapFailure(failure))),

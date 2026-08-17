@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/blog/data/models/faq_model.dart';
 import 'package:untitled1/features/blog/presentation/bloc/faq_cubit.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 
 class AllQuestionsScreen extends StatefulWidget {
@@ -52,6 +54,11 @@ class _AllQuestionsScreenState extends State<AllQuestionsScreen> {
                   }
 
                   final isLoading = state is FaqLoading;
+                  final hasCachedData = state is FaqSuccess;
+                  final showSkeleton = showInitialLoadingSkeleton(
+                    isLoading: isLoading,
+                    hasCachedData: hasCachedData,
+                  );
                   final List<FaqModel> fakeFaqs = List.generate(
                     6,
                     (index) => FaqModel(
@@ -68,30 +75,43 @@ class _AllQuestionsScreenState extends State<AllQuestionsScreen> {
                       : fakeFaqs;
 
                   if (state is FaqSuccess && faqs.isEmpty) {
-                    return EmptyWidget(
-                      icon: Icons.search_off_rounded,
-                      title: 'faq_no_results'.tr(),
-                      subtitle: 'blog_no_results_hint'.tr(),
+                    return AppRefreshIndicator(
+                      onRefresh: () =>
+                          context.read<FaqCubit>().getFaqs(),
+                      child: ListView(
+                        physics: appRefreshPhysics,
+                        children: [
+                          EmptyWidget(
+                            icon: Icons.search_off_rounded,
+                            title: 'faq_no_results'.tr(),
+                            subtitle: 'blog_no_results_hint'.tr(),
+                          ),
+                        ],
+                      ),
                     );
                   }
 
-                  return Skeletonizer(
-                    enabled: isLoading,
-                    child: ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 8.h,
+                  return AppRefreshIndicator(
+                    onRefresh: () => context.read<FaqCubit>().getFaqs(),
+                    child: Skeletonizer(
+                      enabled: showSkeleton,
+                      child: ListView.builder(
+                        physics: appRefreshPhysics,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 8.h,
+                        ),
+                        itemCount: faqs.length,
+                        itemBuilder: (context, index) {
+                          final faq = faqs[index];
+                          final isExpanded = state is FaqSuccess;
+                          return _FaqTile(
+                            faq: faq,
+                            isExpanded: isExpanded,
+                            isDark: isDark,
+                          );
+                        },
                       ),
-                      itemCount: faqs.length,
-                      itemBuilder: (context, index) {
-                        final faq = faqs[index];
-                        final isExpanded = state is FaqSuccess;
-                        return _FaqTile(
-                          faq: faq,
-                          isExpanded: isExpanded,
-                          isDark: isDark,
-                        );
-                      },
                     ),
                   );
                 },

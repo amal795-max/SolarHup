@@ -39,15 +39,15 @@ class ScheduleServiceBloc
       (data) {
         final now = DateTime.now();
         final selectedDate = _resolveInitialDate(data);
-        final slots = selectedDate != null
-            ? _timeSlotsFor(data, selectedDate)
-            : const <ServiceTimeSlotModel>[];
+        final defaultSlotId = selectedDate != null
+            ? _pickDefaultSlotIdForDate(data, selectedDate)
+            : null;
 
         emit(
           ScheduleServiceLoaded(
             service: data,
             selectedDate: selectedDate,
-            selectedTimeSlotId: _pickDefaultSlotId(slots),
+            selectedTimeSlotId: defaultSlotId,
             viewYear: (selectedDate ?? now).year,
             viewMonth: (selectedDate ?? now).month,
           ),
@@ -72,7 +72,12 @@ class ScheduleServiceBloc
         clearSelectedTimeSlot: true,
       );
       emit(
-        next.copyWith(selectedTimeSlotId: _pickDefaultSlotId(next.timeSlots)),
+        next.copyWith(
+          selectedTimeSlotId: _pickDefaultSlotIdForDate(
+            current.service,
+            event.day.date,
+          ),
+        ),
       );
       return;
     }
@@ -81,7 +86,14 @@ class ScheduleServiceBloc
       selectedDate: event.day.date,
       clearSelectedTimeSlot: true,
     );
-    emit(next.copyWith(selectedTimeSlotId: _pickDefaultSlotId(next.timeSlots)));
+    emit(
+      next.copyWith(
+        selectedTimeSlotId: _pickDefaultSlotIdForDate(
+          current.service,
+          event.day.date,
+        ),
+      ),
+    );
   }
 
   void _onSelectTimeSlot(
@@ -90,14 +102,21 @@ class ScheduleServiceBloc
   ) {
     final current = state;
     if (current is! ScheduleServiceLoaded) return;
-    ServiceTimeSlotModel? slot;
-    for (final candidate in current.timeSlots) {
-      if (candidate.id == event.timeSlotId) {
-        slot = candidate;
-        break;
-      }
+
+    final date = current.selectedDate;
+    if (date == null) return;
+
+    final parsed = current.timeAvailability.parseSlotId(event.timeSlotId);
+    if (parsed == null) return;
+
+    if (!current.timeAvailability.isTimeSelectable(
+      forDate: date,
+      hour: parsed.$1,
+      minute: parsed.$2,
+    )) {
+      return;
     }
-    if (slot == null || !slot.isAvailable) return;
+
     emit(current.copyWith(selectedTimeSlotId: event.timeSlotId));
   }
 
@@ -128,24 +147,14 @@ class ScheduleServiceBloc
     return DateTime.now();
   }
 
-  List<ServiceTimeSlotModel> _timeSlotsFor(
+  String? _pickDefaultSlotIdForDate(
     ScheduleServiceModel data,
     DateTime date,
   ) {
-    final availability = data.availability;
-    if (availability != null) {
-      if (!availability.isDateSelectable(date)) return const [];
-      return availability.buildTimeSlots(forDate: date);
-    }
-    return defaultScheduleTimeSlots();
-  }
-
-  String? _pickDefaultSlotId(List<ServiceTimeSlotModel> slots) {
-    if (slots.isEmpty) return null;
-    for (final slot in slots) {
-      if (slot.isAvailable) return slot.id;
-    }
-    return slots.first.id;
+    final availability = data.availability ?? defaultScheduleAvailability();
+    final first = availability.firstSelectableTime(date);
+    if (first == null) return null;
+    return availability.slotIdFor(hour: first.$1, minute: first.$2);
   }
 
   String _mapFailureToMessage(Failure failure) {

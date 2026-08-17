@@ -104,7 +104,9 @@ class _ScheduleServiceBody extends StatelessWidget {
   const _ScheduleServiceBody({required this.state, this.draft});
 
   void _continueToAddress(BuildContext context) {
-    if (!state.hasBookableDays || state.selectedDate == null) {
+    if (!state.hasBookableDays ||
+        !state.hasSelectableTimes ||
+        state.selectedDate == null) {
       return;
     }
 
@@ -185,7 +187,7 @@ class _ScheduleServiceBody extends StatelessWidget {
                 SizedBox(height: 24.h),
                 CustomButton(
                   text: 'continue'.tr(),
-                  onPressed: state.hasBookableDays
+                  onPressed: state.hasBookableDays && state.hasSelectableTimes
                       ? () => _continueToAddress(context)
                       : null,
                 ),

@@ -56,9 +56,14 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     }
   }
 
-  Future<void> loadFavorites(String category) async {
+  Future<void> loadFavorites(String category, {bool showLoading = false}) async {
     _currentCategory = category;
-    emit(FavoritesLoading(category));
+    final hasCategoryCache = state is FavoritesSuccess &&
+        (state as FavoritesSuccess).category == category &&
+        (state as FavoritesSuccess).items.isNotEmpty;
+    if (showLoading || !hasCategoryCache) {
+      emit(FavoritesLoading(category));
+    }
     final result = await repository.getFavorites(category);
 
     result.fold((failure) => emit(FavoritesError(failure.message, category)), (

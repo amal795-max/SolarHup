@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -53,6 +54,11 @@ class _ExpertServicesView extends StatelessWidget {
               }
 
               final isLoading = state is ServiceCategoriesLoading;
+              final hasCachedData = state is ServiceCategoriesLoaded;
+              final showSkeleton = showInitialLoadingSkeleton(
+                isLoading: isLoading,
+                hasCachedData: hasCachedData,
+              );
               final fakeCategories = List.generate(
                 6,
                     (index) => StoreCategoryModel(
@@ -62,13 +68,13 @@ class _ExpertServicesView extends StatelessWidget {
                 ),
               );
 
-              final categories = isLoading
-                  ? fakeCategories
-                  : (state is ServiceCategoriesLoaded ? state.categories : <StoreCategoryModel>[]);
+              final categories = state is ServiceCategoriesLoaded
+                  ? state.categories
+                  : (isLoading ? fakeCategories : <StoreCategoryModel>[]);
 
               return _ServicesContent(
                 categories: categories,
-                onCategoryTap: isLoading ? (_) {}
+                onCategoryTap: showSkeleton ? (_) {}
                     : (category) {
                   context.push(
                     AppRoutes.workshopPickerScreen,
@@ -78,10 +84,9 @@ class _ExpertServicesView extends StatelessWidget {
                     ),
                   );
                 },
-                isLoading: isLoading,
-                onRefresh: isLoading
-                    ? null
-                    : () => context.read<ServiceCategoriesCubit>().loadCategories(),
+                showSkeleton: showSkeleton,
+                onRefresh: () =>
+                    context.read<ServiceCategoriesCubit>().loadCategories(),
               );
             },
           )
@@ -93,13 +98,13 @@ class _ExpertServicesView extends StatelessWidget {
 class _ServicesContent extends StatelessWidget {
   final List<StoreCategoryModel> categories;
   final ValueChanged<StoreCategoryModel> onCategoryTap;
-  final bool isLoading;
+  final bool showSkeleton;
   final Future<void> Function()? onRefresh;
 
   const _ServicesContent({
     required this.categories,
     required this.onCategoryTap,
-    required this.isLoading,
+    required this.showSkeleton,
     this.onRefresh,
   });
 
@@ -170,7 +175,7 @@ class _ServicesContent extends StatelessWidget {
           child: SizedBox(height: 16.h),
         ),
 
-        if (!isLoading && categories.isEmpty)
+        if (!showSkeleton && categories.isEmpty)
           SliverFillRemaining(
             hasScrollBody: false,
             child: EmptyWidget(
@@ -192,7 +197,7 @@ class _ServicesContent extends StatelessWidget {
             ),
             sliver: SliverToBoxAdapter(
               child: Skeletonizer(
-                enabled: isLoading,
+                enabled: showSkeleton,
                 child: ServiceCategoryGrid(
                   categories: categories,
                   onCategoryTap: onCategoryTap,

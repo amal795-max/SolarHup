@@ -16,8 +16,10 @@ class WorkshopDetailCubit extends Cubit<WorkshopDetailState> {
   WorkshopDetailCubit(this.repository, this.catalogRepository)
     : super(WorkshopDetailInitial());
 
-  Future<void> loadWorkshop(String businessId, {int? categoryId}) async {
-    emit(WorkshopDetailLoading());
+  Future<void> loadWorkshop(String businessId, {int? categoryId, bool showLoading = false}) async {
+    if (showLoading || state is! WorkshopDetailLoaded) {
+      emit(WorkshopDetailLoading());
+    }
 
     final workshopResult = await repository.getWorkshop(businessId);
     await workshopResult.fold(

@@ -2,15 +2,12 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled1/features/services/data/models/service_address_model.dart';
-import 'package:untitled1/features/services/data/repositories/service_address_repository.dart';
 
 part 'service_address_event.dart';
 part 'service_address_state.dart';
 
 class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> {
-  final ServiceAddressRepository repository;
-
-  ServiceAddressBloc(this.repository) : super(ServiceAddressInitial()) {
+  ServiceAddressBloc() : super(ServiceAddressInitial()) {
     on<LoadServiceAddressEvent>(_onLoad);
     on<UpdateServiceFullNameEvent>(_onUpdateFullName);
     on<UpdateServiceStreetEvent>(_onUpdateStreet);

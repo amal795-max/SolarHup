@@ -10,14 +10,31 @@ class ReviewsCubit extends Cubit<ReviewsState> {
 
   ReviewsCubit({required this.repository}) : super(ReviewsInitial());
 
-  Future<void> getReviews(String itemType, String itemId) async {
-    emit(ReviewsLoading());
+  List<ReviewModel> _cachedReviews = [];
+  String? _cachedReviewsKey;
+
+  List<ReviewModel> get cachedReviews => List.unmodifiable(_cachedReviews);
+
+  Future<void> getReviews(
+    String itemType,
+    String itemId, {
+    bool showLoading = false,
+  }) async {
+    final key = '$itemType:$itemId';
+    final hasCache = _cachedReviews.isNotEmpty && _cachedReviewsKey == key;
+    if (showLoading || !hasCache) {
+      emit(ReviewsLoading());
+    }
 
     final result = await repository.getReviews(itemType, itemId);
 
     result.fold(
       (failure) => emit(ReviewsError(message: mapFailureToMessage(failure))),
-      (reviews) => emit(ReviewsLoaded(reviews)),
+      (reviews) {
+        _cachedReviews = reviews;
+        _cachedReviewsKey = key;
+        emit(ReviewsLoaded(reviews));
+      },
     );
   }
 

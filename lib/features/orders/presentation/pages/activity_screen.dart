@@ -1,22 +1,24 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
-import 'package:untitled1/features/services/data/models/service_request_model.dart';
-import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
-import 'package:untitled1/widgets/container_style_widget.dart';
-import 'package:untitled1/widgets/text_with_icon.dart';
-import 'package:untitled1/widgets/empty_widget.dart';
+import 'package:untitled1/features/services/data/models/service_request_model.dart';
+import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
+import 'package:untitled1/widgets/container_style_widget.dart';
+import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
+import 'package:untitled1/widgets/text_with_icon.dart';
+
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
@@ -84,23 +86,30 @@ class _ActivityScreenState extends State<ActivityScreen> {
         if (state is OrdersError) {
           return errorWidget(message: state.message, hasButton: false);
         }
+        final ordersCubit = context.read<OrdersCubit>();
         final orders = state is OrdersLoaded
             ? state.orders
-            : (state is OrdersLoading
-                  ? List.generate(
-                      4,
-                      (index) => OrderModel(
-                        id: 0,
-                        orderCode: 'ORD-XXXXXXXX',
-                        businessId: 0,
-                        customerId: 0,
-                        status: 'pending',
-                        totalAmount: '0.00',
-                        items: [],
-                        statusEnum: OrderStatusEnum.pending,
-                      ),
-                    )
-                  : context.read<OrdersCubit>().cachedOrders);
+            : (state is OrdersLoading && ordersCubit.cachedOrders.isNotEmpty
+                  ? ordersCubit.cachedOrders
+                  : (state is OrdersLoading
+                        ? List.generate(
+                            4,
+                            (index) => OrderModel(
+                              id: 0,
+                              orderCode: 'ORD-XXXXXXXX',
+                              businessId: 0,
+                              customerId: 0,
+                              status: 'pending',
+                              totalAmount: '0.00',
+                              items: [],
+                              statusEnum: OrderStatusEnum.pending,
+                            ),
+                          )
+                        : ordersCubit.cachedOrders));
+        final showOrdersSkeleton = showInitialLoadingSkeleton(
+          isLoading: state is OrdersLoading,
+          hasCachedData: ordersCubit.cachedOrders.isNotEmpty,
+        );
 
         if (state is OrdersLoaded && orders.isEmpty) {
           return AppRefreshIndicator(
@@ -115,7 +124,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
         return AppRefreshIndicator(
           onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
           child: Skeletonizer(
-            enabled: state is OrdersLoading,
+            enabled: showOrdersSkeleton,
             child: ListView.separated(
               physics: appRefreshPhysics,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -125,6 +134,11 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 final order = orders[index];
                 return GestureDetector(
                   onTap: () {
+                    if (order.isCompleted) {
+                      context.push(AppRoutes.rateOrderScreen, extra: order);
+                      return;
+                    }
+
                     context.read<OrdersCubit>().getOrderDetails(order);
                     context.push(AppRoutes.orderTrackingScreen, extra: order);
                   },
@@ -152,23 +166,31 @@ class _ActivityScreenState extends State<ActivityScreen> {
           return errorWidget(message: state.message, hasButton: false);
         }
 
+        final requestsCubit = context.read<ServiceRequestsCubit>();
         final requests = state is ServiceRequestsLoaded
             ? state.requests
-            : (state is ServiceRequestsLoading
-                  ? List.generate(
-                      3,
-                      (index) => ServiceRequestModel(
-                        id: index,
-                        orderCode: 'SR-000000',
-                        businessId: 0,
-                        status: 'pending_approval',
-                        statusEnum: OrderStatusEnum.pending,
-                        totalAmount: '0.00',
-                        serviceName: 'Loading service name',
-                        createdAt: DateTime.now(),
-                      ),
-                    )
-                  : context.read<ServiceRequestsCubit>().cachedRequests);
+            : (state is ServiceRequestsLoading &&
+                    requestsCubit.cachedRequests.isNotEmpty
+                  ? requestsCubit.cachedRequests
+                  : (state is ServiceRequestsLoading
+                        ? List.generate(
+                            3,
+                            (index) => ServiceRequestModel(
+                              id: index,
+                              orderCode: 'SR-000000',
+                              businessId: 0,
+                              status: 'pending_approval',
+                              statusEnum: OrderStatusEnum.pending,
+                              totalAmount: '0.00',
+                              serviceName: 'Loading service name',
+                              createdAt: DateTime.now(),
+                            ),
+                          )
+                        : requestsCubit.cachedRequests));
+        final showServicesSkeleton = showInitialLoadingSkeleton(
+          isLoading: state is ServiceRequestsLoading,
+          hasCachedData: requestsCubit.cachedRequests.isNotEmpty,
+        );
 
         if (state is ServiceRequestsLoaded && requests.isEmpty) {
           return AppRefreshIndicator(
@@ -185,7 +207,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           onRefresh: () async =>
               context.read<ServiceRequestsCubit>().loadMyRequests(),
           child: Skeletonizer(
-            enabled: state is ServiceRequestsLoading,
+            enabled: showServicesSkeleton,
             child: ListView.separated(
               physics: appRefreshPhysics,
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -195,11 +217,6 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 final request = requests[index];
                 return GestureDetector(
                   onTap: () {
-                    if (request.isCompleted) {
-                      context.push(AppRoutes.rateServiceScreen, extra: request);
-                      return;
-                    }
-
                     context.read<ServiceRequestsCubit>().loadRequestDetail(
                       request.id,
                     );

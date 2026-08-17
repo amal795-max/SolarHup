@@ -12,8 +12,10 @@ class BlogCubit extends Cubit<BlogState> {
 
   BlogCubit(this.repository) : super(BlogInitial());
 
-  Future<void> loadBlog() async {
-    emit(BlogLoading());
+  Future<void> loadBlog({bool showLoading = false}) async {
+    if (showLoading || state is! BlogLoaded) {
+      emit(BlogLoading());
+    }
     final result = await repository.getBlogFeed();
     result.fold(
       (failure) => emit(BlogError(message: mapFailureToMessage(failure))),

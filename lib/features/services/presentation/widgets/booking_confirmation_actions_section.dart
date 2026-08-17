@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 class BookingConfirmationActionsSection extends StatelessWidget {
-  final VoidCallback? onViewBookingsTap;
   final VoidCallback? onBackHomeTap;
   final bool showCancelButton;
   final bool isCancelling;
@@ -12,7 +11,6 @@ class BookingConfirmationActionsSection extends StatelessWidget {
 
   const BookingConfirmationActionsSection({
     super.key,
-    this.onViewBookingsTap,
     this.onBackHomeTap,
     this.showCancelButton = false,
     this.isCancelling = false,
@@ -23,13 +21,13 @@ class BookingConfirmationActionsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (showCancelButton) ...[
+        if (onBackHomeTap != null)
           CustomButton(
             text: 'btn_back_home'.tr(),
             onPressed: onBackHomeTap,
           ),
-          SizedBox(height: 10.h),
-
+        if (showCancelButton) ...[
+          if (onBackHomeTap != null) SizedBox(height: 10.h),
           CustomButton(
             text: 'cancel_service_request_btn'.tr(),
             type: ButtonType.outlined,
@@ -37,8 +35,6 @@ class BookingConfirmationActionsSection extends StatelessWidget {
             isLoading: isCancelling,
           ),
         ],
-
-
       ],
     );
   }

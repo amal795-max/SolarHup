@@ -14,7 +14,6 @@ class WorkshopAvailabilityModel {
   final bool availableSunday;
   final String? shiftStart;
   final String? shiftEnd;
-  final int? breakMinutes;
 
   const WorkshopAvailabilityModel({
     required this.businessId,
@@ -27,7 +26,6 @@ class WorkshopAvailabilityModel {
     this.availableSunday = false,
     this.shiftStart,
     this.shiftEnd,
-    this.breakMinutes,
   });
 
   factory WorkshopAvailabilityModel.fromJson(Map<String, dynamic> json) {
@@ -42,7 +40,6 @@ class WorkshopAvailabilityModel {
       availableSunday: json['available_sunday'] as bool? ?? false,
       shiftStart: json['shift_start'] as String?,
       shiftEnd: json['shift_end'] as String?,
-      breakMinutes: json['break_minutes'] as int?,
     );
   }
 
@@ -93,51 +90,127 @@ class WorkshopAvailabilityModel {
     return null;
   }
 
-  List<ServiceTimeSlotModel> buildTimeSlots({
-    required DateTime forDate,
-    int intervalMinutes = 60,
-  }) {
-    final start = _parseTime(shiftStart) ?? const TimeOfDay(hour: 9, minute: 0);
-    final end = _parseTime(shiftEnd) ?? const TimeOfDay(hour: 17, minute: 0);
-    final startMinutes = start.hour * 60 + start.minute;
-    final endMinutes = end.hour * 60 + end.minute;
-    if (endMinutes <= startMinutes) return const [];
+  bool hasSelectableTimes(DateTime forDate) {
+    if (!isDateSelectable(forDate)) return false;
+    final start = _minutesOfDay(shiftStartTime);
+    final end = _minutesOfDay(shiftEndTime);
+    if (end <= start) return false;
 
-    final now = DateTime.now();
-    final isToday = _isSameDay(forDate, now);
-    final slots = <ServiceTimeSlotModel>[];
-
-    for (var minutes = startMinutes;
-        minutes + intervalMinutes <= endMinutes;
-        minutes += intervalMinutes) {
+    for (var minutes = start; minutes < end; minutes++) {
       final hour = minutes ~/ 60;
       final minute = minutes % 60;
-      if (isToday) {
-        final slotDateTime = DateTime(
-          forDate.year,
-          forDate.month,
-          forDate.day,
-          hour,
-          minute,
-        );
-        if (!slotDateTime.isAfter(now)) continue;
+      if (isTimeSelectable(forDate: forDate, hour: hour, minute: minute)) {
+        return true;
       }
+    }
+    return false;
+  }
 
-      final id = '${hour.toString().padLeft(2, '0')}-${minute.toString().padLeft(2, '0')}';
-      final label = DateFormat('hh:mm a').format(
-        DateTime(forDate.year, forDate.month, forDate.day, hour, minute),
-      );
-      slots.add(
-        ServiceTimeSlotModel(
-          id: id,
-          label: label,
-          iconType: hour >= 12 ? 'cloudy' : 'sunny',
-        ),
-      );
+  TimeOfDay get shiftStartTime =>
+      _parseTime(shiftStart) ?? const TimeOfDay(hour: 9, minute: 0);
+
+  TimeOfDay get shiftEndTime =>
+      _parseTime(shiftEnd) ?? const TimeOfDay(hour: 17, minute: 0);
+
+  int get shiftStartMinutes => _minutesOfDay(shiftStartTime);
+
+  int get shiftEndMinutes => _minutesOfDay(shiftEndTime);
+
+  bool isTimeSelectable({
+    required DateTime forDate,
+    required int hour,
+    required int minute,
+  }) {
+    if (!isDateSelectable(forDate)) return false;
+
+    final selected = minute + hour * 60;
+    if (selected < shiftStartMinutes || selected >= shiftEndMinutes) {
+      return false;
     }
 
-    return slots;
+    if (_isSameDay(forDate, DateTime.now())) {
+      final slotDateTime = DateTime(
+        forDate.year,
+        forDate.month,
+        forDate.day,
+        hour,
+        minute,
+      );
+      if (!slotDateTime.isAfter(DateTime.now())) return false;
+    }
+
+    return true;
   }
+
+  (int hour, int minute)? parseSlotId(String slotId) {
+    final parts = slotId.split('-');
+    if (parts.length != 2) return null;
+    final hour = int.tryParse(parts[0]);
+    final minute = int.tryParse(parts[1]);
+    if (hour == null || minute == null) return null;
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+    return (hour, minute);
+  }
+
+  String slotIdFor({required int hour, required int minute}) =>
+      '${hour.toString().padLeft(2, '0')}-${minute.toString().padLeft(2, '0')}';
+
+  ServiceTimeSlotModel createSlotModel({
+    required DateTime forDate,
+    required int hour,
+    required int minute,
+  }) {
+    final id = slotIdFor(hour: hour, minute: minute);
+    final label = DateFormat('hh:mm a').format(
+      DateTime(forDate.year, forDate.month, forDate.day, hour, minute),
+    );
+    return ServiceTimeSlotModel(
+      id: id,
+      label: label,
+    );
+  }
+
+  (int hour, int minute)? firstSelectableTime(DateTime forDate) {
+    if (!isDateSelectable(forDate)) return null;
+    final start = shiftStartMinutes;
+    final end = shiftEndMinutes;
+    for (var minutes = start; minutes < end; minutes++) {
+      final hour = minutes ~/ 60;
+      final minute = minutes % 60;
+      if (isTimeSelectable(forDate: forDate, hour: hour, minute: minute)) {
+        return (hour, minute);
+      }
+    }
+    return null;
+  }
+
+  List<int> selectableHours(DateTime forDate) {
+    final hours = <int>[];
+    for (var hour = shiftStartTime.hour; hour <= shiftEndTime.hour; hour++) {
+      for (var minute = 0; minute < 60; minute++) {
+        if (isTimeSelectable(forDate: forDate, hour: hour, minute: minute)) {
+          if (!hours.contains(hour)) hours.add(hour);
+          break;
+        }
+      }
+    }
+    return hours;
+  }
+
+  List<int> selectableMinutes({
+    required DateTime forDate,
+    required int hour,
+  }) {
+    final minutes = <int>[];
+    for (var minute = 0; minute < 60; minute++) {
+      if (isTimeSelectable(forDate: forDate, hour: hour, minute: minute)) {
+        minutes.add(minute);
+      }
+    }
+    return minutes;
+  }
+
+  static int _minutesOfDay(TimeOfDay time) => time.hour * 60 + time.minute;
 
   String get summaryLabel {
     final dayLabels = <String>[];
@@ -159,6 +232,10 @@ class WorkshopAvailabilityModel {
     return '${dayLabels.join(', ')} · $startLabel – $endLabel';
   }
 
+  String get shiftWindowLabel {
+    return '${_formatTimeOfDay(shiftStartTime)} – ${_formatTimeOfDay(shiftEndTime)}';
+  }
+
   static DateTime _dateOnly(DateTime value) =>
       DateTime(value.year, value.month, value.day);
 
@@ -175,17 +252,25 @@ class WorkshopAvailabilityModel {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
-  static String _formatTimeOfDay(TimeOfDay time) {
+  static String formatTimeOfDay(TimeOfDay time) {
     final date = DateTime(2024, 1, 1, time.hour, time.minute);
     return DateFormat('h:mm a').format(date);
   }
+
+  static String _formatTimeOfDay(TimeOfDay time) => formatTimeOfDay(time);
 }
 
-List<ServiceTimeSlotModel> defaultScheduleTimeSlots() {
-  return const [
-    ServiceTimeSlotModel(id: '09-00', label: '09:00 AM', iconType: 'sunny'),
-    ServiceTimeSlotModel(id: '11-00', label: '11:00 AM', iconType: 'sunny'),
-    ServiceTimeSlotModel(id: '14-00', label: '02:00 PM', iconType: 'sunny'),
-    ServiceTimeSlotModel(id: '16-30', label: '04:30 PM', iconType: 'cloudy'),
-  ];
+WorkshopAvailabilityModel defaultScheduleAvailability() {
+  return const WorkshopAvailabilityModel(
+    businessId: 0,
+    availableMonday: true,
+    availableTuesday: true,
+    availableWednesday: true,
+    availableThursday: true,
+    availableFriday: true,
+    availableSaturday: true,
+    availableSunday: true,
+    shiftStart: '09:00',
+    shiftEnd: '17:00',
+  );
 }

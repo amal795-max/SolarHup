@@ -22,6 +22,7 @@ class ServiceRequestModel {
   final String? serviceNote;
   final String? discountAmount;
   final String? couponCode;
+  final String? unitPrice;
 
   const ServiceRequestModel({
     required this.id,
@@ -43,7 +44,28 @@ class ServiceRequestModel {
     this.serviceNote,
     this.discountAmount,
     this.couponCode,
+    this.unitPrice,
   });
+
+  double get parsedTotalAmount => double.tryParse(totalAmount) ?? 0;
+
+  double get parsedDiscountAmount =>
+      double.tryParse(discountAmount ?? '') ?? 0;
+
+  double get originalPriceValue {
+    final unit = double.tryParse(unitPrice ?? '');
+    if (unit != null && unit > 0) return unit;
+
+    final discount = parsedDiscountAmount;
+    final total = parsedTotalAmount;
+    if (discount > 0) return total + discount;
+    return total;
+  }
+
+  double get finalPriceValue => parsedTotalAmount;
+
+  bool get hasDiscount =>
+      parsedDiscountAmount > 0 && originalPriceValue > finalPriceValue;
 
   bool get isPending =>
       status == 'pending_approval' || status == 'pending';
@@ -115,6 +137,12 @@ class ServiceRequestModel {
           : 'Address not available',
       statusLabel: formattedStatus,
       statusEnum: statusEnum,
+      requestId: id,
+      originalPrice: originalPriceValue,
+      finalPrice: finalPriceValue,
+      discountAmount: hasDiscount ? parsedDiscountAmount : null,
+      couponCode: couponCode?.trim().isNotEmpty == true ? couponCode!.trim() : null,
+      businessId: businessId,
     );
   }
 

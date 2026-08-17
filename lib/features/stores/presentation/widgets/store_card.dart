@@ -11,6 +11,8 @@ import 'package:untitled1/widgets/primary_button.dart';
 
 import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
 
+import 'package:untitled1/features/reviews/presentation/utils/reviews_navigation.dart';
+
 import '../../../../core/routing/app_routes.dart';
 
 // ---------------------------------------------------------------------------
@@ -145,9 +147,7 @@ class _StoreImageSection extends StatelessWidget {
               ),
             ),
           if (hasCover)
-            Container(
-              color: Colors.black.withValues(alpha: 0.12),
-            )
+            Container(color: Colors.black.withValues(alpha: 0.12))
           else
             Opacity(
               opacity: 0.12,
@@ -190,7 +190,6 @@ class _ComplaintButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.push('${AppRoutes.addComplaintScreen}/${data.id}');
-
       },
       child: Container(
         padding: EdgeInsets.all(6.r),
@@ -230,13 +229,11 @@ class _RatingBadge extends StatelessWidget {
       itemType: 'store',
       itemId: data.id,
       onTap: () {
-        context.push(
-          AppRoutes.reviewsScreen,
-          extra: {
-            'itemType': 'store',
-            'itemId': data.id.toString(),
-            'itemName': data.name,
-          },
+        openReviewsScreen(
+          context,
+          itemType: 'store',
+          itemId: data.id,
+          itemName: data.name,
         );
       },
     );
@@ -293,7 +290,6 @@ class _StoreIconBadge extends StatelessWidget {
     );
   }
 }
-
 
 // ---------------------------------------------------------------------------
 // Info section — name, location, tags, CTA button

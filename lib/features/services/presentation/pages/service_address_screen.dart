@@ -3,11 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
-import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
-import 'package:untitled1/features/services/data/data_source/service_address_remote_data_source.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
-import 'package:untitled1/features/services/data/repositories/service_address_repository.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_address_bloc/service_address_bloc.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/services/presentation/widgets/service_address_bottom_section.dart';
@@ -30,13 +27,8 @@ class ServiceAddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ServiceAddressBloc(
-        ServiceAddressRepositoryImpl(
-          remote: const ServiceAddressRemoteDataSourceImpl(),
-          networkInfo: NetworkInfoImpl(),
-          useNetworkCheck: false,
-        ),
-      )..add(
+      create: (_) => ServiceAddressBloc()
+        ..add(
           LoadServiceAddressEvent(
             serviceId,
             servicePrice: draft.servicePrice,
@@ -97,6 +89,7 @@ class _ServiceAddressView extends StatelessWidget {
 
     final confirmation = updatedDraft.toConfirmation(
       orderCode: request.orderCode,
+      requestId: request.id,
       originalPrice: originalPrice,
       finalPrice: finalPrice,
       discountAmount: discountAmount > 0 ? discountAmount : null,

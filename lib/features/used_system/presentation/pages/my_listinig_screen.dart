@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
@@ -94,27 +95,37 @@ class MyListingScreen extends StatelessWidget {
         ),
       );
     }
+    final cubit = context.read<UsedSystemCubit>();
     final isLoading = state is MyUsedProductsLoading;
-    final List<UsedProductModel> products = isLoading
-        ? List.generate(
-            4,
-            (index) => UsedProductModel(
-              id: 0,
-              sellerId: 0,
-              sellerPhone: '',
-              name: 'Loading...',
-              description: 'Loading...',
-              category: '',
-              condition: '',
-              price: '',
-              region: '',
-              status: 'active',
-              images: [],
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          )
-        : context.read<UsedSystemCubit>().myProducts;
+    final hasCachedData = cubit.myProducts.isNotEmpty;
+    final showSkeleton = showInitialLoadingSkeleton(
+      isLoading: isLoading,
+      hasCachedData: hasCachedData,
+    );
+    final fakeProducts = List.generate(
+      4,
+      (index) => UsedProductModel(
+        id: 0,
+        sellerId: 0,
+        sellerPhone: '',
+        name: 'Loading...',
+        description: 'Loading...',
+        category: '',
+        condition: '',
+        price: '',
+        region: '',
+        status: 'active',
+        images: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+    );
+    final List<UsedProductModel> products = switch (state) {
+      MyUsedProductsSuccess(:final products) => products,
+      MyUsedProductsLoading() =>
+        hasCachedData ? cubit.myProducts : fakeProducts,
+      _ => cubit.myProducts,
+    };
 
     if (!isLoading && products.isEmpty) {
       return AppRefreshIndicator(
@@ -129,7 +140,7 @@ class MyListingScreen extends StatelessWidget {
     return AppRefreshIndicator(
       onRefresh: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
       child: Skeletonizer(
-        enabled: isLoading,
+        enabled: showSkeleton,
         child: ListView.separated(
           physics: appRefreshPhysics,
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),

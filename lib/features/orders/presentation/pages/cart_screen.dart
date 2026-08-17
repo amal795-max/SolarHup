@@ -5,10 +5,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_state.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -93,7 +95,13 @@ class _CartScreenState extends State<CartScreen> {
       );
     }
 
-    final isLoading = state is CartLoading || state is CartActionLoading;
+    final cubit = context.read<CartCubit>();
+    final isInitialLoading = state is CartLoading;
+    final hasCachedData = cubit.order != null;
+    final showSkeleton = showInitialLoadingSkeleton(
+      isLoading: isInitialLoading,
+      hasCachedData: hasCachedData,
+    );
 
     final fakeCart = OrderModel(
       id: 0,
@@ -116,28 +124,41 @@ class _CartScreenState extends State<CartScreen> {
       statusEnum: OrderStatusEnum.pending,
     );
 
-    final cartToShow = (state is CartSuccess) ? state.cart : fakeCart;
+    final cartToShow = state is CartSuccess
+        ? state.cart
+        : (hasCachedData ? cubit.order! : fakeCart);
 
-    if (state is CartSuccess && cartToShow.items.isEmpty && !isLoading) {
-      return const EmptyWidget(
-        icon: Icons.shopping_cart_outlined,
-        title: 'cart_empty',
-        subtitle: 'cart_empty_hint',
+    if (state is CartSuccess && cartToShow.items.isEmpty && !isInitialLoading) {
+      return AppRefreshIndicator(
+        onRefresh: () => cubit.getCart(),
+        child: ListView(
+          physics: appRefreshPhysics,
+          children: const [
+            EmptyWidget(
+              icon: Icons.shopping_cart_outlined,
+              title: 'cart_empty',
+              subtitle: 'cart_empty_hint',
+            ),
+          ],
+        ),
       );
     }
 
-    return Skeletonizer(
-      ignoreContainers: true,
-      enabled: isLoading,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        child: Column(
-          children: [
-            _CartList(items: cartToShow.items),
-            OrderSummary(cart: cartToShow),
-            SizedBox(height: 24.h),
-          ],
+    return AppRefreshIndicator(
+      onRefresh: () => cubit.getCart(),
+      child: Skeletonizer(
+        ignoreContainers: true,
+        enabled: showSkeleton,
+        child: SingleChildScrollView(
+          physics: appRefreshPhysics,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+          child: Column(
+            children: [
+              _CartList(items: cartToShow.items),
+              OrderSummary(cart: cartToShow),
+              SizedBox(height: 24.h),
+            ],
+          ),
         ),
       ),
     );

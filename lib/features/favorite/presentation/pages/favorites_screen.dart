@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/enums/favorite_category_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
@@ -119,18 +120,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                   final items = state is FavoritesSuccess
                       ? state.items
-                      : (state is FavoritesLoading
-                          ? List.generate(
-                              4,
-                              (index) => FavoriteModel(
-                                id: 0,
-                                price: '0.00',
-                                itemType: '',
-                                itemId: 0,
-                                isAvailable: true,
-                              ),
-                            )
-                          : cubit.cachedFavorites);
+                      : (state is FavoritesLoading && cubit.cachedFavorites.isNotEmpty
+                          ? cubit.cachedFavorites
+                          : (state is FavoritesLoading
+                              ? List.generate(
+                                  4,
+                                  (index) => FavoriteModel(
+                                    id: 0,
+                                    price: '0.00',
+                                    itemType: '',
+                                    itemId: 0,
+                                    isAvailable: true,
+                                  ),
+                                )
+                              : cubit.cachedFavorites));
+                  final showSkeleton = showInitialLoadingSkeleton(
+                    isLoading: state is FavoritesLoading,
+                    hasCachedData: cubit.cachedFavorites.isNotEmpty,
+                  );
 
                   if (items.isEmpty &&
                       state is! FavoritesLoading &&
@@ -156,7 +163,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         .read<FavoritesCubit>()
                         .loadFavorites(selectedCategory),
                     child: Skeletonizer(
-                    enabled: state is FavoritesLoading,
+                    enabled: showSkeleton,
                     child: ListView.builder(
                       physics: appRefreshPhysics,
                       padding: EdgeInsets.all(20.w),

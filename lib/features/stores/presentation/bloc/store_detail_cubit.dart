@@ -19,8 +19,10 @@ class StoreDetailCubit extends Cubit<StoreDetailState> {
   StoreDetailCubit(this.repository, this.catalogRepository)
       : super(StoreDetailInitial());
 
-  Future<void> loadStore(int businessId, {int? categoryId}) async {
-    emit(StoreDetailLoading());
+  Future<void> loadStore(int businessId, {int? categoryId, bool showLoading = false}) async {
+    if (showLoading || state is! StoreDetailLoaded) {
+      emit(StoreDetailLoading());
+    }
 
     final storeResult = await repository.getStore(businessId);
     await storeResult.fold(

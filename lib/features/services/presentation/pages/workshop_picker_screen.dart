@@ -13,6 +13,7 @@ import 'package:untitled1/features/services/presentation/mappers/workshop_picker
 import 'package:untitled1/features/services/presentation/pages/workshop_info_route_args.dart';
 import 'package:untitled1/features/services/presentation/pages/workshop_picker_route_args.dart';
 import 'package:untitled1/features/services/presentation/widgets/workshop_picker_card.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
@@ -61,6 +62,8 @@ class _WorkshopPickerView extends StatelessWidget {
                 builder: (context, state) {
                   return switch (state) {
                     WorkshopPickerLoading() => AppSkeletonizer(
+                        isLoading: true,
+                        hasCachedData: false,
                         child: ListView(
                           padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 24.h),
                           children: [
@@ -100,6 +103,12 @@ class _WorkshopPickerView extends StatelessWidget {
                     WorkshopPickerLoaded(:final offerings) => _PickerContent(
                         args: args,
                         groups: groupOfferingsByWorkshop(offerings),
+                        onRefresh: () => context
+                            .read<WorkshopPickerCubit>()
+                            .loadOfferings(
+                              categoryId: args.categoryId,
+                              categoryName: args.categoryName,
+                            ),
                       ),
                     _ => const SizedBox.shrink(),
                   };
@@ -116,16 +125,20 @@ class _WorkshopPickerView extends StatelessWidget {
 class _PickerContent extends StatelessWidget {
   final WorkshopPickerRouteArgs args;
   final List<WorkshopPickerGroup> groups;
+  final Future<void> Function()? onRefresh;
 
   const _PickerContent({
     required this.args,
     required this.groups,
+    this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
+    return AppRefreshIndicator(
+      onRefresh: onRefresh,
+      child: CustomScrollView(
+      physics: appRefreshPhysics,
       slivers: [
         SliverToBoxAdapter(
           child: Padding(
@@ -190,6 +203,7 @@ class _PickerContent extends StatelessWidget {
             ),
           ),
       ],
+    ),
     );
   }
 }

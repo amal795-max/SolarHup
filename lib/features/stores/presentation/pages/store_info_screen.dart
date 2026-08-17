@@ -13,6 +13,7 @@ import 'package:untitled1/features/stores/presentation/widgets/store_info_detail
 import 'package:untitled1/features/stores/presentation/widgets/store_info_discounts_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_featured_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_info_header_section.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
@@ -221,6 +222,8 @@ class _StoreInfoView extends StatelessWidget {
         builder: (context, state) {
           return switch (state) {
             StoreDetailLoading() => AppSkeletonizer(
+              isLoading: true,
+              hasCachedData: false,
               child: _StoreInfoContent(data: sampleStoreInfo),
             ),
             StoreDetailError(:final message) => errorWidget(
@@ -237,6 +240,7 @@ class _StoreInfoView extends StatelessWidget {
               :final discounts,
             ) =>
               _StoreInfoContent(
+                storeId: storeId,
                 data: storeDetailToInfoData(
                   store,
                   categories: categories,
@@ -255,8 +259,9 @@ class _StoreInfoView extends StatelessWidget {
 
 class _StoreInfoContent extends StatelessWidget {
   final StoreInfoData data;
+  final int? storeId;
 
-  const _StoreInfoContent({required this.data});
+  const _StoreInfoContent({required this.data, this.storeId});
 
   @override
   Widget build(BuildContext context) {
@@ -264,92 +269,95 @@ class _StoreInfoContent extends StatelessWidget {
     final isDark = context.brightness;
     MediaQuery.of(context).padding.top;
 
-    return Scaffold(
-      backgroundColor: cardColor,
-      body: Stack(
+    final scrollContent = SingleChildScrollView(
+      physics: appRefreshPhysics,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Whole page scrolls together ───────────────────────────────────
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          // Hero + floating details card — sized so taps register on the card
+          SizedBox(
+            height: 0.3.sh + 140.h,
+            child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                // Hero + floating details card — sized so taps register on the card
-                SizedBox(
-                  height: 0.3.sh + 140.h,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: 0.3.sh,
-                        child: StoreInfoHeaderSection(data: data),
-                      ),
-                      Positioned(
-                        top: 0.3.sh - 60.h,
-                        left: 16.w,
-                        right: 16.w,
-                        child: Container(
-                          padding: EdgeInsets.only(top: 8.h),
-                          decoration: BoxDecoration(
-                            color: isDark
-                                ? Theme.of(context).colorScheme.surface
-                                : AppColors.white,
-                            borderRadius: BorderRadius.circular(16.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: isDark ? 0.25 : 0.12,
-                                ),
-                                blurRadius: 16,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 0.3.sh,
+                  child: StoreInfoHeaderSection(data: data),
+                ),
+                Positioned(
+                  top: 0.3.sh - 60.h,
+                  left: 16.w,
+                  right: 16.w,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 8.h),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Theme.of(context).colorScheme.surface
+                          : AppColors.white,
+                      borderRadius: BorderRadius.circular(16.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: isDark ? 0.25 : 0.12,
                           ),
-                          child: StoreInfoDetailsSection(data: data),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
                         ),
-                      ),
-                      Positioned(
-                        top: 0.3.sh - 100.h,
-                        left: 35.w,
-                        child: _FloatingStoreLogoBadge(data: data),
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: StoreInfoDetailsSection(data: data),
                   ),
                 ),
-                SizedBox(height: 8.h),
-                StoreInfoCategoriesSection(categories: data.categories),
-                StoreInfoDiscountsSection(
-                  storeId: data.id,
-                  storeName: data.name,
-                  products: data.discountedProducts,
+                Positioned(
+                  top: 0.3.sh - 100.h,
+                  left: 35.w,
+                  child: _FloatingStoreLogoBadge(data: data),
                 ),
-                SizedBox(height: 8.h),
-                BlocBuilder<StoreInfoBloc, StoreInfoState>(
-                  buildWhen: (prev, curr) =>
-                      prev.selectedCategoryIndex != curr.selectedCategoryIndex,
-                  builder: (context, infoState) {
-                    final filteredProducts = filterProductsByCategory(
-                      data.featuredProducts,
-                      data.categories,
-                      infoState.selectedCategoryIndex,
-                    );
-
-                    return StoreInfoFeaturedProductsSection(
-                      storeId: data.id,
-                      storeName: data.name,
-                      products: filteredProducts,
-                    );
-                  },
-                ),
-                SizedBox(height: 16.h),
               ],
             ),
           ),
+          SizedBox(height: 8.h),
+          StoreInfoCategoriesSection(categories: data.categories),
+          StoreInfoDiscountsSection(
+            storeId: data.id,
+            storeName: data.name,
+            products: data.discountedProducts,
+          ),
+          SizedBox(height: 8.h),
+          BlocBuilder<StoreInfoBloc, StoreInfoState>(
+            buildWhen: (prev, curr) =>
+                prev.selectedCategoryIndex != curr.selectedCategoryIndex,
+            builder: (context, infoState) {
+              final filteredProducts = filterProductsByCategory(
+                data.featuredProducts,
+                data.categories,
+                infoState.selectedCategoryIndex,
+              );
+
+              return StoreInfoFeaturedProductsSection(
+                storeId: data.id,
+                storeName: data.name,
+                products: filteredProducts,
+              );
+            },
+          ),
+          SizedBox(height: 16.h),
         ],
       ),
+    );
+
+    return Scaffold(
+      backgroundColor: cardColor,
+      body: storeId != null
+          ? AppRefreshIndicator(
+              onRefresh: () =>
+                  context.read<StoreDetailCubit>().loadStore(storeId!),
+              child: scrollContent,
+            )
+          : scrollContent,
     );
   }
 }

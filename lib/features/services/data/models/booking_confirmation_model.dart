@@ -19,13 +19,14 @@ class BookingConfirmationModel {
   final String dateTimeLabel;
   final BookingTechnicianModel technician;
   final String address;
-  final String? receiptUrl;
   final OrderStatusEnum statusEnum;
   final String? statusLabel;
   final double? originalPrice;
   final double? finalPrice;
   final double? discountAmount;
   final String? couponCode;
+  final int? requestId;
+  final int? businessId;
 
   const BookingConfirmationModel({
     required this.bookingId,
@@ -34,18 +35,29 @@ class BookingConfirmationModel {
     required this.dateTimeLabel,
     required this.technician,
     required this.address,
-    this.receiptUrl,
     this.statusLabel,
     required this.statusEnum,
     this.originalPrice,
     this.finalPrice,
     this.discountAmount,
     this.couponCode,
+    this.requestId,
+    this.businessId,
   });
 
-  bool get hasCouponDiscount =>
+  bool get isCompleted => statusEnum == OrderStatusEnum.completed;
+
+  bool get canCancel => statusEnum == OrderStatusEnum.pending;
+
+  bool get hasDiscount =>
       (discountAmount ?? 0) > 0 &&
-      originalPrice != null &&
-      finalPrice != null &&
-      originalPrice! > finalPrice!;
+      resolvedOriginalPrice > resolvedFinalPrice;
+
+  bool get hasCouponDiscount => hasDiscount;
+
+  double get resolvedOriginalPrice =>
+      originalPrice ?? finalPrice ?? 0;
+
+  double get resolvedFinalPrice =>
+      finalPrice ?? originalPrice ?? 0;
 }

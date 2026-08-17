@@ -236,15 +236,6 @@ class _KitProductCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${product.rating.toStringAsFixed(1)} (${product.reviews})',
-                          style: AppStyle.bodySmall.copyWith(
-                            color: AppStyle.bodySmall.color,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        SizedBox(height: 3.h),
                         Expanded(
                           child: Align(
                             alignment: Alignment.topLeft,

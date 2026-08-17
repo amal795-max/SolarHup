@@ -8,8 +8,10 @@ class OrdersCubit extends Cubit<OrdersState> {
   List<OrderModel> cachedOrders = [];
   OrdersCubit(this.repository) : super(OrdersInitial());
 
-  Future<void> getMyOrders() async {
-    emit(OrdersLoading());
+  Future<void> getMyOrders({bool showLoading = false}) async {
+    if (showLoading || cachedOrders.isEmpty) {
+      emit(OrdersLoading());
+    }
     final result = await repository.getMyOrders();
     result.fold((failure) => emit(OrdersError(failure.message)), (orders) {
       cachedOrders = orders;
@@ -17,8 +19,10 @@ class OrdersCubit extends Cubit<OrdersState> {
     });
   }
 
-  Future<void> getOrderDetails(OrderModel order) async {
-    emit(OrdersLoading());
+  Future<void> getOrderDetails(OrderModel order, {bool showLoading = false}) async {
+    if (showLoading || state is! OrderDetailsLoaded) {
+      emit(OrdersLoading());
+    }
     final result = await repository.getOrderDetails(order.id);
     result.fold((failure) => emit(OrdersError(failure.message)), (
       orderResponse,

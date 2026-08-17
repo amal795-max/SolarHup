@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -79,27 +80,34 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
       );
     }
 
+    final cubit = context.read<UsedSystemCubit>();
     final isLoading = state is UsedProductsLoading;
+    final hasCachedData = cubit.products.isNotEmpty;
+    final showSkeleton = showInitialLoadingSkeleton(
+      isLoading: isLoading,
+      hasCachedData: hasCachedData,
+    );
+    final fakeProducts = List.generate(
+      4,
+      (index) => UsedProductModel(
+        id: 0,
+        sellerId: 0,
+        sellerPhone: '',
+        name: 'Loading product...',
+        description: '',
+        category: '',
+        condition: 'new',
+        price: '0.00',
+        region: 'Loading...',
+        status: 'active',
+        images: [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ),
+    );
     final products = state is UsedProductsSuccess
         ? state.products
-        : List.generate(
-            4,
-            (index) => UsedProductModel(
-              id: 0,
-              sellerId: 0,
-              sellerPhone: '',
-              name: 'Loading product...',
-              description: '',
-              category: '',
-              condition: 'new',
-              price: '0.00',
-              region: 'Loading...',
-              status: 'active',
-              images: [],
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-            ),
-          );
+        : (isLoading && hasCachedData ? cubit.products : fakeProducts);
 
     if (state is UsedProductsSuccess && products.isEmpty) {
       return AppRefreshIndicator(
@@ -116,7 +124,7 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
     return AppRefreshIndicator(
       onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
       child: Skeletonizer(
-        enabled: isLoading,
+        enabled: showSkeleton,
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           physics: appRefreshPhysics,

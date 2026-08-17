@@ -21,7 +21,6 @@ import 'package:untitled1/features/product_compare/presentation/pages/product_co
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
 import 'package:untitled1/features/services/data/models/service_request_model.dart';
-import 'package:untitled1/features/services/presentation/pages/rate_service_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_request_detail_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/booking_confirmation_screen.dart';
 import 'package:untitled1/features/services/presentation/pages/service_address_screen.dart';
@@ -41,6 +40,7 @@ import 'package:untitled1/features/orders/presentation/pages/cart_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/shipping_information.dart';
 import 'package:untitled1/features/orders/presentation/pages/order_confirmed_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/order_tracking_screen.dart';
+import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/pages/rate_order_screen.dart';
 import 'package:untitled1/features/orders/presentation/pages/activity_screen.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
@@ -69,102 +69,119 @@ final GoRouter router = GoRouter(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
         return const SplashScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.onboardingScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const OnboardingScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.authenticationScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const AuthenticationScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.bottomNavBar,
       builder: (BuildContext context, GoRouterState state) {
         return const CustomBottomNavBar();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.homeScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const HomeScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.bottomNavBar,
       builder: (BuildContext context, GoRouterState state) {
         return const CustomBottomNavBar();
-      },),
-
+      },
+    ),
 
     GoRoute(
       path: AppRoutes.loginScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const LoginScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.registerScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const RegisterScreen();
-      },),
-   GoRoute(
+      },
+    ),
+    GoRoute(
       path: AppRoutes.verificationScreen,
       builder: (BuildContext context, GoRouterState state) {
         final isReset = state.extra as bool? ?? false;
-        return  VerificationScreen(isResetPassword: isReset);
-      },),
+        return VerificationScreen(isResetPassword: isReset);
+      },
+    ),
     GoRoute(
       path: AppRoutes.resetPasswordScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ResetPasswordScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.changePasswordScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const ChangePasswordScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.addProductScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const AddUsedProductScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.usedProductScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const UsedProductsScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.filterProductScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const FiltersScreen();
-      },),
-      GoRoute(
+      },
+    ),
+    GoRoute(
       path: AppRoutes.storeDiscountedProductsScreen,
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as StoreDiscountedProductsRouteArgs?;
         return StoreDiscountedProductsScreen(
-          args: args ??
+          args:
+              args ??
               const StoreDiscountedProductsRouteArgs(
                 storeId: 0,
                 storeName: '',
                 products: [],
               ),
         );
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.myListeningScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const MyListingScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.storesScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const StoresScreen();
-      },),
+      },
+    ),
     GoRoute(
       path: AppRoutes.storeInfoScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final storeId = state.extra as int ;
+        final storeId = state.extra as int;
         return StoreInfoScreen(storeId: storeId);
       },
     ),
@@ -173,8 +190,7 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as StoreKitRouteArgs?;
         return StoreKitScreen(
-          args: args ??
-              const StoreKitRouteArgs(storeId: 0, storeName: ''),
+          args: args ?? const StoreKitRouteArgs(storeId: 0, storeName: ''),
         );
       },
     ),
@@ -184,11 +200,9 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as ProductDetailRouteArgs?;
         return ProductDetailScreen(
-          args: args ??
-              const ProductDetailRouteArgs(
-                businessId: 0,
-                productId: '0',
-              ),
+          args:
+              args ??
+              const ProductDetailRouteArgs(businessId: 0, productId: '0'),
         );
       },
     ),
@@ -197,11 +211,9 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as WorkshopPickerRouteArgs?;
         return WorkshopPickerScreen(
-          args: args ??
-              const WorkshopPickerRouteArgs(
-                categoryId: 0,
-                categoryName: '',
-              ),
+          args:
+              args ??
+              const WorkshopPickerRouteArgs(categoryId: 0, categoryName: ''),
         );
       },
     ),
@@ -210,8 +222,7 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as WorkshopInfoRouteArgs?;
         return WorkshopInfoScreen(
-          args: args ??
-              const WorkshopInfoRouteArgs(workshopId: '0'),
+          args: args ?? const WorkshopInfoRouteArgs(workshopId: '0'),
         );
       },
     ),
@@ -250,10 +261,7 @@ final GoRouter router = GoRouter(
         final draft = state.extra is ServiceBookingDraft
             ? state.extra as ServiceBookingDraft
             : null;
-        return ScheduleServiceScreen(
-          serviceId: serviceId,
-          draft: draft,
-        );
+        return ScheduleServiceScreen(serviceId: serviceId, draft: draft);
       },
     ),
     GoRoute(
@@ -261,10 +269,7 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         final serviceId = state.pathParameters['serviceId'] ?? 'svc-1';
         final draft = state.extra! as ServiceBookingDraft;
-        return ServiceAddressScreen(
-          serviceId: serviceId,
-          draft: draft,
-        );
+        return ServiceAddressScreen(serviceId: serviceId, draft: draft);
       },
     ),
     GoRoute(
@@ -277,7 +282,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '${AppRoutes.serviceRequestDetailBase}/:requestId',
       builder: (BuildContext context, GoRouterState state) {
-        final requestId = int.tryParse(state.pathParameters['requestId'] ?? '') ?? 0;
+        final requestId =
+            int.tryParse(state.pathParameters['requestId'] ?? '') ?? 0;
         return ServiceRequestDetailScreen(requestId: requestId);
       },
     ),
@@ -285,7 +291,7 @@ final GoRouter router = GoRouter(
       path: AppRoutes.rateServiceScreen,
       builder: (BuildContext context, GoRouterState state) {
         final request = state.extra! as ServiceRequestModel;
-        return RateServiceScreen(request: request);
+        return ServiceRequestDetailScreen(requestId: request.id);
       },
     ),
     GoRoute(
@@ -321,11 +327,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: AppRoutes.rateOrderScreen,
       builder: (BuildContext context, GoRouterState state) {
-        final extra = state.extra as Map<String, dynamic>?;
-        return RateOrderScreen(
-          storeId: extra?['storeId']?.toString(),
-          storeName: extra?['storeName'] as String?,
-        );
+        final order = state.extra as OrderModel?;
+        return RateOrderScreen(order: order ?? OrderModel.empty());
       },
     ),
     GoRoute(
@@ -351,7 +354,8 @@ final GoRouter router = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const ChatbotScreen();
       },
-    ), GoRoute(
+    ),
+    GoRoute(
       path: AppRoutes.settingsScreen,
       builder: (BuildContext context, GoRouterState state) {
         return const SettingsScreen();
@@ -361,7 +365,7 @@ final GoRouter router = GoRouter(
       path: AppRoutes.usedProductDetailScreen,
       builder: (BuildContext context, GoRouterState state) {
         final args = state.extra as UsedProductModel;
-        return  UsedProductDetailsScreen( product: args,);
+        return UsedProductDetailsScreen(product: args);
       },
     ),
     GoRoute(
@@ -390,7 +394,6 @@ final GoRouter router = GoRouter(
       },
     ),
 
-
     GoRoute(
       path: '${AppRoutes.complaintDetailsScreenBase}/:id',
       builder: (BuildContext context, GoRouterState state) {
@@ -406,6 +409,7 @@ final GoRouter router = GoRouter(
           itemType: extra['itemType'] as String,
           itemId: extra['itemId'] as String,
           itemName: extra['itemName'] as String,
+          showReviewForm: extra['showReviewForm'] as bool? ?? true,
         );
       },
     ),

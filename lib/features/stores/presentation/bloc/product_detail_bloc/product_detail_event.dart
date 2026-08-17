@@ -11,14 +11,16 @@ sealed class ProductDetailEvent extends Equatable {
 final class LoadProductDetailEvent extends ProductDetailEvent {
   final int businessId;
   final String productId;
+  final bool showLoading;
 
   const LoadProductDetailEvent({
     required this.businessId,
     required this.productId,
+    this.showLoading = false,
   });
 
   @override
-  List<Object?> get props => [businessId, productId];
+  List<Object?> get props => [businessId, productId, showLoading];
 }
 
 final class SelectGalleryImageEvent extends ProductDetailEvent {

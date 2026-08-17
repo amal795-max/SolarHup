@@ -13,8 +13,10 @@ class TopSellingProductsCubit extends Cubit<TopSellingProductsState> {
 
   TopSellingProductsCubit(this.repository) : super(TopSellingProductsInitial());
 
-  Future<void> loadTopSellingProducts() async {
-    emit(TopSellingProductsLoading());
+  Future<void> loadTopSellingProducts({bool showLoading = false}) async {
+    if (showLoading || state is! TopSellingProductsLoaded) {
+      emit(TopSellingProductsLoading());
+    }
     final result = await repository.getTopSellingProductsForViewAll(
       limit: viewAllLimit,
     );

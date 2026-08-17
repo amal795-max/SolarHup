@@ -21,7 +21,9 @@ class ProductDetailBloc extends Bloc<ProductDetailEvent, ProductDetailState> {
     LoadProductDetailEvent event,
     Emitter<ProductDetailState> emit,
   ) async {
-    emit(ProductDetailLoading());
+    if (event.showLoading || state is! ProductDetailLoaded) {
+      emit(ProductDetailLoading());
+    }
 
     final result = await repository.getProductDetail(
       businessId: event.businessId,

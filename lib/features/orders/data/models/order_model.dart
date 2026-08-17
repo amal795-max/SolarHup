@@ -1,5 +1,5 @@
-import '../../../../core/enums/order_status_enum.dart';
 import '../../../../core/api/api_response_utils.dart';
+import '../../../../core/enums/order_status_enum.dart';
 
 class OrderModel {
   final int id;
@@ -34,7 +34,8 @@ class OrderModel {
     required this.totalAmount,
     required this.items,
     this.createdAt,
-    this.updatedAt, required this.statusEnum,
+    this.updatedAt,
+    required this.statusEnum,
   });
 
   factory OrderModel.empty() {
@@ -65,7 +66,8 @@ class OrderModel {
       shippingFloor: payload['shipping_floor'],
       status: payload['status'],
       totalAmount: payload['total_amount'],
-      items: (payload['items'] as List?)
+      items:
+          (payload['items'] as List?)
               ?.map((e) => OrderItemModel.fromJson(e))
               .toList() ??
           [],
@@ -84,6 +86,8 @@ class OrderModel {
   }
 
   bool get hasDiscountedItems => items.any((item) => item.hasDiscount);
+
+  bool get isCompleted => statusEnum == OrderStatusEnum.completed;
 
   OrderModel copyWith({
     int? id,
@@ -172,11 +176,7 @@ class OrderItemModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'item_type': itemType,
-      'item_id': itemId,
-      'quantity': quantity,
-    };
+    return {'item_type': itemType, 'item_id': itemId, 'quantity': quantity};
   }
 
   OrderItemModel copyWith({

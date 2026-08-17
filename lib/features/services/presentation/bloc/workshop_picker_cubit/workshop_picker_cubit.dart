@@ -14,8 +14,11 @@ class WorkshopPickerCubit extends Cubit<WorkshopPickerState> {
   Future<void> loadOfferings({
     required int categoryId,
     required String categoryName,
+    bool showLoading = false,
   }) async {
-    emit(WorkshopPickerLoading(categoryName: categoryName));
+    if (showLoading || state is! WorkshopPickerLoaded) {
+      emit(WorkshopPickerLoading(categoryName: categoryName));
+    }
     final result = await repository.getOfferingsForCategory(categoryId);
     result.fold(
       (failure) => emit(

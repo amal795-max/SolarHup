@@ -14,8 +14,9 @@ class ScheduleAppointmentSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final bgColor =
-        isDark ? AppColors.deepPrimaryColor : AppColors.primaryColor;
+    final bgColor = isDark
+        ? AppColors.deepPrimaryColor
+        : AppColors.primaryColor;
     final selectedTime = state.selectedTimeSlot?.label ?? '';
 
     return Container(
@@ -89,6 +90,16 @@ class ScheduleAppointmentSummary extends StatelessWidget {
                 ),
             ],
           ),
+          if (state.shiftWindowLabel != null) ...[
+            SizedBox(height: 10.h),
+            TextWithIcon(
+              title: 'schedule_within_shift_hours'.tr(
+                args: [state.shiftWindowLabel!],
+              ),
+              icon: Icons.timelapse_rounded,
+              color: AppColors.blue.withValues(alpha: 0.85),
+            ),
+          ],
         ],
       ),
     );

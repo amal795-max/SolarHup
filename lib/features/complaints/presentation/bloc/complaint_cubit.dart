@@ -17,8 +17,10 @@ class ComplaintCubit extends Cubit<ComplaintState> {
 
   List<ComplaintModel> get complaints => _cachedComplaints;
 
-  Future<void> getMyComplaints() async {
-    emit(ComplaintLoading());
+  Future<void> getMyComplaints({bool showLoading = false}) async {
+    if (showLoading || _cachedComplaints.isEmpty) {
+      emit(ComplaintLoading());
+    }
     final result = await repository.getMyComplaints();
     result.fold(
       (failure) => emit(ComplaintError(message: mapFailureToMessage(failure))),

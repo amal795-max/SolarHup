@@ -11,8 +11,10 @@ class FaqCubit extends Cubit<FaqState> {
 
   FaqCubit(this.repository) : super(FaqInitial());
 
-  Future<void> getFaqs() async {
-    emit(FaqLoading());
+  Future<void> getFaqs({bool showLoading = false}) async {
+    if (showLoading || state is! FaqSuccess) {
+      emit(FaqLoading());
+    }
     final result = await repository.getFaqs();
     result.fold(
       (failure) => emit(FaqError(message: mapFailureToMessage(failure))),

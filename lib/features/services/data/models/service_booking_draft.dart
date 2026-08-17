@@ -130,6 +130,7 @@ class ServiceBookingDraft {
 
   BookingConfirmationModel toConfirmation({
     required String orderCode,
+    int? requestId,
     double? originalPrice,
     double? finalPrice,
     double? discountAmount,
@@ -150,6 +151,8 @@ class ServiceBookingDraft {
       finalPrice: finalPrice ?? servicePrice,
       discountAmount: discountAmount,
       couponCode: couponCode,
+      requestId: requestId,
+      businessId: businessId,
     );
   }
 

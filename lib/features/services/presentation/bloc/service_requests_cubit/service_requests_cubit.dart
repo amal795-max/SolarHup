@@ -16,8 +16,10 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
 
   List<ServiceRequestModel> get cachedRequests => _cachedRequests;
 
-  Future<void> loadMyRequests() async {
-    emit(ServiceRequestsLoading());
+  Future<void> loadMyRequests({bool showLoading = false}) async {
+    if (showLoading || _cachedRequests.isEmpty) {
+      emit(ServiceRequestsLoading());
+    }
     final result = await repository.getMyServiceRequests();
     result.fold(
       (failure) => emit(ServiceRequestsError(message: _mapFailure(failure))),
@@ -46,8 +48,10 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
     );
   }
 
-  Future<void> loadRequestDetail(int requestId) async {
-    emit(ServiceRequestDetailsLoading());
+  Future<void> loadRequestDetail(int requestId, {bool showLoading = false}) async {
+    if (showLoading || state is! ServiceRequestDetailsLoaded) {
+      emit(ServiceRequestDetailsLoading());
+    }
     final result = await repository.getServiceRequest(requestId);
     result.fold(
       (failure) =>
@@ -63,13 +67,8 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
   }
 
   Future<bool> cancelRequest(int requestId) async {
-    final current = state;
-    final previousRequest = switch (current) {
-      ServiceRequestDetailsLoaded(:final request) => request,
-      ServiceRequestCancelling(:final request) => request,
-      _ => null,
-    };
-
+    final previousState = state;
+    final previousRequest = _findRequest(requestId);
     if (previousRequest == null) return false;
 
     emit(ServiceRequestCancelling(request: previousRequest));
@@ -77,7 +76,7 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
     final result = await repository.cancelServiceRequest(requestId);
     return result.fold(
       (failure) {
-        emit(ServiceRequestDetailsLoaded(request: previousRequest));
+        _restoreStateAfterCancelFailure(previousState, previousRequest);
         return false;
       },
       (request) {
@@ -88,6 +87,38 @@ class ServiceRequestsCubit extends Cubit<ServiceRequestsState> {
         return true;
       },
     );
+  }
+
+  ServiceRequestModel? _findRequest(int requestId) {
+    final current = state;
+    final fromState = switch (current) {
+      ServiceRequestDetailsLoaded(:final request) when request.id == requestId =>
+        request,
+      ServiceRequestCancelling(:final request) when request.id == requestId =>
+        request,
+      _ => null,
+    };
+    if (fromState != null) return fromState;
+
+    for (final request in _cachedRequests) {
+      if (request.id == requestId) return request;
+    }
+    return null;
+  }
+
+  void _restoreStateAfterCancelFailure(
+    ServiceRequestsState previousState,
+    ServiceRequestModel request,
+  ) {
+    switch (previousState) {
+      case ServiceRequestsLoaded():
+        emit(ServiceRequestsLoaded(requests: List.of(_cachedRequests)));
+      case ServiceRequestDetailsLoaded():
+      case ServiceRequestCancelling():
+        emit(ServiceRequestDetailsLoaded(request: request));
+      default:
+        emit(ServiceRequestDetailsLoaded(request: request));
+    }
   }
 
   String _mapFailure(Failure failure) {

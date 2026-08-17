@@ -67,5 +67,8 @@ ServiceRequestModel parseServiceRequest(Map<String, dynamic> item) {
     serviceNote: item['service_note'] as String?,
     discountAmount: item['discount_amount']?.toString(),
     couponCode: item['coupon_code']?.toString(),
+    unitPrice: nestedItem?['unit_price']?.toString() ??
+        item['unit_price']?.toString() ??
+        nestedItem?['price']?.toString(),
   );
 }

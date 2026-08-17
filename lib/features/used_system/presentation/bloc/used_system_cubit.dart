@@ -75,8 +75,10 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     getUsedProducts();
   }
 
-  Future<void> getUsedProducts() async {
-    emit(UsedProductsLoading());
+  Future<void> getUsedProducts({bool showLoading = false}) async {
+    if (showLoading || products.isEmpty) {
+      emit(UsedProductsLoading());
+    }
     final query = {
       if (filterCategory != null) 'category': filterCategory,
       if (filterRegion != null) 'region': filterRegion,
@@ -93,8 +95,10 @@ class UsedSystemCubit extends Cubit<UsedSystemState> {
     );
   }
 
-  Future<void> getMyUsedProducts() async {
-    emit(MyUsedProductsLoading());
+  Future<void> getMyUsedProducts({bool showLoading = false}) async {
+    if (showLoading || myProducts.isEmpty) {
+      emit(MyUsedProductsLoading());
+    }
     final result = await repository.getMyUsedProducts();
     result.fold(
       (failure) => emit(MyUsedProductsFailure(mapFailureToMessage(failure))),

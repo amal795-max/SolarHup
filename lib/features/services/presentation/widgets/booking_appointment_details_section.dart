@@ -11,14 +11,10 @@ import 'package:untitled1/widgets/text_rich_widget.dart';
 
 class BookingAppointmentDetailsSection extends StatelessWidget {
   final BookingConfirmationModel booking;
-  final bool isDownloadingReceipt;
-  final VoidCallback? onReceiptTap;
 
   const BookingAppointmentDetailsSection({
     super.key,
     required this.booking,
-    this.isDownloadingReceipt = false,
-    this.onReceiptTap,
   });
 
   @override
@@ -96,17 +92,8 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
                   value: booking.address,
                   valueColor: valueColor,
                 ),
-                if (booking.hasCouponDiscount) ...[
-                  SizedBox(height: 12.h),
-                  AppointmentDetailRow(
-                    icon: Icons.local_offer_outlined,
-                    label: 'service_coupon_title'.tr(),
-                    value: booking.couponCode ?? '',
-                    valueColor: valueColor,
-                  ),
-                  SizedBox(height: 12.h),
-                  _BookingPriceRow(booking: booking, valueColor: valueColor),
-                ],
+                SizedBox(height: 12.h),
+                _BookingPricingSection(booking: booking, valueColor: valueColor),
               ],
             ),
           ),
@@ -140,11 +127,11 @@ class BookingAppointmentDetailsSection extends StatelessWidget {
   }
 }
 
-class _BookingPriceRow extends StatelessWidget {
+class _BookingPricingSection extends StatelessWidget {
   final BookingConfirmationModel booking;
   final Color valueColor;
 
-  const _BookingPriceRow({
+  const _BookingPricingSection({
     required this.booking,
     required this.valueColor,
   });
@@ -152,48 +139,45 @@ class _BookingPriceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currency = NumberFormat.currency(symbol: r'$', decimalDigits: 2);
-    final original = booking.originalPrice ?? 0;
-    final finalPrice = booking.finalPrice ?? original;
+    final original = booking.resolvedOriginalPrice;
+    final finalPrice = booking.resolvedFinalPrice;
+    final discount = booking.discountAmount ?? 0;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        Icon(Icons.payments_outlined, size: 18.sp, color: AppColors.grey),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'grand_total'.tr(),
-                style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-              ),
-              SizedBox(height: 4.h),
-              Row(
-                children: [
-                  Text(
-                    currency.format(original),
-                    style: AppStyle.labelMedium.copyWith(
-                      color: AppColors.grey,
-                      decoration: TextDecoration.lineThrough,
-                      decorationColor: AppColors.grey,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  Text(
-                    currency.format(finalPrice),
-                    style: AppStyle.labelMedium.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: valueColor,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        AppointmentDetailRow(
+          icon: Icons.attach_money_rounded,
+          label: 'label_price'.tr(),
+          value: currency.format(original),
+          valueColor: valueColor,
+        ),
+        if (booking.hasDiscount) ...[
+          SizedBox(height: 12.h),
+          AppointmentDetailRow(
+            icon: Icons.local_offer_outlined,
+            label: 'label_discount'.tr(),
+            value: _discountValue(currency, discount),
+            valueColor: AppColors.tertiaryColor,
           ),
+        ],
+        SizedBox(height: 12.h),
+        AppointmentDetailRow(
+          icon: Icons.payments_outlined,
+          label: 'total_amount'.tr(),
+          value: currency.format(finalPrice),
+          valueColor: valueColor,
         ),
       ],
     );
+  }
+
+  String _discountValue(NumberFormat currency, double discount) {
+    final amount = currency.format(discount);
+    final code = booking.couponCode?.trim();
+    if (code != null && code.isNotEmpty) {
+      return '$code • -$amount';
+    }
+    return '-$amount';
   }
 }
 

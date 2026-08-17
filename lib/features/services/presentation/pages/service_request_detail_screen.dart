@@ -32,24 +32,6 @@ class _ServiceRequestDetailScreenState
     );
   }
 
-  Future<void> _cancelRequest() async {
-    final success = await context.read<ServiceRequestsCubit>().cancelRequest(
-      widget.requestId,
-    );
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          success
-              ? 'service_request_cancelled_success'.tr()
-              : 'stores_error_title'.tr(),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ServiceRequestsCubit, ServiceRequestsState>(
@@ -64,11 +46,12 @@ class _ServiceRequestDetailScreenState
         }
       },
       builder: (context, state) {
-        if (state is ServiceRequestDetailsLoading) {
-          return const Scaffold(body: SafeArea(child: LoadingIndicator()));
-        }
+        final cubit = context.read<ServiceRequestsCubit>();
+        final request = _resolveRequest(state, cubit);
+        final isLoading = state is ServiceRequestDetailsLoading;
+        final hasCachedData = request != null;
 
-        if (state is ServiceRequestDetailsError) {
+        if (state is ServiceRequestDetailsError && !hasCachedData) {
           return Scaffold(
             body: SafeArea(
               child: EmptyWidget(
@@ -84,33 +67,39 @@ class _ServiceRequestDetailScreenState
           );
         }
 
-        final request = _resolveRequest(state);
-        if (request == null) {
+        if (isLoading && !hasCachedData) {
           return const Scaffold(body: SafeArea(child: LoadingIndicator()));
         }
 
-        final isCancelling = state is ServiceRequestCancelling;
+        if (request == null) {
+          return const Scaffold(body: SafeArea(child: LoadingIndicator()));
+        }
 
         return BookingConfirmationScreen(
           booking: request.toBookingConfirmation(),
           headerTitleKey: 'service_request_details_title',
           headerSubtitleKey: 'service_request_details_subtitle',
-          showCancelButton: request.canCancel,
-          isCancelling: isCancelling,
-          onCancelTap: request.canCancel && !isCancelling
-              ? _cancelRequest
-              : null,
           showBackButton: true,
+          onRefresh: _reload,
         );
       },
     );
   }
 
-  ServiceRequestModel? _resolveRequest(ServiceRequestsState state) {
-    return switch (state) {
+  ServiceRequestModel? _resolveRequest(
+    ServiceRequestsState state,
+    ServiceRequestsCubit cubit,
+  ) {
+    final fromState = switch (state) {
       ServiceRequestDetailsLoaded(:final request) => request,
       ServiceRequestCancelling(:final request) => request,
       _ => null,
     };
+    if (fromState != null) return fromState;
+
+    for (final item in cubit.cachedRequests) {
+      if (item.id == widget.requestId) return item;
+    }
+    return null;
   }
 }

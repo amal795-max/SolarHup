@@ -3,14 +3,10 @@ import 'workshop_availability_model.dart';
 class ServiceTimeSlotModel {
   final String id;
   final String label;
-  final bool isAvailable;
-  final String iconType;
 
   const ServiceTimeSlotModel({
     required this.id,
     required this.label,
-    this.isAvailable = true,
-    this.iconType = 'sunny',
   });
 }
 

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/reviews/presentation/utils/reviews_navigation.dart';
+import 'package:untitled1/features/reviews/presentation/widgets/review_summary_indicator.dart';
 import 'package:untitled1/features/services/presentation/mappers/workshop_picker_mapper.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 
@@ -11,17 +13,14 @@ class WorkshopPickerCard extends StatelessWidget {
   final WorkshopPickerGroup group;
   final VoidCallback? onTap;
 
-  const WorkshopPickerCard({
-    super.key,
-    required this.group,
-    this.onTap,
-  });
+  const WorkshopPickerCard({super.key, required this.group, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final hasCover = isDisplayableImageUrl(group.coverImageUrl);
     final hasLogo = isDisplayableImageUrl(group.logoUrl);
+    final workshopId = int.tryParse(group.workshopId) ?? 0;
     final base = Color(group.iconColorValue);
     final darker = Color.fromARGB(
       255,
@@ -91,6 +90,23 @@ class WorkshopPickerCard extends StatelessWidget {
                           ),
                         ),
                         Positioned(
+                          top: 10.h,
+                          right: 10.w,
+                          child: ReviewSummaryIndicator(
+                            itemType: 'workshop',
+                            itemId: workshopId,
+                            variant: ReviewSummaryVariant.workshopBanner,
+                            onTap: () {
+                              openReviewsScreen(
+                                context,
+                                itemType: 'workshop',
+                                itemId: workshopId,
+                                itemName: group.workshopName,
+                              );
+                            },
+                          ),
+                        ),
+                        Positioned(
                           left: 14.w,
                           bottom: 14.h,
                           right: 14.w,
@@ -135,7 +151,9 @@ class WorkshopPickerCard extends StatelessWidget {
                                     fontWeight: FontWeight.w800,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.black.withValues(alpha: 0.4),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.4,
+                                        ),
                                         blurRadius: 6,
                                       ),
                                     ],
@@ -179,9 +197,7 @@ class WorkshopPickerCard extends StatelessWidget {
                               SizedBox(height: 8.h),
                               Text(
                                 'workshop_services_count'.tr(
-                                  namedArgs: {
-                                    'count': '${group.serviceCount}',
-                                  },
+                                  namedArgs: {'count': '${group.serviceCount}'},
                                 ),
                                 style: AppStyle.labelXSmall.copyWith(
                                   color: AppColors.primaryColor,
@@ -221,4 +237,3 @@ class WorkshopPickerCard extends StatelessWidget {
     );
   }
 }
-

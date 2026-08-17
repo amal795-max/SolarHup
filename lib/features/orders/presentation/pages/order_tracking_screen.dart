@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
@@ -63,7 +64,10 @@ class OrderTrackingScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Skeletonizer(
                 ignoreContainers: true,
-                enabled: state is OrdersLoading,
+                enabled: showInitialLoadingSkeleton(
+                  isLoading: state is OrdersLoading,
+                  hasCachedData: state is OrderDetailsLoaded,
+                ),
                 child: Column(
                   spacing: 16.h,
                   children: [

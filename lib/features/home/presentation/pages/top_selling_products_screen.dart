@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -100,6 +101,11 @@ class _TopSellingProductsView extends StatelessWidget {
                   }
 
                   final isLoading = state is TopSellingProductsLoading;
+                  final hasCachedData = state is TopSellingProductsLoaded;
+                  final showSkeleton = showInitialLoadingSkeleton(
+                    isLoading: isLoading,
+                    hasCachedData: hasCachedData,
+                  );
                   final products = state is TopSellingProductsLoaded
                       ? state.products
                       : fakeProducts;
@@ -130,7 +136,7 @@ class _TopSellingProductsView extends StatelessWidget {
                         .read<TopSellingProductsCubit>()
                         .loadTopSellingProducts(),
                     child: Skeletonizer(
-                      enabled: isLoading,
+                      enabled: showSkeleton,
                       child: GridView.builder(
                         physics: appRefreshPhysics,
                         padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 24.h),
@@ -148,7 +154,7 @@ class _TopSellingProductsView extends StatelessWidget {
                           return ProductCard(
                             data: card,
                             fillWidth: true,
-                            onTap: isLoading
+                            onTap: showSkeleton
                                 ? null
                                 : () => context.push(
                                       AppRoutes.productDetailScreen,

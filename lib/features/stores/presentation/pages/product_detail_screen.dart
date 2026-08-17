@@ -13,6 +13,7 @@ import 'package:untitled1/features/stores/presentation/widgets/product_detail_co
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_gallery_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_info_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/product_detail_technical_sheet_section.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -80,6 +81,8 @@ class _ProductDetailView extends StatelessWidget {
         return Scaffold(
           body: switch (state) {
             ProductDetailLoading() => AppSkeletonizer(
+              isLoading: true,
+              hasCachedData: false,
               child: _ProductDetailBody(
                 businessId: args.businessId,
                 product: _skeletonProduct,
@@ -112,6 +115,14 @@ class _ProductDetailView extends StatelessWidget {
                 product: product,
                 selectedImageIndex: selectedImageIndex,
                 storeName: args.storeName,
+                onRefresh: () async {
+                  context.read<ProductDetailBloc>().add(
+                    LoadProductDetailEvent(
+                      businessId: args.businessId,
+                      productId: args.productId,
+                    ),
+                  );
+                },
               ),
             _ => const SizedBox.shrink(),
           },
@@ -126,23 +137,20 @@ class _ProductDetailBody extends StatelessWidget {
   final ProductDetailModel product;
   final int selectedImageIndex;
   final String? storeName;
+  final Future<void> Function()? onRefresh;
 
   const _ProductDetailBody({
     required this.businessId,
     required this.product,
     required this.selectedImageIndex,
     this.storeName,
+    this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SafeArea(
-            bottom: false,
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+    final scrollContent = SingleChildScrollView(
+              physics: appRefreshPhysics,
               padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +182,19 @@ class _ProductDetailBody extends StatelessWidget {
                   SizedBox(height: 16.h),
                 ],
               ),
-            ),
+            );
+
+    return Column(
+      children: [
+        Expanded(
+          child: SafeArea(
+            bottom: false,
+            child: onRefresh != null
+                ? AppRefreshIndicator(
+                    onRefresh: onRefresh,
+                    child: scrollContent,
+                  )
+                : scrollContent,
           ),
         ),
         ProductDetailBottomBar(product: product),

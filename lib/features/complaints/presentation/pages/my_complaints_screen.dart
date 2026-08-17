@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
 import 'package:untitled1/features/complaints/presentation/bloc/complaint_cubit.dart';
@@ -63,27 +64,31 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                 }
                 final cubit = context.read<ComplaintCubit>();
                 final isLoading = state is ComplaintLoading;
+                final hasCachedData = cubit.complaints.isNotEmpty;
+                final showSkeleton = showInitialLoadingSkeleton(
+                  isLoading: isLoading,
+                  hasCachedData: hasCachedData,
+                );
 
-                List<ComplaintModel> sourceList;
-                if (isLoading) {
-                  sourceList = List.generate(
-                    4,
-                    (index) => ComplaintModel(
-                      id: index,
-                      customerId: 0,
-                      customerPhone: '',
-                      businessId: 0,
-                      businessName: 'Business Name',
-                      subject: 'Loading complaint subject...',
-                      status: 'pending',
-                      messages: const [],
-                      createdAt: DateTime.now(),
-                      updatedAt: DateTime.now(),
-                    ),
-                  );
-                } else {
-                  sourceList = cubit.complaints;
-                }
+                final fakeComplaints = List.generate(
+                  4,
+                  (index) => ComplaintModel(
+                    id: index,
+                    customerId: 0,
+                    customerPhone: '',
+                    businessId: 0,
+                    businessName: 'Business Name',
+                    subject: 'Loading complaint subject...',
+                    status: 'pending',
+                    messages: const [],
+                    createdAt: DateTime.now(),
+                    updatedAt: DateTime.now(),
+                  ),
+                );
+
+                final sourceList = isLoading && hasCachedData
+                    ? cubit.complaints
+                    : (isLoading ? fakeComplaints : cubit.complaints);
 
                 final complaints = sourceList.where((c) {
                   final matchesFilter =
@@ -120,7 +125,7 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                   onRefresh: () async =>
                       context.read<ComplaintCubit>().getMyComplaints(),
                   child: Skeletonizer(
-                  enabled: isLoading,
+                  enabled: showSkeleton,
                   child: ListView.builder(
                     physics: appRefreshPhysics,
                     padding: EdgeInsets.symmetric(

@@ -11,7 +11,8 @@ import 'package:untitled1/features/reviews/data/repositories/reviews_repository.
 enum ReviewSummaryVariant {
   listCard,
   storeProfile,
-  productLink,
+  workshopBanner,
+  workshopDetail,
 }
 
 class ReviewSummaryIndicator extends StatefulWidget {
@@ -97,13 +98,6 @@ class _ReviewSummaryIndicatorState extends State<ReviewSummaryIndicator> {
   @override
   Widget build(BuildContext context) {
     switch (widget.variant) {
-      case ReviewSummaryVariant.productLink:
-        return _ProductReviewLink(
-          rating: _rating,
-          reviewCount: _reviewCount,
-          isLoading: _isLoading,
-          onTap: widget.onTap,
-        );
       case ReviewSummaryVariant.storeProfile:
         return _StoreProfileRatingBadge(
           rating: _rating,
@@ -113,6 +107,20 @@ class _ReviewSummaryIndicatorState extends State<ReviewSummaryIndicator> {
       case ReviewSummaryVariant.listCard:
         return _StoreListRatingBadge(
           rating: _rating,
+          isLoading: _isLoading && widget.itemId > 0,
+          onTap: widget.onTap,
+        );
+      case ReviewSummaryVariant.workshopBanner:
+        return _WorkshopBannerRatingBadge(
+          rating: _rating,
+          reviewCount: _reviewCount,
+          isLoading: _isLoading && widget.itemId > 0,
+          onTap: widget.onTap,
+        );
+      case ReviewSummaryVariant.workshopDetail:
+        return _WorkshopDetailRatingBadge(
+          rating: _rating,
+          reviewCount: _reviewCount,
           isLoading: _isLoading && widget.itemId > 0,
           onTap: widget.onTap,
         );
@@ -229,6 +237,139 @@ class _StoreProfileRatingBadge extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: badge,
+    );
+  }
+}
+
+class _WorkshopBannerRatingBadge extends StatelessWidget {
+  final double rating;
+  final int reviewCount;
+  final bool isLoading;
+  final VoidCallback? onTap;
+
+  const _WorkshopBannerRatingBadge({
+    required this.rating,
+    required this.reviewCount,
+    required this.isLoading,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final badge = Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.18),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.star_rounded,
+            color: AppColors.secondaryColor,
+            size: 14.sp,
+          ),
+          SizedBox(width: 4.w),
+          if (isLoading)
+            SizedBox(
+              width: 10.w,
+              height: 10.w,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.5,
+                color: AppColors.black.withValues(alpha: 0.4),
+              ),
+            )
+          else
+            Text(
+              '${rating.toStringAsFixed(1)} ($reviewCount)',
+              style: AppStyle.labelXSmall.copyWith(
+                color: AppColors.black,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return badge;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: badge,
+    );
+  }
+}
+
+class _WorkshopDetailRatingBadge extends StatelessWidget {
+  final double rating;
+  final int reviewCount;
+  final bool isLoading;
+  final VoidCallback? onTap;
+
+  const _WorkshopDetailRatingBadge({
+    required this.rating,
+    required this.reviewCount,
+    required this.isLoading,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final label =
+        '${rating.toStringAsFixed(1)} ($reviewCount ${'product_detail_reviews_suffix'.tr()})';
+
+    final child = Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      decoration: BoxDecoration(
+        color: AppColors.lightOrange,
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.star_rounded, color: AppColors.brown, size: 16.sp),
+          SizedBox(width: 4.w),
+          if (isLoading)
+            SizedBox(
+              width: 10.w,
+              height: 10.w,
+              child: CircularProgressIndicator(
+                strokeWidth: 1.5,
+                color: AppColors.brown.withValues(alpha: 0.5),
+              ),
+            )
+          else
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyle.labelSmall.copyWith(
+                  color: AppColors.brown,
+                  fontWeight: FontWeight.w700,
+                  decoration: onTap != null ? TextDecoration.underline : null,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+
+    if (onTap == null) return child;
+
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: child,
     );
   }
 }
