@@ -5,12 +5,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
 import 'package:untitled1/features/used_system/presentation/bloc/used_system_cubit.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/header_section.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -168,7 +170,7 @@ class _ListingCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
-        color: AppColors.white,
+        color: context.colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: AppColors.shadowColor,
@@ -184,23 +186,11 @@ class _ListingCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 100.w,
-                  height: 100.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.backGroundGrey,
-                    borderRadius: BorderRadius.circular(12.r),
-                    image: product.images.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(product.images.first),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
-                  ),
-                  child: product.images.isEmpty
-                      ? Icon(Icons.inventory_2_outlined, size: 40.sp)
-                      : null,
-                ),
+                     ImageWidget(
+                       height: 80.h,
+                       width: 80.w,
+                       image: product.images.isNotEmpty ? product.images.first : '',
+                     ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(

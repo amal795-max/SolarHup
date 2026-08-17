@@ -267,28 +267,39 @@ class _HomeViewState extends State<_HomeView> {
 
 
   Widget _buildBody(BuildContext context, HomeState state) {
-    if (state is HomeLoading || state is HomeInitial) {
+    if (state is HomeInitial) {
       return _buildScrollable(
-        isLoading: true,
+        loadingLayout: true,
         layout: _skeletonLayout,
+        loadingTips: true,
         tips: const [],
+        loadingUsedProducts: true,
         usedProducts: _skeletonUsedProducts,
+        loadingTopSellingProducts: true,
         topSellingProducts: _skeletonNewOffers,
+        loadingNewOffers: true,
         newOffers: _skeletonNewOffers,
+        loadingBlogPosts: true,
         blogPosts: _skeletonBlogs,
       );
     }
     if (state is HomeLoaded) {
       return _buildScrollable(
+        loadingLayout: state.loadingLayout,
         layout: state.homeLayout,
+        loadingTips: state.loadingTips,
         tips: state.tips,
         tipsError: state.tipsError,
+        loadingUsedProducts: state.loadingUsedProducts,
         usedProducts: state.usedProducts,
         usedProductsError: state.usedProductsError,
+        loadingTopSellingProducts: state.loadingTopSellingProducts,
         topSellingProducts: state.topSellingProducts.map(_mapNewOffer).toList(),
         topSellingProductsError: state.topSellingProductsError,
+        loadingNewOffers: state.loadingNewOffers,
         newOffers: state.newOffers.map(_mapNewOffer).toList(),
         newOffersError: state.newOffersError,
+        loadingBlogPosts: state.loadingBlogPosts,
         blogPosts: state.blogPosts.map(_mapBlog).toList(),
         blogPostsError: state.blogPostsError,
       );
@@ -297,25 +308,29 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   Widget _buildScrollable({
-    bool isLoading = false,
+    bool loadingLayout = false,
     required List<HomeLayoutModel> layout,
+    bool loadingTips = false,
     required List<TipModel> tips,
     String? tipsError,
+    bool loadingUsedProducts = false,
     required List<UsedProductModel> usedProducts,
     String? usedProductsError,
+    bool loadingTopSellingProducts = false,
     required List<ProductCardData> topSellingProducts,
     String? topSellingProductsError,
+    bool loadingNewOffers = false,
     required List<ProductCardData> newOffers,
     String? newOffersError,
+    bool loadingBlogPosts = false,
     required List<BlogCardData> blogPosts,
     String? blogPostsError,
   }) {
-    final bool isSearching = _searchQuery.isNotEmpty && !isLoading;
+    final bool isSearching = _searchQuery.isNotEmpty;
     final homeBloc = context.read<HomeBloc>();
 
-    VoidCallback? retrySection(String sectionKey) => isLoading
-        ? null
-        : () => homeBloc.add(RetryHomeSectionEvent(sectionKey));
+    VoidCallback? retrySection(String sectionKey) =>
+        () => homeBloc.add(RetryHomeSectionEvent(sectionKey));
 
     final filteredUsed = isSearching ? _filterUsedProducts(usedProducts) : usedProducts;
     final filteredTopSelling =
@@ -327,94 +342,108 @@ class _HomeViewState extends State<_HomeView> {
         filteredUsed.map(_mapUsedProduct).toList();
 
     final Map<String, Widget> sectionWidgets = {
-      'tips': tipsError != null
-          ? SectionErrorWidget(
-              message: tipsError,
-              onRetry: retrySection('tips'),
-            )
-          : DidYouKnowBanner(tips: tips),
-      'promotions': PromotionProductsSection(
-        titleKey: 'home_new_offer',
-        products: filteredNew,
-        errorMessage: newOffersError,
-        onRetry: retrySection('promotions'),
-        onViewAll: isLoading ? null : _navigateToDiscountedProducts,
-        onProductTap: isLoading ? null : (index) => _navigateToProductDetail(filteredNew[index]),
+      'tips': Skeletonizer(
+        enabled: loadingTips,
+        child: tipsError != null
+            ? SectionErrorWidget(
+                message: tipsError,
+                onRetry: retrySection('tips'),
+              )
+            : DidYouKnowBanner(tips: tips),
       ),
-      'used_systems': UsedProductsSection(
-        titleKey: 'home_used_systems',
-        products: usedProductsMapped,
-        errorMessage: usedProductsError,
-        onRetry: retrySection('used_systems'),
-        onViewAll: isLoading ? null : _navigateToUsedProducts,
-        onProductTap: isLoading ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
+      'promotions': Skeletonizer(
+        enabled: loadingNewOffers,
+        child: PromotionProductsSection(
+          titleKey: 'home_new_offer',
+          products: loadingNewOffers ? _skeletonNewOffers : filteredNew,
+          errorMessage: newOffersError,
+          onRetry: retrySection('promotions'),
+          onViewAll: loadingNewOffers ? null : _navigateToDiscountedProducts,
+          onProductTap: loadingNewOffers ? null : (index) => _navigateToProductDetail(filteredNew[index]),
+        ),
       ),
-      'best_sellers': PromotionProductsSection(
-        titleKey: 'top_selling',
-        products: filteredTopSelling,
-        errorMessage: topSellingProductsError,
-        onRetry: retrySection('best_sellers'),
-        onViewAll: isLoading ? null : _navigateToTopSellingProducts,
-        onProductTap: isLoading
-            ? null
-            : (index) => _navigateToProductDetail(filteredTopSelling[index]),
+      'used_systems': Skeletonizer(
+        enabled: loadingUsedProducts,
+        child: UsedProductsSection(
+          titleKey: 'home_used_systems',
+          products: loadingUsedProducts ? _skeletonUsedProducts.map(_mapUsedProduct).toList() : usedProductsMapped,
+          errorMessage: usedProductsError,
+          onRetry: retrySection('used_systems'),
+          onViewAll: loadingUsedProducts ? null : _navigateToUsedProducts,
+          onProductTap: loadingUsedProducts ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
+        ),
       ),
-      'blog_highlights': BlogSection(
-        blogs: filteredBlogs,
-        errorMessage: blogPostsError,
-        onRetry: retrySection('blog_highlights'),
-        onBlogTap: isLoading
-            ? null
-            : (articleId) => context.push(AppRoutes.blogArticleDetail(articleId)),
+      'best_sellers': Skeletonizer(
+        enabled: loadingTopSellingProducts,
+        child: PromotionProductsSection(
+          titleKey: 'top_selling',
+          products: loadingTopSellingProducts ? _skeletonNewOffers : filteredTopSelling,
+          errorMessage: topSellingProductsError,
+          onRetry: retrySection('best_sellers'),
+          onViewAll: loadingTopSellingProducts ? null : _navigateToTopSellingProducts,
+          onProductTap: loadingTopSellingProducts
+              ? null
+              : (index) => _navigateToProductDetail(filteredTopSelling[index]),
+        ),
+      ),
+      'blog_highlights': Skeletonizer(
+        enabled: loadingBlogPosts,
+        child: BlogSection(
+          blogs: loadingBlogPosts ? _skeletonBlogs : filteredBlogs,
+          errorMessage: blogPostsError,
+          onRetry: retrySection('blog_highlights'),
+          onBlogTap: loadingBlogPosts
+              ? null
+              : (articleId) => context.push(AppRoutes.blogArticleDetail(articleId)),
+        ),
       ),
     };
 
-    final content = AppRefreshIndicator(
-      onRefresh: isLoading ? null : _refreshHome,
+    return AppRefreshIndicator(
+      onRefresh: _refreshHome,
       child: SingleChildScrollView(
         physics: appRefreshPhysics,
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: HomeSearchBar(
-              controller: _searchController,
-              enabled: !isLoading,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: HomeSearchBar(
+                controller: _searchController,
+              ),
             ),
-          ),
+            if (!loadingLayout && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
+              const Padding(
+                padding: EdgeInsets.only(bottom: 12),
+                child: VerificationBanner(),
+              ),
+            if (!isSearching) ...[
+              QuickActionsSection(
+                onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen),
+                onExpertTap: () => context.push(AppRoutes.askExpertScreen),
+              ),
+              SizedBox(height: 16.h),
+            ],
+            Skeletonizer(
+              enabled: loadingLayout,
+              child: Column(
+                children: layout
+                    .where((section) => section.isActive)
+                    .map((section) {
+                  final widget = sectionWidgets[section.key];
+                  if (widget == null) return const SizedBox.shrink();
 
-          if (!isLoading && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
-            const Padding(
-              padding: EdgeInsets.only(bottom: 12),
-              child: VerificationBanner(),
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: widget,
+                  );
+                }).toList(),
+              ),
             ),
-
-          if (!isSearching) ...[
-             QuickActionsSection(
-                 onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen),
-                 onExpertTap: () => context.push(AppRoutes.askExpertScreen),
-             ),
-            SizedBox(height: 16.h),
           ],
-
-          ...layout
-              .where((section) => section.isActive)
-              .map((section) {
-            final widget = sectionWidgets[section.key];
-            if (widget == null) return const SizedBox.shrink();
-
-            return Padding(
-              padding: EdgeInsets.only(bottom: 16.h),
-              child: widget,
-            );
-          }),
-        ],
+        ),
       ),
-    ),
     );
-
-    return isLoading ? Skeletonizer(enabled: true, child: content) : content;
   }
 }
 

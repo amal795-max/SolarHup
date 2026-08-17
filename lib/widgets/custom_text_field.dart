@@ -148,7 +148,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ],
       ),
     )  .animate()
-        .fadeIn(duration: 500.ms, delay: 300.ms)
+        .fadeIn(duration: 500.ms)
         .slideX(begin: -0.2, end: 0, duration: 500.ms);
   }
 }

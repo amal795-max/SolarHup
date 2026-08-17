@@ -19,11 +19,10 @@ class OrdersCubit extends Cubit<OrdersState> {
     });
   }
 
-  Future<void> getOrderDetails(OrderModel order, {bool showLoading = false}) async {
-    if (showLoading || state is! OrderDetailsLoaded) {
+  Future<void> getOrderDetails(OrderModel order) async {
       emit(OrdersLoading());
-    }
-    final result = await repository.getOrderDetails(order.id);
+
+      final result = await repository.getOrderDetails(order.id);
     result.fold((failure) => emit(OrdersError(failure.message)), (
       orderResponse,
     ) {

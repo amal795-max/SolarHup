@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -375,8 +376,8 @@ class _ServiceRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createdAt = request.createdAt;
-    final month = DateFormat('MMM').format(createdAt).toUpperCase();
-    final day = DateFormat('d').format(createdAt);
+    final month = DataHelper.dateFormat('MMM',createdAt,locale: context.locale);
+    final day =DataHelper.dateFormat('d',createdAt,locale: context.locale);
     final status = request.statusEnum;
     final isActive =
         status != OrderStatusEnum.completed &&

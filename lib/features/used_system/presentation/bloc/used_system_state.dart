@@ -46,7 +46,14 @@ class MyUsedProductsFailure extends UsedSystemState {
 }
 
 class AddUsedProductLoading extends UsedSystemState {}
-class UploadImage extends UsedSystemState {}
+
+class UploadImage extends UsedSystemState {
+  final double? updateToken;
+  const UploadImage({this.updateToken});
+
+  @override
+  List<Object?> get props => [updateToken];
+}
 
 class AddUsedProductSuccess extends UsedSystemState {
   final UsedProductModel product;

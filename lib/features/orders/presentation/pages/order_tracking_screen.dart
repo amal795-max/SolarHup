@@ -8,6 +8,7 @@ import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import '../../../../core/helper/extensions.dart';
@@ -71,7 +72,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 child: Column(
                   spacing: 16.h,
                   children: [
-                    _OrderHeaderCard(order: order),
+                    AnimationWidget(child: _OrderHeaderCard(order: order)),
                     if (order.statusEnum == OrderStatusEnum.rejected)
                       _EstimatedDeliveryBanner(order: order),
                     OrderTrackingTimeline(order: order),

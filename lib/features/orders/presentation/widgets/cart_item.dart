@@ -72,7 +72,7 @@ class CartItem extends StatelessWidget {
                             onTap: () {
                               if (item.quantity > 1) {
                                 context.read<CartCubit>().updateCartItem(
-                                  item.itemId,
+                                  item.id,
                                   item.quantity - 1,
                                 );
                               }
@@ -89,7 +89,7 @@ class CartItem extends StatelessWidget {
                             icon: Icons.add,
                             onTap: () {
                               context.read<CartCubit>().updateCartItem(
-                                item.itemId,
+                                item.id,
                                 item.quantity + 1,
                               );
                             },

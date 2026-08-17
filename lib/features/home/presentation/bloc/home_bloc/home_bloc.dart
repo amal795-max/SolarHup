@@ -26,9 +26,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     LoadHomeDataEvent event,
     Emitter<HomeState> emit,
   ) async {
-    if (event.showLoading) {
-      emit(HomeLoading());
-    }
+    emit(const HomeLoaded(
+      usedProducts: [],
+      loadingUsedProducts: true,
+      topSellingProducts: [],
+      loadingTopSellingProducts: true,
+      newOffers: [],
+      loadingNewOffers: true,
+      blogPosts: [],
+      loadingBlogPosts: true,
+      tips: [],
+      loadingTips: true,
+      homeLayout: HomeLayoutModel.defaultLayout,
+      loadingLayout: true,
+    ));
     await _fetchAll(emit);
   }
 
@@ -36,6 +47,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     RefreshHomeDataEvent event,
     Emitter<HomeState> emit,
   ) async {
+    final current = state;
+    if (current is HomeLoaded) {
+      emit(current.copyWith(
+        loadingUsedProducts: true,
+        loadingTopSellingProducts: true,
+        loadingNewOffers: true,
+        loadingBlogPosts: true,
+        loadingTips: true,
+        loadingLayout: true,
+        refreshToken: current.refreshToken + 1,
+      ));
+    }
     await _fetchAll(emit);
   }
 
@@ -131,85 +154,120 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _fetchAll(Emitter<HomeState> emit) async {
-    final (
-      layoutResult,
-      usedResult,
-      topSellingResult,
-      newResult,
-      blogResult,
-      tipsResult,
-    ) = await (
-      repository.getHomeLayout(),
-      repository.getUsedProducts(),
-      repository.getTopSellingProducts(),
-      repository.getNewOffers(),
-      repository.getBlogPosts(),
-      repository.getRandomTips(),
-    ).wait;
+    final futures = [
+      _fetchLayout(emit),
+      _fetchUsedProducts(emit),
+      _fetchTopSelling(emit),
+      _fetchNewOffers(emit),
+      _fetchBlogPosts(emit),
+      _fetchTips(emit),
+    ];
 
-    List<HomeLayoutModel> homeLayout = HomeLayoutModel.defaultLayout;
-    List<UsedProductModel> usedProducts = [];
-    String? usedProductsError;
-    List<ProductModel> topSellingProducts = [];
-    String? topSellingProductsError;
-    List<ProductModel> newOffers = [];
-    String? newOffersError;
-    List<BlogModel> blogPosts = [];
-    String? blogPostsError;
-    List<TipModel> tips = [];
-    String? tipsError;
+    await Future.wait(futures);
+  }
 
-    layoutResult.fold(
-      (_) {},
-      (data) {
-        if (data.isNotEmpty) homeLayout = data;
-      },
-    );
+  Future<void> _fetchLayout(Emitter<HomeState> emit) async {
+    final result = await repository.getHomeLayout();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (_) => emit(current.copyWith(loadingLayout: false)),
+        (data) => emit(current.copyWith(
+          homeLayout: data.isNotEmpty ? data : HomeLayoutModel.defaultLayout,
+          loadingLayout: false,
+        )),
+      );
+    }
+  }
 
-    usedResult.fold(
-      (failure) => usedProductsError = _mapFailureToMessage(failure),
-      (data) => usedProducts = data,
-    );
+  Future<void> _fetchUsedProducts(Emitter<HomeState> emit) async {
+    final result = await repository.getUsedProducts();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (failure) => emit(current.copyWith(
+          usedProductsError: _mapFailureToMessage(failure),
+          loadingUsedProducts: false,
+        )),
+        (data) => emit(current.copyWith(
+          usedProducts: data,
+          loadingUsedProducts: false,
+          clearUsedProductsError: true,
+        )),
+      );
+    }
+  }
 
-    topSellingResult.fold(
-      (failure) => topSellingProductsError = _mapFailureToMessage(failure),
-      (data) => topSellingProducts = data,
-    );
+  Future<void> _fetchTopSelling(Emitter<HomeState> emit) async {
+    final result = await repository.getTopSellingProducts();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (failure) => emit(current.copyWith(
+          topSellingProductsError: _mapFailureToMessage(failure),
+          loadingTopSellingProducts: false,
+        )),
+        (data) => emit(current.copyWith(
+          topSellingProducts: data,
+          loadingTopSellingProducts: false,
+          clearTopSellingProductsError: true,
+        )),
+      );
+    }
+  }
 
-    newResult.fold(
-      (failure) => newOffersError = _mapFailureToMessage(failure),
-      (data) => newOffers = data,
-    );
+  Future<void> _fetchNewOffers(Emitter<HomeState> emit) async {
+    final result = await repository.getNewOffers();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (failure) => emit(current.copyWith(
+          newOffersError: _mapFailureToMessage(failure),
+          loadingNewOffers: false,
+        )),
+        (data) => emit(current.copyWith(
+          newOffers: data,
+          loadingNewOffers: false,
+          clearNewOffersError: true,
+        )),
+      );
+    }
+  }
 
-    blogResult.fold(
-      (failure) => blogPostsError = _mapFailureToMessage(failure),
-      (data) => blogPosts = data,
-    );
+  Future<void> _fetchBlogPosts(Emitter<HomeState> emit) async {
+    final result = await repository.getBlogPosts();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (failure) => emit(current.copyWith(
+          blogPostsError: _mapFailureToMessage(failure),
+          loadingBlogPosts: false,
+        )),
+        (data) => emit(current.copyWith(
+          blogPosts: data,
+          loadingBlogPosts: false,
+          clearBlogPostsError: true,
+        )),
+      );
+    }
+  }
 
-    tipsResult.fold(
-      (failure) => tipsError = _mapFailureToMessage(failure),
-      (data) => tips = data,
-    );
-
-    final nextRefreshToken =
-        state is HomeLoaded ? (state as HomeLoaded).refreshToken + 1 : 1;
-
-    emit(
-      HomeLoaded(
-        usedProducts: usedProducts,
-        usedProductsError: usedProductsError,
-        topSellingProducts: topSellingProducts,
-        topSellingProductsError: topSellingProductsError,
-        newOffers: newOffers,
-        newOffersError: newOffersError,
-        blogPosts: blogPosts,
-        blogPostsError: blogPostsError,
-        tips: tips,
-        tipsError: tipsError,
-        homeLayout: homeLayout,
-        refreshToken: nextRefreshToken,
-      ),
-    );
+  Future<void> _fetchTips(Emitter<HomeState> emit) async {
+    final result = await repository.getRandomTips();
+    final current = state;
+    if (current is HomeLoaded) {
+      result.fold(
+        (failure) => emit(current.copyWith(
+          tipsError: _mapFailureToMessage(failure),
+          loadingTips: false,
+        )),
+        (data) => emit(current.copyWith(
+          tips: data,
+          loadingTips: false,
+          clearTipsError: true,
+        )),
+      );
+    }
   }
 
   String _mapFailureToMessage(Failure failure) {

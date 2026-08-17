@@ -61,7 +61,6 @@ class ImageWidget extends StatelessWidget {
       height: height,
       width: width,
       fit: fit,
-      // placeholderBuilder: (_) => _shimmer(),
     );
   }
 
@@ -71,23 +70,9 @@ class ImageWidget extends StatelessWidget {
       height: height,
       width: width,
       fit: fit,
-      // placeholder: (_, __) => _shimmer(),
       errorWidget: (_, __, ___) => _fallbackIcon(),
     );
   }
-
-  // Widget _shimmer() {
-  //   return Shimmer.fromColors(
-  //     baseColor: Colors.grey.shade300,
-  //     highlightColor: Colors.grey.shade100,
-  //     child: Container(
-  //       height: height ?? 80.h,
-  //       width: width ?? 110.w,
-  //       color: Colors.white,
-  //     ),
-  //   );
-  // }
-
   Widget _fallbackIcon() {
     return Icon(Icons.broken_image_outlined, size: 30.w, color: Colors.grey);
   }

@@ -8,9 +8,9 @@ class ApiRequest {
   ApiRequest({required this.dio}) {
     dio.options = BaseOptions(
       baseUrl: EnvironmentConfig.apiEndpoint,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      sendTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 24),
+      receiveTimeout: const Duration(seconds: 24),
+      sendTimeout: const Duration(seconds: 24),
       contentType: 'application/json',
       responseType: ResponseType.json,
       validateStatus: (status) => true,

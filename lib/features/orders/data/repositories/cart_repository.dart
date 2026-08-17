@@ -16,7 +16,7 @@ abstract class CartRepository {
 
   Future<Either<Failure, Unit>> clearCart();
 
-  Future<Either<Failure, Unit>> updateCartItem(AddProductToCartParams params);
+  Future<Either<Failure, Unit>> updateCartItem(UpdateProductToCartParams params,int productId);
 
   Future<Either<Failure, Unit>> deleteCartItem(int productId);
   Future<Either<Failure, Unit>> submitCart(ShippingInformationParams params);
@@ -75,10 +75,10 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> updateCartItem(AddProductToCartParams params) async {
+  Future<Either<Failure, Unit>> updateCartItem(UpdateProductToCartParams params,int productId) async {
     if (await networkInfo.isConnected) {
       try {
-        await remoteDataSource.updateCartItem(params);
+        await remoteDataSource.updateCartItem(params,productId);
         return const Right(unit);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

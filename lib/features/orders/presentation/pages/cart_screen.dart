@@ -15,6 +15,7 @@ import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_style.dart';
 import '../widgets/cart_item.dart';
 import '../widgets/order_summary.dart';
 
@@ -37,7 +38,9 @@ class _CartScreenState extends State<CartScreen> {
     final CartCubit cubit =context.read<CartCubit>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('your_cart'.tr()),
+        title: Text('your_cart'.tr(),
+          style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+        ),
         actions: [
           BlocBuilder<CartCubit, CartState>(
             builder: (context, stateOrdersState){

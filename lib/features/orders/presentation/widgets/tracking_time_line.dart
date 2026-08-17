@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 
 import '../../../../core/enums/order_status_enum.dart';
 import '../../../../core/helper/extensions.dart';
@@ -113,87 +114,89 @@ class _TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          Column(
-            children: [
-              Container(
-                width: 24.w,
-                height: 24.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color:
-                  iconColor ??
-                      (isCurrent
-                          ? AppColors.secondaryColor
-                          : isCompleted
-                          ? AppColors.darkMode
-                          : AppColors.lightGrey),
-                ),
-                child: icon != null
-                    ? Icon(icon, color: Colors.white, size: 14.sp)
-                    : isCurrent
-                    ? Center(
-                  child: Container(
-                    width: 8.w,
-                    height: 8.w,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                )
-                    : isCompleted
-                    ? Icon(Icons.check, color: Colors.white, size: 12.sp)
-                    : null,
-              ),
-              if (!isLast)
-                Expanded(
-                  child: Container(
-                    width: 2.w,
-                    color: isCompleted
-                        ? AppColors.darkMode
-                        : AppColors.lightGrey,
-                  ),
-                ),
-            ],
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return AnimationWidget(
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Column(
               children: [
-                Text(
-                  title,
-                  style: AppStyle.bodyMedium.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: isCompleted ? null : AppColors.grey,
+                Container(
+                  width: 24.w,
+                  height: 24.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color:
+                    iconColor ??
+                        (isCurrent
+                            ? AppColors.secondaryColor
+                            : isCompleted
+                            ? AppColors.darkMode
+                            : AppColors.lightGrey),
                   ),
-                ),
-                Text(
-                  subtitle,
-                  style: AppStyle.bodySmall.copyWith(
-                    color: AppColors.grey,
-                    fontSize: 12.sp,
-                  ),
-                ),
-                if (date != null)
-                  Padding(
-                    padding: EdgeInsets.only(top: 4.h),
-                    child: Text(
-                      date!,
-                      style: AppStyle.labelSmall.copyWith(
-                        color: AppColors.primaryColor.withOpacity(0.6),
-                        fontSize: 10.sp,
+                  child: icon != null
+                      ? Icon(icon, color: Colors.white, size: 14.sp)
+                      : isCurrent
+                      ? Center(
+                    child: Container(
+                      width: 8.w,
+                      height: 8.w,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.primaryColor,
                       ),
                     ),
+                  )
+                      : isCompleted
+                      ? Icon(Icons.check, color: Colors.white, size: 12.sp)
+                      : null,
+                ),
+                if (!isLast)
+                  Expanded(
+                    child: Container(
+                      width: 2.w,
+                      color: isCompleted
+                          ? AppColors.darkMode
+                          : AppColors.lightGrey,
+                    ),
                   ),
-                SizedBox(height: 24.h),
               ],
             ),
-          ),
-        ],
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppStyle.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: isCompleted ? null : AppColors.grey,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: AppStyle.bodySmall.copyWith(
+                      color: AppColors.grey,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+                  if (date != null)
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.h),
+                      child: Text(
+                        date!,
+                        style: AppStyle.labelSmall.copyWith(
+                          color: AppColors.primaryColor.withOpacity(0.6),
+                          fontSize: 10.sp,
+                        ),
+                      ),
+                    ),
+                  SizedBox(height: 24.h),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

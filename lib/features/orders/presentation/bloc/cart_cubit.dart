@@ -62,48 +62,61 @@ class CartCubit extends Cubit<CartState> {
     });
   }
 
-  Future<void> updateCartItem(int productId, int quantity) async {
-    AddProductToCartParams params = AddProductToCartParams(
-      id: productId,
+  Future<void> updateCartItem(int itemId, int quantity) async {
+    UpdateProductToCartParams params = UpdateProductToCartParams(
       quantity: quantity,
     );
-
-    final oldItems = List<OrderItemModel>.from(order?.items ?? []);
-    final updatedItems = order?.items.map((e) {
-      if (e.itemId == productId) {
-        return e.copyWith(quantity: quantity);
+    if (order == null) return;
+    final oldOrder = order!;
+    final updatedItems = order!.items.map((e) {
+      if (e.id == itemId) {
+        return e.copyWith(
+          quantity: quantity,
+          subtotal: (double.parse(e.effectiveUnitPrice) * quantity).toStringAsFixed(2),
+        );
       }
       return e;
     }).toList();
 
-    if (updatedItems != null) {
-      order = order!.copyWith(items: updatedItems);
-      emit(CartSuccess(order!));
-    }
+    order = order!.copyWith(
+      items: updatedItems,
+      totalAmount: updatedItems.fold<double>(0, (sum, item) => sum + double.parse(item.subtotal)).toStringAsFixed(2),
+    );
+    emit(CartSuccess(order!));
 
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(seconds: 1), () async {
-      final result = await repository.updateCartItem(params);
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      final result = await repository.updateCartItem(params, itemId);
       result.fold(
         (failure) {
-          order = order!.copyWith(items: oldItems);
+          order = oldOrder;
           emit(CartError(failure.message));
-          emit(CartSuccess(order!));
         },
-        (_) {
-          emit(CartSuccess(order!));
+        (_) async {
+          final freshResult = await repository.getCart();
+          freshResult.fold(
+            (_) => emit(CartSuccess(order!)),
+            (freshCart) async {
+              order = await _applyDiscountPricing(freshCart);
+              emit(CartSuccess(order!));
+            },
+          );
         },
       );
     });
   }
 
-  Future<void> deleteCartItem(int productId) async {
+  Future<void> deleteCartItem(int itemId) async {
     emit(CartActionLoading());
-    final result = await repository.deleteCartItem(productId);
-    result.fold((failure) => emit(CartError(failure.message)), (success) {
-      order?.items.removeWhere((e) => productId == e.id);
+    final result = await repository.deleteCartItem(itemId);
+    result.fold((failure) => emit(CartError(failure.message)), (success) async {
+      order?.items.removeWhere((e) => itemId == e.id);
       if (order != null) {
+        final newTotal = order!.items.fold<double>(0, (sum, item) => sum + double.parse(item.subtotal)).toStringAsFixed(2);
+        order = order!.copyWith(totalAmount: newTotal);
+        
         emit(CartSuccess(order!));
+        emit(const CartActionSuccess(deleteFromCartSuccessfully));
       }
     });
   }

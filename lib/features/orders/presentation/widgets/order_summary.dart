@@ -17,7 +17,14 @@ class OrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final total = cart.effectiveTotalAmount.toStringAsFixed(2);
+    final double subtotalVal = cart.items.fold<double>(
+      0,
+      (sum, item) => sum + (double.tryParse(item.unitPrice) ?? 0) * item.quantity,
+    );
+    
+    final double effectiveTotal = cart.effectiveTotalAmount;
+    final double discount = subtotalVal - effectiveTotal;
+
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -34,14 +41,24 @@ class OrderSummary extends StatelessWidget {
                 'order_summary'.tr(),
                 style: AppStyle.h6.copyWith(color: AppColors.white),
               ),
-              Text(
-                cart.orderCode,
-                style: AppStyle.h6.copyWith(color: AppColors.white),
-              ),
+              if (cart.orderCode.isNotEmpty)
+                Text(
+                  cart.orderCode,
+                  style: AppStyle.h6.copyWith(color: AppColors.white),
+                ),
             ],
           ),
           SizedBox(height: 16.h),
-          _SummaryRow(label: 'subtotal'.tr(), value: '\$$total'),
+          _SummaryRow(
+            label: 'subtotal'.tr(),
+            value: '\$${subtotalVal.toStringAsFixed(2)}',
+          ),
+          if (discount > 0.01)
+            _SummaryRow(
+              label: 'discount'.tr(),
+              value: '-\$${discount.toStringAsFixed(2)}',
+              valueColor: AppColors.secondaryColor,
+            ),
           _SummaryRow(label: 'shipping'.tr(), value: 'free'.tr()),
           Divider(color: AppColors.white.withOpacity(0.2), height: 32.h),
           Row(
@@ -52,7 +69,7 @@ class OrderSummary extends StatelessWidget {
                 style: AppStyle.h6.copyWith(color: AppColors.white),
               ),
               Text(
-                '\$$total',
+                '\$${effectiveTotal.toStringAsFixed(2)}',
                 style: AppStyle.h3.copyWith(color: AppColors.white),
               ),
             ],

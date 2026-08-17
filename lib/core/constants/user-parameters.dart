@@ -123,7 +123,10 @@ class AddUsedProductParams {
   final String condition;
   final double price;
   final String region;
-  final List<String> images;
+
+  final List<String?> images;
+
+  final Set<int> changedImageIndexes;
 
   AddUsedProductParams({
     required this.name,
@@ -133,16 +136,21 @@ class AddUsedProductParams {
     required this.price,
     required this.region,
     required this.images,
+    this.changedImageIndexes = const {},
+  });
+}
+class UpdateProductToCartParams {
+  final int quantity;
+
+
+  UpdateProductToCartParams({
+    required this.quantity,
+
   });
 
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'description': description,
-    'category': category,
-    'condition': condition,
-    'price': price,
-    'region': region,
-    'images': images,
+    'quantity': quantity,
+
   };
 }
 
@@ -162,7 +170,8 @@ class AddProductToCartParams {
     'quantity': quantity,
 
   };
-}class ShippingInformationParams {
+}
+class ShippingInformationParams {
   final String fullName;
   final String city;
   final String street;

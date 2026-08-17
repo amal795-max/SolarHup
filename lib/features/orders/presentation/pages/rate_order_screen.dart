@@ -10,6 +10,8 @@ import 'package:untitled1/features/reviews/presentation/bloc/reviews_cubit.dart'
 import 'package:untitled1/features/reviews/presentation/widgets/rate_review_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 
+import '../../../../widgets/animation_widget.dart';
+
 class RateOrderScreen extends StatelessWidget {
   final OrderModel order;
 
@@ -35,11 +37,13 @@ class RateOrderScreen extends StatelessWidget {
             children: [
               RateOrderSummaryCard(order: order),
               SizedBox(height: 24.h),
-              RateReviewSection(
-                titleKey: 'store_rating',
-                itemType: 'store',
-                itemId: order.businessId.toString(),
-                onSuccess: () {},
+              AnimationWidget(
+                child: RateReviewSection(
+                  titleKey: 'store_rating',
+                  itemType: 'store',
+                  itemId: order.businessId.toString(),
+                  onSuccess: () {},
+                ),
               ),
             ],
           ),

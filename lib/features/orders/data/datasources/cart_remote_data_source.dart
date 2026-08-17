@@ -12,7 +12,7 @@ abstract class CartRemoteDataSource {
 
   Future<void> clearCart();
 
-  Future<void> updateCartItem(AddProductToCartParams params);
+  Future<void> updateCartItem(UpdateProductToCartParams params,int productId);
 
   Future<void> deleteCartItem(int productId);
   Future<void> submitCart(ShippingInformationParams params);
@@ -99,12 +99,12 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> updateCartItem(AddProductToCartParams params) async {
+  Future<void> updateCartItem(UpdateProductToCartParams params,int productId) async {
     try {
-      final response = await apiRequest.post(
-        EndPoints.cartItems, body:
-      params.toJson());
-      if (response.statusCode != 201) {
+      final response = await apiRequest.patch(
+        '${EndPoints.cartItems}/$productId',
+          body: params.toJson());
+      if (response.statusCode != 200) {
         throw ServerException(
           message: getErrorMessage(response.statusCode ?? 0),
         );

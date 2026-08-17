@@ -223,12 +223,9 @@ class _BottomActionBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
                       Text(
                         'grand_total'.tr().toUpperCase(),
-                        style: AppStyle.labelXSmall.copyWith(
+                        style: AppStyle.labelSmall.copyWith(
                           color: AppColors.grey,
                           letterSpacing: 1.2,
                         ),
@@ -237,31 +234,8 @@ class _BottomActionBar extends StatelessWidget {
                         '${order?.totalAmount ?? '0.00'} \$',
                         style: AppStyle.h5,
                       ),
-                    ],
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 6.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondaryColor.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.bolt, color: AppColors.brown, size: 14.sp),
-                        SizedBox(width: 4.w),
-                        Text(
-                          'credits_earned'.tr(args: ['120']),
-                          style: AppStyle.labelXSmall.copyWith(
-                            color: AppColors.brown,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+
+
                 ],
               ),
               SizedBox(height: 8.h),
@@ -283,24 +257,6 @@ class _BottomActionBar extends StatelessWidget {
                 },
                 text: 'place_order'.tr(),
                 icon: Icons.arrow_forward_rounded,
-              ),
-              SizedBox(height: 12.h),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-                  children: [
-                    TextSpan(text: '${'place_order_agree'.tr()} '),
-                    TextSpan(
-                      text: 'terms_of_service'.tr(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                    const TextSpan(text: '.'),
-                  ],
-                ),
               ),
               SizedBox(height: 20.h),
             ],
