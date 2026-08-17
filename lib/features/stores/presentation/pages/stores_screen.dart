@@ -163,9 +163,10 @@ class _StoresViewState extends State<_StoresView> {
       return _buildErrorBody(context);
     }
 
-    if(state is StoresLoaded && state.stores.isEmpty){
+    if (state is StoresLoaded && state.stores.isEmpty) {
       return _buildNoResultsBody();
-    } return const SizedBox.shrink();
+    }
+    return const SizedBox.shrink();
   }
 
   // ── Scrollable content ────────────────────────────────────────────────────
@@ -183,51 +184,63 @@ class _StoresViewState extends State<_StoresView> {
           ? null
           : () => context.read<StoresCubit>().refreshStores(),
       child: CustomScrollView(
-      physics: appRefreshPhysics,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      slivers: [
-        SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              headerSection(title: 'stores_title', subTitle: 'stores_subtitle'),
-              SizedBox(height: 16.h),
-              StoresSearchBar(
-                controller: _searchController,
-                enabled: !isLoading,
-                onChanged: (v) =>
-                    setState(() => _searchQuery = v.trim().toLowerCase()),
-                onClear: () {
-                  _searchController.clear();
-                  setState(() => _searchQuery = '');
-                },
-              ),
-              SizedBox(height: 8.h),
-            ],
-          ),
-        ),
-
-        if (hasNoResults)
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: _buildNoResultsBody(),
-          )
-        else
-          SliverList(
-            delegate: SliverChildBuilderDelegate((context, i) {
-              return Skeletonizer(
-                enabled: isLoading,
-                child: StoreCard(
-                  data: filtered[i],
-                  onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+        physics: appRefreshPhysics,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                headerSection(
+                  title: 'stores_title',
+                  subTitle: 'stores_subtitle',
                 ),
-              );
-            }, childCount: filtered.length),
+                SizedBox(height: 16.h),
+                StoresSearchBar(
+                  controller: _searchController,
+                  enabled: !isLoading,
+                  onChanged: (v) =>
+                      setState(() => _searchQuery = v.trim().toLowerCase()),
+                  onClear: () {
+                    _searchController.clear();
+                    setState(() => _searchQuery = '');
+                  },
+                ),
+                SizedBox(height: 8.h),
+              ],
+            ),
           ),
 
-        SliverToBoxAdapter(child: SizedBox(height: 80.h)),
-      ],
-    ),
+          if (stores.isEmpty)
+            const SliverFillRemaining(
+              hasScrollBody: false,
+              child: EmptyWidget(
+                title: 'stores_no_results',
+                subtitle: '',
+
+              ),
+            ),
+          if (hasNoResults)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: _buildNoResultsBody(),
+            )
+          else
+            SliverList(
+              delegate: SliverChildBuilderDelegate((context, i) {
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: StoreCard(
+                    data: filtered[i],
+                    onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+                  ),
+                );
+              }, childCount: filtered.length),
+            ),
+
+          SliverToBoxAdapter(child: SizedBox(height: 80.h)),
+        ],
+      ),
     );
   }
 
@@ -248,9 +261,8 @@ class _StoresViewState extends State<_StoresView> {
     return errorWidget(
       message: 'stores_error_subtitle'.tr(),
       hasButton: true,
-        onPressed: () =>
-            context.read<StoresCubit>().loadStores(showLoading: true),
-
+      onPressed: () =>
+          context.read<StoresCubit>().loadStores(showLoading: true),
     );
   }
 }
