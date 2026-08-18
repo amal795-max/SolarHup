@@ -5,6 +5,7 @@ import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 
 class DiscountProductCandidate {
+  final int promotionId;
   final String productId;
   final int businessId;
   final String name;
@@ -18,6 +19,7 @@ class DiscountProductCandidate {
   final DateTime? endDate;
 
   const DiscountProductCandidate({
+    required this.promotionId,
     required this.productId,
     required this.businessId,
     required this.name,
@@ -41,6 +43,7 @@ List<DiscountProductCandidate> flattenDiscountProducts(
     for (final product in discount.products) {
       final key = '${discount.businessId}-${product.id}';
       final candidate = DiscountProductCandidate(
+        promotionId: discount.id,
         productId: product.id.toString(),
         businessId: discount.businessId,
         name: product.name,
@@ -90,6 +93,7 @@ DiscountedProductModel candidateToDiscountedProductPreview(
   return DiscountedProductModel(
     productId: candidate.productId,
     businessId: candidate.businessId,
+    promotionId: candidate.promotionId,
     name: candidate.name,
     category: _formatCategory(candidate.category),
     businessName: candidate.businessName,
@@ -140,6 +144,7 @@ DiscountedProductModel mergeDiscountWithProductDetail({
   return DiscountedProductModel(
     productId: candidate.productId,
     businessId: candidate.businessId,
+    promotionId: candidate.promotionId,
     name: detail.title.isNotEmpty ? detail.title : candidate.name,
     category: _formatCategory(candidate.category),
     businessName: candidate.businessName,
@@ -170,6 +175,30 @@ ProductModel discountedProductToHomeProduct(DiscountedProductModel product) {
     imageUrl: product.imageUrl,
     imagePlaceholderColorValue: product.imagePlaceholderColorValue,
     iconType: _iconTypeForCategory(product.category),
+  );
+}
+
+ProductModel discountedProductToEligibleHomeProduct(
+  DiscountedProductModel product, {
+  Set<int> usedPromotionIds = const {},
+}) {
+  final promotionUsed = product.promotionId != null &&
+      usedPromotionIds.contains(product.promotionId);
+  if (!promotionUsed) {
+    return discountedProductToHomeProduct(product);
+  }
+
+  return ProductModel(
+    id: product.productId,
+    businessId: product.businessId,
+    name: product.name,
+    category: product.category,
+    price: product.originalPrice,
+    metaText: product.businessName,
+    imageUrl: product.imageUrl,
+    imagePlaceholderColorValue: product.imagePlaceholderColorValue,
+    iconType: _iconTypeForCategory(product.category),
+    promotionAlreadyUsed: true,
   );
 }
 
@@ -212,13 +241,15 @@ DiscountProductCandidate? findBestDiscountForProduct({
   required List<DiscountModel> discounts,
   required int businessId,
   required String productId,
+  Set<int> excludedPromotionIds = const {},
 }) {
   final normalizedProductId = normalizeProductId(productId);
   final candidates = flattenDiscountProducts(discounts)
       .where(
         (candidate) =>
             candidate.businessId == businessId &&
-            normalizeProductId(candidate.productId) == normalizedProductId,
+            normalizeProductId(candidate.productId) == normalizedProductId &&
+            !excludedPromotionIds.contains(candidate.promotionId),
       )
       .toList();
   if (candidates.isEmpty) return null;
@@ -272,6 +303,40 @@ OrderModel applyDiscountPricingToCart(
 
     return item.copyWith(
       discountedUnitPrice: discountedPrice.toStringAsFixed(2),
+      subtotal: (discountedPrice * item.quantity).toStringAsFixed(2),
+    );
+  }).toList();
+
+  return cart.copyWith(items: items);
+}
+
+OrderModel applyEligiblePromotionPricingToCart(
+  OrderModel cart,
+  List<DiscountModel> discounts, {
+  Set<int> usedPromotionIds = const {},
+}) {
+  if (cart.items.isEmpty || discounts.isEmpty) return cart;
+
+  final items = cart.items.map((item) {
+    final candidate = findBestDiscountForProduct(
+      discounts: discounts,
+      businessId: cart.businessId,
+      productId: item.itemId.toString(),
+      excludedPromotionIds: usedPromotionIds,
+    );
+    if (candidate == null) return item;
+
+    final retail = double.tryParse(item.unitPrice) ?? 0;
+    final pricing = computeDiscountPricing(
+      retailPrice: retail,
+      discountType: candidate.discountType,
+      discountValue: candidate.discountValue,
+    );
+    if (pricing.salePrice >= retail) return item;
+
+    return item.copyWith(
+      discountedUnitPrice: pricing.salePrice.toStringAsFixed(2),
+      subtotal: (pricing.salePrice * item.quantity).toStringAsFixed(2),
     );
   }).toList();
 

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/auth_session.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/core/helper/user_city_preference.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -156,6 +158,7 @@ class SettingsScreen extends StatelessWidget {
                   borderColor: AppColors.red,
                   textColor: AppColors.red,
                   onPressed: () async {
+                    getIt<PromotionEligibilityService>().clear();
                     await AuthSession.clear();
                     if (context.mounted) {
                       context.go(AppRoutes.authenticationScreen);

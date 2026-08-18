@@ -13,6 +13,7 @@ StoreInfoData storeDetailToInfoData(
   List<StoreProductModel> products = const [],
   List<DiscountedProductModel> discountedProducts = const [],
   List<DiscountModel> discounts = const [],
+  Set<int> usedPromotionIds = const {},
 }) {
   final categoryItems = categories.isNotEmpty
       ? apiCategoriesToItems(categories)
@@ -21,7 +22,15 @@ StoreInfoData storeDetailToInfoData(
     for (final category in categories) category.id: category.name,
   };
 
-  final discountItems = discountedProducts.map(discountedProductToStoreItem).toList();
+  final discountItems = discountedProducts
+      .map(
+        (product) => discountedProductToStoreItem(
+          product,
+          promotionAlreadyUsed: product.promotionId != null &&
+              usedPromotionIds.contains(product.promotionId),
+        ),
+      )
+      .toList();
   final discountByProductId = {
     for (final item in discountItems) normalizeProductId(item.id): item,
   };
@@ -42,6 +51,7 @@ StoreInfoData storeDetailToInfoData(
             discounts: discounts,
             businessId: model.id,
             productId: product.id,
+            excludedPromotionIds: usedPromotionIds,
           );
           if (candidate != null) {
             return mergeStoreItemWithCandidate(base, candidate, product.price);
@@ -153,7 +163,27 @@ StoreProductItem mergeStoreItemWithCandidate(
   );
 }
 
-StoreProductItem discountedProductToStoreItem(DiscountedProductModel product) {
+StoreProductItem discountedProductToStoreItem(
+  DiscountedProductModel product, {
+  bool promotionAlreadyUsed = false,
+}) {
+  if (promotionAlreadyUsed) {
+    return StoreProductItem(
+      id: product.productId,
+      name: product.name,
+      categoryLabel: product.category,
+      categoryKey: product.category.toLowerCase().replaceAll(' ', '_'),
+      categoryId: 0,
+      price: product.originalPrice,
+      description: product.discountDescription,
+      imagePlaceholderColorValue: product.imagePlaceholderColorValue,
+      imageIcon: _iconForCategory(product.category),
+      imageUrl: product.imageUrl,
+      isKitProduct: false,
+      promotionAlreadyUsed: true,
+    );
+  }
+
   return StoreProductItem(
     id: product.productId,
     name: product.name,

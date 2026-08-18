@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/image_url_utils.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_detail_cubit.dart';
 import 'package:untitled1/features/stores/presentation/bloc/store_info_bloc/store_info_bloc.dart';
@@ -88,6 +89,7 @@ class StoreProductItem {
   final IconData imageIcon;
   final String? imageUrl;
   final bool isKitProduct;
+  final bool promotionAlreadyUsed;
 
   const StoreProductItem({
     this.id = 'helios-450w',
@@ -107,6 +109,7 @@ class StoreProductItem {
     required this.imageIcon,
     this.imageUrl,
     this.isKitProduct = false,
+    this.promotionAlreadyUsed = false,
   });
 }
 
@@ -247,6 +250,8 @@ class _StoreInfoView extends StatelessWidget {
                   products: products,
                   discountedProducts: discountedProducts,
                   discounts: discounts,
+                  usedPromotionIds:
+                      getIt<PromotionEligibilityService>().usedPromotionIds,
                 ),
               ),
             _ => const SizedBox.shrink(),

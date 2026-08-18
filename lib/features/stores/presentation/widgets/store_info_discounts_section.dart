@@ -34,6 +34,7 @@ class StoreInfoDiscountsSection extends StatelessWidget {
       discountDescription: product.discountDescription,
       discountStartDate: product.discountStartDate,
       discountEndDate: product.discountEndDate,
+      promotionAlreadyUsed: product.promotionAlreadyUsed,
       imageUrl: product.imageUrl,
       imagePlaceholderColorValue: product.imagePlaceholderColorValue,
       iconType: switch (product.imageIcon) {

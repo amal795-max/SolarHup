@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/core/constants/app_url.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
+import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/helper/refresh_loading.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
@@ -16,8 +19,37 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../widgets/tracking_time_line.dart';
 
-class OrderTrackingScreen extends StatelessWidget {
+class OrderTrackingScreen extends StatefulWidget {
   const OrderTrackingScreen({super.key});
+
+  @override
+  State<OrderTrackingScreen> createState() => _OrderTrackingScreenState();
+}
+
+class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadOrderDetails());
+  }
+
+  void _loadOrderDetails() {
+    final cubit = context.read<OrdersCubit>();
+    final state = cubit.state;
+
+    final extra = GoRouterState.of(context).extra;
+    if (extra is OrderModel && extra.id > 0) {
+      if (state is OrderDetailsLoaded && state.order.id == extra.id) return;
+      cubit.getOrderDetails(extra);
+      return;
+    }
+
+    final orderId = LocalStorage().getData(key: ApiKeys.orderId);
+    if (orderId is int && orderId > 0) {
+      if (state is OrderDetailsLoaded && state.order.id == orderId) return;
+      cubit.getOrderDetailsById(orderId);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

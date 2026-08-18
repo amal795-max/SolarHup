@@ -8,6 +8,7 @@ import 'package:untitled1/features/stores/data/models/store_category_model.dart'
 import 'package:untitled1/features/stores/data/models/store_detail_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/catalog/data/repositories/catalog_repository.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/features/stores/data/repositories/stores_repository.dart';
 
 part 'store_detail_state.dart';
@@ -15,14 +16,20 @@ part 'store_detail_state.dart';
 class StoreDetailCubit extends Cubit<StoreDetailState> {
   final StoresRepository repository;
   final CatalogRepository catalogRepository;
+  final PromotionEligibilityService promotionEligibility;
 
-  StoreDetailCubit(this.repository, this.catalogRepository)
-      : super(StoreDetailInitial());
+  StoreDetailCubit(
+    this.repository,
+    this.catalogRepository,
+    this.promotionEligibility,
+  ) : super(StoreDetailInitial());
 
   Future<void> loadStore(int businessId, {int? categoryId, bool showLoading = false}) async {
     if (showLoading || state is! StoreDetailLoaded) {
       emit(StoreDetailLoading());
     }
+
+    await promotionEligibility.ensureSynced();
 
     final storeResult = await repository.getStore(businessId);
     await storeResult.fold(

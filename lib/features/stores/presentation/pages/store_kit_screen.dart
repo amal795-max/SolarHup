@@ -10,6 +10,7 @@ import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 import 'package:untitled1/features/stores/data/models/store_category_model.dart';
 import 'package:untitled1/features/stores/data/models/store_product_model.dart';
 import 'package:untitled1/features/stores/presentation/pages/store_kit_route_args.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_header_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_products_section.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_kit_search_section.dart';
@@ -156,6 +157,8 @@ class _StoreKitLoadedBody extends StatelessWidget {
                 products,
                 businessId: args.storeId,
                 discounts: discounts,
+                usedPromotionIds:
+                    getIt<PromotionEligibilityService>().usedPromotionIds,
               ),
             ),
             SizedBox(height: 20.h),

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/app_url.dart';
+import 'package:untitled1/core/constants/failure_success_message.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
@@ -15,6 +16,7 @@ import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
+import 'package:untitled1/features/orders/presentation/widgets/cart_checkout_summary.dart';
 import '../widgets/shipping_form.dart';
 
 class ShippingInformationScreen extends StatelessWidget {
@@ -23,19 +25,25 @@ class ShippingInformationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CartCubit, CartState>(
+      listenWhen: (previous, current) =>
+          current is CartActionSuccess &&
+              current.message == cartSubmittedSuccessfully ||
+          current is CartActionError,
       listener: (context, state) {
         if (state is CartActionSuccess) {
-          DataHelper.showSnackBar(
-            message: state.message.tr(),
-            context: context,
-          );
-          context.read<OrdersCubit>().getOrderDetails(
-            LocalStorage().getData(key: ApiKeys.orderId),
-          );
+          final orderId = context.read<CartCubit>().order?.id ??
+              LocalStorage().getData(key: ApiKeys.orderId);
+
           context.pushReplacement(AppRoutes.orderConfirmedScreen);
+
+          if (orderId is int && orderId > 0) {
+            context.read<OrdersCubit>().getOrderDetailsById(orderId);
+          }
+
+          context.read<CartCubit>().getCart();
         } else if (state is CartActionError) {
           DataHelper.showSnackBar(
-            message: state.message.tr(),
+            message: state.message,
             context: context,
             color: AppColors.red,
           );
@@ -84,10 +92,15 @@ class _OrderSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartCubit, CartState>(
-      buildWhen: (prev, curr) => curr is CartSuccess || curr is CartLoading,
+      buildWhen: (prev, curr) =>
+          curr is CartSuccess ||
+          curr is CartLoading ||
+          curr is CartActionError,
       builder: (context, state) {
-        final order = context.read<CartCubit>().order;
-        if (order == null) return const SizedBox.shrink();
+        final cubit = context.read<CartCubit>();
+        final order = cubit.order;
+        final pricing = cubit.pricingSummary;
+        if (order == null || pricing == null) return const SizedBox.shrink();
 
         return Container(
           padding: EdgeInsets.all(20.w),
@@ -116,37 +129,22 @@ class _OrderSummaryCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 16.h),
-                  ...order.items.map(
-                    (item) => _SummaryRow(
-                      label: '${item.name} x${item.quantity}',
-                      value: '${item.subtotal} \$',
+                  CartCheckoutSummary(
+                    order: order,
+                    pricing: pricing,
+                    labelStyle: AppStyle.labelSmall.copyWith(
+                      color: AppColors.white.withOpacity(0.9),
                     ),
-                  ),
-                  _SummaryRow(
-                    label: 'shipping'.tr(),
-                    value: 'free'.tr().toUpperCase(),
-                    valueColor: AppColors.secondaryColor,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    child: Divider(color: Colors.white.withOpacity(0.1)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'total_amount'.tr(),
-                        style: AppStyle.labelMedium.copyWith(
-                          color: AppColors.white,
-                        ),
-                      ),
-                      Text(
-                        '${order.totalAmount} \$',
-                        style: AppStyle.h4.copyWith(
-                          color: AppColors.secondaryColor,
-                        ),
-                      ),
-                    ],
+                    valueStyle: AppStyle.labelSmall.copyWith(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    totalLabelStyle: AppStyle.labelMedium.copyWith(
+                      color: AppColors.white,
+                    ),
+                    totalValueStyle: AppStyle.h4.copyWith(
+                      color: AppColors.secondaryColor,
+                    ),
                   ),
                 ],
               ),
@@ -158,47 +156,6 @@ class _OrderSummaryCard extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color? valueColor;
-
-  const _SummaryRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: AppStyle.labelSmall.copyWith(
-                color: AppColors.white.withOpacity(0.9),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Text(
-            value,
-            style: AppStyle.labelSmall.copyWith(
-              color: valueColor ?? AppColors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _BottomActionBar extends StatelessWidget {
   const _BottomActionBar();
 
@@ -206,8 +163,16 @@ class _BottomActionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.brightness;
     return BlocBuilder<CartCubit, CartState>(
+      buildWhen: (prev, curr) =>
+          curr is CartSuccess ||
+          curr is CartActionError ||
+          curr is CartActionLoading,
       builder: (context, state) {
-        final order = context.read<CartCubit>().order;
+        final cubit = context.read<CartCubit>();
+        final pricing = cubit.pricingSummary;
+        final formattedTotal = pricing != null
+            ? '\$${pricing.finalTotal.toStringAsFixed(2)}'
+            : '\$0.00';
 
         return Container(
           padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
@@ -231,7 +196,7 @@ class _BottomActionBar extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${order?.totalAmount ?? '0.00'} \$',
+                        formattedTotal,
                         style: AppStyle.h5,
                       ),
 

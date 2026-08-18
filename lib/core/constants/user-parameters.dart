@@ -177,19 +177,25 @@ class ShippingInformationParams {
   final String street;
   final String building;
   final String floor;
+  final int? promotionId;
 
   ShippingInformationParams({
-
-   required this.fullName, required this.city, required this.street, required this.building, required this.floor});
+    required this.fullName,
+    required this.city,
+    required this.street,
+    required this.building,
+    required this.floor,
+    this.promotionId,
+  });
 
   Map<String, dynamic> toJson() => {
-      'full_name': fullName,
-      'city': city,
-      'street': street,
-      'building': building,
-      'floor': floor
-
-  };
+        'full_name': fullName,
+        'city': city,
+        'street': street,
+        'building': building,
+        'floor': floor,
+        if (promotionId != null) 'promotion_id': promotionId,
+      };
 }
 class AddComplaintParams {
   final int businessId;

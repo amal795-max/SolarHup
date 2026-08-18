@@ -18,6 +18,7 @@ import 'package:untitled1/features/stores/presentation/pages/product_detail_rout
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 
 class DiscountedProductsScreen extends StatelessWidget {
   const DiscountedProductsScreen({super.key});
@@ -35,18 +36,24 @@ class _DiscountedProductsView extends StatelessWidget {
   const _DiscountedProductsView();
 
   ProductCardData _mapProduct(DiscountedProductModel product) {
+    final homeProduct = discountedProductToEligibleHomeProduct(
+      product,
+      usedPromotionIds: getIt<PromotionEligibilityService>().usedPromotionIds,
+    );
     return ProductCardData(
-      id: product.productId,
-      businessId: product.businessId,
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      discountPercent: product.discountPercent,
-      metaText: product.businessName,
-      imageUrl: product.imageUrl,
-      imagePlaceholderColorValue: product.imagePlaceholderColorValue,
-      iconType: discountedProductToHomeProduct(product).iconType,
+      id: homeProduct.id,
+      businessId: homeProduct.businessId,
+      name: homeProduct.name,
+      category: homeProduct.category,
+      price: homeProduct.price,
+      originalPrice: homeProduct.originalPrice,
+      discountPercent: homeProduct.discountPercent,
+      badgeText: homeProduct.badgeText,
+      metaText: homeProduct.metaText,
+      imageUrl: homeProduct.imageUrl,
+      imagePlaceholderColorValue: homeProduct.imagePlaceholderColorValue,
+      iconType: homeProduct.iconType,
+      promotionAlreadyUsed: homeProduct.promotionAlreadyUsed,
     );
   }
 

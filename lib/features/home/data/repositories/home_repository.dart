@@ -7,6 +7,7 @@ import 'package:untitled1/features/blog/data/repositories/blog_repository.dart';
 import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
 import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 import 'package:untitled1/features/catalog/data/repositories/catalog_repository.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/features/home/data/mappers/top_selling_product_mapper.dart';
 import 'package:untitled1/features/stores/data/data_source/product_detail_remote_data_source.dart';
 import 'package:untitled1/features/used_system/data/model/used_product_model.dart';
@@ -36,6 +37,7 @@ class HomeRepositoryImpl implements HomeRepository {
   final BlogRepository blogRepository;
   final ProductDetailRemoteDataSource productDetailRemote;
   final NetworkInfo networkInfo;
+  final PromotionEligibilityService promotionEligibility;
   final bool useNetworkCheck;
 
   const HomeRepositoryImpl({
@@ -44,6 +46,7 @@ class HomeRepositoryImpl implements HomeRepository {
     required this.blogRepository,
     required this.productDetailRemote,
     required this.networkInfo,
+    required this.promotionEligibility,
     this.useNetworkCheck = true,
   });
 
@@ -95,6 +98,8 @@ class HomeRepositoryImpl implements HomeRepository {
   }) async {
     if (!useNetworkCheck || await networkInfo.isConnected) {
       try {
+        await promotionEligibility.ensureSynced();
+        final usedPromotionIds = promotionEligibility.usedPromotionIds;
         final discounts = (await catalogRepository.getDiscounts(
           businessType: 'store',
         ))
@@ -113,6 +118,7 @@ class HomeRepositoryImpl implements HomeRepository {
                 discounts: discounts,
                 businessId: item.businessId,
                 productId: item.id.toString(),
+                excludedPromotionIds: usedPromotionIds,
               );
               if (discount != null) {
                 return discountedProductToHomeProduct(
@@ -148,13 +154,21 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<Either<Failure, List<ProductModel>>> getNewOffers() async {
+    await promotionEligibility.ensureSynced();
+    final usedPromotionIds = promotionEligibility.usedPromotionIds;
     final result = await catalogRepository.getDiscountedProducts(
       limit: 5,
       businessType: 'store',
     );
     return result.map(
-      (products) =>
-          products.map(discountedProductToHomeProduct).toList(growable: false),
+      (products) => products
+          .map(
+            (product) => discountedProductToEligibleHomeProduct(
+              product,
+              usedPromotionIds: usedPromotionIds,
+            ),
+          )
+          .toList(growable: false),
     );
   }
 

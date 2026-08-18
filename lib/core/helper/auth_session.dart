@@ -16,5 +16,6 @@ class AuthSession {
     await LocalStorage().removeData(key: ApiKeys.token);
     await LocalStorage().removeData(key: ApiKeys.securityCode);
     await LocalStorage().removeData(key: ApiKeys.isVerified);
+    await LocalStorage().removeData(key: ApiKeys.usedPromotionIds);
   }
 }
