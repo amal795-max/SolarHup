@@ -25,10 +25,12 @@ import 'package:untitled1/features/home/presentation/widgets/used_products_secti
 import 'package:untitled1/features/home/presentation/widgets/quick_actions_section.dart';
 import 'package:untitled1/features/home/presentation/widgets/solar_dynamic_background.dart';
 import 'package:untitled1/features/home/presentation/widgets/verification_banner.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/section_error_widget.dart';
 import 'package:untitled1/features/stores/presentation/pages/product_detail_route_args.dart';
 import '../../../used_system/data/model/used_product_model.dart';
+import '../bloc/application_cubit.dart';
 import '../widgets/home_search_bar.dart';
 
 /// Entry point — provides the HomeBloc and immediately fires LoadHomeDataEvent.
@@ -38,7 +40,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<HomeBloc>()..add(const LoadHomeDataEvent(showLoading: false)),
+      create: (_) =>
+          getIt<HomeBloc>()..add(const LoadHomeDataEvent(showLoading: false)),
       child: const _HomeView(),
     );
   }
@@ -56,7 +59,6 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-
   // ── Search ────────────────────────────────────────────────────────────────
 
   final TextEditingController _searchController = TextEditingController();
@@ -107,7 +109,6 @@ class _HomeViewState extends State<_HomeView> {
 
   // ── Skeleton mock data_source (shown while HomeLoading) ──────────────────────────
 
-
   static final List<ProductCardData> _skeletonNewOffers = List.generate(
     3,
     (i) => const ProductCardData(
@@ -151,7 +152,6 @@ class _HomeViewState extends State<_HomeView> {
 
   // ── Model → UI data_source mappers ───────────────────────────────────────────────
   // ── Model → UI data mappers ───────────────────────────────────────────────
-
 
   ProductCardData _mapNewOffer(ProductModel m) => ProductCardData(
     id: m.id,
@@ -212,10 +212,7 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   void _navigateToUsedProductDetail(UsedProductModel product) {
-    context.push(
-      AppRoutes.usedProductDetailScreen,
-      extra: product,
-    );
+    context.push(AppRoutes.usedProductDetailScreen, extra: product);
   }
 
   Future<void> _refreshHome() async {
@@ -237,34 +234,33 @@ class _HomeViewState extends State<_HomeView> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-          return SafeArea(
+        return SafeArea(
           top: false,
           child: SolarDynamicBackground(
-              child: Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: HomeAppBar(
-              onCartTap: () {
-                context.push(AppRoutes.cartScreen);
-              },
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: HomeAppBar(
+                onCartTap: () {
+                  context.push(AppRoutes.cartScreen);
+                },
+              ),
+              body: _buildBody(context, state),
+
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  context.push(AppRoutes.chatBotScreen);
+                },
+                backgroundColor: AppColors.secondaryColor,
+                elevation: 4,
+                shape: const CircleBorder(),
+                child: SvgPicture.asset(AppImages.chatBotIcon),
+              ),
             ),
-            body: _buildBody(context, state),
-            
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                context.push(AppRoutes.chatBotScreen);
-              },
-              backgroundColor: AppColors.secondaryColor,
-              elevation: 4,
-              shape: const CircleBorder(),
-              child: SvgPicture.asset(AppImages.chatBotIcon),
-            ),
-              )
           ),
         );
       },
     );
   }
-
 
   Widget _buildBody(BuildContext context, HomeState state) {
     if (state is HomeInitial) {
@@ -332,118 +328,161 @@ class _HomeViewState extends State<_HomeView> {
     VoidCallback? retrySection(String sectionKey) =>
         () => homeBloc.add(RetryHomeSectionEvent(sectionKey));
 
-    final filteredUsed = isSearching ? _filterUsedProducts(usedProducts) : usedProducts;
-    final filteredTopSelling =
-        isSearching ? _filterProducts(topSellingProducts) : topSellingProducts;
+    final filteredUsed = isSearching
+        ? _filterUsedProducts(usedProducts)
+        : usedProducts;
+    final filteredTopSelling = isSearching
+        ? _filterProducts(topSellingProducts)
+        : topSellingProducts;
     final filteredNew = isSearching ? _filterProducts(newOffers) : newOffers;
     final filteredBlogs = isSearching ? _filterBlogs(blogPosts) : blogPosts;
 
-    final List<ProductCardData> usedProductsMapped =
-        filteredUsed.map(_mapUsedProduct).toList();
+    final List<ProductCardData> usedProductsMapped = filteredUsed
+        .map(_mapUsedProduct)
+        .toList();
 
     final Map<String, Widget> sectionWidgets = {
-      'tips': Skeletonizer(
-        enabled: loadingTips,
-        child: tipsError != null
-            ? SectionErrorWidget(
-                message: tipsError,
-                onRetry: retrySection('tips'),
-              )
-            : DidYouKnowBanner(tips: tips),
-      ),
-      'promotions': Skeletonizer(
-        enabled: loadingNewOffers,
-        child: PromotionProductsSection(
-          titleKey: 'home_new_offer',
-          products: loadingNewOffers ? _skeletonNewOffers : filteredNew,
-          errorMessage: newOffersError,
-          onRetry: retrySection('promotions'),
-          onViewAll: loadingNewOffers ? null : _navigateToDiscountedProducts,
-          onProductTap: loadingNewOffers ? null : (index) => _navigateToProductDetail(filteredNew[index]),
+      'tips': AnimationWidget(
+        child: Skeletonizer(
+          enabled: loadingTips,
+          child: tipsError != null
+              ? SectionErrorWidget(
+                  message: tipsError,
+                  onRetry: retrySection('tips'),
+                )
+              : DidYouKnowBanner(tips: tips),
         ),
       ),
-      'used_systems': Skeletonizer(
-        enabled: loadingUsedProducts,
-        child: UsedProductsSection(
-          titleKey: 'home_used_systems',
-          products: loadingUsedProducts ? _skeletonUsedProducts.map(_mapUsedProduct).toList() : usedProductsMapped,
-          errorMessage: usedProductsError,
-          onRetry: retrySection('used_systems'),
-          onViewAll: loadingUsedProducts ? null : _navigateToUsedProducts,
-          onProductTap: loadingUsedProducts ? null : (index) => _navigateToUsedProductDetail(filteredUsed[index]),
+      if (filteredNew.isNotEmpty)
+        'promotions': AnimationWidget(
+          child: Skeletonizer(
+            enabled: loadingNewOffers,
+            child: PromotionProductsSection(
+              titleKey: 'home_new_offer',
+              products: loadingNewOffers ? _skeletonNewOffers : filteredNew,
+              errorMessage: newOffersError,
+              onRetry: retrySection('promotions'),
+              onViewAll: loadingNewOffers
+                  ? null
+                  : _navigateToDiscountedProducts,
+              onProductTap: loadingNewOffers
+                  ? null
+                  : (index) => _navigateToProductDetail(filteredNew[index]),
+            ),
+          ),
         ),
-      ),
-      'best_sellers': Skeletonizer(
-        enabled: loadingTopSellingProducts,
-        child: PromotionProductsSection(
-          titleKey: 'top_selling',
-          products: loadingTopSellingProducts ? _skeletonNewOffers : filteredTopSelling,
-          errorMessage: topSellingProductsError,
-          onRetry: retrySection('best_sellers'),
-          onViewAll: loadingTopSellingProducts ? null : _navigateToTopSellingProducts,
-          onProductTap: loadingTopSellingProducts
-              ? null
-              : (index) => _navigateToProductDetail(filteredTopSelling[index]),
+      if (usedProductsMapped.isNotEmpty)
+        'used_systems': AnimationWidget(
+          child: Skeletonizer(
+            enabled: loadingUsedProducts,
+            child: AnimationWidget(
+              child: UsedProductsSection(
+                titleKey: 'home_used_systems',
+                products: loadingUsedProducts
+                    ? _skeletonUsedProducts.map(_mapUsedProduct).toList()
+                    : usedProductsMapped,
+                errorMessage: usedProductsError,
+                onRetry: retrySection('used_systems'),
+                onViewAll: loadingUsedProducts ? null : _navigateToUsedProducts,
+                onProductTap: loadingUsedProducts
+                    ? null
+                    : (index) =>
+                          _navigateToUsedProductDetail(filteredUsed[index]),
+              ),
+            ),
+          ),
         ),
-      ),
-      'blog_highlights': Skeletonizer(
-        enabled: loadingBlogPosts,
-        child: BlogSection(
-          blogs: loadingBlogPosts ? _skeletonBlogs : filteredBlogs,
-          errorMessage: blogPostsError,
-          onRetry: retrySection('blog_highlights'),
-          onBlogTap: loadingBlogPosts
-              ? null
-              : (articleId) => context.push(AppRoutes.blogArticleDetail(articleId)),
+      if (filteredTopSelling.isNotEmpty)
+        'best_sellers': Skeletonizer(
+          enabled: loadingTopSellingProducts,
+          child: AnimationWidget(
+            child: PromotionProductsSection(
+              titleKey: 'top_selling',
+              products: loadingTopSellingProducts
+                  ? _skeletonNewOffers
+                  : filteredTopSelling,
+              errorMessage: topSellingProductsError,
+              onRetry: retrySection('best_sellers'),
+              onViewAll: loadingTopSellingProducts
+                  ? null
+                  : _navigateToTopSellingProducts,
+              onProductTap: loadingTopSellingProducts
+                  ? null
+                  : (index) =>
+                        _navigateToProductDetail(filteredTopSelling[index]),
+            ),
+          ),
         ),
-      ),
+      if (filteredBlogs.isNotEmpty)
+        'blog_highlights': AnimationWidget(
+          child: Skeletonizer(
+            enabled: loadingBlogPosts,
+            child: BlogSection(
+              blogs: loadingBlogPosts ? _skeletonBlogs : filteredBlogs,
+              errorMessage: blogPostsError,
+              onRetry: retrySection('blog_highlights'),
+              onBlogTap: loadingBlogPosts
+                  ? null
+                  : (articleId) =>
+                        context.push(AppRoutes.blogArticleDetail(articleId)),
+            ),
+          ),
+        ),
     };
 
-    return AppRefreshIndicator(
-      onRefresh: _refreshHome,
-      child: SingleChildScrollView(
-        physics: appRefreshPhysics,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: HomeSearchBar(
-                controller: _searchController,
-              ),
-            ),
-            if (!loadingLayout && !LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false))
-              const Padding(
-                padding: EdgeInsets.only(bottom: 12),
-                child: VerificationBanner(),
-              ),
-            if (!isSearching) ...[
-              QuickActionsSection(
-                onUsedSystemsTap: () => context.push(AppRoutes.usedProductScreen),
-                onExpertTap: () => context.push(AppRoutes.askExpertScreen),
-              ),
-              SizedBox(height: 16.h),
-            ],
-            Skeletonizer(
-              enabled: loadingLayout,
-              child: Column(
-                children: layout
-                    .where((section) => section.isActive)
-                    .map((section) {
-                  final widget = sectionWidgets[section.key];
-                  if (widget == null) return const SizedBox.shrink();
+    return BlocBuilder<ApplicationCubit, ApplicationState>(
+      builder: (context, appState) {
+        final bool isVerified = appState is ApplicationMainState
+            ? appState.isVerified
+            : false;
 
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
-                    child: widget,
-                  );
-                }).toList(),
-              ),
+        return AppRefreshIndicator(
+          onRefresh: _refreshHome,
+          child: SingleChildScrollView(
+            physics: appRefreshPhysics,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: HomeSearchBar(controller: _searchController),
+                ),
+                if (!loadingLayout && !isVerified)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: VerificationBanner(),
+                  ),
+                if (!isSearching) ...[
+                  AnimationWidget(
+                    child: QuickActionsSection(
+                      onUsedSystemsTap: () =>
+                          context.push(AppRoutes.usedProductScreen),
+                      onExpertTap: () => context.push(AppRoutes.askExpertScreen),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                ],
+                Skeletonizer(
+                  enabled: loadingLayout,
+                  child: Column(
+                    children: layout.where((section) => section.isActive).map((
+                      section,
+                    ) {
+                      final widget = sectionWidgets[section.key];
+                      if (widget == null) return const SizedBox.shrink();
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: widget,
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
-

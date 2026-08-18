@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/image_url_utils.dart';
@@ -34,6 +36,8 @@ class StoreInfoData {
   final int iconColorValue;
   final String? logoUrl;
   final String? coverImageUrl;
+  final double? latitude;
+  final double? longitude;
   final List<StoreCategoryItem> categories;
   final List<StoreProductItem> featuredProducts;
   final List<StoreProductItem> discountedProducts;
@@ -50,6 +54,8 @@ class StoreInfoData {
     required this.iconColorValue,
     this.logoUrl,
     this.coverImageUrl,
+    this.latitude,
+    this.longitude,
     required this.categories,
     required this.featuredProducts,
     this.discountedProducts = const [],
@@ -288,7 +294,7 @@ class _StoreInfoContent extends StatelessWidget {
                   child: StoreInfoHeaderSection(data: data),
                 ),
                 Positioned(
-                  top: 0.3.sh - 60.h,
+                  top: 0.18.sh ,
                   left: 16.w,
                   right: 16.w,
                   child: Container(
@@ -312,7 +318,7 @@ class _StoreInfoContent extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 0.3.sh - 100.h,
+                  top: 0.2.sh - 50.h,
                   left: 35.w,
                   child: _FloatingStoreLogoBadge(data: data),
                 ),
@@ -321,6 +327,8 @@ class _StoreInfoContent extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           StoreInfoCategoriesSection(categories: data.categories),
+          if(data.categories.isEmpty)
+          SizedBox(height:32.h),
           StoreInfoDiscountsSection(
             storeId: data.id,
             storeName: data.name,
@@ -344,6 +352,11 @@ class _StoreInfoContent extends StatelessWidget {
               );
             },
           ),
+          if (data.latitude != null && data.longitude != null)
+            _StoreInfoMapSection(
+              latitude: data.latitude!,
+              longitude: data.longitude!,
+            ),
           SizedBox(height: 16.h),
         ],
       ),
@@ -400,6 +413,60 @@ class _FloatingStoreLogoBadge extends StatelessWidget {
               fit: BoxFit.cover,
             )
           : Icon(data.iconData, color: AppColors.secondaryColor, size: 28.sp),
+    );
+  }
+}
+
+class _StoreInfoMapSection extends StatelessWidget {
+  final double latitude;
+  final double longitude;
+
+  const _StoreInfoMapSection({required this.latitude, required this.longitude});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200.h,
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: FlutterMap(
+        options: MapOptions(
+          initialCenter: LatLng(latitude, longitude),
+          initialZoom: 14,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+            subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
+            userAgentPackageName: 'com.example.untitled1',
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: LatLng(latitude, longitude),
+                width: 45.w,
+                height: 45.w,
+                child: const Icon(
+                  Icons.location_on,
+                  color: AppColors.red,
+                  size: 35,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

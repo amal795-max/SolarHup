@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/complaints/data/models/complaint_model.dart';
@@ -45,9 +46,9 @@ class _ComplaintDetailsScreenState extends State<ComplaintDetailsScreen> {
             style: AppStyle.h6,
           ),
           bottom: TabBar(
-            labelColor: AppColors.primaryColor,
+            labelColor: context.colorScheme.primary,
             unselectedLabelColor: AppColors.grey,
-            indicatorColor: AppColors.primaryColor,
+            indicatorColor: context.colorScheme.primary,
             indicatorWeight: 3,
             dividerColor: AppColors.lightGrey,
             tabs: [

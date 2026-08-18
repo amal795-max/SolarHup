@@ -60,8 +60,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 return Padding(
                   padding: EdgeInsets.only(right: 8.w),
                   child: ChoiceChip(
+                    checkmarkColor: context.colorScheme.onSurface,
                     padding: const EdgeInsets.symmetric(
-                      vertical: 4,
+                      vertical: 8,
                       horizontal: 8,
                     ),
                     shape: RoundedRectangleBorder(
@@ -76,7 +77,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                     label: Text(
                       category.name.tr(),
-                      style: AppStyle.labelMedium,
+                      style: AppStyle.labelMedium.copyWith(),
                     ),
                     selected: isSelected,
                     onSelected: (selected) {
@@ -260,6 +261,7 @@ class _FavoriteItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 12.h),
             child: Row(
               children: [
+                const SizedBox(width: 16),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),
                   child: SizedBox(
@@ -285,7 +287,6 @@ class _FavoriteItem extends StatelessWidget {
                         Text(
                           workshopSubtitle,
                           style: AppStyle.bodySmall.copyWith(
-                            color: AppColors.grey,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -294,7 +295,6 @@ class _FavoriteItem extends StatelessWidget {
                         Text(
                           _priceLabel!,
                           style: AppStyle.bodySmall.copyWith(
-                            color: AppColors.primaryColor,
                           ),
                         ),
                       Text(
@@ -302,7 +302,6 @@ class _FavoriteItem extends StatelessWidget {
                             ? 'available'.tr()
                             : 'unavailable'.tr(),
                         style: AppStyle.bodySmall.copyWith(
-                          color: AppColors.primaryColor,
                         ),
                       ),
                     ],

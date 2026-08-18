@@ -57,7 +57,7 @@ class OrderTrackingScreen extends StatelessWidget {
           return AppRefreshIndicator(
             onRefresh: () async {
               if (order.id != 0) {
-                await context.read<OrdersCubit>().getOrderDetails(order);
+                await context.read<OrdersCubit>().getOrderDetails(order.id);
               }
             },
             child: SingleChildScrollView(

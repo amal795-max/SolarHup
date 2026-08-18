@@ -31,5 +31,6 @@ void showLoader(BuildContext context) {
       return  const LoadingIndicator();
     },
 
+  // ignore: invalid_use_of_protected_member
   ).then((_) => loaderKey.currentState?.dispose());
 }

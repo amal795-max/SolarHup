@@ -87,8 +87,6 @@ class _CategoryChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final unselectedBg =
-    isDark ? AppColors.darkContainer : AppColors.white;
     final unselectedBorder =
     isDark ? AppColors.darkGray : AppColors.borderColor;
     final unselectedIconBg =

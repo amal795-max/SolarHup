@@ -119,7 +119,7 @@ class _OrderSummaryCard extends StatelessWidget {
                   ...order.items.map(
                     (item) => _SummaryRow(
                       label: '${item.name} x${item.quantity}',
-                      value: '${item.subtotal} \$',
+                      value: '${item.effectiveUnitPrice} \$',
                     ),
                   ),
                   _SummaryRow(
@@ -141,7 +141,7 @@ class _OrderSummaryCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${order.totalAmount} \$',
+                        '${order.effectiveTotalAmount.toStringAsFixed(2)} \$',
                         style: AppStyle.h4.copyWith(
                           color: AppColors.secondaryColor,
                         ),
@@ -231,7 +231,7 @@ class _BottomActionBar extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${order?.totalAmount ?? '0.00'} \$',
+                        '${order?.effectiveTotalAmount.toStringAsFixed(2) ?? '0.00'} \$',
                         style: AppStyle.h5,
                       ),
 

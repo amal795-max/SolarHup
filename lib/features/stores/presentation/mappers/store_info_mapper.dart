@@ -14,9 +14,6 @@ StoreInfoData storeDetailToInfoData(
   List<DiscountedProductModel> discountedProducts = const [],
   List<DiscountModel> discounts = const [],
 }) {
-  final categoryItems = categories.isNotEmpty
-      ? apiCategoriesToItems(categories)
-      : buildCategoriesFromProducts(products);
   final categoryNames = {
     for (final category in categories) category.id: category.name,
   };
@@ -66,6 +63,8 @@ StoreInfoData storeDetailToInfoData(
     iconColorValue: model.imagePlaceholderColorValue,
     logoUrl: model.logoUrl,
     coverImageUrl: model.coverImageUrl,
+    latitude: model.latitude,
+    longitude: model.longitude,
     categories: categoriesForStore(products, categoryNames),
     discountedProducts: discountItems,
     featuredProducts: featuredProducts,

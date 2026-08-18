@@ -11,6 +11,8 @@ class StoreApiModel {
   final String? logo;
   final String? coverImage;
   final DateTime createdAt;
+  final double? latitude;
+  final double? longitude;
 
   StoreApiModel({
     required this.id,
@@ -22,6 +24,8 @@ class StoreApiModel {
     required this.logo,
     required this.coverImage,
     required this.createdAt,
+    this.latitude,
+    this.longitude,
   });
 
   factory StoreApiModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class StoreApiModel {
       logo: json['logo'] as String?,
       coverImage: json['cover_image'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
+      latitude: (json['latitude'] as num?)?.toDouble() ?? (json['lat'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble() ?? (json['lng'] as num?)?.toDouble(),
     );
   }
 
@@ -54,6 +60,8 @@ class StoreApiModel {
       imagePlaceholderColorValue: _placeholderColor(id),
       logoUrl: logo,
       coverImageUrl: coverImage,
+      latitude: latitude,
+      longitude: longitude,
     );
   }
 }

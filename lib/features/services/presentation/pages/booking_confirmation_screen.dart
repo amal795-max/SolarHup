@@ -1,20 +1,17 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/constants/debendency_injection.dart';
-import 'package:untitled1/core/routing/app_routes.dart';
+import 'package:untitled1/core/helper/data_helper.dart';
+import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/reviews/presentation/bloc/reviews_cubit.dart';
 import 'package:untitled1/features/services/data/models/booking_confirmation_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
 import 'package:untitled1/features/services/presentation/widgets/booking_appointment_details_section.dart';
-import 'package:untitled1/features/services/presentation/widgets/booking_confirmation_actions_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/booking_confirmation_header_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/booking_rate_service_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/booking_whats_next_section.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
-import 'package:untitled1/widgets/back_button_widget.dart';
 
 class BookingConfirmationScreen extends StatefulWidget {
   final BookingConfirmationModel booking;
@@ -82,14 +79,11 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
           _booking = state.request.toBookingConfirmation();
         });
       }
+        DataHelper.showSnackBar(message: 'service_request_cancelled_success', context: context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('service_request_cancelled_success'.tr())),
-      );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('stores_error_title'.tr())),
-      );
+      DataHelper.showSnackBar(message: 'stores_error_title', context: context,color: AppColors.red);
+
     }
   }
 
@@ -126,11 +120,11 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
             titleKey: widget.headerTitleKey,
             subtitleKey: widget.headerSubtitleKey,
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 16.h),
           BookingAppointmentDetailsSection(
             booking: _booking,
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 16.h),
           if (_booking.isCompleted)
             BlocProvider(
               create: (_) => getIt<ReviewsCubit>(),
@@ -156,24 +150,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            if (widget.showBackButton)
-              Padding(
-                padding: EdgeInsets.fromLTRB(8.w, 4.h, 16.w, 0),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: BackButtonWidget(),
-                ),
-              ),
+
             Expanded(child: refreshableScroll),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 16.h),
-              child: BookingConfirmationActionsSection(
-                showCancelButton: _canCancel,
-                isCancelling: _isCancelling,
-                onCancelTap: _cancelRequest,
-                onBackHomeTap: () => context.go(AppRoutes.bottomNavBar),
-              ),
-            ),
+
           ],
         ),
       ),

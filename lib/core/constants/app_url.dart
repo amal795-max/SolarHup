@@ -61,7 +61,6 @@ class EndPoints {
   static String updateProduct(int id) => '${baseUrl}used-products/me/$id';
 
   static const String favorites = '${baseUrl}favorites';
-  static const String _orders = '${baseUrl}orders';
   static const String myOrders = '${baseUrl}orders/me';
   static String orderDetails(int id) => '${baseUrl}orders/$id';
   static const String cart = '${baseUrl}orders/cart';

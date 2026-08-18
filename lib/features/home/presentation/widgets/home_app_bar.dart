@@ -10,7 +10,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key, this.onCartTap});
 
   @override
-  Size get preferredSize => Size.fromHeight(75.h);
+  Size get preferredSize => Size.fromHeight(0.09.sh);
 
   @override
   Widget build(BuildContext context) {

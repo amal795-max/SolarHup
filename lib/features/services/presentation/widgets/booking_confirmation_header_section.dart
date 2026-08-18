@@ -24,8 +24,8 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 88.w,
-          height: 88.w,
+          width: 80.w,
+          height: 80.w,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.secondaryColor.withValues(alpha: isDark ? 0.2 : 0.35),
@@ -39,21 +39,21 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
           ),
           child: Center(
             child: Container(
-              width: 64.w,
-              height: 64.w,
+              width: 60.w,
+              height: 60.w,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.secondaryColor,
               ),
               child: Icon(
                 Icons.check_rounded,
-                color: AppColors.primaryColor,
+                color: AppColors.brown,
                 size: 36.sp,
               ),
             ),
           ),
         ),
-        SizedBox(height: 20.h),
+        SizedBox(height: 12.h),
         Text(
           (titleKey ?? 'booking_confirmed_title').tr(),
           textAlign: TextAlign.center,
@@ -62,7 +62,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
             color: titleColor,
           ),
         ),
-        SizedBox(height: 8.h),
+        SizedBox(height: 4.h),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(

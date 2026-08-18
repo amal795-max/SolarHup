@@ -10,6 +10,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/authentication/presentation/bloc/reset_password/reset_password_cubit.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/header.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../widgets/white_section_widget.dart';
@@ -29,7 +30,9 @@ class ResetPasswordScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
       ),
-      body: BlocListener<ResetPasswordCubit, ResetPasswordState>(
+      body: BlocConsumer<ResetPasswordCubit, ResetPasswordState>(
+        listenWhen: (previous, current) => current is ResetPasswordSuccess || current is ResetPasswordFailure,
+        buildWhen: (previous, current) => current is ResetPasswordLoading,
         listener: (context, state) {
           if (state is ResetPasswordSuccess) {
             DataHelper.showSnackBar(
@@ -45,7 +48,11 @@ class ResetPasswordScreen extends StatelessWidget {
             );
           }
         },
-        child: SafeArea(
+       builder: (BuildContext context, ResetPasswordState state) { 
+        if( state is ResetPasswordLoading){
+          return const LoadingIndicator();
+        }
+        return SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(20.w),
             child: Form(
@@ -92,7 +99,6 @@ class ResetPasswordScreen extends StatelessWidget {
                           builder: (context, state) {
                             return CustomButton(
                               text: 'reset'.tr(),
-                              isLoading: state is ResetPasswordLoading,
                               onPressed: () {
                                 cubit.setNewPassword();
                               },
@@ -108,7 +114,7 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        );}
       ),
     );
   }
