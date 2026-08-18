@@ -116,7 +116,7 @@ class _TopSellingProductsView extends StatelessWidget {
                           .read<TopSellingProductsCubit>()
                           .loadTopSellingProducts(),
                       child: ListView(
-                        physics: appRefreshPhysics,
+                        physics: appEmptyRefreshPhysics,
                         children: [
                           EmptyWidget(
                             icon: Icons.trending_up_rounded,

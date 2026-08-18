@@ -79,7 +79,7 @@ class _AllQuestionsScreenState extends State<AllQuestionsScreen> {
                       onRefresh: () =>
                           context.read<FaqCubit>().getFaqs(),
                       child: ListView(
-                        physics: appRefreshPhysics,
+                        physics: appEmptyRefreshPhysics,
                         children: [
                           EmptyWidget(
                             icon: Icons.search_off_rounded,

@@ -10,6 +10,7 @@ import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_state.dart';
 import 'package:untitled1/features/product_compare/data/models/compare_product_model.dart';
+import 'package:untitled1/features/product_compare/presentation/mappers/compare_spec_evaluator.dart';
 import 'package:untitled1/features/product_compare/presentation/mappers/compare_spec_mapper.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
@@ -190,18 +191,6 @@ class _CompareProductCard extends StatelessWidget {
                         height: 1.25,
                       ),
                     ),
-                    if (product != null) ...[
-                      SizedBox(height: 6.h),
-                      Text(
-                        product!.storeName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppStyle.bodySmall.copyWith(
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ),
@@ -271,6 +260,110 @@ class _EmptyProductPlaceholder extends StatelessWidget {
   }
 }
 
+/// Shared shell for compare values — winner and loser keep identical size.
+class _CompareValueShell extends StatelessWidget {
+  final bool isWinner;
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  const _CompareValueShell({
+    required this.isWinner,
+    required this.child,
+    this.padding = EdgeInsets.zero,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = context.brightness;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      fit: StackFit.expand,
+      children: [
+        Container(
+          width: double.infinity,
+          padding: padding,
+          decoration: BoxDecoration(
+            color: isWinner
+                ? AppColors.green.withValues(alpha: isDark ? 0.14 : 0.07)
+                : Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: isWinner
+                  ? AppColors.green.withValues(alpha: 0.55)
+                  : Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.14),
+              width: 1.5,
+            ),
+            boxShadow: [
+              if (!isDark)
+                BoxShadow(
+                  color: isWinner
+                      ? AppColors.green.withValues(alpha: 0.14)
+                      : AppColors.shadowColor,
+                  blurRadius: isWinner ? 12 : 10,
+                  offset: const Offset(0, 4),
+                ),
+            ],
+          ),
+          child: Align(
+            alignment: Alignment.center,
+            child: child,
+          ),
+        ),
+        if (isWinner)
+          Positioned(
+            top: 8.h,
+            right: 8.w,
+            child: _CompareWinnerBadge(),
+          ),
+      ],
+    );
+  }
+}
+
+class _CompareWinnerBadge extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.green,
+            AppColors.green.withValues(alpha: 0.85),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(999.r),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.green.withValues(alpha: 0.35),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.emoji_events_rounded, size: 11.sp, color: AppColors.white),
+          SizedBox(width: 4.w),
+          Text(
+            'compare_best_value'.tr(),
+            style: AppStyle.labelSmall.copyWith(
+              color: AppColors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 9.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ComparePricingSection extends StatelessWidget {
   final CompareProduct? firstProduct;
   final CompareProduct? secondProduct;
@@ -286,6 +379,10 @@ class ComparePricingSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final valueColor = isDark ? AppColors.blue : AppColors.primaryColor;
+    final priceWinner = evaluatePriceWinner(
+      leftPrice: firstProduct?.detail.currentPrice,
+      rightPrice: secondProduct?.detail.currentPrice,
+    );
 
     return container(
       context: context,
@@ -307,22 +404,27 @@ class ComparePricingSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 18.h),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _PriceColumn(
-                  product: firstProduct,
-                  valueColor: valueColor,
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _PriceColumn(
+                    product: firstProduct,
+                    valueColor: valueColor,
+                    isWinner: priceWinner == CompareSpecWinner.left,
+                  ),
                 ),
-              ),
-              Expanded(
-                child: _PriceColumn(
-                  product: secondProduct,
-                  valueColor: valueColor,
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: _PriceColumn(
+                    product: secondProduct,
+                    valueColor: valueColor,
+                    isWinner: priceWinner == CompareSpecWinner.right,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -333,64 +435,81 @@ class ComparePricingSection extends StatelessWidget {
 class _PriceColumn extends StatelessWidget {
   final CompareProduct? product;
   final Color valueColor;
+  final bool isWinner;
 
   const _PriceColumn({
     required this.product,
     required this.valueColor,
+    this.isWinner = false,
+  });
+
+  static EdgeInsets get _padding =>
+      EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h);
+
+  @override
+  Widget build(BuildContext context) {
+    return _CompareValueShell(
+      isWinner: isWinner,
+      padding: _padding,
+      child: _PriceContent(
+        originalPrice: product?.detail.hasDiscount == true
+            ? product!.detail.originalPrice
+            : null,
+        currentPrice: product?.detail.currentPrice,
+        valueColor: valueColor,
+        isWinner: isWinner,
+      ),
+    );
+  }
+}
+
+class _PriceContent extends StatelessWidget {
+  final double? originalPrice;
+  final double? currentPrice;
+  final Color valueColor;
+  final bool isWinner;
+
+  const _PriceContent({
+    required this.originalPrice,
+    required this.currentPrice,
+    required this.valueColor,
+    required this.isWinner,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (product == null) {
-      return Text(
-        '—',
-        textAlign: TextAlign.center,
-        style: AppStyle.h4.copyWith(
-          fontWeight: FontWeight.w800,
-          color: AppColors.grey,
+    final hasOriginal = originalPrice != null;
+    final priceColor = isWinner ? AppColors.green : valueColor;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          hasOriginal ? _formatPrice(originalPrice!) : _formatPrice(0),
+          textAlign: TextAlign.center,
+          style: AppStyle.bodyMedium.copyWith(
+            color: hasOriginal ? AppColors.grey : Colors.transparent,
+            decoration:
+                hasOriginal ? TextDecoration.lineThrough : TextDecoration.none,
+            decorationColor: hasOriginal ? AppColors.grey : Colors.transparent,
+            height: 1.2,
+          ),
         ),
-      );
-    }
-
-    final detail = product!.detail;
-
-    if (detail.hasDiscount) {
-      return Column(
-        children: [
-          Text(
-            _formatPrice(detail.originalPrice!),
-            textAlign: TextAlign.center,
-            style: AppStyle.bodyMedium.copyWith(
-              color: AppColors.grey,
-              decoration: TextDecoration.lineThrough,
-              decorationColor: AppColors.grey,
-            ),
+        SizedBox(height: 4.h),
+        Text(
+          currentPrice != null ? _formatPrice(currentPrice!) : '—',
+          textAlign: TextAlign.center,
+          style: AppStyle.h4.copyWith(
+            fontWeight: FontWeight.w800,
+            color: currentPrice != null ? priceColor : AppColors.grey,
           ),
-          SizedBox(height: 4.h),
-          Text(
-            _formatPrice(detail.currentPrice),
-            textAlign: TextAlign.center,
-            style: AppStyle.h4.copyWith(
-              fontWeight: FontWeight.w800,
-              color: valueColor,
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Text(
-      _formatPrice(detail.currentPrice),
-      textAlign: TextAlign.center,
-      style: AppStyle.h4.copyWith(
-        fontWeight: FontWeight.w800,
-        color: valueColor,
-      ),
+        ),
+      ],
     );
   }
 
-  String _formatPrice(double price) =>
-      '\$${price.toStringAsFixed(2)}';
+  String _formatPrice(double price) => '\$${price.toStringAsFixed(2)}';
 }
 
 class CompareSpecsSection extends StatelessWidget {
@@ -420,6 +539,7 @@ class CompareSpecsSection extends StatelessWidget {
                     value: rows[i].leftValue,
                     icon: rows[i].icon,
                     height: _cardHeight,
+                    isWinner: rows[i].winner == CompareSpecWinner.left,
                   ),
                 ),
                 SizedBox(width: 10.w),
@@ -429,7 +549,7 @@ class CompareSpecsSection extends StatelessWidget {
                     value: rows[i].rightValue,
                     icon: rows[i].icon,
                     height: _cardHeight,
-                    emphasizeValue: true,
+                    isWinner: rows[i].winner == CompareSpecWinner.right,
                   ),
                 ),
               ],
@@ -446,29 +566,30 @@ class _ProductSpecCard extends StatelessWidget {
   final String? value;
   final IconData? icon;
   final double height;
-  final bool emphasizeValue;
+  final bool isWinner;
 
   const _ProductSpecCard({
     required this.labelKey,
     required this.value,
     required this.height,
     this.icon,
-    this.emphasizeValue = false,
+    this.isWinner = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final valueColor = emphasizeValue
-        ? (isDark ? AppColors.blue : AppColors.primaryColor)
-        : AppColors.grey;
+    final valueColor = isWinner
+        ? AppColors.green
+        : (isDark ? AppColors.blue : AppColors.primaryColor);
     final iconColor = _iconColorForKey(labelKey);
     final resolvedIcon = icon ?? _iconForKey(labelKey);
 
     return SizedBox(
       height: height.h,
-      child: container(
-        context: context,
+      child: _CompareValueShell(
+        isWinner: isWinner,
+        padding: EdgeInsets.all(16.w),
         child: Scrollbar(
           thumbVisibility: false,
           child: SingleChildScrollView(
@@ -500,8 +621,7 @@ class _ProductSpecCard extends StatelessWidget {
                 Text(
                   value ?? '—',
                   style: AppStyle.h6.copyWith(
-                    fontWeight:
-                        emphasizeValue ? FontWeight.w800 : FontWeight.w700,
+                    fontWeight: FontWeight.w800,
                     color: valueColor,
                     fontSize: 16.sp,
                     height: 1.2,

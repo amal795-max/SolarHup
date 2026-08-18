@@ -126,7 +126,7 @@ class MyListingScreen extends StatelessWidget {
       return AppRefreshIndicator(
         onRefresh: () => context.read<UsedSystemCubit>().getMyUsedProducts(),
         child: ListView(
-          physics: appRefreshPhysics,
+          physics: appEmptyRefreshPhysics,
           children: const [EmptyWidget()],
         ),
       );

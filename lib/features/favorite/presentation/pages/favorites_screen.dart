@@ -151,7 +151,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           .read<FavoritesCubit>()
                           .loadFavorites(selectedCategory),
                       child: ListView(
-                        physics: appRefreshPhysics,
+                        physics: appEmptyRefreshPhysics,
                         children: [
                           EmptyWidget(
                             icon: Icons.favorite_border_rounded,

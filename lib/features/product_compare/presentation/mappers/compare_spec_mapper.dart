@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show IconData;
 import 'package:untitled1/features/product_compare/data/models/compare_product_model.dart';
+import 'package:untitled1/features/product_compare/presentation/mappers/compare_spec_evaluator.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 
 List<CompareSpecRow> buildCompareSpecRows({
@@ -15,6 +16,7 @@ List<CompareSpecRow> buildCompareSpecRows({
     if (detail == null) return;
 
     for (final spec in detail.highlightSpecs) {
+      if (!isComparableSpecKey(spec.labelKey)) continue;
       orderedKeys.addIfAbsent(spec.labelKey);
       if (isLeft) {
         leftValues[spec.labelKey] = spec.value;
@@ -25,6 +27,7 @@ List<CompareSpecRow> buildCompareSpecRows({
     }
 
     for (final row in detail.technicalRows) {
+      if (!isComparableSpecKey(row.labelKey)) continue;
       orderedKeys.addIfAbsent(row.labelKey);
       if (isLeft) {
         leftValues[row.labelKey] = row.value;
@@ -38,14 +41,24 @@ List<CompareSpecRow> buildCompareSpecRows({
   absorb(second?.detail, isLeft: false);
 
   return orderedKeys
-      .map(
-        (key) => CompareSpecRow(
+      .map((key) {
+        final leftValue = leftValues[key];
+        final rightValue = rightValues[key];
+        if (leftValue == null && rightValue == null) return null;
+
+        return CompareSpecRow(
           labelKey: key,
-          leftValue: leftValues[key],
-          rightValue: rightValues[key],
+          leftValue: leftValue,
+          rightValue: rightValue,
           icon: icons[key],
-        ),
-      )
+          winner: evaluateSpecWinner(
+            labelKey: key,
+            leftValue: leftValue,
+            rightValue: rightValue,
+          ),
+        );
+      })
+      .whereType<CompareSpecRow>()
       .toList(growable: false);
 }
 

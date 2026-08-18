@@ -520,6 +520,7 @@
   "compare_replace_prompt": "Both compare slots are full. Which one should be replaced?",
   "compare_replace": "Start over",
   "compare_clear": "Clear compare",
+  "compare_best_value": "Best",
   "compare_pick_first_hint": "Choose the first product before picking the second one.",
   "compare_pick_second_hint": "Choose a second product from the same category to complete the comparison.",
   "badge_basic": "BASIC",

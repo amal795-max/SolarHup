@@ -8,6 +8,7 @@ import 'package:untitled1/features/product_compare/presentation/mappers/compare_
 import 'package:untitled1/features/product_compare/presentation/widgets/compare_product_picker_sheet.dart';
 import 'package:untitled1/features/product_compare/presentation/widgets/compare_sections.dart';
 import 'package:untitled1/features/product_compare/presentation/widgets/compare_vs_celebration.dart';
+import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
@@ -21,15 +22,6 @@ class ProductCompareScreen extends StatefulWidget {
 }
 
 class _ProductCompareScreenState extends State<ProductCompareScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      context.read<CompareSessionCubit>().refreshSelectedProducts();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return const _ProductCompareView();
@@ -129,10 +121,15 @@ class _ProductCompareViewState extends State<_ProductCompareView> {
                 Expanded(
                   child: Stack(
                     children: [
-                      SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
-                        child: Column(
+                      AppRefreshIndicator(
+                        onRefresh: () => context
+                            .read<CompareSessionCubit>()
+                            .refreshSelectedProducts(),
+                        child: SingleChildScrollView(
+                          physics: appRefreshPhysics,
+                          padding:
+                              EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
+                          child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CompareHeaderSection(category: state.lockedCategory),
@@ -169,6 +166,7 @@ class _ProductCompareViewState extends State<_ProductCompareView> {
                               ),
                             ],
                           ],
+                        ),
                         ),
                       ),
                       if (state.isLoading)

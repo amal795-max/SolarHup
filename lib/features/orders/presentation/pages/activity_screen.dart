@@ -117,7 +117,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
           return AppRefreshIndicator(
             onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
             child: ListView(
-              physics: appRefreshPhysics,
+              physics: appEmptyRefreshPhysics,
               children: [
                 EmptyWidget(
                   icon: Icons.receipt_long_outlined,
@@ -210,7 +210,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
             onRefresh: () async =>
                 context.read<ServiceRequestsCubit>().loadMyRequests(),
             child: ListView(
-              physics: appRefreshPhysics,
+              physics: appEmptyRefreshPhysics,
               children: [
                 EmptyWidget(
                   icon: Icons.build_circle_outlined,

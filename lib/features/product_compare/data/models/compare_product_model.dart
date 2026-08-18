@@ -64,19 +64,23 @@ class CompareProductListItem extends Equatable {
       ];
 }
 
+enum CompareSpecWinner { none, left, right, tie }
+
 class CompareSpecRow extends Equatable {
   final String labelKey;
   final String? leftValue;
   final String? rightValue;
   final IconData? icon;
+  final CompareSpecWinner winner;
 
   const CompareSpecRow({
     required this.labelKey,
     this.leftValue,
     this.rightValue,
     this.icon,
+    this.winner = CompareSpecWinner.none,
   });
 
   @override
-  List<Object?> get props => [labelKey, leftValue, rightValue, icon];
+  List<Object?> get props => [labelKey, leftValue, rightValue, icon, winner];
 }

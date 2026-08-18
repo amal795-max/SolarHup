@@ -113,7 +113,7 @@ class _UsedProductsScreenState extends State<UsedProductsScreen> {
       return AppRefreshIndicator(
         onRefresh: () => context.read<UsedSystemCubit>().getUsedProducts(),
         child: ListView(
-          physics: appRefreshPhysics,
+          physics: appEmptyRefreshPhysics,
           children: const [
             EmptyWidget(subtitle: '', title: 'not_used_systems_found'),
           ],

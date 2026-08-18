@@ -109,7 +109,7 @@ class _MyComplaintsScreenState extends State<MyComplaintsScreen> {
                     onRefresh: () async =>
                         context.read<ComplaintCubit>().getMyComplaints(),
                     child: ListView(
-                      physics: appRefreshPhysics,
+                      physics: appEmptyRefreshPhysics,
                       children: const [
                         EmptyWidget(
                           icon: Icons.assignment_late_outlined,

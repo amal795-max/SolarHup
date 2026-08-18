@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 
-/// Shared pull-to-refresh physics so overscroll works even on short content.
-const ScrollPhysics appRefreshPhysics = AlwaysScrollableScrollPhysics(
+/// Default scroll physics for pull-to-refresh lists.
+const ScrollPhysics appRefreshPhysics = BouncingScrollPhysics();
+
+/// Use for short or empty lists so pull-to-refresh still works at the top.
+const ScrollPhysics appEmptyRefreshPhysics = AlwaysScrollableScrollPhysics(
   parent: BouncingScrollPhysics(),
 );
 
 /// Branded pull-to-refresh with a rotating sun while data reloads.
+///
+/// Reload runs only when the scroll view is already at the top and the user
+/// pulls down — the standard pull-to-refresh behavior.
 class AppRefreshIndicator extends StatefulWidget {
   final Future<void> Function()? onRefresh;
   final Widget child;
@@ -32,6 +38,14 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator>
   late final AnimationController _sunController;
   bool _isRefreshing = false;
 
+  /// Starts false so refresh never fires before we know scroll position.
+  bool _dragStartedAtTop = false;
+  double _scrollPixels = 0;
+  double _minScrollExtent = 0;
+  bool _hasScrollMetrics = false;
+
+  static const double _topTolerance = 1.0;
+
   @override
   void initState() {
     super.initState();
@@ -47,9 +61,41 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator>
     super.dispose();
   }
 
+  bool get _isAtScrollTop {
+    if (!_hasScrollMetrics) return false;
+    return _scrollPixels <= _minScrollExtent + _topTolerance;
+  }
+
+  void _trackScrollNotification(ScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) return;
+    if (notification.depth != 0) return;
+
+    _hasScrollMetrics = true;
+    _scrollPixels = notification.metrics.pixels;
+    _minScrollExtent = notification.metrics.minScrollExtent;
+
+    if (notification is ScrollStartNotification) {
+      _dragStartedAtTop =
+          notification.dragDetails != null && _isAtScrollTop;
+    } else if (notification is ScrollEndNotification) {
+      _dragStartedAtTop = false;
+    }
+  }
+
+  bool _notificationPredicate(ScrollNotification notification) {
+    _trackScrollNotification(notification);
+    return notification.depth == 0 &&
+        notification.metrics.axis == Axis.vertical;
+  }
+
+  bool get _canRefresh =>
+      _dragStartedAtTop && _isAtScrollTop && !_isRefreshing;
+
   Future<void> _handleRefresh() async {
     final refresh = widget.onRefresh;
-    if (refresh == null || _isRefreshing) return;
+    if (refresh == null || !_canRefresh) {
+      return;
+    }
 
     setState(() => _isRefreshing = true);
     _sunController.repeat();
@@ -60,7 +106,10 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator>
         _sunController
           ..stop()
           ..reset();
-        setState(() => _isRefreshing = false);
+        setState(() {
+          _isRefreshing = false;
+          _dragStartedAtTop = false;
+        });
       }
     }
   }
@@ -77,6 +126,8 @@ class _AppRefreshIndicatorState extends State<AppRefreshIndicator>
       children: [
         RefreshIndicator(
           onRefresh: _handleRefresh,
+          triggerMode: RefreshIndicatorTriggerMode.onEdge,
+          notificationPredicate: _notificationPredicate,
           color: Colors.transparent,
           backgroundColor: Colors.transparent,
           displacement: widget.displacement,

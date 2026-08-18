@@ -43,7 +43,6 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         currentIndex: selectedIndex,
         onTap: (index) => setState(() => selectedIndex = index),
         items: [
-
           BottomNavigationBarItem(
             icon: const Icon(Icons.home_outlined),
             activeIcon: const Icon(Icons.home),
@@ -68,7 +67,8 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             icon: const Icon(Icons.person_2_outlined),
             activeIcon: const Icon(Icons.person),
             label: 'nav_profile'.tr(),
-          ), ],
+          ),
+        ],
       ),
     );
   }

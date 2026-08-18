@@ -168,6 +168,7 @@
   "compare_replace_prompt": " خانتا المقارنة ممتلئتان. أي منتج تريد استبداله؟",
   "compare_replace": "البدء من جديد",
   "compare_clear": "مسح المقارنة",
+  "compare_best_value": "الأفضل",
   "compare_pick_first_hint": "اختر المنتج الأول قبل اختيار الثاني.",
   "compare_pick_second_hint": "اختر منتجاً ثانياً من نفس الفئة لإكمال المقارنة.",
   "home_compare_desc": "قارن منتجين من نفس الفئة",

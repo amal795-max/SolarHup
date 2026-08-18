@@ -136,7 +136,7 @@ class _DiscountedProductsView extends StatelessWidget {
                               .read<DiscountedProductsCubit>()
                               .loadDiscountedProducts(),
                           child: ListView(
-                            physics: appRefreshPhysics,
+                            physics: appEmptyRefreshPhysics,
                             children: [
                               EmptyWidget(
                                 icon: Icons.local_offer_outlined,
