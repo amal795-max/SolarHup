@@ -62,14 +62,15 @@ class RecommendedProduct extends Equatable {
 }
 class ProductModel extends Equatable {
   final int id;
-  final int businessId;
-  final int categoryId;
-  final String name;
-  final String description;
+  final int? businessId;
+  final int? categoryId;
+  final String ? name;
+  final String ? description;
   final String price;
   final int quantity;
   final List<String> images;
   final bool isAvailable;
+  final String reason;
   final String createdAt;
   final String updatedAt;
 
@@ -83,6 +84,7 @@ class ProductModel extends Equatable {
     required this.quantity,
     required this.images,
     required this.isAvailable,
+    required this.reason,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -98,6 +100,7 @@ class ProductModel extends Equatable {
       quantity: json['quantity'] ?? 0,
       images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       isAvailable: json['is_available'] ?? false,
+      reason: json['reason'] ?? '',
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
     );

@@ -141,7 +141,7 @@ class _SendButton extends StatelessWidget {
               height: 20.sp,
               width: 20.sp,
               child: const CircularProgressIndicator(
-                color: Colors.white,
+                color: AppColors.tertiaryColor,
                 strokeWidth: 2,
               ),
             )

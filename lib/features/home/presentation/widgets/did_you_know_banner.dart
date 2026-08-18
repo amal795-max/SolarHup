@@ -9,10 +9,7 @@ import 'package:untitled1/features/home/data/models/tip_model.dart';
 class DidYouKnowBanner extends StatefulWidget {
   final List<TipModel> tips;
 
-  const DidYouKnowBanner({
-    super.key,
-    required this.tips,
-  });
+  const DidYouKnowBanner({super.key, required this.tips});
 
   @override
   State<DidYouKnowBanner> createState() => _DidYouKnowBannerState();
@@ -95,7 +92,10 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
-                  padding: EdgeInsets.symmetric(vertical:8.w,horizontal: 10.w),
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.w,
+                    horizontal: 10.w,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(18.r),
@@ -115,7 +115,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                                 color: AppColors.lightGrey,
                               ),
                               textAlign: TextAlign.center,
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -133,7 +133,7 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                           height: 1.4,
                         ),
                         textAlign: TextAlign.center,
-                        maxLines: 4,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],

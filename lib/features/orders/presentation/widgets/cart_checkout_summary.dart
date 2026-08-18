@@ -68,13 +68,7 @@ class CartCheckoutSummary extends StatelessWidget {
             valueStyle: valueStyle,
           ),
         ],
-        _SummaryRow(
-          label: 'shipping'.tr(),
-          value: 'free'.tr(),
-          labelStyle: labelStyle,
-          valueStyle: valueStyle?.copyWith(color: AppColors.secondaryColor) ??
-              const TextStyle(color: AppColors.secondaryColor),
-        ),
+
         Padding(
           padding: EdgeInsets.symmetric(vertical: 12.h),
           child: Divider(color: dividerColor.withValues(alpha: 0.2)),

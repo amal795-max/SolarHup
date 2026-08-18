@@ -8,7 +8,7 @@ class ServerFailure extends Failure {
 }
 
 class OfflineFailure extends Failure {
-  const OfflineFailure() : super('No internet connection');
+  const OfflineFailure() : super('offline_failure_message');
 }
 
 class CacheFailure extends Failure {

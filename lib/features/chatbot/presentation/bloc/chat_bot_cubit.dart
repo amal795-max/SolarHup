@@ -56,7 +56,8 @@ class ChatBotCubit extends Cubit<ChatBotState> {
   }
 
   void recommend() async {
-    emit(ChatBotLoading());
+    deleteImage();
+ emit(ChatBotLoading());
     final params = RecommendParams(
       message: messageController.text.trim(),
       budget: budgetController.text.trim(),
@@ -66,7 +67,6 @@ class ChatBotCubit extends Cubit<ChatBotState> {
 
     messageController.clear();
     selectedImagePath = null;
-    deleteImage();
 
     final result = await repository.recommend(params);
 

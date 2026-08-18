@@ -22,19 +22,24 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(milliseconds: 3000), () async {
+      if (!mounted) return;
+
       final onboardingCompleted = LocalStorage().getData(
         key: StorageKeys.onboardingCompleted,
         defaultValue: false,
-      );
+      ) ?? false;
 
       if (!onboardingCompleted) {
         context.go(AppRoutes.onboardingScreen);
-      } else if (AuthSession.isLoggedIn) {
+        return;
+      }
+
+      if (AuthSession.isLoggedIn) {
         context.go(AppRoutes.bottomNavBar);
       } else {
         await AuthSession.clear();
+        if (!mounted) return;
         context.go(AppRoutes.authenticationScreen);
       }
     });

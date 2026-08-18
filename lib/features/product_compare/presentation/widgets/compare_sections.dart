@@ -517,7 +517,7 @@ class CompareSpecsSection extends StatelessWidget {
 
   const CompareSpecsSection({super.key, required this.rows});
 
-  static const double _cardHeight = 118;
+  static  double get _cardHeight => 130.h;
 
   @override
   Widget build(BuildContext context) {
@@ -766,8 +766,6 @@ class _AddToCartButton extends StatelessWidget {
     return CustomButton(
       text: 'product_detail_add_to_cart'.tr(),
       type: outlined ? ButtonType.outlined : ButtonType.filled,
-      icon: Icons.add_shopping_cart_rounded,
-      iconLeft: true,
       isLoading: isLoading,
       onPressed: canAdd ? onPressed : null,
     );
