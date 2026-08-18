@@ -194,7 +194,7 @@ class SettingsScreen extends StatelessWidget {
           return Column(
             children: [
               child,
-              Divider(height: 1, indent: 16.w, endIndent: 16.w),
+              Divider(height: 1.h, indent: 16.w, endIndent: 16.w),
             ],
           );
         }).toList(),

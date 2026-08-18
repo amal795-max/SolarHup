@@ -90,7 +90,7 @@ class _QuickActionCard extends StatelessWidget {
                   ],
           ),
           child: SizedBox(
-            height: 130.h,
+            height: 140.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
@@ -118,7 +118,7 @@ class _QuickActionCard extends StatelessWidget {
                 SizedBox(height: 2.h),
                 Expanded(
                   child: Text(
-                    subtitle,
+                    subtitle,maxLines: 2,
                     overflow: TextOverflow.visible,
                     style: AppStyle.labelXSmall.copyWith(color: AppColors.grey),
                   ),

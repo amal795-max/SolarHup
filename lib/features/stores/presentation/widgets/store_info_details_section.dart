@@ -38,7 +38,6 @@ class StoreInfoDetailsSection extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 14.h),
 
           // ─────────────── Store Name + Rating ───────────────
           Row(

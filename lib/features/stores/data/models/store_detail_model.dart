@@ -11,6 +11,8 @@ class StoreDetailModel {
   final String? coverImageUrl;
   final int imagePlaceholderColorValue;
   final String iconType;
+  final double? latitude;
+  final double? longitude;
 
   const StoreDetailModel({
     required this.id,
@@ -23,6 +25,8 @@ class StoreDetailModel {
     required this.coverImageUrl,
     required this.imagePlaceholderColorValue,
     required this.iconType,
+    this.latitude,
+    this.longitude,
   });
 
   factory StoreDetailModel.fromApi(StoreApiModel api) {
@@ -37,6 +41,8 @@ class StoreDetailModel {
       coverImageUrl: api.coverImage,
       imagePlaceholderColorValue: _placeholderColor(api.id),
       iconType: _iconType(api.id),
+      latitude: api.latitude,
+      longitude: api.longitude,
     );
   }
 }

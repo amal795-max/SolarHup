@@ -13,6 +13,7 @@ import 'package:untitled1/features/stores/data/models/store_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/stores_cubit.dart';
 import 'package:untitled1/features/stores/presentation/widgets/store_card.dart';
 import 'package:untitled1/features/stores/presentation/widgets/stores_search_bar.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/error_widget.dart';
@@ -100,6 +101,8 @@ class _StoresViewState extends State<_StoresView> {
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     logoUrl: m.logoUrl,
     coverImageUrl: m.coverImageUrl,
+    latitude: m.latitude,
+    longitude: m.longitude,
   );
 
   IconData _iconForType(String type) => switch (type) {
@@ -230,9 +233,11 @@ class _StoresViewState extends State<_StoresView> {
               delegate: SliverChildBuilderDelegate((context, i) {
                 return Skeletonizer(
                   enabled: isLoading,
-                  child: StoreCard(
-                    data: filtered[i],
-                    onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+                  child: AnimationWidget(
+                    child: StoreCard(
+                      data: filtered[i],
+                      onTap: isLoading ? null : () => _onStoreTap(filtered[i]),
+                    ),
                   ),
                 );
               }, childCount: filtered.length),

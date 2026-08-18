@@ -14,12 +14,11 @@ import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
 import 'package:untitled1/features/services/data/models/service_request_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
+import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
-import 'package:untitled1/widgets/text_with_icon.dart';
-
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
@@ -140,7 +139,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       return;
                     }
 
-                    context.read<OrdersCubit>().getOrderDetails(order);
+                    context.read<OrdersCubit>().getOrderDetails(order.id);
                     context.push(AppRoutes.orderTrackingScreen, extra: order);
                   },
                   child: _OrderCard(
@@ -316,53 +315,55 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return container(
-      context: context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.r),
+    return AnimationWidget(
+      child: container(
+        context: context,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Icon(
+                    Icons.shopping_bag_outlined,
+                    color: AppColors.primaryColor,
+                    size: 20.sp,
+                  ),
                 ),
-                child: Icon(
-                  Icons.shopping_bag_outlined,
-                  color: AppColors.primaryColor,
-                  size: 20.sp,
+                StatusOrderService(text: status.status.tr(), color: status),
+              ],
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              orderCode,
+              style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
+            ),
+            Text(
+              date,
+              style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+            ),
+            Divider(color: AppColors.borderColor),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'total_price_label'.tr(),
+                  style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
                 ),
-              ),
-              StatusOrderService(text: status.status.tr(), color: status),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            orderCode,
-            style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-          ),
-          Text(
-            date,
-            style: AppStyle.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Divider(color: AppColors.borderColor),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'total_price_label'.tr(),
-                style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-              ),
-              Text(
-                '$price \$',
-                style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ],
+                Text(
+                  '$price \$',
+                  style: AppStyle.bodyLarge.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -383,86 +384,78 @@ class _ServiceRequestCard extends StatelessWidget {
         status != OrderStatusEnum.completed &&
         status != OrderStatusEnum.rejected;
 
-    return container(
-      context: context,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: context.colorScheme.tertiaryContainer,
-              borderRadius: BorderRadius.circular(12.r),
+    return AnimationWidget(
+      child: container(
+        context: context,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: context.colorScheme.tertiaryContainer,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    month,
+                    style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
+                  ),
+                  Text(
+                    day,
+                    style: AppStyle.h4.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                Text(
-                  month,
-                  style: AppStyle.labelSmall.copyWith(color: AppColors.grey),
-                ),
-                Text(
-                  day,
-                  style: AppStyle.h4.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        request.serviceName.isNotEmpty
-                            ? request.serviceName
-                            : request.orderCode,
-                        style: AppStyle.bodyMedium.copyWith(
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          request.serviceName.isNotEmpty
+                              ? request.serviceName
+                              : request.orderCode,
+                          style: AppStyle.bodyMedium.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      StatusOrderService(text: status.status.tr(), color: status),
+                    ],
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(request.orderCode,style: AppStyle.bodySmall,),
+                  SizedBox(height: 8.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'total_price_label'.tr(),
+                        style: AppStyle.labelSmall.copyWith(
+                          color: AppColors.grey,
+                        ),
+                      ),
+                      Text(
+                        '\$${request.totalAmount}',
+                        style: AppStyle.bodyLarge.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    StatusOrderService(text: status.status.tr(), color: status),
-                  ],
-                ),
-                SizedBox(height: 4.h),
-                TextWithIcon(
-                  title: request.orderCode,
-                  icon: Icons.tag_outlined,
-                  color: AppColors.grey,
-                ),
-                SizedBox(height: 12.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'total_price_label'.tr(),
-                      style: AppStyle.labelSmall.copyWith(
-                        color: AppColors.grey,
-                      ),
-                    ),
-                    Text(
-                      '\$${request.totalAmount}',
-                      style: AppStyle.bodyLarge.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                if (isActive) ...[
-                  SizedBox(height: 8.h),
-                  Text(
-                    'services_request_pending_hint'.tr(),
-                    style: AppStyle.bodySmall.copyWith(color: AppColors.grey),
+                    ],
                   ),
+      
                 ],
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

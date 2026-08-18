@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/image_url_utils.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -30,6 +32,8 @@ class StoreCardData {
   final int imagePlaceholderColorValue;
   final String? logoUrl;
   final String? coverImageUrl;
+  final double? latitude;
+  final double? longitude;
 
   const StoreCardData({
     required this.id,
@@ -42,6 +46,8 @@ class StoreCardData {
     required this.imagePlaceholderColorValue,
     this.logoUrl,
     this.coverImageUrl,
+    this.latitude,
+    this.longitude,
   });
 }
 
@@ -85,6 +91,9 @@ class StoreCard extends StatelessWidget {
               children: [
                 _StoreImageSection(data: data),
                 _StoreInfoSection(data: data, onTap: onTap, isDark: isDark),
+                if (data.latitude != null && data.longitude != null)
+                  _StoreMapSection(
+                      latitude: data.latitude!, longitude: data.longitude!),
               ],
             ),
             // Stacked logo badge (overlaps image + white info section)
@@ -402,6 +411,53 @@ class _TagChip extends StatelessWidget {
           color: isDark ? AppColors.blue : AppColors.deepGrey,
           fontWeight: FontWeight.w500,
         ),
+      ),
+    );
+  }
+}
+
+class _StoreMapSection extends StatelessWidget {
+  final double latitude;
+  final double longitude;
+
+  const _StoreMapSection({required this.latitude, required this.longitude});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150.h,
+      margin: EdgeInsets.fromLTRB(14.w, 0, 14.w, 20.h),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: AppColors.borderColor.withValues(alpha: 0.5)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: FlutterMap(
+        options: MapOptions(
+          initialCenter: LatLng(latitude, longitude),
+          initialZoom: 13,
+          interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            userAgentPackageName: 'com.example.untitled1',
+          ),
+          MarkerLayer(
+            markers: [
+              Marker(
+                point: LatLng(latitude, longitude),
+                width: 40.w,
+                height: 40.w,
+                child: const Icon(
+                  Icons.location_on,
+                  color: AppColors.red,
+                  size: 30,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

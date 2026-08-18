@@ -114,7 +114,7 @@ class CartCubit extends Cubit<CartState> {
       if (order != null) {
         final newTotal = order!.items.fold<double>(0, (sum, item) => sum + double.parse(item.subtotal)).toStringAsFixed(2);
         order = order!.copyWith(totalAmount: newTotal);
-        
+        await _applyDiscountPricing(order!);
         emit(CartSuccess(order!));
         emit(const CartActionSuccess(deleteFromCartSuccessfully));
       }

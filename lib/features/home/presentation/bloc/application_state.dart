@@ -9,11 +9,17 @@ final class ApplicationInitial extends ApplicationState {
   List<Object> get props => [];
 }
 final class ApplicationMainState extends ApplicationState {
-   final ThemeMode themeMode;
-   final Locale locale;
+  final ThemeMode themeMode;
+  final Locale locale;
+  final bool isVerified;
 
-  const ApplicationMainState({this.themeMode = ThemeMode.light, this.locale = const Locale('ar'),
+  const ApplicationMainState({
+    this.themeMode = ThemeMode.light,
+    this.locale = const Locale('ar'),
+    this.isVerified = false,
   });
+
   @override
-  List<Object?> get props => [themeMode,locale]; }
+  List<Object?> get props => [themeMode, locale, isVerified];
+}
 

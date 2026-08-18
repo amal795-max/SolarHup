@@ -103,8 +103,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
             cursorColor: Colors.black,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
-                vertical: 12.h,
-                horizontal: 12.w,
+                vertical: 12.r,
+                horizontal: 12.r,
               ),
               hintText: widget.hint,
               filled: true,

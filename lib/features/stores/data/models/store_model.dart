@@ -9,6 +9,8 @@ class StoreModel {
   final int imagePlaceholderColorValue;
   final String? logoUrl;
   final String? coverImageUrl;
+  final double? latitude;
+  final double? longitude;
 
   const StoreModel({
     required this.id,
@@ -21,6 +23,8 @@ class StoreModel {
     required this.imagePlaceholderColorValue,
     this.logoUrl,
     this.coverImageUrl,
+    this.latitude,
+    this.longitude,
   });
 
   factory StoreModel.fromJson(Map<String, dynamic> json) => StoreModel(
@@ -36,6 +40,8 @@ class StoreModel {
         logoUrl: json['logo_url'] as String? ?? json['logo'] as String?,
         coverImageUrl:
             json['cover_image_url'] as String? ?? json['cover_image'] as String?,
+        latitude: (json['latitude'] as num?)?.toDouble() ?? (json['lat'] as num?)?.toDouble(),
+        longitude: (json['longitude'] as num?)?.toDouble() ?? (json['lng'] as num?)?.toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -49,5 +55,7 @@ class StoreModel {
         'image_placeholder_color_value': imagePlaceholderColorValue,
         'logo_url': logoUrl,
         'cover_image_url': coverImageUrl,
+        'latitude': latitude,
+        'longitude': longitude,
       };
 }

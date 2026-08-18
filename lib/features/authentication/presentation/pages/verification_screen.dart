@@ -11,11 +11,13 @@ import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/authentication/presentation/widgets/header.dart';
+import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/constants/app_url.dart';
 import '../../../../core/helper/data_helper.dart';
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/helper/local_storage.dart';
+import '../../../home/presentation/bloc/application_cubit.dart';
 import '../widgets/help_verify_widget.dart';
 import '../widgets/white_section_widget.dart';
 
@@ -56,6 +58,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         context.go(AppRoutes.resetPasswordScreen);
       } else {
         LocalStorage().saveData(key: ApiKeys.isVerified, value: true);
+        context.read<ApplicationCubit>().updateVerificationStatus(true);
         context.go(AppRoutes.bottomNavBar);
       }
     } else if (state is SendVerificationFailure) {
@@ -67,7 +70,9 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   Widget _builder(BuildContext context, ResetPasswordState state) {
     final cubit = context.read<ResetPasswordCubit>();
-
+if(state is  SendVerificationLoading || state is ConfirmOtpLoading){
+  return const LoadingIndicator();
+}
     return Scaffold(
       appBar: !widget.isResetPassword
           ? AppBar(
@@ -121,7 +126,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
                     CustomButton(
                       text: _isCodeSent ? 'confirm_otp' : 'send_code_to_telegram',
-                      isLoading: state is SendVerificationLoading || state is ConfirmOtpLoading,
                       onPressed: () {
                         if (!_isCodeSent) {
                           cubit.sendOtpVerification(isReset: widget.isResetPassword);
@@ -134,11 +138,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         }
                       },
                     ),
+                    SizedBox(height: 8.h),
 
                     if (_isCodeSent)
                       TextButton(
                         onPressed: () => cubit.sendOtpVerification(isReset: widget.isResetPassword),
-                        child: Text('resend_code'.tr(), style: AppStyle.bodySmall.copyWith(color: AppColors.primaryColor)),
+                        child: Text('resend_code'.tr(), style: AppStyle.bodySmall),
                       ),
                   ],
                 ),
@@ -175,7 +180,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: context.brightness
-            ? AppColors.lightYellow.withOpacity(0.5)
+            ? AppColors.lightYellow.withOpacity(0.7)
             : context.colorScheme.surface.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12.r),
       ),

@@ -128,7 +128,7 @@ class _ReviewSummaryIndicatorState extends State<ReviewSummaryIndicator> {
   }
 }
 
-class _ProductReviewLink extends StatelessWidget {
+class _ProductReviewLink extends StatefulWidget {
   final double rating;
   final int reviewCount;
   final bool isLoading;
@@ -137,21 +137,25 @@ class _ProductReviewLink extends StatelessWidget {
   const _ProductReviewLink({
     required this.rating,
     required this.reviewCount,
-    required this.isLoading,
-    this.onTap,
+    required this.isLoading, this.onTap,
   });
 
   @override
+  State<_ProductReviewLink> createState() => _ProductReviewLinkState();
+}
+
+class _ProductReviewLinkState extends State<_ProductReviewLink> {
+  @override
   Widget build(BuildContext context) {
     final label =
-        '${rating.toStringAsFixed(1)} ($reviewCount ${'product_detail_reviews_suffix'.tr()})';
+        '${widget.rating.toStringAsFixed(1)} (${widget.reviewCount} ${'product_detail_reviews_suffix'.tr()})';
 
     final child = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.star_rounded, color: Colors.orange, size: 20.sp),
         SizedBox(width: 4.w),
-        if (isLoading)
+        if (widget.isLoading)
           SizedBox(
             width: 12.w,
             height: 12.w,
@@ -172,11 +176,11 @@ class _ProductReviewLink extends StatelessWidget {
       ],
     );
 
-    if (onTap == null) return child;
+    if (widget.onTap == null) return child;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: onTap,
+      onTap: widget.onTap,
       child: child,
     );
   }

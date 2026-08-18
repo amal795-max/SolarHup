@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element_parameter
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -107,9 +109,7 @@ class _TimelineItem extends StatelessWidget {
     this.date,
     this.isCompleted = false,
     this.isCurrent = false,
-    this.isLast = false,
-    this.icon,
-    this.iconColor,
+    this.isLast = false, this.iconColor, this.icon,
   });
 
   @override

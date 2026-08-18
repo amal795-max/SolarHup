@@ -14,11 +14,27 @@ class ApplicationCubit extends Cubit<ApplicationState> {
   void _initApp() {
     String? mode = LocalStorage().getData(key: StorageKeys.mode);
     String? langCode = LocalStorage().getData(key: StorageKeys.langCode);
+    bool isVerified = LocalStorage().getData(key: ApiKeys.isVerified, defaultValue: false);
 
     ThemeMode currentMode = (mode == 'd') ? ThemeMode.dark : ThemeMode.light;
     Locale currentLocale = Locale(langCode ?? 'ar');
 
-    emit(ApplicationMainState(themeMode: currentMode, locale: currentLocale));
+    emit(ApplicationMainState(
+      themeMode: currentMode,
+      locale: currentLocale,
+      isVerified: isVerified,
+    ));
+  }
+
+  void updateVerificationStatus(bool isVerified) {
+    if (state is ApplicationMainState) {
+      final currentState = state as ApplicationMainState;
+      emit(ApplicationMainState(
+        themeMode: currentState.themeMode,
+        locale: currentState.locale,
+        isVerified: isVerified,
+      ));
+    }
   }
 
   void toggleTheme() {
@@ -38,6 +54,7 @@ class ApplicationCubit extends Cubit<ApplicationState> {
       emit(ApplicationMainState(
         themeMode: newMode,
         locale: currentState.locale,
+        isVerified: currentState.isVerified,
       ));
     }
   }
@@ -53,6 +70,7 @@ class ApplicationCubit extends Cubit<ApplicationState> {
       emit(ApplicationMainState(
         themeMode: currentState.themeMode,
         locale: newLocale,
+        isVerified: currentState.isVerified,
       ));
     }
   }
