@@ -156,7 +156,7 @@ class _CartScreenState extends State<CartScreen> {
           child: Column(
             children: [
               _CartList(items: cartToShow.items),
-              OrderSummary(cart: cartToShow),
+              const OrderSummary(),
               SizedBox(height: 24.h),
             ],
           ),

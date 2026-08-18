@@ -1,6 +1,7 @@
 class DiscountedProductModel {
   final String productId;
   final int businessId;
+  final int? promotionId;
   final String name;
   final String category;
   final String businessName;
@@ -17,6 +18,7 @@ class DiscountedProductModel {
   const DiscountedProductModel({
     required this.productId,
     required this.businessId,
+    this.promotionId,
     required this.name,
     required this.category,
     required this.businessName,

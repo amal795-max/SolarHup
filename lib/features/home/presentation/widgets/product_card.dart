@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
@@ -25,6 +26,7 @@ class ProductCardData {
   final String? discountDescription;
   final DateTime? discountStartDate;
   final DateTime? discountEndDate;
+  final bool promotionAlreadyUsed;
 
   const ProductCardData({
     this.id,
@@ -45,6 +47,7 @@ class ProductCardData {
     this.discountDescription,
     this.discountStartDate,
     this.discountEndDate,
+    this.promotionAlreadyUsed = false,
   });
 
   IconData get imageIcon {
@@ -317,6 +320,29 @@ class _CardImage extends StatelessWidget {
                   color: AppColors.white,
                   fontWeight: FontWeight.w700,
                 ),
+              ),
+            ),
+          ),
+        if (data.promotionAlreadyUsed)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.red.withValues(alpha: 0.92),
+              ),
+              child: Text(
+                'promotion_offer_used_banner'.tr(),
+                style: AppStyle.labelXSmall.copyWith(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),

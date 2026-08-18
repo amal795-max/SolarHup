@@ -56,6 +56,7 @@ import 'package:untitled1/features/orders/data/datasources/cart_remote_data_sour
 import 'package:untitled1/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:untitled1/features/orders/data/repositories/cart_repository.dart';
 import 'package:untitled1/features/orders/data/repositories/orders_repository.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/settings/data/data_sources/settings_remote_data_source.dart';
@@ -108,6 +109,9 @@ Future<void> init() async {
   getIt.registerLazySingleton<FavoriteRepository>(() => FavoriteRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<OrdersRepository>(() => OrdersRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
+  getIt.registerLazySingleton<PromotionEligibilityService>(
+    () => PromotionEligibilityService(getIt()),
+  );
   getIt.registerLazySingleton<ComplaintRepository>(() => ComplaintRepositoryImpl(remote: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<ExpertConsultationRepository>(() => ExpertConsultationRepositoryImpl(remote: getIt(), networkInfo: getIt()));
   getIt.registerLazySingleton<SettingsRepository>(() => SettingsRepositoryImpl(remoteDataSource: getIt(), networkInfo: getIt()));
@@ -122,8 +126,8 @@ Future<void> init() async {
   getIt.registerFactory(() => StoresCubit(getIt()));
   getIt.registerFactory(() => UsedSystemCubit(getIt()));
   getIt.registerFactory(() => FavoritesCubit(getIt()));
-  getIt.registerFactory(() => CartCubit(getIt(), getIt()));
-  getIt.registerFactory(() => OrdersCubit(getIt()));
+  getIt.registerFactory(() => CartCubit(getIt(), getIt(), getIt()));
+  getIt.registerFactory(() => OrdersCubit(getIt(), getIt()));
   getIt.registerFactory(() => FaqCubit(getIt()));
   getIt.registerFactory(() => ComplaintCubit(getIt()));
   getIt.registerFactory(() => ExpertConsultationCubit(getIt()));
@@ -141,6 +145,7 @@ Future<void> init() async {
       remote: getIt(),
       catalogRemote: getIt(),
       networkInfo: getIt(),
+      promotionEligibility: getIt(),
     ),
   );
 
@@ -166,10 +171,11 @@ Future<void> init() async {
       blogRepository: getIt(),
       productDetailRemote: getIt(),
       networkInfo: getIt(),
+      promotionEligibility: getIt(),
     ),
   );
 
-  getIt.registerFactory(() => DiscountedProductsCubit(getIt()));
+  getIt.registerFactory(() => DiscountedProductsCubit(getIt(), getIt()));
   getIt.registerFactory(() => TopSellingProductsCubit(getIt()));
 
   getIt.registerFactory(() => BlogDetailCubit(getIt()));
@@ -200,7 +206,7 @@ Future<void> init() async {
     ),
   );
 
-  getIt.registerFactory(() => StoreDetailCubit(getIt(), getIt()));
+  getIt.registerFactory(() => StoreDetailCubit(getIt(), getIt(), getIt()));
   getIt.registerFactory(() => StoreKitCubit(getIt(), getIt()));
   getIt.registerFactory(() => ServiceCategoriesCubit(getIt()));
   getIt.registerFactory(() => WorkshopPickerCubit(getIt()));

@@ -52,6 +52,7 @@ class EndPoints {
       '${baseUrl}service-requests/$requestId';
   static String cancelServiceRequest(int requestId) =>
       '${baseUrl}service-requests/$requestId/cancel';
+  static const String validateCoupon = '${baseUrl}coupons/validate';
 
   static const String usedProducts = '${baseUrl}used-products';
   static const String topSellingProducts = '${baseUrl}products/top-selling';
@@ -87,6 +88,7 @@ class ApiKeys {
   static const String phoneNumber = 'phoneNumber';
 
   static const String orderId = 'orderId';
+  static const String usedPromotionIds = 'used_promotion_ids';
 
 }
 class StorageKeys {

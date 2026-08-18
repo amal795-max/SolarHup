@@ -1,13 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/features/services/data/models/service_address_model.dart';
+import 'package:untitled1/features/services/data/repositories/service_requests_repository.dart';
 
 part 'service_address_event.dart';
 part 'service_address_state.dart';
 
 class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> {
-  ServiceAddressBloc() : super(ServiceAddressInitial()) {
+  final ServiceRequestsRepository repository;
+
+  ServiceAddressBloc({required this.repository}) : super(ServiceAddressInitial()) {
     on<LoadServiceAddressEvent>(_onLoad);
     on<UpdateServiceFullNameEvent>(_onUpdateFullName);
     on<UpdateServiceStreetEvent>(_onUpdateStreet);
@@ -104,10 +108,10 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
     );
   }
 
-  void _onApplyCoupon(
+  Future<void> _onApplyCoupon(
     ApplyServiceCouponEvent event,
     Emitter<ServiceAddressState> emit,
-  ) {
+  ) async {
     final current = state;
     if (current is! ServiceAddressLoaded) return;
 
@@ -117,12 +121,54 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
       return;
     }
 
-    emit(
-      current.copyWith(
-        couponCode: code,
-        clearCouponError: true,
-        address: current.address.copyWith(appliedCouponCode: code),
+    final serviceId = int.tryParse(current.address.serviceId);
+    if (serviceId == null || serviceId <= 0) {
+      emit(current.copyWith(couponError: 'service_coupon_invalid'));
+      return;
+    }
+
+    emit(current.copyWith(isValidatingCoupon: true, clearCouponError: true));
+
+    final result = await repository.validateCoupon(
+      serviceId: serviceId,
+      couponCode: code,
+    );
+
+    final latest = state;
+    if (latest is! ServiceAddressLoaded) return;
+
+    result.fold(
+      (failure) => emit(
+        latest.copyWith(
+          isValidatingCoupon: false,
+          couponError: _mapFailure(failure),
+        ),
       ),
+      (validation) {
+        if (!validation.valid) {
+          emit(
+            latest.copyWith(
+              isValidatingCoupon: false,
+              couponError: 'service_coupon_invalid',
+            ),
+          );
+          return;
+        }
+
+        emit(
+          latest.copyWith(
+            isValidatingCoupon: false,
+            couponCode: validation.code,
+            clearCouponError: true,
+            address: latest.address.copyWith(
+              appliedCouponCode: validation.code,
+              originalTotal: validation.originalPrice,
+              grandTotal: validation.finalPrice,
+              discountAmount: validation.discountAmount,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -144,5 +190,13 @@ class ServiceAddressBloc extends Bloc<ServiceAddressEvent, ServiceAddressState> 
         ),
       ),
     );
+  }
+
+  String _mapFailure(Failure failure) {
+    return switch (failure) {
+      ServerFailure(:final message) => message,
+      OfflineFailure() => 'No internet connection',
+      _ => 'service_coupon_invalid',
+    };
   }
 }

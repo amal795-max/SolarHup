@@ -4,6 +4,7 @@ import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/core/network/check_internet.dart';
 import 'package:untitled1/features/catalog/data/data_source/catalog_remote_data_source.dart';
 import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
+import 'package:untitled1/features/orders/services/promotion_eligibility_service.dart';
 import 'package:untitled1/features/stores/data/data_source/product_detail_remote_data_source.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 
@@ -18,11 +19,13 @@ class ProductDetailRepositoryImpl implements ProductDetailRepository {
   final ProductDetailRemoteDataSource remote;
   final CatalogRemoteDataSource catalogRemote;
   final NetworkInfo networkInfo;
+  final PromotionEligibilityService promotionEligibility;
 
   ProductDetailRepositoryImpl({
     required this.remote,
     required this.catalogRemote,
     required this.networkInfo,
+    required this.promotionEligibility,
   });
 
   @override
@@ -40,11 +43,13 @@ class ProductDetailRepositoryImpl implements ProductDetailRepository {
       );
 
       try {
+        await promotionEligibility.ensureSynced();
         final discounts = await catalogRemote.getStoreDiscounts(businessId);
         final candidate = findBestDiscountForProduct(
           discounts: discounts,
           businessId: businessId,
           productId: productId,
+          excludedPromotionIds: promotionEligibility.usedPromotionIds,
         );
         if (candidate != null) {
           return Right(

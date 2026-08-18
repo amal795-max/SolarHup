@@ -139,9 +139,9 @@ class _ProductImageSection extends StatelessWidget {
               ),
             ),
 
-          // Category label — bottom left
+          // Category label — bottom left (lifted when offer-used banner shows)
           Positioned(
-            bottom: 10.h,
+            bottom: product.promotionAlreadyUsed ? 38.h : 10.h,
             left: 12.w,
             child: _CategoryLabel(label: product.categoryLabel),
           ),
@@ -158,6 +158,28 @@ class _ProductImageSection extends StatelessWidget {
               top: 10.h,
               right: 10.w,
               child: _DiscountBadge(percent: product.discountPercent!),
+            ),
+
+          if (product.promotionAlreadyUsed)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                color: AppColors.red.withValues(alpha: 0.92),
+                child: Text(
+                  'promotion_offer_used_banner'.tr(),
+                  style: AppStyle.labelSmall.copyWith(
+                    color: AppColors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
         ],
       ),
@@ -295,34 +317,35 @@ class _ProductInfoSection extends StatelessWidget {
           SizedBox(height: 10.h),
 
           // Price row
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Current price
-              Text(
-                '\$${product.price.toStringAsFixed(2)}',
-                style: AppStyle.h6.copyWith(
-                  color: isDark ? AppColors.white : AppColors.black,
-                ),
-              ),
-
-              // Crossed-out original price (discounted products)
-              if (product.originalPrice != null) ...[
-                SizedBox(width: 8.w),
-                Text(
-                  '\$${product.originalPrice!.toStringAsFixed(2)}',
-                  style: AppStyle.labelSmall.copyWith(
-                    color: AppColors.grey,
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: AppColors.grey,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '\$${product.price.toStringAsFixed(2)}',
+                    style: AppStyle.h6.copyWith(
+                      color: isDark ? AppColors.white : AppColors.black,
+                    ),
                   ),
-                ),
-              ],
-
-              if (product.isKitProduct) ...[
-                const Spacer(),
-                _ConfigureKitButton(),
-              ],
+                  if (product.originalPrice != null) ...[
+                    SizedBox(width: 8.w),
+                    Text(
+                      '\$${product.originalPrice!.toStringAsFixed(2)}',
+                      style: AppStyle.labelSmall.copyWith(
+                        color: AppColors.grey,
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: AppColors.grey,
+                      ),
+                    ),
+                  ],
+                  if (product.isKitProduct) ...[
+                    const Spacer(),
+                    _ConfigureKitButton(),
+                  ],
+                ],
+              ),
             ],
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_address_bloc/service_address_bloc.dart';
+import 'package:untitled1/features/services/presentation/widgets/service_coupon_savings_celebration.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/custom_text_field.dart';
 import 'package:untitled1/widgets/primary_button.dart';
@@ -19,6 +20,7 @@ class ServiceCouponSection extends StatefulWidget {
 
 class _ServiceCouponSectionState extends State<ServiceCouponSection> {
   late final TextEditingController _couponController;
+  int _celebrationSeed = 0;
 
   @override
   void initState() {
@@ -32,6 +34,15 @@ class _ServiceCouponSectionState extends State<ServiceCouponSection> {
     if (oldWidget.state.couponCode != widget.state.couponCode &&
         _couponController.text != widget.state.couponCode) {
       _couponController.text = widget.state.couponCode;
+    }
+
+    final justApplied = oldWidget.state.isValidatingCoupon &&
+        !widget.state.isValidatingCoupon &&
+        widget.state.couponError == null &&
+        widget.state.address.hasCouponDiscount;
+
+    if (justApplied) {
+      _celebrationSeed++;
     }
   }
 
@@ -73,47 +84,48 @@ class _ServiceCouponSectionState extends State<ServiceCouponSection> {
           ),
           SizedBox(height: 16.h),
           if (hasAppliedCoupon) ...[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: AppColors.secondaryColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.check_circle_rounded,
-                    color: AppColors.tertiaryColor,
-                    size: 18.sp,
-                  ),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      'service_coupon_applied'.tr(
-                        args: [widget.state.address.appliedCouponCode ?? ''],
-                      ),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+            if (widget.state.address.hasCouponDiscount)
+              ServiceCouponSavingsCelebration(
+                key: ValueKey('celebration-$_celebrationSeed'),
+                savingsAmount: widget.state.address.discountAmount,
+                animationSeed: _celebrationSeed,
+                onRemove: () => context
+                    .read<ServiceAddressBloc>()
+                    .add(const ClearServiceCouponEvent()),
+              )
+            else
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_rounded,
+                      color: AppColors.tertiaryColor,
+                      size: 18.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        'service_coupon_applied'.tr(),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () => context
-                        .read<ServiceAddressBloc>()
-                        .add(const ClearServiceCouponEvent()),
-                    child: Text('remove_coupon'.tr()),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () => context
+                          .read<ServiceAddressBloc>()
+                          .add(const ClearServiceCouponEvent()),
+                      child: Text('remove_coupon'.tr()),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              'service_coupon_pending'.tr(),
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: AppColors.grey,
-              ),
-            ),
           ] else ...[
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -134,6 +146,7 @@ class _ServiceCouponSectionState extends State<ServiceCouponSection> {
                   width: 96.w,
                   child: CustomButton(
                     text: 'apply_coupon'.tr(),
+                    isLoading: widget.state.isValidatingCoupon,
                     onPressed: () => context
                         .read<ServiceAddressBloc>()
                         .add(const ApplyServiceCouponEvent()),

@@ -14,6 +14,11 @@ class OrderModel {
   final String? shippingFloor;
   final String status;
   final String totalAmount;
+  final String? originalPrice;
+  final String? discountAmount;
+  final String? finalPrice;
+  final int? appliedPromotionId;
+  final String? promotionTitle;
   final List<OrderItemModel> items;
   final String? createdAt;
   final String? updatedAt;
@@ -32,6 +37,11 @@ class OrderModel {
     this.shippingFloor,
     required this.status,
     required this.totalAmount,
+    this.originalPrice,
+    this.discountAmount,
+    this.finalPrice,
+    this.appliedPromotionId,
+    this.promotionTitle,
     required this.items,
     this.createdAt,
     this.updatedAt,
@@ -46,6 +56,9 @@ class OrderModel {
       customerId: 0,
       status: OrderStatusEnum.pending.status,
       totalAmount: '0.00',
+      originalPrice: '0.00',
+      discountAmount: '0.00',
+      finalPrice: '0.00',
       items: const [],
       statusEnum: OrderStatusEnum.pending,
     );
@@ -65,7 +78,12 @@ class OrderModel {
       shippingBuilding: payload['shipping_building'],
       shippingFloor: payload['shipping_floor'],
       status: payload['status'],
-      totalAmount: payload['total_amount'],
+      totalAmount: payload['total_amount']?.toString() ?? '0.00',
+      originalPrice: payload['original_price']?.toString(),
+      discountAmount: payload['discount_amount']?.toString(),
+      finalPrice: payload['final_price']?.toString(),
+      appliedPromotionId: payload['applied_promotion_id'] as int?,
+      promotionTitle: payload['promotion_title']?.toString(),
       items:
           (payload['items'] as List?)
               ?.map((e) => OrderItemModel.fromJson(e))
@@ -77,7 +95,41 @@ class OrderModel {
     );
   }
 
+  double get retailSubtotal => items.fold<double>(
+        0,
+        (sum, item) =>
+            sum + (double.tryParse(item.unitPrice) ?? 0) * item.quantity,
+      );
+
+  bool get hasBackendDiscount {
+    final discount = double.tryParse(discountAmount ?? '');
+    if (discount != null && discount > 0.01) return true;
+
+    final original = double.tryParse(originalPrice ?? '');
+    final finalValue = double.tryParse(finalPrice ?? '');
+    if (original != null &&
+        finalValue != null &&
+        finalValue < original - 0.01) {
+      return true;
+    }
+
+    return appliedPromotionId != null;
+  }
+
+  double get effectiveOriginalAmount {
+    if (hasBackendDiscount) {
+      return double.tryParse(originalPrice ?? '') ?? retailSubtotal;
+    }
+    return retailSubtotal;
+  }
+
   double get effectiveTotalAmount {
+    if (hasBackendDiscount) {
+      return double.tryParse(finalPrice ?? '') ??
+          double.tryParse(totalAmount) ??
+          0;
+    }
+
     if (items.isEmpty) return double.tryParse(totalAmount) ?? 0;
     if (items.every((item) => !item.hasDiscount)) {
       return double.tryParse(totalAmount) ?? 0;
@@ -85,7 +137,19 @@ class OrderModel {
     return items.fold<double>(0, (sum, item) => sum + item.effectiveSubtotal);
   }
 
-  bool get hasDiscountedItems => items.any((item) => item.hasDiscount);
+  double get effectiveDiscountAmount {
+    if (hasBackendDiscount) {
+      final parsed = double.tryParse(discountAmount ?? '');
+      if (parsed != null && parsed > 0) return parsed;
+      return effectiveOriginalAmount - effectiveTotalAmount;
+    }
+
+    final discount = effectiveOriginalAmount - effectiveTotalAmount;
+    return discount > 0 ? discount : 0;
+  }
+
+  bool get hasDiscountedItems =>
+      hasBackendDiscount || items.any((item) => item.hasDiscount);
 
   bool get isCompleted => statusEnum == OrderStatusEnum.completed;
 
@@ -102,6 +166,11 @@ class OrderModel {
     String? shippingFloor,
     String? status,
     String? totalAmount,
+    String? originalPrice,
+    String? discountAmount,
+    String? finalPrice,
+    int? appliedPromotionId,
+    String? promotionTitle,
     List<OrderItemModel>? items,
     String? createdAt,
     String? updatedAt,
@@ -120,6 +189,11 @@ class OrderModel {
       shippingFloor: shippingFloor ?? this.shippingFloor,
       status: status ?? this.status,
       totalAmount: totalAmount ?? this.totalAmount,
+      originalPrice: originalPrice ?? this.originalPrice,
+      discountAmount: discountAmount ?? this.discountAmount,
+      finalPrice: finalPrice ?? this.finalPrice,
+      appliedPromotionId: appliedPromotionId ?? this.appliedPromotionId,
+      promotionTitle: promotionTitle ?? this.promotionTitle,
       items: items ?? this.items,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,

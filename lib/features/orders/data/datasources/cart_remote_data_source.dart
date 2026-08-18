@@ -117,21 +117,29 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> submitCart(ShippingInformationParams params) async{
+  Future<void> submitCart(ShippingInformationParams params) async {
     try {
       final response = await apiRequest.post(
-         EndPoints.submitCart,
-        body: params.toJson()
+        EndPoints.submitCart,
+        body: params.toJson(),
       );
       if (response.statusCode != 200) {
         throw ServerException(
-          message: getErrorMessage(response.statusCode ?? 0),
+          message: _readErrorDetail(response) ??
+              getErrorMessage(response.statusCode ?? 0),
         );
-      } else {
-        return;
       }
     } on DioException catch (e) {
       throw ServerException(message: mapDioError(e));
     }
   }
+}
+
+String? _readErrorDetail(Response<dynamic> response) {
+  final data = response.data;
+  if (data is Map<String, dynamic>) {
+    final detail = data['detail'];
+    if (detail is String && detail.trim().isNotEmpty) return detail.trim();
+  }
+  return null;
 }

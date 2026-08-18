@@ -139,7 +139,7 @@ class _ActivityScreenState extends State<ActivityScreen> {
                       return;
                     }
 
-                    context.read<OrdersCubit>().getOrderDetails(order.id);
+                    context.read<OrdersCubit>().getOrderDetailsById(order.id);
                     context.push(AppRoutes.orderTrackingScreen, extra: order);
                   },
                   child: _OrderCard(

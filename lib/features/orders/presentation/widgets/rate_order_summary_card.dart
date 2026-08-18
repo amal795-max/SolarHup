@@ -25,7 +25,7 @@ class RateOrderSummaryCard extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.read<OrdersCubit>().getOrderDetails(order.id);
+        context.read<OrdersCubit>().getOrderDetailsById(order.id);
         context.push(AppRoutes.orderTrackingScreen, extra: order);
       },
       child: AnimationWidget(

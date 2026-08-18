@@ -158,6 +158,7 @@ class _HomeViewState extends State<_HomeView> {
     businessId: m.businessId,
     name: m.name,
     category: m.category,
+    price: m.price,
     badgeText: m.badgeText,
     badgeColor: m.badgeColorValue,
     metaText: m.metaText,
@@ -166,7 +167,8 @@ class _HomeViewState extends State<_HomeView> {
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     discountPercent: m.discountPercent,
     iconType: m.iconType,
-    showPrice: false,
+    showPrice: m.promotionAlreadyUsed,
+    promotionAlreadyUsed: m.promotionAlreadyUsed,
   );
 
   ProductCardData _mapUsedProduct(UsedProductModel m) => ProductCardData(

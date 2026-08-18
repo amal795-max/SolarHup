@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:untitled1/core/constants/debendency_injection.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/services/data/models/service_booking_draft.dart';
@@ -27,7 +28,7 @@ class ServiceAddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ServiceAddressBloc()
+      create: (_) => ServiceAddressBloc(repository: getIt())
         ..add(
           LoadServiceAddressEvent(
             serviceId,

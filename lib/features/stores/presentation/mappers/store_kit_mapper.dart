@@ -7,6 +7,7 @@ List<StoreKitProductData> storeProductsToKitData(
   List<StoreProductModel> products, {
   required int businessId,
   List<DiscountModel> discounts = const [],
+  Set<int> usedPromotionIds = const {},
 }) {
   return products
       .map(
@@ -14,6 +15,7 @@ List<StoreKitProductData> storeProductsToKitData(
           product,
           businessId: businessId,
           discounts: discounts,
+          usedPromotionIds: usedPromotionIds,
         ),
       )
       .toList();
@@ -23,6 +25,7 @@ StoreKitProductData _toKitProduct(
   StoreProductModel product, {
   required int businessId,
   required List<DiscountModel> discounts,
+  Set<int> usedPromotionIds = const {},
 }) {
   var price = product.price;
   double? originalPrice;
@@ -33,6 +36,7 @@ StoreKitProductData _toKitProduct(
     discounts: discounts,
     businessId: businessId,
     productId: product.id,
+    excludedPromotionIds: usedPromotionIds,
   );
   if (candidate != null) {
     final pricing = computeDiscountPricing(

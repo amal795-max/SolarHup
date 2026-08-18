@@ -16,6 +16,7 @@ class ProductModel extends Equatable {
   final String? imageUrl;
   final int? imagePlaceholderColorValue;
   final int? discountPercent;
+  final bool promotionAlreadyUsed;
 
   /// 'solar' | 'inverter' | 'battery'
   final String iconType;
@@ -34,6 +35,7 @@ class ProductModel extends Equatable {
     this.imageUrl,
     this.imagePlaceholderColorValue,
     this.discountPercent,
+    this.promotionAlreadyUsed = false,
     this.iconType = 'solar',
   });
 
@@ -52,6 +54,7 @@ class ProductModel extends Equatable {
         imageUrl,
         imagePlaceholderColorValue,
         discountPercent,
+        promotionAlreadyUsed,
         iconType,
       ];
 }
