@@ -21,6 +21,7 @@ import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
 import 'package:untitled1/widgets/primary_button.dart';
+import 'package:untitled1/widgets/service_booking_step_indicator.dart';
 
 import '../../../../core/helper/data_helper.dart';
 
@@ -165,6 +166,10 @@ class _ScheduleServiceBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const ServiceBookingStepIndicator(
+                  currentStep: ServiceBookingStep.schedule,
+                ),
+                SizedBox(height: 16.h),
                 ScheduleServiceHeroSection(
                   service: state.service,
                   titleOverride: draft?.serviceName,

@@ -63,6 +63,13 @@ final class ScheduleServiceLoaded extends ScheduleServiceState {
   String get monthYearLabel =>
       DateFormat('MMMM yyyy').format(DateTime(viewYear, viewMonth));
 
+  bool get canGoToPreviousMonth {
+    final now = DateTime.now();
+    final currentMonth = DateTime(now.year, now.month);
+    final viewedMonth = DateTime(viewYear, viewMonth);
+    return viewedMonth.isAfter(currentMonth);
+  }
+
   String get formattedSelectedDate {
     final date = selectedDate;
     if (date == null) return '—';

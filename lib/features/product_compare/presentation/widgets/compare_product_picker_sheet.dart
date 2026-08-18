@@ -411,11 +411,18 @@ void _showAddedSnackBar(
     SnackBar(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       behavior: SnackBarBehavior.floating,
+      duration: const Duration(seconds: 3),
       content: Text('compare_added_snackbar'.tr()),
       action: SnackBarAction(
         label: 'compare_view'.tr(),
         onPressed: () => context.push(AppRoutes.packageComparisonScreen),
       ),
+    ),
+    snackBarAnimationStyle: const AnimationStyle(
+      duration: Duration(milliseconds: 250),
+      reverseDuration: Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeIn,
     ),
   );
 

@@ -14,6 +14,7 @@ import 'package:untitled1/features/services/presentation/widgets/service_address
 import 'package:untitled1/features/services/presentation/widgets/service_coupon_section.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
+import 'package:untitled1/widgets/service_booking_step_indicator.dart';
 
 class ServiceAddressScreen extends StatelessWidget {
   final String serviceId;
@@ -139,6 +140,10 @@ class _ServiceAddressView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 8.h),
+                    const ServiceBookingStepIndicator(
+                      currentStep: ServiceBookingStep.address,
+                    ),
+                    SizedBox(height: 12.h),
                     const ServiceAddressHeaderSection(),
                     SizedBox(height: 20.h),
                     Expanded(

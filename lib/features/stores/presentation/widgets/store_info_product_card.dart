@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/helper/image_url_utils.dart';
+import 'package:untitled1/core/helper/product_hero.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
@@ -98,6 +99,8 @@ class _ProductImageSection extends StatelessWidget {
               image: product.imageUrl,
               fit: BoxFit.cover,
               borderRadius: 0,
+              enableHero: productHeroTag(product.id) != null,
+              heroTag: productHeroTag(product.id),
             )
           else
             Container(

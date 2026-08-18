@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
+import 'package:untitled1/core/theme/app_style.dart';
 
 import '../../../../widgets/primary_button.dart';
+import '../../../../widgets/success_celebration_icon.dart';
 
 class OrderConfirmedScreen extends StatelessWidget {
   const OrderConfirmedScreen({super.key});
@@ -21,38 +23,25 @@ class OrderConfirmedScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              Container(
-                width: 120.w,
-                height: 120.w,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.check_circle_rounded,
-                    color: AppColors.primaryColor,
-                    size: 80.sp,
-                  ),
-                ),
+              const SuccessCelebrationIcon(
+                size: 120,
+                iconColor: AppColors.primaryColor,
               ),
               SizedBox(height: 32.h),
               Text(
                 'order_placed_successfully'.tr(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24.sp,
+                style: AppStyle.h4.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.black,
                 ),
               ),
               SizedBox(height: 12.h),
               Text(
                 'order_confirmed_subtitle'.tr(),
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.grey[600],
+                style: AppStyle.bodyMedium.copyWith(
+                  color: AppColors.grey,
                 ),
               ),
               const Spacer(),
@@ -69,8 +58,7 @@ class OrderConfirmedScreen extends StatelessWidget {
                 },
                 child: Text(
                   'back_home'.tr(),
-                  style: TextStyle(
-                    fontSize: 16.sp,
+                  style: AppStyle.bodyMedium.copyWith(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.w600,
                   ),

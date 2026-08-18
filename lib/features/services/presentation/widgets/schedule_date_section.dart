@@ -40,19 +40,16 @@ class ScheduleDateSection extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.blue.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Text(
-                state.monthYearLabel,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: headingColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            _MonthNavigator(
+              label: state.monthYearLabel,
+              headingColor: headingColor,
+              canGoBack: state.canGoToPreviousMonth,
+              onPrevious: () => context.read<ScheduleServiceBloc>().add(
+                    const ChangeScheduleMonthEvent(-1),
+                  ),
+              onNext: () => context.read<ScheduleServiceBloc>().add(
+                    const ChangeScheduleMonthEvent(1),
+                  ),
             ),
           ],
         ),
@@ -108,6 +105,63 @@ class ScheduleDateSection extends StatelessWidget {
           );
         }),
       ],
+    );
+  }
+}
+
+class _MonthNavigator extends StatelessWidget {
+  final String label;
+  final Color headingColor;
+  final bool canGoBack;
+  final VoidCallback onPrevious;
+  final VoidCallback onNext;
+
+  const _MonthNavigator({
+    required this.label,
+    required this.headingColor,
+    required this.canGoBack,
+    required this.onPrevious,
+    required this.onNext,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      decoration: BoxDecoration(
+        color: AppColors.blue.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: canGoBack ? onPrevious : null,
+            icon: Icon(Icons.chevron_left_rounded, color: headingColor),
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
+            tooltip: MaterialLocalizations.of(context).previousMonthTooltip,
+          ),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: headingColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          IconButton(
+            onPressed: onNext,
+            icon: Icon(Icons.chevron_right_rounded, color: headingColor),
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(minWidth: 32.w, minHeight: 32.w),
+            tooltip: MaterialLocalizations.of(context).nextMonthTooltip,
+          ),
+        ],
+      ),
     );
   }
 }

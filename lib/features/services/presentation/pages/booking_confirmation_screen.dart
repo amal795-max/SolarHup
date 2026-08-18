@@ -12,6 +12,7 @@ import 'package:untitled1/features/services/presentation/widgets/booking_confirm
 import 'package:untitled1/features/services/presentation/widgets/booking_rate_service_section.dart';
 import 'package:untitled1/features/services/presentation/widgets/booking_whats_next_section.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
+import 'package:untitled1/widgets/service_booking_step_indicator.dart';
 
 class BookingConfirmationScreen extends StatefulWidget {
   final BookingConfirmationModel booking;
@@ -116,6 +117,10 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
       padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 16.h),
       child: Column(
         children: [
+          const ServiceBookingStepIndicator(
+            currentStep: ServiceBookingStep.confirm,
+          ),
+          SizedBox(height: 16.h),
           BookingConfirmationHeaderSection(
             titleKey: widget.headerTitleKey,
             subtitleKey: widget.headerSubtitleKey,

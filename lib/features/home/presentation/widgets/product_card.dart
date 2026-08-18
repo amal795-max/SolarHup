@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/core/helper/product_hero.dart';
 import 'package:untitled1/widgets/discount_meta_lines.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/product_favorite_button.dart';
@@ -268,6 +269,8 @@ class _CardImage extends StatelessWidget {
                     image: data.imageUrl,
                     fit: BoxFit.cover,
                     borderRadius: 0,
+                    enableHero: productHeroTag(data.id) != null,
+                    heroTag: productHeroTag(data.id),
                   )
                 : data.imageAssetPath != null && data.imageAssetPath!.isNotEmpty
                     ? Image.asset(data.imageAssetPath!)

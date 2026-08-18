@@ -44,7 +44,13 @@ class ImageWidget extends StatelessWidget {
     );
 
     if (enableHero && heroTag != null) {
-      content = Hero(tag: heroTag!, child: content);
+      content = Hero(
+        tag: heroTag!,
+        child: Material(
+          type: MaterialType.transparency,
+          child: content,
+        ),
+      );
     }
 
     return GestureDetector(

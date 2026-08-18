@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
 import 'package:untitled1/core/helper/refresh_loading.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/features/orders/data/models/order_model.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/cart_state.dart';
@@ -16,6 +18,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../widgets/cart_item.dart';
 import '../widgets/order_summary.dart';
+import '../../../../widgets/primary_button.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -134,11 +137,16 @@ class _CartScreenState extends State<CartScreen> {
         onRefresh: () => cubit.getCart(),
         child: ListView(
           physics: appRefreshPhysics,
-          children: const [
+          children: [
             EmptyWidget(
               icon: Icons.shopping_cart_outlined,
               title: 'cart_empty',
               subtitle: 'cart_empty_hint',
+              action: CustomButton(
+                text: 'empty_browse_stores'.tr(),
+                onPressed: () => context.push(AppRoutes.storesScreen),
+                height: 44.h,
+              ),
             ),
           ],
         ),

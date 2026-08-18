@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:untitled1/core/helper/product_hero.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
 import 'package:untitled1/features/stores/presentation/bloc/product_detail_bloc/product_detail_bloc.dart';
@@ -75,12 +76,16 @@ class _ProductDetailGallerySectionState extends State<ProductDetailGallerySectio
                   },
                   itemBuilder: (context, index) {
                     if (hasImages) {
+                      final heroTag =
+                          index == 0 ? productHeroTag(widget.product.id) : null;
                       return ImageWidget(
                         image: widget.product.imageUrls[index],
                         height: 220.h,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         borderRadius: 0,
+                        enableHero: heroTag != null,
+                        heroTag: heroTag,
                       );
                     }
                     return _buildPlaceholder(theme);

@@ -2,9 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:untitled1/core/enums/favorite_category_enum.dart';
 import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/helper/refresh_loading.dart';
+import 'package:untitled1/core/routing/app_routes.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/favorite/data/models/favorite_model.dart';
@@ -18,6 +20,7 @@ import 'package:untitled1/widgets/header_section.dart';
 import 'package:untitled1/widgets/image_widget.dart';
 import 'package:untitled1/widgets/workshop_service_favorite_button.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../../widgets/error_widget.dart';
 
@@ -149,10 +152,17 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           .loadFavorites(selectedCategory),
                       child: ListView(
                         physics: appRefreshPhysics,
-                        children: const [
+                        children: [
                           EmptyWidget(
+                            icon: Icons.favorite_border_rounded,
                             title: 'no_favorites_yet',
                             subtitle: 'start_adding_favorites',
+                            action: CustomButton(
+                              text: 'empty_browse_stores'.tr(),
+                              onPressed: () =>
+                                  context.push(AppRoutes.storesScreen),
+                              height: 44.h,
+                            ),
                           ),
                         ],
                       ),

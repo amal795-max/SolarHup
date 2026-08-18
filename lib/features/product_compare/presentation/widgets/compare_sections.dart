@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/helper/data_helper.dart';
@@ -30,25 +31,70 @@ class CompareProductCardsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    final bothSelected = firstProduct != null && secondProduct != null;
+
+    return Stack(
+      alignment: Alignment.topCenter,
+      clipBehavior: Clip.none,
       children: [
-        Expanded(
-          child: _CompareProductCard(
-            product: firstProduct,
-            badgeKey: 'compare_product_a',
-            onTap: onTapFirst,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _CompareProductCard(
+                product: firstProduct,
+                badgeKey: 'compare_product_a',
+                onTap: onTapFirst,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _CompareProductCard(
+                product: secondProduct,
+                badgeKey: 'compare_product_b',
+                isHighlighted: true,
+                onTap: onTapSecond,
+              ),
+            ),
+          ],
         ),
-        SizedBox(width: 12.w),
-        Expanded(
-          child: _CompareProductCard(
-            product: secondProduct,
-            badgeKey: 'compare_product_b',
-            isHighlighted: true,
-            onTap: onTapSecond,
+        if (bothSelected)
+          Positioned(
+            top: 72.h,
+            child: Container(
+              width: 36.w,
+              height: 36.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.secondaryColor,
+                border: Border.all(color: Theme.of(context).colorScheme.surface, width: 3),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.secondaryColor.withValues(alpha: 0.35),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                'VS',
+                style: AppStyle.labelSmall.copyWith(
+                  color: AppColors.brown,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 11.sp,
+                ),
+              ),
+            )
+                .animate()
+                .fadeIn(duration: 300.ms)
+                .scale(
+                  begin: const Offset(0.5, 0.5),
+                  end: const Offset(1, 1),
+                  duration: 450.ms,
+                  curve: Curves.elasticOut,
+                ),
           ),
-        ),
       ],
     );
   }

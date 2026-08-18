@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/app_style.dart';
 import '../core/theme/app_colors.dart';
 
@@ -12,6 +14,7 @@ class EmptyWidget extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final Widget? action;
   final MainAxisAlignment alignment;
+  final bool animate;
 
   const EmptyWidget({
     super.key,
@@ -23,11 +26,12 @@ class EmptyWidget extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 40, horizontal: 40),
     this.action,
     this.alignment = MainAxisAlignment.center,
+    this.animate = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    final content = Center(
       child: Padding(
         padding: padding,
         child: SingleChildScrollView(
@@ -35,16 +39,31 @@ class EmptyWidget extends StatelessWidget {
             spacing: 4,
             mainAxisAlignment: alignment,
             children: [
-              Icon(
-                icon,
-                size: iconSize,
-                color: iconColor ?? AppColors.lightGrey,
+              Container(
+                width: (iconSize + 28).w,
+                height: (iconSize + 28).w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.secondaryColor.withValues(alpha: 0.22),
+                      AppColors.primaryColor.withValues(alpha: 0.04),
+                    ],
+                  ),
+                ),
+                child: Icon(
+                  icon,
+                  size: iconSize,
+                  color: iconColor ?? AppColors.primaryColor.withValues(alpha: 0.55),
+                ),
               ),
+              SizedBox(height: 8.h),
               Text(
-                title?.tr()?? 'no_items_added'.tr(),
+                title?.tr() ?? 'no_items_added'.tr(),
                 textAlign: TextAlign.center,
                 style: AppStyle.bodyMedium.copyWith(
                   color: AppColors.grey,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               if (subtitle == null || subtitle!.isNotEmpty)
@@ -55,14 +74,19 @@ class EmptyWidget extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-              const SizedBox(height: 4,),
-              if (action != null) ...[
-                action!,
-              ]
+              SizedBox(height: 8.h),
+              if (action != null) action!,
             ],
           ),
         ),
       ),
     );
+
+    if (!animate) return content;
+
+    return content
+        .animate()
+        .fadeIn(duration: 450.ms, curve: Curves.easeOut)
+        .slideY(begin: 0.08, end: 0, duration: 450.ms, curve: Curves.easeOutCubic);
   }
 }

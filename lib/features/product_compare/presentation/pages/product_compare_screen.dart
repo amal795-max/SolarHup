@@ -7,6 +7,7 @@ import 'package:untitled1/features/product_compare/presentation/cubit/compare_se
 import 'package:untitled1/features/product_compare/presentation/mappers/compare_spec_mapper.dart';
 import 'package:untitled1/features/product_compare/presentation/widgets/compare_product_picker_sheet.dart';
 import 'package:untitled1/features/product_compare/presentation/widgets/compare_sections.dart';
+import 'package:untitled1/features/product_compare/presentation/widgets/compare_vs_celebration.dart';
 import 'package:untitled1/widgets/back_button_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/loader.dart';
@@ -35,16 +36,49 @@ class _ProductCompareScreenState extends State<ProductCompareScreen> {
   }
 }
 
-class _ProductCompareView extends StatelessWidget {
+class _ProductCompareView extends StatefulWidget {
   const _ProductCompareView();
+
+  @override
+  State<_ProductCompareView> createState() => _ProductCompareViewState();
+}
+
+class _ProductCompareViewState extends State<_ProductCompareView> {
+  bool _showVsCelebration = false;
+  bool _vsShownForCurrentPair = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final state = context.read<CompareSessionCubit>().state;
+      if (state.isReadyForComparison && !_vsShownForCurrentPair) {
+        _vsShownForCurrentPair = true;
+        setState(() => _showVsCelebration = true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: BlocBuilder<CompareSessionCubit, CompareSessionState>(
-          builder: (context, state) {
+        child: BlocListener<CompareSessionCubit, CompareSessionState>(
+          listenWhen: (previous, current) =>
+              !previous.isReadyForComparison && current.isReadyForComparison,
+          listener: (context, state) {
+            if (!_vsShownForCurrentPair) {
+              _vsShownForCurrentPair = true;
+              setState(() => _showVsCelebration = true);
+            }
+          },
+          child: BlocBuilder<CompareSessionCubit, CompareSessionState>(
+            builder: (context, state) {
+              if (!state.isReadyForComparison) {
+                _vsShownForCurrentPair = false;
+              }
             if (state.isLoading && state.selectedCount == 0) {
               return const LoadingIndicator();
             }
@@ -142,6 +176,14 @@ class _ProductCompareView extends StatelessWidget {
                           color: Color(0x44FFFFFF),
                           child: Center(child: LoadingIndicator()),
                         ),
+                      if (_showVsCelebration)
+                        CompareVsCelebration(
+                          onFinished: () {
+                            if (mounted) {
+                              setState(() => _showVsCelebration = false);
+                            }
+                          },
+                        ),
                     ],
                   ),
                 ),
@@ -156,6 +198,7 @@ class _ProductCompareView extends StatelessWidget {
               ],
             );
           },
+        ),
         ),
       ),
     );

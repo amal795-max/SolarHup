@@ -7,6 +7,8 @@ import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/stores/data/models/product_detail_model.dart';
+import 'package:untitled1/core/constants/failure_success_message.dart';
+import 'package:untitled1/widgets/added_to_cart_banner.dart';
 import 'package:untitled1/widgets/primary_button.dart';
 
 import '../../../orders/presentation/bloc/cart_cubit.dart';
@@ -74,10 +76,20 @@ class ProductDetailBottomBar extends StatelessWidget {
               child: BlocConsumer<CartCubit, CartState>(
                 listener: (BuildContext context, CartState state) {
                   if (state is CartActionSuccess) {
-                   DataHelper.showSnackBar(message: state.message, context: context);
+                    if (state.message == addToCartSuccessfully) {
+                      AddedToCartBanner.show(context);
+                      return;
+                    }
+                    DataHelper.showSnackBar(
+                      message: state.message,
+                      context: context,
+                    );
                   }
                   if (state is CartError) {
-                   DataHelper.showSnackBar(message: state.message, context: context);
+                    DataHelper.showSnackBar(
+                      message: state.message,
+                      context: context,
+                    );
                   }
                 },
                 builder: (BuildContext context, CartState state) {

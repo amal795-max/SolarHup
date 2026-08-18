@@ -14,11 +14,13 @@ import 'package:untitled1/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:untitled1/features/orders/presentation/bloc/orders_state.dart';
 import 'package:untitled1/features/services/data/models/service_request_model.dart';
 import 'package:untitled1/features/services/presentation/bloc/service_requests_cubit/service_requests_cubit.dart';
+import 'package:untitled1/features/services/presentation/pages/expert_services_screen.dart';
 import 'package:untitled1/widgets/animation_widget.dart';
 import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/container_style_widget.dart';
 import 'package:untitled1/widgets/empty_widget.dart';
 import 'package:untitled1/widgets/error_widget.dart';
+import 'package:untitled1/widgets/primary_button.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_style.dart';
 import '../../../../widgets/header_section.dart';
@@ -116,7 +118,18 @@ class _ActivityScreenState extends State<ActivityScreen> {
             onRefresh: () async => context.read<OrdersCubit>().getMyOrders(),
             child: ListView(
               physics: appRefreshPhysics,
-              children: const [EmptyWidget()],
+              children: [
+                EmptyWidget(
+                  icon: Icons.receipt_long_outlined,
+                  title: 'empty_activity_orders_title',
+                  subtitle: 'empty_activity_orders_subtitle',
+                  action: CustomButton(
+                    text: 'empty_browse_stores'.tr(),
+                    onPressed: () => context.push(AppRoutes.storesScreen),
+                    height: 44.h,
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -198,7 +211,24 @@ class _ActivityScreenState extends State<ActivityScreen> {
                 context.read<ServiceRequestsCubit>().loadMyRequests(),
             child: ListView(
               physics: appRefreshPhysics,
-              children: const [EmptyWidget()],
+              children: [
+                EmptyWidget(
+                  icon: Icons.build_circle_outlined,
+                  title: 'empty_activity_services_title',
+                  subtitle: 'empty_activity_services_subtitle',
+                  action: CustomButton(
+                    text: 'empty_book_service'.tr(),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const ExpertServicesScreen(),
+                        ),
+                      );
+                    },
+                    height: 44.h,
+                  ),
+                ),
+              ],
             ),
           );
         }

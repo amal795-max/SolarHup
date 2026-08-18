@@ -5,6 +5,7 @@ import 'package:untitled1/core/theme/app_colors.dart';
 
 import '../../../../core/helper/extensions.dart';
 import '../../../../core/theme/app_style.dart';
+import '../../../../widgets/success_celebration_icon.dart';
 
 class BookingConfirmationHeaderSection extends StatelessWidget {
   final String? titleKey;
@@ -23,41 +24,17 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
 
     return Column(
       children: [
-        Container(
-          width: 80.w,
-          height: 80.w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.secondaryColor.withValues(alpha: isDark ? 0.2 : 0.35),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.secondaryColor.withValues(alpha: 0.35),
-                blurRadius: 24,
-                spreadRadius: 4,
-              ),
-            ],
-          ),
-          child: Center(
-            child: Container(
-              width: 60.w,
-              height: 60.w,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.secondaryColor,
-              ),
-              child: Icon(
-                Icons.check_rounded,
-                color: AppColors.brown,
-                size: 36.sp,
-              ),
-            ),
-          ),
+        SuccessCelebrationIcon(
+          size: 88,
+          icon: Icons.check_rounded,
+          iconColor: AppColors.brown,
+          ringColor: AppColors.secondaryColor,
         ),
         SizedBox(height: 12.h),
         Text(
           (titleKey ?? 'booking_confirmed_title').tr(),
           textAlign: TextAlign.center,
-          style:AppStyle.h4.copyWith(
+          style: AppStyle.h4.copyWith(
             fontWeight: FontWeight.w800,
             color: titleColor,
           ),
