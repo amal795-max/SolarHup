@@ -434,10 +434,7 @@ class _HomeViewState extends State<_HomeView> {
 
     return BlocBuilder<ApplicationCubit, ApplicationState>(
       builder: (context, appState) {
-        final bool isVerified = appState is ApplicationMainState
-            ? appState.isVerified
-            : false;
-
+        final bool isVerified =LocalStorage().getData(key: ApiKeys.isVerified);
         return AppRefreshIndicator(
           onRefresh: _refreshHome,
           child: SingleChildScrollView(

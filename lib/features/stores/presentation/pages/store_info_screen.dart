@@ -362,7 +362,7 @@ class _StoreInfoContent extends StatelessWidget {
               latitude: data.latitude!,
               longitude: data.longitude!,
             ),
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
         ],
       ),
     );
@@ -445,33 +445,34 @@ class _StoreInfoMapSection extends StatelessWidget {
         ],
       ),
       clipBehavior: Clip.antiAlias,
-      child: FlutterMap(
-        options: MapOptions(
-          initialCenter: LatLng(latitude, longitude),
-          initialZoom: 14,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-            subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
-            userAgentPackageName: 'com.example.untitled1',
+        child: FlutterMap(
+          options: MapOptions(
+            initialCenter: LatLng(latitude, longitude),
+            initialZoom: 18,
+
           ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                point: LatLng(latitude, longitude),
-                width: 45.w,
-                height: 45.w,
-                child: const Icon(
-                  Icons.location_on,
-                  color: AppColors.red,
-                  size: 35,
+          children: [
+            TileLayer(
+              urlTemplate: 'https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+              subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
+              userAgentPackageName: 'com.example.untitled1',
+            ),
+            MarkerLayer(
+              markers: [
+                Marker(
+                  point: LatLng(latitude, longitude),
+                  width: 45.w,
+                  height: 45.w,
+                  child: const Icon(
+                    Icons.location_on,
+                    color: AppColors.red,
+                    size: 35,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
+          ],
+        )
     );
   }
 }

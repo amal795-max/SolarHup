@@ -197,30 +197,10 @@ class UsedProductDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        spacing: 12.w,
-        children: [
-          Expanded(
-            child: CustomButton(
+      child: CustomButton(
               text: 'call_seller',
               onPressed: () => DataHelper().makeCall(product.sellerPhone),
-              type: ButtonType.outlined,
-              borderColor: AppColors.primaryColor,
-              textColor: AppColors.primaryColor,
-              icon: Icons.call,
             ),
-          ),
-          Expanded(
-            child: CustomButton(
-              text: 'whatsapp',
-              onPressed: () => DataHelper().openWhatsApp(product.sellerPhone),
-              backgroundColor: AppColors.green,
-              textColor: Colors.white,
-              icon: Icons.chat,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

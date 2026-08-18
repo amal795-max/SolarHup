@@ -75,13 +75,6 @@ class DataHelper {
     }
   }
 
-  Future<void> openWhatsApp(String phoneNumber) async {
-    final String url = 'https://wa.me/$phoneNumber';
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
-  }
   Future<void> openTelegram(String username) async {
     final telegramApp = Uri.parse('tg://resolve?domain=$username');
     final telegramWeb = Uri.parse('https://t.me/$username');

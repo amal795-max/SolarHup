@@ -6,8 +6,10 @@ import 'package:untitled1/core/helper/extensions.dart';
 import 'package:untitled1/core/theme/app_colors.dart';
 import 'package:untitled1/core/theme/app_style.dart';
 import 'package:untitled1/features/chatbot/data/model/recommend_model.dart';
+import 'package:untitled1/widgets/image_widget.dart';
 
 import '../../../../core/routing/app_routes.dart';
+import '../../../stores/presentation/pages/product_detail_route_args.dart';
 
 class ChatProductCard extends StatelessWidget {
   final RecommendedProduct product;
@@ -41,12 +43,7 @@ class ChatProductCard extends StatelessWidget {
               borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
             ),
             child: (p.images.isNotEmpty && p.images.first.isNotEmpty)
-                ? Image.network(
-              p.images.first,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Icon(Icons.solar_power, size: 60.sp, color: Colors.grey),
-            )
+           ? ImageWidget(image: p.images.first)
                 : Icon(Icons.solar_power, size: 60.sp, color: Colors.grey),
           ),
 
@@ -57,22 +54,22 @@ class ChatProductCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  p.name,
+                  p.name??'',
                   style: AppStyle.bodyMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-
                 SizedBox(height: 4.h),
-
                 Text(
-                  p.description,
+                  p.description??'',
+                  style: AppStyle.bodySmall,
+                ),
+                SizedBox(height: 12.h),
+                Text(
+                  p.reason,
                   style: AppStyle.bodySmall,
                 ),
 
-                SizedBox(height: 12.h),
-
-                // PRICE + BUTTON
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -84,9 +81,12 @@ class ChatProductCard extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {
                         context.push(
-                          AppRoutes.productDetailScreen,
-                          extra: p.id,
-                        );
+                            AppRoutes.productDetailScreen,
+                            extra: ProductDetailRouteArgs(
+                              businessId: p.businessId??0,
+                              productId: p.id.toString(),
+                              storeName: 'p.',
+                            ));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,

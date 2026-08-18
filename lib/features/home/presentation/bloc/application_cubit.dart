@@ -22,7 +22,6 @@ class ApplicationCubit extends Cubit<ApplicationState> {
     emit(ApplicationMainState(
       themeMode: currentMode,
       locale: currentLocale,
-      isVerified: isVerified,
     ));
   }
 
@@ -32,7 +31,6 @@ class ApplicationCubit extends Cubit<ApplicationState> {
       emit(ApplicationMainState(
         themeMode: currentState.themeMode,
         locale: currentState.locale,
-        isVerified: isVerified,
       ));
     }
   }
@@ -54,7 +52,6 @@ class ApplicationCubit extends Cubit<ApplicationState> {
       emit(ApplicationMainState(
         themeMode: newMode,
         locale: currentState.locale,
-        isVerified: currentState.isVerified,
       ));
     }
   }
@@ -70,7 +67,6 @@ class ApplicationCubit extends Cubit<ApplicationState> {
       emit(ApplicationMainState(
         themeMode: currentState.themeMode,
         locale: newLocale,
-        isVerified: currentState.isVerified,
       ));
     }
   }
