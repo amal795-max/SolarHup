@@ -142,11 +142,7 @@ class _CartScreenState extends State<CartScreen> {
               icon: Icons.shopping_cart_outlined,
               title: 'cart_empty',
               subtitle: 'cart_empty_hint',
-              action: CustomButton(
-                text: 'empty_browse_stores'.tr(),
-                onPressed: () => context.push(AppRoutes.storesScreen),
-                height: 44.h,
-              ),
+
             ),
           ],
         ),

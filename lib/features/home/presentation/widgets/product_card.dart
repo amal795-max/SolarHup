@@ -144,7 +144,7 @@ class _CardBody extends StatelessWidget {
     );
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(10.w, 8.h, 10.w, 10.h),
+      padding: EdgeInsets.fromLTRB(10.w, 6.h, 10.w, 6.h),
       child: compactMeta ? _buildCompactBody(name) : _buildDefaultBody(name),
     );
   }
@@ -168,7 +168,8 @@ class _CardBody extends StatelessWidget {
           SizedBox(height: 2.h),
         ],
         name,
-        SizedBox(height: 4.h),
+
+        SizedBox(height: 3.h),
         if (data.showPrice) _PriceRow(data: data, isDark: isDark),
         DiscountMetaLines(
           description: data.discountDescription,
@@ -205,6 +206,7 @@ class _CardBody extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
+
           SizedBox(height: 2.h),
         ],
         Expanded(
@@ -262,7 +264,7 @@ class _CardImage extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(14.r)),
           child: SizedBox(
-            height: 105.h,
+            height: 90.h,
             width: double.infinity,
             child: _hasNetworkImage
                 ? ImageWidget(

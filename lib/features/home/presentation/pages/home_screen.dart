@@ -114,7 +114,9 @@ class _HomeViewState extends State<_HomeView> {
     (i) => const ProductCardData(
       name: 'Loading Product Name',
       imagePlaceholderColorValue: 0xFF0A2A43,
-      showPrice: false,
+      showPrice: true,
+      price: 0.0,
+      category: 'Category',
     ),
   );
 
@@ -159,6 +161,7 @@ class _HomeViewState extends State<_HomeView> {
     name: m.name,
     category: m.category,
     price: m.price,
+    originalPrice: m.originalPrice,
     badgeText: m.badgeText,
     badgeColor: m.badgeColorValue,
     metaText: m.metaText,
@@ -167,7 +170,7 @@ class _HomeViewState extends State<_HomeView> {
     imagePlaceholderColorValue: m.imagePlaceholderColorValue,
     discountPercent: m.discountPercent,
     iconType: m.iconType,
-    showPrice: m.promotionAlreadyUsed,
+    showPrice: true,
     promotionAlreadyUsed: m.promotionAlreadyUsed,
   );
 

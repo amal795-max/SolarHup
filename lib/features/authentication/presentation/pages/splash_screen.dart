@@ -1,11 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:untitled1/core/helper/auth_session.dart';
 import 'package:untitled1/core/helper/local_storage.dart';
 import 'package:untitled1/core/theme/app_style.dart';
+import 'package:untitled1/features/favorite/presentation/bloc/favorites_cubit.dart';
 import '../../../../core/constants/app_images.dart';
 import '../../../../core/constants/app_url.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -22,28 +24,36 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 3000), () async {
-      if (!mounted) return;
-
-      final onboardingCompleted = LocalStorage().getData(
-        key: StorageKeys.onboardingCompleted,
-        defaultValue: false,
-      ) ?? false;
-
-      if (!onboardingCompleted) {
-        context.go(AppRoutes.onboardingScreen);
-        return;
-      }
-
-      if (AuthSession.isLoggedIn) {
-        context.go(AppRoutes.bottomNavBar);
-      } else {
-        await AuthSession.clear();
-        if (!mounted) return;
-        context.go(AppRoutes.authenticationScreen);
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleNavigation();
     });
   }
+
+  Future<void> _handleNavigation() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!mounted) return;
+
+    final onboardingCompleted = LocalStorage().getData(
+      key: StorageKeys.onboardingCompleted,
+      defaultValue: false,
+    ) ?? false;
+
+    if (!onboardingCompleted) {
+      context.go(AppRoutes.onboardingScreen);
+      return;
+    }
+
+    if (AuthSession.isLoggedIn) {
+      if (!mounted) return;
+      context.read<FavoritesCubit>().prefetchInitialFavorites();
+      context.go(AppRoutes.bottomNavBar);
+    } else {
+      await AuthSession.clear();
+      context.go(AppRoutes.authenticationScreen);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

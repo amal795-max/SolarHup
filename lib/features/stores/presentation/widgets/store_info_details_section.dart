@@ -18,8 +18,15 @@ import 'package:untitled1/widgets/favorite_heart_button.dart';
 ///   5. Divider
 class StoreInfoDetailsSection extends StatelessWidget {
   final StoreInfoData data;
+  final VoidCallback? onMapTap;
+  final VoidCallback? onDirectionsTap;
 
-  const StoreInfoDetailsSection({super.key, required this.data});
+  const StoreInfoDetailsSection({
+    super.key,
+    required this.data,
+    this.onMapTap,
+    this.onDirectionsTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +35,28 @@ class StoreInfoDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Align(
-            alignment: Alignment.topRight,
-            child: FavoriteHeartButton(
-              itemType: FavoriteCategoryEnum.store.name,
-              itemId: data.id,
-              iconSize: 22.sp,
-              elevation: 2,
-            ),
+          Row(
+            children: [
+              FavoriteHeartButton(
+                itemType: FavoriteCategoryEnum.store.name,
+                itemId: data.id,
+                iconSize: 22.sp,
+                elevation: 2,
+              ),
+              if (data.latitude != null && data.longitude != null)
+                IconButton(
+                  onPressed: onMapTap,
+                  icon: Icon(
+                    Icons.map_outlined,
+                    color: AppColors.primaryColor,
+                    size: 24.sp,
+                  ),
+                  tooltip: 'show_on_map'.tr(),
+                )
+              else
+                const SizedBox.shrink(),
+
+            ],
           ),
 
 

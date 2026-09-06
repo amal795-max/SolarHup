@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:untitled1/core/theme/app_themes.dart';
@@ -30,6 +31,12 @@ import 'package:untitled1/features/services/presentation/bloc/service_requests_c
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   Bloc.observer = AppBlocObserver();
   await di.init();
   await LocalStorage().init();
@@ -92,28 +99,6 @@ class MyApp extends StatelessWidget {
                 supportedLocales: context.supportedLocales,
                 locale: context.locale,
                 routerConfig: router,
-                builder: (context, child) {
-                  return BlocListener<FavoritesCubit, FavoritesState>(
-                    listenWhen: (prev, curr) =>
-                        curr is FavoriteActionSuccess ||
-                        curr is FavoriteActionError,
-                    listener: (context, state) {
-                      if (state is FavoriteActionSuccess) {
-                        DataHelper.showSnackBar(
-                          message: state.message,
-                          context: context,
-                        );
-                      } else if (state is FavoriteActionError) {
-                        DataHelper.showSnackBar(
-                          message: state.message,
-                          context: context,
-                          color: AppColors.red,
-                        );
-                      }
-                    },
-                    child: child ?? const SizedBox.shrink(),
-                  );
-                },
               );
             },
           );

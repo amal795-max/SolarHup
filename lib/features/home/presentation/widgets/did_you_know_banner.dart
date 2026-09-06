@@ -93,8 +93,8 @@ class _DidYouKnowBannerState extends State<DidYouKnowBanner> {
                   duration: const Duration(milliseconds: 300),
                   margin: EdgeInsets.symmetric(horizontal: 10.w),
                   padding: EdgeInsets.symmetric(
-                    vertical: 8.w,
-                    horizontal: 10.w,
+                    vertical: 10.w,
+                    horizontal: 16.w,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryColor,

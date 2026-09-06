@@ -101,7 +101,6 @@ class CartCubit extends Cubit<CartState> {
     final result = await repository.addToCart(params);
     result.fold((failure) => emit(CartError(failure.message)), (_) async {
       emit(const CartActionSuccess(addToCartSuccessfully));
-      await getCart();
     });
   }
 

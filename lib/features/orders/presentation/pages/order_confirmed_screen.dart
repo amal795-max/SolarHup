@@ -15,7 +15,6 @@ class OrderConfirmedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -33,7 +32,6 @@ class OrderConfirmedScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: AppStyle.h4.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.black,
                 ),
               ),
               SizedBox(height: 12.h),

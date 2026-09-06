@@ -48,7 +48,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
           }
 
           return SingleChildScrollView(
-            padding: EdgeInsets.all(20.r),
+            padding: EdgeInsets.all(16.r),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

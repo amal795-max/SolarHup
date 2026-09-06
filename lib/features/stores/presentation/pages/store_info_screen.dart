@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +21,8 @@ import 'package:untitled1/widgets/app_refresh_indicator.dart';
 import 'package:untitled1/widgets/app_skeletonizer.dart';
 import 'package:untitled1/widgets/error_widget.dart';
 import 'package:untitled1/widgets/image_widget.dart';
+
+import '../../../../core/theme/app_style.dart';
 
 // ---------------------------------------------------------------------------
 // UI data_source models — kept in this file so the page and its widgets stay in sync
@@ -268,19 +271,44 @@ class _StoreInfoView extends StatelessWidget {
   }
 }
 
-class _StoreInfoContent extends StatelessWidget {
+class _StoreInfoContent extends StatefulWidget {
   final StoreInfoData data;
   final int? storeId;
 
   const _StoreInfoContent({required this.data, this.storeId});
 
   @override
+  State<_StoreInfoContent> createState() => _StoreInfoContentState();
+}
+
+class _StoreInfoContentState extends State<_StoreInfoContent> {
+  final GlobalKey _mapKey = GlobalKey();
+  final ScrollController _scrollController = ScrollController();
+
+  void _scrollToMap() {
+    final context = _mapKey.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final cardColor = Theme.of(context).scaffoldBackgroundColor;
     final isDark = context.brightness;
-    MediaQuery.of(context).padding.top;
 
     final scrollContent = SingleChildScrollView(
+      controller: _scrollController,
       physics: appRefreshPhysics,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,10 +324,10 @@ class _StoreInfoContent extends StatelessWidget {
                   left: 0,
                   right: 0,
                   height: 0.3.sh,
-                  child: StoreInfoHeaderSection(data: data),
+                  child: StoreInfoHeaderSection(data: widget.data),
                 ),
                 Positioned(
-                  top: 0.18.sh ,
+                  top: 0.18.sh,
                   left: 16.w,
                   right: 16.w,
                   child: Container(
@@ -319,25 +347,27 @@ class _StoreInfoContent extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: StoreInfoDetailsSection(data: data),
+                    child: StoreInfoDetailsSection(
+                      data: widget.data,
+                      onMapTap: _scrollToMap,
+                    ),
                   ),
                 ),
                 Positioned(
                   top: 0.2.sh - 50.h,
                   left: 35.w,
-                  child: _FloatingStoreLogoBadge(data: data),
+                  child: _FloatingStoreLogoBadge(data: widget.data),
                 ),
               ],
             ),
           ),
           SizedBox(height: 8.h),
-          StoreInfoCategoriesSection(categories: data.categories),
-          if(data.categories.isEmpty)
-          SizedBox(height:32.h),
+          StoreInfoCategoriesSection(categories: widget.data.categories),
+          if (widget.data.categories.isEmpty) SizedBox(height: 32.h),
           StoreInfoDiscountsSection(
-            storeId: data.id,
-            storeName: data.name,
-            products: data.discountedProducts,
+            storeId: widget.data.id,
+            storeName: widget.data.name,
+            products: widget.data.discountedProducts,
           ),
           SizedBox(height: 8.h),
           BlocBuilder<StoreInfoBloc, StoreInfoState>(
@@ -345,23 +375,40 @@ class _StoreInfoContent extends StatelessWidget {
                 prev.selectedCategoryIndex != curr.selectedCategoryIndex,
             builder: (context, infoState) {
               final filteredProducts = filterProductsByCategory(
-                data.featuredProducts,
-                data.categories,
+                widget.data.featuredProducts,
+                widget.data.categories,
                 infoState.selectedCategoryIndex,
               );
 
               return StoreInfoFeaturedProductsSection(
-                storeId: data.id,
-                storeName: data.name,
+                storeId: widget.data.id,
+                storeName: widget.data.name,
                 products: filteredProducts,
               );
             },
           ),
-          if (data.latitude != null && data.longitude != null)
-            _StoreInfoMapSection(
-              latitude: data.latitude!,
-              longitude: data.longitude!,
+          if (widget.data.latitude != null && widget.data.longitude != null) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'store_location'.tr(),
+                    style: AppStyle.h6.copyWith(fontWeight: FontWeight.bold),
+                  ),
+
+                ],
+              ),
             ),
+            Container(
+              key: _mapKey,
+              child: _StoreInfoMapSection(
+                latitude: widget.data.latitude!,
+                longitude: widget.data.longitude!,
+              ),
+            ),
+          ],
           SizedBox(height: 24.h),
         ],
       ),
@@ -369,10 +416,10 @@ class _StoreInfoContent extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: cardColor,
-      body: storeId != null
+      body: widget.storeId != null
           ? AppRefreshIndicator(
               onRefresh: () =>
-                  context.read<StoreDetailCubit>().loadStore(storeId!),
+                  context.read<StoreDetailCubit>().loadStore(widget.storeId!),
               child: scrollContent,
             )
           : scrollContent,

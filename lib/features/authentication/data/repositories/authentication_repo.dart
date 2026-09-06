@@ -49,6 +49,7 @@ class AuthenticationRepositoriesImpl implements AuthenticationRepositories {
         LocalStorage().saveData(key: ApiKeys.token, value: response.accessToken,);
         LocalStorage().saveData(key: ApiKeys.securityCode, value: response.securityCode,);
         LocalStorage().saveData(key: ApiKeys.userIsLogin, value: true);
+        LocalStorage().saveData(key: ApiKeys.isVerified, value: response.isVerified);
         return Right(response);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));

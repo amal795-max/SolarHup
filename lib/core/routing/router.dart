@@ -83,12 +83,7 @@ final GoRouter router = GoRouter(
         return const AuthenticationScreen();
       },
     ),
-    GoRoute(
-      path: AppRoutes.bottomNavBar,
-      builder: (BuildContext context, GoRouterState state) {
-        return const CustomBottomNavBar();
-      },
-    ),
+
     GoRoute(
       path: AppRoutes.homeScreen,
       builder: (BuildContext context, GoRouterState state) {

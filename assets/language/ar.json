@@ -137,6 +137,7 @@
   "cart_cleared_successfully": "تم حذف السلة بنجاح",
   "cart_submitted_successfully": "تم إرسال الطلب بنجاح",
   "view_history": "عرض السجل",
+  "store_location":"موقع المتجر",
 
   "home_search_hint": "ابحث عن ألواح، محولات، خدمات...",
   "home_used_system_label": "نظام مستعمل",

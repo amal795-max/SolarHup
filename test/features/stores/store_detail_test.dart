@@ -34,7 +34,7 @@ void main() {
     final api = StoreApiModel.fromJson(sampleJson);
     final detail = StoreDetailModel.fromApi(api);
 
-    expect(detail.id, '42');
+    expect(detail.id, 42);
     expect(detail.name, 'SunPeak Energy');
     expect(detail.location, 'Damascus, Syria');
     expect(detail.logoUrl, 'https://example.com/logo.png');
@@ -45,7 +45,7 @@ void main() {
     final api = StoreApiModel.fromJson(sampleJson);
     final ui = storeDetailToInfoData(StoreDetailModel.fromApi(api));
 
-    expect(ui.id, '42');
+    expect(ui.id, 42);
     expect(ui.name, 'SunPeak Energy');
     expect(ui.description, 'Premium solar hardware solutions.');
     expect(ui.location, 'Damascus, Syria');

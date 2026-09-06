@@ -17,11 +17,9 @@ class FavoritesCubit extends Cubit<FavoritesState> {
   final Set<String> _pendingToggles = {};
   int _cacheRevision = 0;
 
-  FavoritesCubit(this.repository) : super(FavoritesInitial()) {
-    unawaited(_prefetchInitialFavorites());
-  }
+  FavoritesCubit(this.repository) : super(FavoritesInitial());
 
-  Future<void> _prefetchInitialFavorites() async {
+  Future<void> prefetchInitialFavorites() async {
     await Future.wait([
       prefetchFavorites(FavoriteCategoryEnum.product.name),
       prefetchFavorites(FavoriteCategoryEnum.service.name),
