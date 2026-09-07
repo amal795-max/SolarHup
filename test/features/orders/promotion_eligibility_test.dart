@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:untitled1/core/api/errors/failures.dart';
 import 'package:untitled1/features/catalog/data/mappers/discounted_product_mapper.dart';
 import 'package:untitled1/features/catalog/data/models/discount_model.dart';
 import 'package:untitled1/core/enums/order_status_enum.dart';

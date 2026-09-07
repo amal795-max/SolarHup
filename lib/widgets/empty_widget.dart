@@ -75,7 +75,7 @@ class EmptyWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               SizedBox(height: 8.h),
-              if (action != null) action!,
+              ?action,
             ],
           ),
         ),

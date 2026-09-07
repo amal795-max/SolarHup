@@ -24,7 +24,7 @@ class BookingConfirmationHeaderSection extends StatelessWidget {
 
     return Column(
       children: [
-        SuccessCelebrationIcon(
+        const SuccessCelebrationIcon(
           size: 88,
           icon: Icons.check_rounded,
           iconColor: AppColors.brown,

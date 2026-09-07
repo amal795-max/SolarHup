@@ -137,7 +137,7 @@ class _CartScreenState extends State<CartScreen> {
         onRefresh: () => cubit.getCart(),
         child: ListView(
           physics: appEmptyRefreshPhysics,
-          children: [
+          children: const [
             EmptyWidget(
               icon: Icons.shopping_cart_outlined,
               title: 'cart_empty',

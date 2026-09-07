@@ -137,7 +137,7 @@ class _ProductReviewLink extends StatefulWidget {
   const _ProductReviewLink({
     required this.rating,
     required this.reviewCount,
-    required this.isLoading, this.onTap,
+    required this.isLoading,
   });
 
   @override
